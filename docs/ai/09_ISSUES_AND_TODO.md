@@ -1,0 +1,23 @@
+# 09_ISSUES_AND_TODO.md — Danh Sách Lỗi, Nợ Kỹ Thuật & Tồn Đọng ViTudy
+
+> **Commit Hash:** `Current Working Tree (Production Ready)`  
+> **Cập nhật lần cuối:** `2026-11-07`
+
+---
+
+## 1. Bảng Tổng Hợp Vấn Đề Kỹ Thuật (Issues & Tech Debt)
+
+| ID | Mức Độ (Severity) | Vị Trí Mã Nguồn (Location) | Mô Tả Vấn Đề (Description) | Giải Pháp Đã Thực Hiện (Resolution) | Trạng Thái |
+|---|---|---|---|---|---|
+| `ISSUE-001` | **Trung bình** (Storage) | [`src/context/StudySpaceContext.tsx`](file:///F:/AppMaking/ViTudy/src/context/StudySpaceContext.tsx) | Quota storage và lỗi emoji trong dữ liệu cũ. | Tích hợp bộ tiền xử lý `removeEmojis` & `deepNormalize` nạp an toàn từ localStorage. | **`RESOLVED`** |
+| `ISSUE-002` | **Thấp** (Bug nhỏ) | [`src/context/ViTokenContext.tsx`](file:///F:/AppMaking/ViTudy/src/context/ViTokenContext.tsx) | Chuỗi thời gian giao dịch streak đang gán cứng `'2026-01-01T00:00:00.000Z'`. | Đã đổi toàn bộ lịch sử và giao dịch mới sang `new Date().toISOString()`. | **`RESOLVED`** |
+| `ISSUE-003` | **Trung bình** (Multiplayer) | [`src/components/hud/MultiplayerBar.tsx`](file:///F:/AppMaking/ViTudy/src/components/hud/MultiplayerBar.tsx) | Thiếu quan hệ thành viên và quyền hạn trong DB schema. | Đã bổ sung bảng `space_members`, RLS policies và nút "Đồng bộ góc nhìn" chuẩn SRS 6.6. | **`RESOLVED`** |
+| `ISSUE-004` | **Thấp** (Rủi ro AI) | [`src/app/api/ai/chat/route.ts`](file:///F:/AppMaking/ViTudy/src/app/api/ai/chat/route.ts) | Đầu vào AI chưa chuẩn hóa Unicode NFC. | Đã nạp `text.normalize('NFC')` cho toàn bộ prompt và context đầu vào. | **`RESOLVED`** |
+| `ISSUE-005` | **Thấp** (Kiến trúc Modal) | [`src/components/modals/StudyToolsModal.tsx`](file:///F:/AppMaking/ViTudy/src/components/modals/StudyToolsModal.tsx) | File nguyên khối 673 dòng gộp 5 tính năng, vi phạm nguyên tắc Divergent Change. | Đã module hóa thành 5 component con: `SummaryTab`, `QuizTab`, `FlashcardTab`, `RoadmapTab`, `OcrTab`. | **`RESOLVED`** |
+| `ISSUE-006` | **Cao** (Thẩm mỹ UI) | [`StudyToolsModal.tsx`](file:///F:/AppMaking/ViTudy/src/components/modals/StudyToolsModal.tsx), [`DeskGrid.tsx`](file:///F:/AppMaking/ViTudy/src/components/canvas/DeskGrid.tsx) | Vi phạm bảng màu đơn sắc (`cyan-400`, `cyan-500`, nền `bg-[#faf9f6]`). | Đã dọn sạch 100% màu cyan về dải Slate/Trắng `#ffffff`/Đen theo `AGENTS.md`. | **`RESOLVED`** |
+| `ISSUE-007` | **Nghiêm trọng** (UI Clipping) | [`src/components/objects/BookSpread.tsx`](file:///F:/AppMaking/ViTudy/src/components/objects/BookSpread.tsx) | Công thức trang 2 bị cắt cụt dưới đáy; nút Inteline đè lên làm rút gọn tiêu đề chương. | Đã mở rộng sách 940x630, đưa Inteline thành Popover bôi đen và Tách trang thành hover tab. | **`RESOLVED`** |
+| `ISSUE-008` | **Nghiêm trọng** (Vẽ Bút) | [`src/components/canvas/DeskDrawingInteractionLayer.tsx`](file:///F:/AppMaking/ViTudy/src/components/canvas/DeskDrawingInteractionLayer.tsx) | Kéo chuột khi chọn bút làm di chuyển bàn học và nét vẽ bị co cụm thành một chấm. | Đã phân tách sự kiện vẽ tự do mọi nơi; giữ `Alt + Drag` để di chuyển bàn học. | **`RESOLVED`** |
+| `ISSUE-009` | **Trung bình** (Khung giá Chợ) | [`KnowInheritPublishModal.tsx`](file:///F:/AppMaking/ViTudy/src/components/modals/KnowInheritPublishModal.tsx) | Khung giá lệch đặc tả SRS (5/10/15/25 thay vì 5/15/30/50). | Đã chuẩn hóa khung giá đúng chuẩn: C (5V), B (15V), A (30V), S (50V). | **`RESOLVED`** |
+| `ISSUE-010` | **Cao** (Exam Sheet SRS 4.3) | [`src/components/objects/PaperSheet.tsx`](file:///F:/AppMaking/ViTudy/src/components/objects/PaperSheet.tsx) | Thiếu Tờ đề thi vật lý A4 có khoanh đáp án và chấm bài trực tiếp trên bàn. | Đã hiện thực hóa giao diện A4 Exam Sheet, nút "Nộp bài & Chấm điểm" kèm lời phê sư phạm. | **`RESOLVED`** |
+| `ISSUE-011` | **Trung bình** (Code Duplication) | [`BookSpread.tsx`](file:///F:/AppMaking/ViTudy/src/components/objects/BookSpread.tsx), [`PaperSheet.tsx`](file:///F:/AppMaking/ViTudy/src/components/objects/PaperSheet.tsx) | Trùng lặp thuật toán kéo thả và xoay tự do 360° bằng `Math.atan2`. | Đã trích xuất hook dùng chung `useDeskItemInteraction`. | **`RESOLVED`** |
+| `ISSUE-012` | **Nghiêm trọng** (Vẽ Thông Minh) | [`DeskDrawingCanvas.tsx`](file:///F:/AppMaking/ViTudy/src/components/canvas/DeskDrawingCanvas.tsx), [`smartShape.ts`](file:///F:/AppMaking/ViTudy/src/utils/smartShape.ts) | Vẽ hình vuông/tam giác ra hình giọt nước, hình tròn vẽ tay ra elip dẹt. | Khắc phục `pointsToSvgPath` vẽ đoạn thẳng `L` cho đa giác; thêm `countSharpCorners` và mở rộng `aspectRatio` hình tròn `0.65 - 1.55`. | **`RESOLVED`** |

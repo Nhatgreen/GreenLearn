@@ -1,0 +1,126 @@
+@import "katex/dist/katex.min.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+
+  /* Signature Coral Orange Brand Accent (from Java Study System) */
+  --accent: #E0562D;
+  --accent-hover: #FF5722;
+  --accent-active: #C4431C;
+  --accent-soft: #FFF7ED;
+  --accent-border: #FFEDD5;
+  --accent-text: #9A3412;
+  --accent-glow: rgba(224, 86, 45, 0.35);
+
+  /* Status Tokens (WCAG AA >= 4.5:1) */
+  --ok: #15803D;
+  --ok-soft: #ECFDF5;
+  --ok-border: #A7F3D0;
+  --bad: #DC2626;
+  --bad-soft: #FEF2F2;
+  --bad-border: #FECACA;
+  --warn: #92400E;
+  --warn-bg: #FEF3C7;
+  --warn-border: #FDE68A;
+}
+
+html, body {
+  color: #0f172a;
+  background-color: #f8fafc;
+  font-family: var(--font-ui), 'Open Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Explicit class-based font enforcements */
+.book-page, .paper-sheet {
+  font-family: var(--font-ui), 'Open Sans', ui-sans-serif, system-ui, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+.sticky-note {
+  font-family: var(--font-note), var(--font-ui), cursive, sans-serif !important;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.8);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+/* Book paper aesthetic - Clean ivory tone without dotted moiré noise */
+.paper-texture {
+  background-color: #fdfbf7;
+}
+
+/* Suppress Next.js dev indicator / lightning bolt button */
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dev-indicator],
+[data-nextjs-portal] {
+  display: none !important;
+}
+
+/* Micro-interaction Keyframes for Quiz Options & Badges */
+@keyframes badgePop {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@keyframes correctPulse {
+  0% { box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.45); transform: scale(1); }
+  50% { box-shadow: 0 0 0 8px rgba(21, 128, 61, 0); transform: scale(1.015); }
+  100% { box-shadow: 0 0 0 0 rgba(21, 128, 61, 0); transform: scale(1); }
+}
+
+@keyframes wrongShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes verdictPopIn {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.anim-badge-pop {
+  animation: badgePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.anim-correct-pulse {
+  animation: correctPulse 0.45s ease-out;
+}
+
+.anim-wrong-shake {
+  animation: wrongShake 0.38s ease-in-out;
+}
+
+.anim-verdict-pop {
+  animation: verdictPopIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
