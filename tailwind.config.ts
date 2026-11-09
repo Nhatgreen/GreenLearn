@@ -14,6 +14,16 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        brand: {
+          DEFAULT: "#16A34A",
+          hover: "#15803D",
+          active: "#166534",
+          soft: "#F0FDF4",
+          border: "#BBF7D0",
+          text: "#166534",
+          dark: "#242D3D",
+          black: "#0F172A",
+        },
         desk: {
           surface: "#0c1017",
           border: "#1e2638",

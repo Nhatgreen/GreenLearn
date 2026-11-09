@@ -7,6 +7,7 @@ import { AuthForm } from '@/components/auth/AuthForm';
 import { OAuthButtons } from '@/components/auth/OAuthButtons';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { getAssetPath } from '@/lib/assets';
 
 export default function AuthPage() {
   const router = useRouter();
@@ -51,16 +52,23 @@ export default function AuthPage() {
       <div className="w-full max-w-sm bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-8">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#FFF7ED] text-[#E0562D] font-black text-xl mb-3 shadow-sm border border-orange-200">
-            V
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-green-50 text-[#16A34A] font-black text-xl mb-3 shadow-xs border border-green-200">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src={getAssetPath('/icons/greenlearn-icon.png')} 
+              alt="GreenLearn" 
+              width={36} 
+              height={36} 
+              className="w-9 h-9 object-contain"
+            />
           </div>
           <h1 className="text-lg font-bold text-slate-900 tracking-tight">
-            {mode === 'login' ? 'Đăng nhập ViTudy' : 'Đăng ký tài khoản ViTudy'}
+            {mode === 'login' ? 'Đăng nhập GreenLearn' : 'Đăng ký tài khoản GreenLearn'}
           </h1>
           <p className="text-xs text-slate-500 mt-1">
             {mode === 'login' 
               ? 'Tiếp tục không gian học tập và đồng bộ dữ liệu đám mây' 
-              : 'Nhận ngay 50 ViToken quà tặng khởi đầu trải nghiệm AI'}
+              : 'Không gian học tập 2.5D hoàn toàn miễn phí'}
           </p>
         </div>
 
@@ -100,7 +108,7 @@ export default function AuthPage() {
               <button
                 type="button"
                 onClick={() => setMode('signup')}
-                className="font-bold text-[#E0562D] hover:underline"
+                className="font-bold text-[#16A34A] hover:underline"
               >
                 Đăng ký ngay
               </button>
@@ -111,7 +119,7 @@ export default function AuthPage() {
               <button
                 type="button"
                 onClick={() => setMode('login')}
-                className="font-bold text-[#E0562D] hover:underline"
+                className="font-bold text-[#16A34A] hover:underline"
               >
                 Đăng nhập
               </button>

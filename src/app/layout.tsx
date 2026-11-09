@@ -27,14 +27,14 @@ const lora = Lora({
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 export const metadata: Metadata = {
-  title: 'ViTudy — Bàn Học Tương Tác',
-  description: 'Bàn học tương tác, tài liệu học tập và hỗ trợ ôn thi thông minh.',
+  title: 'GreenLearn — Bàn Học Tri Thức 2.5D',
+  description: 'Không gian học tập trực quan 2.5D miễn phí, tích hợp trợ lý AI thông minh.',
   icons: {
     icon: [
-      { url: `${basePath}/icons/vitudy.png`, type: 'image/png' },
+      { url: `${basePath}/icons/greenlearn-icon.png`, type: 'image/png' },
       { url: `${basePath}/favicon.ico` },
     ],
-    apple: `${basePath}/icons/vitudy.png`,
+    apple: `${basePath}/apple-touch-icon.png`,
   },
   manifest: `${basePath}/manifest.json`,
 };
@@ -48,10 +48,10 @@ export default function RootLayout({
     <html lang="vi" className={`${openSans.variable} ${patrickHand.variable} ${lora.variable}`} suppressHydrationWarning spellCheck={false}>
       <head>
         <link rel="manifest" href={`${basePath}/manifest.json`} />
-        <link rel="icon" href={`${basePath}/icons/vitudy.png`} type="image/png" />
+        <link rel="icon" href={`${basePath}/icons/greenlearn-icon.png`} type="image/png" />
         <link rel="shortcut icon" href={`${basePath}/favicon.ico`} />
-        <link rel="apple-touch-icon" href={`${basePath}/icons/vitudy.png`} />
-        <meta name="theme-color" content="#E0562D" />
+        <link rel="apple-touch-icon" href={`${basePath}/apple-touch-icon.png`} />
+        <meta name="theme-color" content="#16A34A" />
       </head>
       <body 
         suppressHydrationWarning

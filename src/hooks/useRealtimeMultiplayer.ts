@@ -118,7 +118,7 @@ export function useRealtimeMultiplayer(spaceId: string, currentUserName = 'Bạn
         setIsConnected(true);
         channel.track({
           name: currentUserName,
-          avatarColor: isHost ? '#0f172a' : '#E0562D',
+          avatarColor: isHost ? '#0f172a' : '#16A34A',
           status: 'Đang tương tác',
           role: isHost ? 'owner' : 'editor',
           isPresenter: isHost

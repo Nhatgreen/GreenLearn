@@ -183,7 +183,7 @@ export function PaymentHistory({ onRetryPayment }: PaymentHistoryProps) {
                     <div className="font-mono font-bold text-slate-800">
                       {tx.amountVnd.toLocaleString('vi-VN')} đ
                     </div>
-                    <div className="text-[11px] font-black font-mono text-[#E0562D]">
+                    <div className="text-[11px] font-black font-mono text-[#16A34A]">
                       +{tx.tokenAmount.toLocaleString('vi-VN')} ViToken
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export function PaymentHistory({ onRetryPayment }: PaymentHistoryProps) {
                     <button
                       type="button"
                       onClick={() => onRetryPayment?.()}
-                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#E0562D] hover:bg-[#c9451e] text-white text-[11px] font-bold shadow-2xs transition-all cursor-pointer whitespace-nowrap active:scale-95"
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#16A34A] hover:bg-[#15803D] text-white text-[11px] font-bold shadow-2xs transition-all cursor-pointer whitespace-nowrap active:scale-95"
                     >
                       <span>Tiếp tục thanh toán</span>
                       <ArrowRight className="w-3 h-3" />

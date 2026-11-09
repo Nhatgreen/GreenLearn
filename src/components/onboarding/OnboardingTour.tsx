@@ -50,7 +50,8 @@ const TOUR_STEPS: TourStepConfig[] = [
   },
 ];
 
-const ONBOARDING_KEY = 'vitudy_onboarding_done';
+const ONBOARDING_KEY = 'greenlearn_onboarding_done';
+const LEGACY_ONBOARDING_KEY = 'vitudy_onboarding_done';
 
 export function OnboardingTour() {
   const { user } = useAuth();
@@ -59,7 +60,7 @@ export function OnboardingTour() {
 
   useEffect(() => {
     // Check if onboarding was already completed
-    const localDone = localStorage.getItem(ONBOARDING_KEY);
+    const localDone = localStorage.getItem(ONBOARDING_KEY) || localStorage.getItem(LEGACY_ONBOARDING_KEY);
     if (!localDone) {
       // Small delay to allow initial desk rendering
       const timer = setTimeout(() => {
@@ -124,7 +125,7 @@ export function OnboardingTour() {
       {/* Spotlight cutout if target element exists */}
       {targetRect && (
         <div
-          className="absolute rounded-xl border-2 border-[#E0562D] shadow-[0_0_0_9999px_rgba(15,23,42,0.45)] transition-all duration-300 pointer-events-none"
+          className="absolute rounded-xl border-2 border-[#16A34A] shadow-[0_0_0_9999px_rgba(15,23,42,0.45)] transition-all duration-300 pointer-events-none"
           style={{
             top: targetRect.top - 4,
             left: targetRect.left - 4,

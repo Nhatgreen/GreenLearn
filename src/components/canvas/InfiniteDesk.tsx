@@ -410,9 +410,9 @@ export function InfiniteDesk() {
 
       {/* Drop Target Overlay Highlight (Clean White Miro Styling) */}
       {isDragOver && (
-        <div className="absolute inset-0 z-50 bg-slate-900/5 border-4 border-dashed border-[#E0562D]/60 pointer-events-none flex items-center justify-center backdrop-blur-[2px]">
+        <div className="absolute inset-0 z-50 bg-slate-900/5 border-4 border-dashed border-[#16A34A]/60 pointer-events-none flex items-center justify-center backdrop-blur-[2px]">
           <div className="bg-white/95 text-slate-800 font-semibold px-6 py-3.5 rounded-2xl border border-slate-300 shadow-2xl flex items-center gap-3 backdrop-blur-md">
-            <FileUp className="w-5 h-5 text-[#E0562D]" />
+            <FileUp className="w-5 h-5 text-[#16A34A]" />
             <span>Thả tệp vào đây để mở trên bàn học</span>
           </div>
         </div>
@@ -497,12 +497,12 @@ export function InfiniteDesk() {
           data-focus-notice="true"
           className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-4 py-2 bg-white/95 text-slate-800 border border-slate-300/90 shadow-2xl rounded-full text-xs font-semibold backdrop-blur-md animate-fade-in pointer-events-auto select-none"
         >
-          <Eye className="w-4 h-4 text-[#E0562D]" />
+          <Eye className="w-4 h-4 text-[#16A34A]" />
           <span>Đang tập trung</span>
           <button
             type="button"
             onClick={exitFocusMode}
-            className="px-2.5 py-1 bg-[#E0562D] hover:bg-[#c9451e] text-white rounded-full text-[11px] font-bold transition-all shadow-xs cursor-pointer active:scale-95 ml-1"
+            className="px-2.5 py-1 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-full text-[11px] font-bold transition-all shadow-xs cursor-pointer active:scale-95 ml-1"
           >
             (nhấn để thoát)
           </button>

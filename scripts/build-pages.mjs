@@ -2,9 +2,9 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-console.log('🚀 Đang build ViTudy cho GitHub Pages (Static Export)...');
+console.log('🚀 Đang build GreenLearn cho GitHub Pages (Static Export)...');
 process.env.GITHUB_PAGES = 'true';
-process.env.NEXT_PUBLIC_BASE_PATH = '/ViTudy';
+process.env.NEXT_PUBLIC_BASE_PATH = '/GreenLearn';
 
 execSync('next build', { stdio: 'inherit', env: process.env });
 

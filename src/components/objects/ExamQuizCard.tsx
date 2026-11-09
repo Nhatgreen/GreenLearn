@@ -304,7 +304,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                 className="flex items-center justify-between border-b border-black/10 pb-2.5 cursor-grab active:cursor-grabbing"
               >
                 <div className="flex items-center gap-2 overflow-hidden flex-1 mr-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#E0562D] flex-shrink-0 shadow-xs" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A] flex-shrink-0 shadow-xs" />
                   {isEditingTitle ? (
                     <input
                       autoFocus
@@ -329,7 +329,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                       title="Bấm để đổi tên bộ đề"
                       className="flex items-center gap-1.5 group/editTitle cursor-pointer truncate"
                     >
-                      <span className="text-xs font-black text-slate-900 tracking-tight truncate group-hover/editTitle:text-[#E0562D]">
+                      <span className="text-xs font-black text-slate-900 tracking-tight truncate group-hover/editTitle:text-[#16A34A]">
                         {cleanTitle}
                       </span>
                       <Pencil className="w-2.5 h-2.5 text-slate-500 opacity-0 group-hover/editTitle:opacity-100 transition-opacity flex-shrink-0" />
@@ -345,7 +345,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
               {/* Card Center: Title, Questions Count, Badge */}
               <div className="my-auto text-center px-4 space-y-3">
                 <div className="w-14 h-14 rounded-2xl bg-white/90 border border-black/10 flex items-center justify-center mx-auto shadow-sm">
-                  <HelpCircle className="w-7 h-7 text-[#E0562D] stroke-[2.4]" />
+                  <HelpCircle className="w-7 h-7 text-[#16A34A] stroke-[2.4]" />
                 </div>
 
                 <div className="space-y-1">
@@ -359,7 +359,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
 
                 <div className="inline-flex items-center gap-2 bg-white/80 border border-black/10 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-800 shadow-2xs font-mono">
                   <span>Tổng số:</span>
-                  <span className="text-[#E0562D] font-black">{totalQuestions} câu hỏi</span>
+                  <span className="text-[#16A34A] font-black">{totalQuestions} câu hỏi</span>
                   <span>•</span>
                   <span>{exam.timeLimitMinutes || 15} phút</span>
                 </div>
@@ -370,7 +370,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                 <button
                   type="button"
                   onClick={handleStartExam}
-                  className="w-full max-w-[240px] mx-auto py-2.5 px-6 bg-[#E0562D] hover:bg-[#c9451e] active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full max-w-[240px] mx-auto py-2.5 px-6 bg-[#16A34A] hover:bg-[#15803D] active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Bắt đầu làm bài</span>
                   <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -393,7 +393,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                   <button
                     type="button"
                     onClick={handleBackToSummary}
-                    className="flex items-center gap-1.5 text-xs font-bold text-slate-800 hover:text-[#E0562D] bg-white/80 hover:bg-white px-2.5 py-1 rounded-lg border border-black/10 transition-colors cursor-pointer shadow-2xs"
+                    className="flex items-center gap-1.5 text-xs font-bold text-slate-800 hover:text-[#16A34A] bg-white/80 hover:bg-white px-2.5 py-1 rounded-lg border border-black/10 transition-colors cursor-pointer shadow-2xs"
                   >
                     <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
                     <span>Quay lại tổng kết</span>
@@ -437,8 +437,8 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                         badgeStyle = 'bg-[#DC2626] text-white border-[#DC2626]';
                       }
                     } else if (isChosen) {
-                      btnStyle = 'bg-white border-[#E0562D] text-slate-900 font-bold ring-2 ring-[#E0562D]/30 shadow-xs';
-                      badgeStyle = 'bg-[#E0562D] text-white border-[#E0562D]';
+                      btnStyle = 'bg-white border-[#16A34A] text-slate-900 font-bold ring-2 ring-[#16A34A]/30 shadow-xs';
+                      badgeStyle = 'bg-[#16A34A] text-white border-[#16A34A]';
                     }
 
                     return (
@@ -479,7 +479,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                 {/* Explanation Box when confirmed */}
                 {(isCurrentConfirmed || exam.isGraded) && currentQuestion.explanation && (
                   <div className="bg-white/90 p-2.5 rounded-xl border border-black/10 text-[11px] text-slate-700 leading-relaxed shadow-2xs animate-fade-in">
-                    <span className="font-bold text-[#E0562D] mr-1">Giải thích:</span>
+                    <span className="font-bold text-[#16A34A] mr-1">Giải thích:</span>
                     <span>{currentQuestion.explanation}</span>
                   </div>
                 )}
@@ -505,7 +505,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                       type="button"
                       disabled={currentSelectedAnswer === undefined}
                       onClick={handleConfirmAnswer}
-                      className="px-4 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95"
+                      className="px-4 py-1.5 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95"
                     >
                       Xác nhận
                     </button>
@@ -513,7 +513,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                     <button
                       type="button"
                       onClick={handleNextQuestion}
-                      className="px-4 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 flex items-center gap-1"
+                      className="px-4 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer active:scale-95 flex items-center gap-1"
                     >
                       <span>{currentQuestionIndex < totalQuestions - 1 ? 'Câu tiếp theo' : 'Hoàn thành'}</span>
                       <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -555,7 +555,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                         cellStyle = 'bg-rose-600 text-white font-bold border-rose-700 shadow-2xs';
                       }
                     } else if (isAnswered) {
-                      cellStyle = 'bg-orange-100 text-[#E0562D] font-bold border-orange-300';
+                      cellStyle = 'bg-orange-100 text-[#16A34A] font-bold border-green-300';
                     }
 
                     return (
@@ -597,7 +597,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                 className="border-b border-black/10 pb-2 flex items-center justify-between cursor-grab active:cursor-grabbing"
               >
                 <div className="flex items-center gap-1.5">
-                  <Award className="w-4 h-4 text-[#E0562D]" />
+                  <Award className="w-4 h-4 text-[#16A34A]" />
                   <h4 className="text-xs font-black text-slate-900 uppercase tracking-wide">
                     Kết Quả Luyện Tập
                   </h4>
@@ -609,7 +609,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
 
               {/* Top Center: Prominent Big Score */}
               <div className="text-center py-2 space-y-1">
-                <div className="text-4xl font-black font-mono text-[#E0562D] tracking-tight">
+                <div className="text-4xl font-black font-mono text-[#16A34A] tracking-tight">
                   {score10Scale} <span className="text-lg font-bold text-slate-700">/ 10</span>
                 </div>
                 <div className="text-xs font-bold text-slate-800">

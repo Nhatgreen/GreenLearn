@@ -13,15 +13,15 @@ export function getSupabaseConfig(): { url: string; anonKey: string; isConfigure
 
   // Đọc từ localStorage nếu người dùng đã cấu hình riêng
   if (typeof window !== 'undefined') {
-    const localUrl = localStorage.getItem('vitudy_supabase_url');
-    const localKey = localStorage.getItem('vitudy_supabase_anon_key');
+    const localUrl = localStorage.getItem('greenlearn_supabase_url') || localStorage.getItem('vitudy_supabase_url');
+    const localKey = localStorage.getItem('greenlearn_supabase_anon_key') || localStorage.getItem('vitudy_supabase_anon_key');
     if (localUrl && localKey) {
       url = localUrl;
       anonKey = localKey;
     }
   }
 
-  // Sử dụng cấu hình mặc định của ViTudy nếu biến môi trường chưa có
+  // Sử dụng cấu hình mặc định của GreenLearn nếu biến môi trường chưa có
   if (!url || !anonKey || !url.startsWith('https://') || url.includes('placeholder')) {
     url = DEFAULT_SUPABASE_URL;
     anonKey = DEFAULT_SUPABASE_ANON_KEY;
@@ -72,14 +72,16 @@ export function getSupabase(): SupabaseClient | null {
 
 export function saveSupabaseConfig(url: string, anonKey: string) {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('vitudy_supabase_url', url.trim());
-    localStorage.setItem('vitudy_supabase_anon_key', anonKey.trim());
+    localStorage.setItem('greenlearn_supabase_url', url.trim());
+    localStorage.setItem('greenlearn_supabase_anon_key', anonKey.trim());
     cachedClient = null;
   }
 }
 
 export function clearSupabaseConfig() {
   if (typeof window !== 'undefined') {
+    localStorage.removeItem('greenlearn_supabase_url');
+    localStorage.removeItem('greenlearn_supabase_anon_key');
     localStorage.removeItem('vitudy_supabase_url');
     localStorage.removeItem('vitudy_supabase_anon_key');
     cachedClient = null;

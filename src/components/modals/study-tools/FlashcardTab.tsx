@@ -108,7 +108,7 @@ export function FlashcardTab({ fullText, documentTitle }: FlashcardTabProps) {
               onClick={handleLoadDueCards}
               className="px-3.5 py-1.5 border border-slate-300 hover:bg-slate-100 text-slate-700 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <CalendarCheck className="w-3.5 h-3.5 text-[#E0562D]" />
+              <CalendarCheck className="w-3.5 h-3.5 text-[#16A34A]" />
               <span>Ôn tập hôm nay</span>
             </button>
           )}
@@ -123,7 +123,7 @@ export function FlashcardTab({ fullText, documentTitle }: FlashcardTabProps) {
       </div>
 
       {sm2Notice && (
-        <div className="mt-3 p-2.5 bg-orange-50 border border-orange-200 rounded-xl text-xs text-[#9A3412] font-semibold text-center animate-fade-in">
+        <div className="mt-3 p-2.5 bg-green-50 border border-green-200 rounded-xl text-xs text-[#166534] font-semibold text-center animate-fade-in">
           {sm2Notice}
         </div>
       )}
@@ -187,7 +187,7 @@ export function FlashcardTab({ fullText, documentTitle }: FlashcardTabProps) {
                 <button
                   type="button"
                   onClick={() => handleRateCard(5)}
-                  className="flex-1 py-1.5 px-2 rounded-xl border border-orange-300 bg-[#FFF7ED] hover:bg-orange-100 text-[11px] font-bold text-[#E0562D] cursor-pointer transition-colors shadow-2xs"
+                  className="flex-1 py-1.5 px-2 rounded-xl border border-green-300 bg-[#F0FDF4] hover:bg-green-100 text-[11px] font-bold text-[#16A34A] cursor-pointer transition-colors shadow-2xs"
                   title="Nhớ hoàn hảo"
                 >
                   Dễ

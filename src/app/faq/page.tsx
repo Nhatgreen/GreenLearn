@@ -175,7 +175,7 @@ const FAQ_LIST: FaqItem[] = [
           <li>Bạn sửa đổi nội dung chuyển khoản khiến hệ thống không đối soát tự động được mã đơn.</li>
           <li>Hệ thống Napas liên ngân hàng đang trong kỳ đối soát bảo trì đêm.</li>
         </ul>
-        <div className="p-3.5 bg-orange-50 border border-orange-200/80 rounded-xl text-xs text-[#9A3412] leading-relaxed">
+        <div className="p-3.5 bg-green-50 border border-green-200/80 rounded-xl text-xs text-[#166534] leading-relaxed">
           <strong>Cách xử lý ngay:</strong> Bạn hãy gửi email đến <a href="mailto:support@vitudy.edu.vn" className="underline font-bold">support@vitudy.edu.vn</a> kèm ảnh chụp biên lai giao dịch thành công. Ban quản trị sẽ tra soát đối soát Napas và cộng bù ViToken cho bạn trong vòng tối đa 15 phút.
         </div>
       </div>
@@ -351,7 +351,7 @@ function FaqContent() {
   useEffect(() => {
     let source = fromParam;
     if (!source && typeof window !== 'undefined') {
-      source = sessionStorage.getItem('vitudy_last_view');
+      source = sessionStorage.getItem('greenlearn_last_view') || sessionStorage.getItem('vitudy_last_view');
     }
     if (source === 'home') {
       setBackTarget({ href: '/?view=home', label: 'Về Trang Chủ' });
@@ -432,21 +432,21 @@ function FaqContent() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link
             href={backTarget.href}
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-[#E0562D] transition-colors py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-slate-50"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-[#16A34A] transition-colors py-1.5 px-2.5 -ml-2.5 rounded-lg hover:bg-slate-50"
           >
             <ArrowLeft className="w-4 h-4 text-slate-500" />
             <span>{backTarget.label}</span>
           </Link>
           <div className="flex items-center gap-2.5">
             <img
-              src={getAssetPath('/icons/vitudy.png')}
-              alt="ViTudy"
+              src={getAssetPath('/icons/greenlearn-icon.png')}
+              alt="GreenLearn"
               width={24}
               height={24}
               className="w-6 h-6 object-contain rounded-md"
               style={{ width: '24px', height: '24px' }}
             />
-            <span className="font-bold text-sm text-slate-900 tracking-tight">Hỏi Đáp ViTudy</span>
+            <span className="font-bold text-sm text-slate-900 tracking-tight">Hỏi Đáp GreenLearn</span>
           </div>
         </div>
       </header>
@@ -473,7 +473,7 @@ function FaqContent() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm câu hỏi, từ khóa (VD: VietQR, SM-2, hoàn tiền, flashcard, bản quyền...)"
-            className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E0562D]/20 focus:border-[#E0562D] focus:bg-white transition-all shadow-2xs"
+            className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#16A34A]/20 focus:border-[#16A34A] focus:bg-white transition-all shadow-2xs"
           />
           {searchQuery && (
             <button
@@ -564,7 +564,7 @@ function FaqContent() {
                   key={item.id}
                   className={`rounded-2xl transition-all border ${
                     isOpen
-                      ? 'border-[#E0562D] bg-white shadow-sm ring-1 ring-[#E0562D]/15'
+                      ? 'border-[#16A34A] bg-white shadow-sm ring-1 ring-[#16A34A]/15'
                       : 'border-slate-200/90 bg-white hover:border-slate-300 shadow-2xs'
                   }`}
                 >
@@ -572,11 +572,11 @@ function FaqContent() {
                     type="button"
                     onClick={() => toggleItem(item.id)}
                     aria-expanded={isOpen}
-                    className="w-full text-left p-4 sm:p-5 flex items-start sm:items-center justify-between gap-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E0562D] rounded-2xl min-h-[52px]"
+                    className="w-full text-left p-4 sm:p-5 flex items-start sm:items-center justify-between gap-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#16A34A] rounded-2xl min-h-[52px]"
                   >
                     <div className="space-y-1.5 pr-2 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold text-[#9A3412] bg-[#FFF7ED] border border-[#FFEDD5] px-2.5 py-0.5 rounded-md uppercase tracking-wider">
+                        <span className="text-[11px] font-bold text-[#166534] bg-[#F0FDF4] border border-[#BBF7D0] px-2.5 py-0.5 rounded-md uppercase tracking-wider">
                           {item.categoryLabel}
                         </span>
                       </div>
@@ -603,7 +603,7 @@ function FaqContent() {
                       {/* Icon mũi tên xoay */}
                       <div
                         className={`w-8 h-8 rounded-lg flex items-center justify-center transition-transform ${
-                          isOpen ? 'rotate-180 bg-orange-100 text-[#E0562D]' : 'bg-slate-100 text-slate-500'
+                          isOpen ? 'rotate-180 bg-green-100 text-[#16A34A]' : 'bg-slate-100 text-slate-500'
                         }`}
                       >
                         <ChevronDown className="w-4 h-4 stroke-[2.4]" />
@@ -674,7 +674,7 @@ function FaqContent() {
             <div className="flex flex-wrap items-center gap-3">
               <a
                 href="mailto:support@vitudy.edu.vn"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
               >
                 <Mail className="w-4 h-4" />
                 <span>Liên hệ hỗ trợ: support@vitudy.edu.vn</span>
@@ -707,7 +707,7 @@ export default function FaqPage() {
     <Suspense
       fallback={
         <div className="w-full min-h-screen bg-white flex items-center justify-center">
-          <div className="w-6 h-6 border-2 border-slate-300 border-t-[#E0562D] rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-slate-300 border-t-[#16A34A] rounded-full animate-spin" />
         </div>
       }
     >

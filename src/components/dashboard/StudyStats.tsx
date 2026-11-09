@@ -28,7 +28,7 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
         <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Thời gian học tuần</span>
-            <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
+            <div className="w-8 h-8 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
               <Clock className="w-4 h-4" />
             </div>
           </div>
@@ -44,8 +44,8 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
         <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Chuỗi học tập</span>
-            <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
-              <Flame className="w-4 h-4 text-[#E0562D] fill-[#E0562D]" />
+            <div className="w-8 h-8 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
+              <Flame className="w-4 h-4 text-[#16A34A] fill-[#16A34A]" />
             </div>
           </div>
           <div className="flex items-baseline gap-1.5">
@@ -82,7 +82,7 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
             ) : (
               <Link
                 href="/?view=desk"
-                className="text-[#E0562D] font-bold hover:underline flex items-center gap-1"
+                className="text-[#16A34A] font-bold hover:underline flex items-center gap-1"
               >
                 <span>Làm bài thi thử ngay</span>
                 <ArrowRight className="w-3 h-3" />
@@ -117,9 +117,9 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
                     <div
                       className={`w-full rounded-md transition-all cursor-pointer relative group ${
                         isToday
-                          ? 'bg-[#E0562D] shadow-xs'
+                          ? 'bg-[#16A34A] shadow-xs'
                           : item.minutes > 0
-                          ? 'bg-orange-200 hover:bg-orange-300'
+                          ? 'bg-green-200 hover:bg-green-300'
                           : 'bg-slate-100 hover:bg-slate-200'
                       }`}
                       style={{ height: `${heightPercent}%` }}
@@ -130,7 +130,7 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
                       </div>
                     </div>
                   </div>
-                  <span className={`text-[10px] font-bold font-mono ${isToday ? 'text-[#E0562D]' : 'text-slate-400'}`}>
+                  <span className={`text-[10px] font-bold font-mono ${isToday ? 'text-[#16A34A]' : 'text-slate-400'}`}>
                     {item.day}
                   </span>
                 </div>
@@ -145,7 +145,7 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
         {/* Mục tiêu học hôm nay */}
         <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D] shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A] shrink-0">
               <Target className="w-5 h-5 stroke-[2.4]" />
             </div>
             <div>
@@ -157,7 +157,7 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
           </div>
           <div className="w-20 bg-slate-100 h-2.5 rounded-full overflow-hidden shrink-0">
             <div 
-              className="bg-[#E0562D] h-full rounded-full transition-all duration-500"
+              className="bg-[#16A34A] h-full rounded-full transition-all duration-500"
               style={{ width: `${goalProgress}%` }}
             />
           </div>

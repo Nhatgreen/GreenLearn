@@ -53,12 +53,12 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
       setInitialDisplayName(profile.display_name);
     }
     if (typeof window !== 'undefined') {
-      const storedNick = localStorage.getItem('vitudy_user_nickname') || '';
+      const storedNick = localStorage.getItem('greenlearn_user_nickname') || localStorage.getItem('vitudy_user_nickname') || '';
       setNickname(storedNick);
       setInitialNickname(storedNick);
 
-      const storedOpenAi = localStorage.getItem('vitudy_byok_openai') || '';
-      const storedGemini = localStorage.getItem('vitudy_byok_gemini') || '';
+      const storedOpenAi = localStorage.getItem('greenlearn_byok_openai') || localStorage.getItem('vitudy_byok_openai') || '';
+      const storedGemini = localStorage.getItem('greenlearn_byok_gemini') || localStorage.getItem('vitudy_byok_gemini') || '';
       setOpenAiKey(storedOpenAi);
       setInitialOpenAi(storedOpenAi);
       setGeminiKey(storedGemini);
@@ -89,7 +89,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
 
     // Lưu nickname vào LocalStorage để đồng bộ với lời chào trang chủ
     if (typeof window !== 'undefined') {
-      localStorage.setItem('vitudy_user_nickname', nickname.trim());
+      localStorage.setItem('greenlearn_user_nickname', nickname.trim());
       setInitialNickname(nickname.trim());
     }
 
@@ -124,8 +124,8 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
   const handleSaveByok = (e: React.FormEvent) => {
     e.preventDefault();
     if (typeof window !== 'undefined') {
-      localStorage.setItem('vitudy_byok_openai', openAiKey.trim());
-      localStorage.setItem('vitudy_byok_gemini', geminiKey.trim());
+      localStorage.setItem('greenlearn_byok_openai', openAiKey.trim());
+      localStorage.setItem('greenlearn_byok_gemini', geminiKey.trim());
       setInitialOpenAi(openAiKey.trim());
       setInitialGemini(geminiKey.trim());
       setByokSaved(true);
@@ -136,10 +136,12 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
   const handleClearKey = (provider: 'openai' | 'gemini') => {
     if (typeof window !== 'undefined') {
       if (provider === 'openai') {
+        localStorage.removeItem('greenlearn_byok_openai');
         localStorage.removeItem('vitudy_byok_openai');
         setOpenAiKey('');
         setInitialOpenAi('');
       } else {
+        localStorage.removeItem('greenlearn_byok_gemini');
         localStorage.removeItem('vitudy_byok_gemini');
         setGeminiKey('');
         setInitialGemini('');
@@ -229,7 +231,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="Nhập họ và tên của bạn"
-              className="w-full max-w-md px-3.5 py-2.5 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E0562D]/20 focus:border-[#E0562D] transition-all"
+              className="w-full max-w-md px-3.5 py-2.5 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#16A34A]/20 focus:border-[#16A34A] transition-all"
             />
           </div>
 
@@ -244,7 +246,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="VD: Thành (để hiển thị &quot;Ôn bài thôi, Thành&quot;)"
-              className="w-full max-w-md px-3.5 py-2.5 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E0562D]/20 focus:border-[#E0562D] transition-all"
+              className="w-full max-w-md px-3.5 py-2.5 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#16A34A]/20 focus:border-[#16A34A] transition-all"
             />
           </div>
 
@@ -259,7 +261,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
           <button
             type="submit"
             disabled={isUpdatingName || !hasNameChanged}
-            className="px-4 py-2.5 bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer active:scale-95"
+            className="px-4 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer active:scale-95"
           >
             {isUpdatingName ? (
               <>
@@ -287,7 +289,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
           </div>
           <Link
             href="/?view=desk"
-            className="text-[11px] font-bold text-[#E0562D] hover:underline inline-flex items-center gap-1"
+            className="text-[11px] font-bold text-[#16A34A] hover:underline inline-flex items-center gap-1"
             title="Mở giao diện Cài đặt AI đầy đủ trên bàn học"
           >
             <span>Mở Cài đặt kết nối AI</span>
@@ -295,7 +297,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
           </Link>
         </div>
         <p className="text-xs text-slate-500 mb-5 leading-relaxed">
-          Khóa API cá nhân chỉ được lưu trữ cục bộ 100% trong trình duyệt máy của bạn (không gửi về máy chủ ViTudy). Khi sử dụng khóa riêng, bạn được miễn phí 0 ViToken cho mọi lượt hỏi bài.
+          Khóa API cá nhân chỉ được lưu trữ cục bộ 100% trong trình duyệt máy của bạn (không gửi về máy chủ GreenLearn). Khi sử dụng khóa riêng, bạn được miễn phí 0 ViToken cho mọi lượt hỏi bài.
         </p>
 
         <form onSubmit={handleSaveByok} className="space-y-4 max-w-lg">
@@ -324,7 +326,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
                   value={openAiKey}
                   onChange={(e) => setOpenAiKey(e.target.value)}
                   placeholder="sk-proj-..."
-                  className="w-full px-3 py-2 pr-9 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E0562D]/20 focus:border-[#E0562D] font-mono transition-colors"
+                  className="w-full px-3 py-2 pr-9 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#16A34A]/20 focus:border-[#16A34A] font-mono transition-colors"
                 />
                 <button
                   type="button"
@@ -371,7 +373,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
                   value={geminiKey}
                   onChange={(e) => setGeminiKey(e.target.value)}
                   placeholder="AIzaSy..."
-                  className="w-full px-3 py-2 pr-9 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E0562D]/20 focus:border-[#E0562D] font-mono transition-colors"
+                  className="w-full px-3 py-2 pr-9 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#16A34A]/20 focus:border-[#16A34A] font-mono transition-colors"
                 />
                 <button
                   type="button"

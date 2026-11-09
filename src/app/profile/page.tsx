@@ -25,7 +25,7 @@ function ProfilePageContent() {
     }
     // Fallback: check last active view saved in sessionStorage
     try {
-      const stored = sessionStorage.getItem('vitudy_last_view');
+      const stored = sessionStorage.getItem('greenlearn_last_view') || sessionStorage.getItem('vitudy_last_view');
       if (stored === 'desk' || stored === 'home') {
         setReturnDestination(stored);
       }
@@ -61,7 +61,7 @@ function ProfilePageContent() {
   if (status === 'loading' || !user) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#E0562D]" />
+        <Loader2 className="w-6 h-6 animate-spin text-[#16A34A]" />
       </div>
     );
   }
@@ -100,7 +100,7 @@ function ProfilePageContent() {
         {/* 3. Payment History Card */}
         <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
+            <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
               <CreditCard className="w-5 h-5" />
             </div>
             <div>
@@ -121,7 +121,7 @@ function ProfilePageContent() {
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-100 flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-[#E0562D]" /></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-slate-100 flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-[#16A34A]" /></div>}>
       <ProfilePageContent />
     </Suspense>
   );

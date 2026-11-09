@@ -23,18 +23,18 @@ export function GuestBanner({ user }: GuestBannerProps) {
     >
       <div className="max-w-5xl mx-auto flex items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-6 h-6 rounded-md bg-[#FFF7ED] text-[#E0562D] flex items-center justify-center font-bold flex-shrink-0">
+          <div className="w-6 h-6 rounded-md bg-[#F0FDF4] text-[#16A34A] flex items-center justify-center font-bold flex-shrink-0">
             <Cloud className="w-3.5 h-3.5" />
           </div>
           <p className="truncate font-medium text-slate-200">
-            <span className="font-bold text-white">Chế độ trải nghiệm khách:</span> Đăng nhập để lưu bàn học lên đám mây và nhận 50 ViToken miễn phí.
+            <span className="font-bold text-white">Chế độ trải nghiệm khách:</span> Đăng nhập để lưu bàn học lên đám mây và đồng bộ đa thiết bị miễn phí.
           </p>
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
           <Link
             href="/auth"
-            className="px-3 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
           >
             <LogIn className="w-3.5 h-3.5" />
             <span>Đăng nhập</span>

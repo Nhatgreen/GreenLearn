@@ -388,7 +388,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     }
 
     try {
-      const saved = localStorage.getItem('vitudy_spaces');
+      const saved = localStorage.getItem('greenlearn_spaces') || localStorage.getItem('vitudy_spaces');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -416,7 +416,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   // Save spaces to localStorage & Supabase Cloud (debounce 500ms)
   useEffect(() => {
     try {
-      localStorage.setItem('vitudy_spaces', JSON.stringify(spaces));
+      localStorage.setItem('greenlearn_spaces', JSON.stringify(spaces));
     } catch {
       // ignore
     }

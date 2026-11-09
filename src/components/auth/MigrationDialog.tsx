@@ -44,7 +44,7 @@ export function MigrationDialog() {
 
   const handleDismiss = () => {
     if (user?.id) {
-      localStorage.setItem(`vitudy_migrated_${user.id}`, 'dismissed');
+      localStorage.setItem(`greenlearn_migrated_${user.id}`, 'dismissed');
     }
     setIsOpen(false);
   };
@@ -61,7 +61,7 @@ export function MigrationDialog() {
           <X className="w-4 h-4" />
         </button>
 
-        <div className="w-10 h-10 rounded-xl bg-orange-50 text-[#E0562D] flex items-center justify-center mb-4">
+        <div className="w-10 h-10 rounded-xl bg-green-50 text-[#16A34A] flex items-center justify-center mb-4">
           <CloudUpload className="w-5 h-5" />
         </div>
 
@@ -90,7 +90,7 @@ export function MigrationDialog() {
               type="button"
               onClick={handleMigrate}
               disabled={isMigrating}
-              className="flex-1 py-2 text-xs font-bold text-white bg-[#E0562D] hover:bg-[#c9451e] rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-2 text-xs font-bold text-white bg-[#16A34A] hover:bg-[#15803D] rounded-lg shadow-sm transition-colors flex items-center justify-center gap-1.5"
             >
               {isMigrating ? (
                 <>

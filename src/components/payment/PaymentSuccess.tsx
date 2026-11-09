@@ -36,7 +36,7 @@ export function PaymentSuccess({
       <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 max-w-sm mx-auto space-y-2 text-xs">
         <div className="flex items-center justify-between">
           <span className="text-slate-500">Số ViToken nhận được:</span>
-          <div className="flex items-center gap-1.5 font-black text-[#E0562D] font-mono text-sm">
+          <div className="flex items-center gap-1.5 font-black text-[#16A34A] font-mono text-sm">
             <Sparkles className="w-3.5 h-3.5" />
             <span>+{tokenAmount.toLocaleString()} V</span>
           </div>
@@ -68,7 +68,7 @@ export function PaymentSuccess({
         <button
           type="button"
           onClick={onClose}
-          className="px-5 py-2.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+          className="px-5 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
         >
           <span>Tiếp tục học tập</span>
           <ArrowRight className="w-3.5 h-3.5" />

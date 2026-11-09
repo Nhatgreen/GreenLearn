@@ -54,7 +54,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   // Lấy tên gọi ngắn gọn cho lời chào (Ví dụ "Thành Nam Lê Võ" -> "Thành", hoặc ưu tiên nickname đã lưu)
   const getShortGreetingName = (fullName: string) => {
     if (typeof window !== 'undefined') {
-      const storedNick = localStorage.getItem('vitudy_user_nickname');
+      const storedNick = localStorage.getItem('greenlearn_user_nickname') || localStorage.getItem('vitudy_user_nickname');
       if (storedNick && storedNick.trim()) return storedNick.trim();
     }
     if (!fullName) return 'Bạn';
@@ -135,7 +135,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   const displayedSpaces = showAllSpaces ? filteredSpaces : filteredSpaces.slice(0, 5);
 
   return (
-    <div className="w-full min-h-screen bg-[#faf8f5] text-stone-900 flex font-sans selection:bg-orange-100 selection:text-[#E0562D]">
+    <div className="w-full min-h-screen bg-[#faf8f5] text-stone-900 flex font-sans selection:bg-green-100 selection:text-[#16A34A]">
       {/* ================= LEFT SIDEBAR ================= */}
       <aside className="w-64 flex-shrink-0 border-r border-[#ece7e1] bg-[#faf8f5] p-5 flex flex-col justify-between min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar">
         <div className="flex flex-col">
@@ -143,15 +143,16 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           <div className="flex items-center gap-2.5 mb-5 select-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={getAssetPath('/icons/vitudy.png')}
-              alt="ViTudy"
+              src={getAssetPath('/icons/greenlearn-icon.png')}
+              alt="GreenLearn"
               width={32}
               height={32}
               className="w-8 h-8 rounded-xl object-contain shadow-xs flex-shrink-0"
               style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px' }}
             />
-            <span className="text-lg font-black tracking-tight text-[#E0562D] select-none leading-none">
-              ViTudy
+            <span className="text-lg font-black tracking-tight select-none leading-none">
+              <span className="text-[#16A34A]">Green</span>
+              <span className="text-[#242D3D]">Learn</span>
             </span>
           </div>
 
@@ -249,7 +250,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <span className="text-[11px] font-bold text-[#B8431A]">1 / 4 phiên</span>
             </div>
             <div className="w-full h-1.5 bg-stone-200/90 rounded-full overflow-hidden mb-1.5">
-              <div className="h-full bg-[#E0562D] rounded-full transition-all" style={{ width: '25%' }} />
+              <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: '25%' }} />
             </div>
             <p className="text-[10px] text-stone-600 leading-tight">
               Hoàn thành 25 phút Pomodoro để duy trì chuỗi học.
@@ -277,7 +278,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <button
               type="button"
               onClick={() => setIsTopUpOpen(true)}
-              className="w-full mt-3 py-2.5 bg-[#E0562D] hover:bg-[#c9451e] text-white font-bold text-xs rounded-xl shadow-xs transition-colors text-center cursor-pointer active:scale-98"
+              className="w-full mt-3 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs rounded-xl shadow-xs transition-colors text-center cursor-pointer active:scale-98"
             >
               Nạp ViToken
             </button>
@@ -306,7 +307,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-2 active:scale-98 ${
                 isClaimedToday 
                   ? 'bg-emerald-50/90 border border-emerald-200 text-emerald-800'
-                  : 'bg-white border border-stone-200/90 text-stone-800 hover:border-[#E0562D] hover:shadow-xs'
+                  : 'bg-white border border-stone-200/90 text-stone-800 hover:border-[#16A34A] hover:shadow-xs'
               }`}
             >
               {isClaimedToday ? (
@@ -314,10 +315,10 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               ) : (
                 <div className="flex items-center gap-1.5">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0562D] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E0562D]"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]"></span>
                   </span>
-                  <Flame className="w-3.5 h-3.5 text-[#E0562D] fill-[#E0562D]" />
+                  <Flame className="w-3.5 h-3.5 text-[#16A34A] fill-[#16A34A]" />
                 </div>
               )}
               <span>Chuỗi {streakDays || 1} ngày · {isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}</span>
@@ -327,7 +328,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <Link
               href="/profile?from=home"
               title={`Hồ sơ cá nhân (${userName})`}
-              className="w-8.5 h-8.5 rounded-full border border-stone-300 hover:border-[#E0562D] bg-white shadow-2xs overflow-hidden flex items-center justify-center transition-all cursor-pointer active:scale-95"
+              className="w-8.5 h-8.5 rounded-full border border-stone-300 hover:border-[#16A34A] bg-white shadow-2xs overflow-hidden flex items-center justify-center transition-all cursor-pointer active:scale-95"
             >
               {profile?.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -337,7 +338,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-[#FFF7ED] text-[#B8431A] font-bold text-xs flex items-center justify-center select-none">
+                <div className="w-full h-full bg-[#F0FDF4] text-[#B8431A] font-bold text-xs flex items-center justify-center select-none">
                   {shortName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -347,7 +348,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
         {/* Thông báo điểm danh nổi ngắn */}
         {claimFeedback && (
-          <div className="mb-4 p-3 rounded-xl bg-orange-50 border border-orange-200 text-xs font-semibold text-[#B8431A] flex items-center justify-between animate-fade-in shadow-xs">
+          <div className="mb-4 p-3 rounded-xl bg-green-50 border border-green-200 text-xs font-semibold text-[#B8431A] flex items-center justify-between animate-fade-in shadow-xs">
             <span>{claimFeedback}</span>
             <button onClick={() => setClaimFeedback(null)} className="text-stone-400 hover:text-stone-600 font-bold px-1.5">✕</button>
           </div>
@@ -384,10 +385,10 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             {/* Card 1: Bàn học trống (Viền trung tính, chỉ hiện cam khi hover/focus) */}
             <div
               onClick={() => handleSelectTemplate('blank')}
-              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#E0562D] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#E0562D]"
+              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
             >
-              <div className="aspect-[16/10] w-full rounded-xl border-2 border-dashed border-stone-300 flex flex-col items-center justify-center bg-stone-50/70 group-hover:border-[#E0562D]/60 transition-colors gap-1.5">
-                <Plus className="w-7 h-7 text-stone-400 group-hover:text-[#E0562D] stroke-[1.8] transition-colors" />
+              <div className="aspect-[16/10] w-full rounded-xl border-2 border-dashed border-stone-300 flex flex-col items-center justify-center bg-stone-50/70 group-hover:border-[#16A34A]/60 transition-colors gap-1.5">
+                <Plus className="w-7 h-7 text-stone-400 group-hover:text-[#16A34A] stroke-[1.8] transition-colors" />
                 <span className="text-[11px] font-medium text-stone-600">Thả tài liệu vào đây</span>
               </div>
               <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#B8431A] transition-colors">
@@ -401,7 +402,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             {/* Card 2: Ôn thi giữa kỳ */}
             <div
               onClick={() => handleSelectTemplate('midterm')}
-              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#E0562D] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#E0562D]"
+              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
             >
               <div className="aspect-[16/10] w-full rounded-xl bg-[#eef1f5] p-3 flex items-center justify-center gap-3 relative overflow-hidden group-hover:bg-[#e8ebf0] transition-colors">
                 {/* Cuốn sách nâu lớn rõ chi tiết */}
@@ -435,7 +436,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             {/* Card 3: Giáo trình + đề thi */}
             <div
               onClick={() => handleSelectTemplate('curriculum_exam')}
-              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#E0562D] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#E0562D]"
+              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
             >
               <div className="aspect-[16/10] w-full rounded-xl bg-[#eef1f5] p-3 flex items-center justify-center gap-3 relative overflow-hidden group-hover:bg-[#e8ebf0] transition-colors">
                 {/* 2 Tờ tài liệu A4 song song */}
@@ -464,7 +465,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             {/* Card 4: Học nhóm (Vẽ lại 2 con trỏ chuột kèm tên trực quan) */}
             <div
               onClick={() => handleSelectTemplate('group_study')}
-              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#E0562D] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#E0562D]"
+              className="bg-white border border-stone-200/90 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
             >
               <div className="aspect-[16/10] w-full rounded-xl bg-[#eef1f5] p-3 flex items-center justify-center relative overflow-hidden group-hover:bg-[#e8ebf0] transition-colors">
                 {/* Bìa sổ chung ở trung tâm */}
@@ -476,8 +477,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
                 {/* Con trỏ chuột 1: Màu Cam ViT kèm nhãn tên "Thành" */}
                 <div className="absolute top-2.5 left-4 flex items-start gap-0.5">
-                  <MousePointer2 className="w-4 h-4 text-[#E0562D] fill-[#E0562D] -rotate-12 drop-shadow-xs" />
-                  <span className="px-1.5 py-0.5 bg-[#E0562D] text-white text-[9px] font-bold rounded-md shadow-xs leading-none">
+                  <MousePointer2 className="w-4 h-4 text-[#16A34A] fill-[#16A34A] -rotate-12 drop-shadow-xs" />
+                  <span className="px-1.5 py-0.5 bg-[#16A34A] text-white text-[9px] font-bold rounded-md shadow-xs leading-none">
                     {shortName}
                   </span>
                 </div>
@@ -508,7 +509,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <button
                 type="button"
                 onClick={() => setShowAllSpaces(!showAllSpaces)}
-                className="text-xs font-bold text-[#B8431A] hover:text-[#9A3412] hover:underline cursor-pointer"
+                className="text-xs font-bold text-[#B8431A] hover:text-[#166534] hover:underline cursor-pointer"
               >
                 {showAllSpaces ? 'Thu gọn' : 'Xem tất cả'}
               </button>
@@ -541,7 +542,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                       {/* Name & Subtitle kèm Thumbnail nhỏ 56x40px */}
                       <div className="col-span-6 pr-3 flex items-center gap-3">
                         {/* Ảnh thu nhỏ bàn học 56x40px */}
-                        <div className="w-14 h-10 rounded-lg bg-[#f1ede6] border border-stone-300/80 shadow-2xs flex-shrink-0 flex items-center justify-center relative overflow-hidden group-hover:border-[#E0562D]/60 transition-colors">
+                        <div className="w-14 h-10 rounded-lg bg-[#f1ede6] border border-stone-300/80 shadow-2xs flex-shrink-0 flex items-center justify-center relative overflow-hidden group-hover:border-[#16A34A]/60 transition-colors">
                           {idx % 2 === 0 ? (
                             <div className="w-7 h-5 rounded-xs border border-[#5c3920] bg-white flex items-center justify-center">
                               <div className="w-2 h-2 rounded-2xs bg-[#fef08a]" />

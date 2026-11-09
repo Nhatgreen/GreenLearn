@@ -55,8 +55,8 @@ export function StudyToolsModal({ item, isOpen, onClose, isPaper: explicitIsPape
           {/* Header Bar: Gọn gàng [Icon] STudy kèm nút đóng X */}
           <div className="px-4 py-2.5 border-b border-slate-200 flex items-center justify-between bg-white text-slate-900">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center text-[#E0562D] border border-orange-200">
-                <Sparkles className="w-4 h-4 text-[#E0562D] stroke-[2.4]" />
+              <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center text-[#16A34A] border border-green-200">
+                <Sparkles className="w-4 h-4 text-[#16A34A] stroke-[2.4]" />
               </div>
               <h3 className="text-sm font-bold text-slate-900">
                 STudy
@@ -78,7 +78,7 @@ export function StudyToolsModal({ item, isOpen, onClose, isPaper: explicitIsPape
               onClick={() => setActiveTab('summary')}
               className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold border-b-2 transition-all cursor-pointer ${
                 activeTab === 'summary'
-                  ? 'border-[#E0562D] text-[#E0562D] bg-white'
+                  ? 'border-[#16A34A] text-[#16A34A] bg-white'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -90,7 +90,7 @@ export function StudyToolsModal({ item, isOpen, onClose, isPaper: explicitIsPape
               onClick={() => setActiveTab('quiz')}
               className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold border-b-2 transition-all cursor-pointer ${
                 activeTab === 'quiz'
-                  ? 'border-[#E0562D] text-[#E0562D] bg-white'
+                  ? 'border-[#16A34A] text-[#16A34A] bg-white'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
               }`}
             >

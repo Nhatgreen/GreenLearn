@@ -332,7 +332,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
       >
         <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-slate-200 text-[10px] text-slate-500 select-none">
           <div className="flex items-center gap-1.5 font-bold text-slate-800">
-            <TableIcon className="w-3.5 h-3.5 text-[#E0562D]" />
+            <TableIcon className="w-3.5 h-3.5 text-[#16A34A]" />
             <span>BẢNG DỮ LIỆU</span>
           </div>
           <button
@@ -811,7 +811,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
           {/* Header */}
           <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-stone-200 text-xs">
             <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <Lightbulb className="w-4 h-4 text-[#E0562D]" />
+              <Lightbulb className="w-4 h-4 text-[#16A34A]" />
               <span className="text-xs font-black tracking-tight">Inteline — Note AI</span>
             </div>
             <button 
@@ -855,14 +855,14 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               <button
                 disabled={selectionPopover.loading}
                 onClick={() => handleQuickAsk('Giải thích ngắn gọn đoạn này')}
-                className="px-2 py-0.5 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[10px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                className="px-2 py-0.5 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[10px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
               >
                 Giải thích ngắn
               </button>
               <button
                 disabled={selectionPopover.loading}
                 onClick={() => handleQuickAsk('Cho ví dụ thực tế')}
-                className="px-2 py-0.5 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[10px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                className="px-2 py-0.5 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[10px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
               >
                 Cho ví dụ
               </button>
@@ -887,12 +887,12 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 }
               }}
               disabled={selectionPopover.loading}
-              className="flex-1 px-2.5 py-1 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:border-[#E0562D] focus:bg-white text-slate-900 font-sans"
+              className="flex-1 px-2.5 py-1 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:border-[#16A34A] focus:bg-white text-slate-900 font-sans"
             />
             <button
               onClick={() => handleQuickAsk()}
               disabled={selectionPopover.loading || !selectionPopover.question.trim()}
-              className="p-1.5 bg-[#E0562D] hover:bg-[#FF5722] text-white rounded-lg transition-colors cursor-pointer disabled:opacity-40"
+              className="p-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg transition-colors cursor-pointer disabled:opacity-40"
             >
               <Send className="w-3.5 h-3.5" />
             </button>

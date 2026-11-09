@@ -62,9 +62,9 @@ export function BottomRightToolkit() {
           data-tour="minimap-toggle"
           onClick={() => setIsMinimapVisible(true)}
           title="Mở bản đồ bàn học (Phím M)"
-          className="w-10 h-10 rounded-xl bg-white hover:bg-orange-50/80 text-[#E0562D] shadow-sm border border-slate-300 hover:border-orange-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer animate-fade-in group"
+          className="w-10 h-10 rounded-xl bg-white hover:bg-green-50/80 text-[#16A34A] shadow-sm border border-slate-300 hover:border-green-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer animate-fade-in group"
         >
-          <Map className="w-4.5 h-4.5 text-[#E0562D] stroke-[2.4] group-hover:scale-110 transition-transform" />
+          <Map className="w-4.5 h-4.5 text-[#16A34A] stroke-[2.4] group-hover:scale-110 transition-transform" />
         </button>
       )}
 
@@ -79,7 +79,7 @@ export function BottomRightToolkit() {
           onClick={() => setIsViewRotateMode(prev => !prev)}
           className={`p-2 rounded-xl transition-all cursor-pointer flex items-center justify-center ${
             isViewRotateMode 
-              ? 'bg-[#E0562D] text-white shadow-xs' 
+              ? 'bg-[#16A34A] text-white shadow-xs' 
               : 'text-slate-800 hover:text-black hover:bg-slate-100'
           }`}
         >

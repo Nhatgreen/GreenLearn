@@ -188,7 +188,7 @@ export function MultiplayerBar() {
             </button>
 
             <div className="flex items-center gap-2 mb-1.5">
-              <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
+              <div className="w-8 h-8 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
                 <Users className="w-4.5 h-4.5 stroke-[2.4]" />
               </div>
               <h3 className="text-base font-bold text-slate-900">Mời bạn cùng học</h3>
@@ -202,7 +202,7 @@ export function MultiplayerBar() {
               <label className="text-xs font-semibold text-slate-700 block mb-1">
                 Liên kết phòng học
               </label>
-              <div className="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-2 focus-within:border-[#E0562D] focus-within:bg-white transition-colors">
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-2 focus-within:border-[#16A34A] focus-within:bg-white transition-colors">
                 <input
                   type="text"
                   readOnly
@@ -212,7 +212,7 @@ export function MultiplayerBar() {
                 <button
                   type="button"
                   onClick={handleCopyShareLink}
-                  className="px-3 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer whitespace-nowrap active:scale-95"
+                  className="px-3 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer whitespace-nowrap active:scale-95"
                 >
                   {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedLink ? 'Đã sao chép' : 'Sao chép'}</span>
@@ -317,7 +317,7 @@ export function MultiplayerBar() {
                   placeholder="https://your-project.supabase.co"
                   value={supabaseUrlInput}
                   onChange={(e) => setSupabaseUrlInput(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl outline-none focus:border-[#E0562D] focus:bg-white text-slate-900 font-mono"
+                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl outline-none focus:border-[#16A34A] focus:bg-white text-slate-900 font-mono"
                   required
                 />
               </div>
@@ -331,7 +331,7 @@ export function MultiplayerBar() {
                   placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                   value={supabaseKeyInput}
                   onChange={(e) => setSupabaseKeyInput(e.target.value)}
-                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl outline-none focus:border-[#E0562D] focus:bg-white text-slate-900 font-mono"
+                  className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl outline-none focus:border-[#16A34A] focus:bg-white text-slate-900 font-mono"
                   required
                 />
               </div>
@@ -368,7 +368,7 @@ export function MultiplayerBar() {
 
                   <button
                     type="submit"
-                    className="px-4 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer"
+                    className="px-4 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer"
                   >
                     Lưu & Kết Nối Ngay
                   </button>

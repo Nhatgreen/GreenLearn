@@ -433,7 +433,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  className="flex items-center gap-1 text-[11.5px] font-bold text-[#E0562D] hover:text-[#c9451e] bg-orange-50 hover:bg-orange-100 border border-orange-200/70 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-[11.5px] font-bold text-[#16A34A] hover:text-[#15803D] bg-green-50 hover:bg-green-100 border border-green-200/70 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>Đặt lại</span>
@@ -475,7 +475,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#E0562D] bg-orange-50 hover:bg-orange-100 border border-orange-200 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+                  className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#16A34A] bg-green-50 hover:bg-green-100 border border-green-200 px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Đặt lại tất cả bộ lọc</span>
@@ -521,7 +521,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                         {/* Điểm AI with tooltip */}
                         <div className="relative group/score inline-flex items-center gap-1 cursor-help">
                           <span className="font-semibold text-stone-700">Điểm AI:</span>
-                          <span className="font-bold text-[#E0562D] font-mono">
+                          <span className="font-bold text-[#16A34A] font-mono">
                             {item.aiScore}/100
                           </span>
                           <div className="absolute left-0 bottom-full mb-1 hidden group-hover/score:flex flex-col w-56 p-2 bg-stone-900 text-white text-[10px] rounded-lg shadow-xl z-50 pointer-events-none">
@@ -562,7 +562,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs ${
                           item.purchased
                             ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
-                            : 'bg-[#E0562D] hover:bg-[#c9451e] text-white active:scale-95'
+                            : 'bg-[#16A34A] hover:bg-[#15803D] text-white active:scale-95'
                         }`}
                       >
                         {item.purchased ? (
@@ -633,7 +633,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                   <div className="flex-1 flex flex-col justify-between overflow-hidden">
                     <div>
                       {/* Tiêu đề tài liệu */}
-                      <h4 className="text-sm font-black text-stone-900 leading-snug mb-1.5 hover:text-[#E0562D] transition-colors">
+                      <h4 className="text-sm font-black text-stone-900 leading-snug mb-1.5 hover:text-[#16A34A] transition-colors">
                         {item.title}
                       </h4>
 
@@ -655,7 +655,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                         {/* Điểm AI with tooltip */}
                         <div className="relative group/score inline-flex items-center gap-1 cursor-help">
                           <span className="font-bold text-stone-800">AI:</span>
-                          <span className="font-bold text-[#E0562D] font-mono px-1.5 py-0.2 rounded bg-orange-50 border border-orange-200/60">
+                          <span className="font-bold text-[#16A34A] font-mono px-1.5 py-0.2 rounded bg-green-50 border border-green-200/60">
                             {item.aiScore}/100
                           </span>
                           {/* Tooltip */}
@@ -704,7 +704,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                           className="w-4 h-4 rounded-full object-contain shrink-0" 
                           style={{ width: '16px', height: '16px', maxWidth: '16px', maxHeight: '16px' }}
                         />
-                        <span className="text-sm font-black font-mono text-[#E0562D]">{item.price} ViToken</span>
+                        <span className="text-sm font-black font-mono text-[#16A34A]">{item.price} ViToken</span>
                         {item.purchased && (
                           <span className="text-[10.5px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full ml-1">
                             Đã sở hữu
@@ -727,7 +727,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                           className={`py-1.5 px-3.5 rounded-xl text-xs font-bold transition-all text-center cursor-pointer shadow-xs flex items-center gap-1.5 ${
                             item.purchased
                               ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                              : 'bg-[#E0562D] hover:bg-[#c9451e] text-white active:scale-95'
+                              : 'bg-[#16A34A] hover:bg-[#15803D] text-white active:scale-95'
                           }`}
                         >
                           {item.purchased ? (
@@ -755,7 +755,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
           <div className="bg-white border border-stone-300 rounded-3xl w-full max-w-2xl p-6 shadow-2xl relative text-stone-900 animate-fade-in font-sans flex flex-col max-h-[85vh]">
             <div className="flex items-center justify-between pb-3 border-b border-stone-100">
               <div className="flex items-center gap-2">
-                <Eye className="w-5 h-5 text-[#E0562D]" />
+                <Eye className="w-5 h-5 text-[#16A34A]" />
                 <h3 className="text-base font-black text-stone-900">Xem thử tài liệu</h3>
               </div>
               <button
@@ -776,7 +776,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                   {previewItem.title}
                 </h4>
                 <p className="text-xs text-stone-600 mt-0.5">
-                  Tác giả: <strong className="text-stone-800">{previewItem.author}</strong> • Điểm AI: <strong className="text-[#E0562D] font-mono">{previewItem.aiScore}/100</strong>
+                  Tác giả: <strong className="text-stone-800">{previewItem.author}</strong> • Điểm AI: <strong className="text-[#16A34A] font-mono">{previewItem.aiScore}/100</strong>
                 </p>
               </div>
 
@@ -817,7 +817,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
             <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs text-stone-500">Giá mở tài liệu:</span>
-                <span className="text-sm font-black font-mono text-[#E0562D]">{previewItem.price} ViToken</span>
+                <span className="text-sm font-black font-mono text-[#16A34A]">{previewItem.price} ViToken</span>
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -835,7 +835,7 @@ export function MarketModal({ isOpen, onClose }: MarketModalProps) {
                   className={`px-4 py-1.5 rounded-xl text-xs font-bold cursor-pointer shadow-xs flex items-center gap-1.5 ${
                     previewItem.purchased
                       ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                      : 'bg-[#E0562D] hover:bg-[#c9451e] text-white active:scale-95'
+                      : 'bg-[#16A34A] hover:bg-[#15803D] text-white active:scale-95'
                   }`}
                 >
                   {previewItem.purchased ? (

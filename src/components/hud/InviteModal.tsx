@@ -58,7 +58,7 @@ export function InviteModal({ isOpen, onClose, spaceId, spaceName }: InviteModal
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
+          <div className="w-10 h-10 rounded-2xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
             <Users className="w-5 h-5" />
           </div>
           <div>
@@ -86,7 +86,7 @@ export function InviteModal({ isOpen, onClose, spaceId, spaceName }: InviteModal
             <button
               type="button"
               onClick={handleCopy}
-              className="px-3.5 py-2 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95"
+              className="px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95"
             >
               {copied ? (
                 <>

@@ -254,8 +254,8 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             {/* Header: [Icon] STudy + Nút đóng X */}
             <div className="px-3.5 py-2.5 border-b border-slate-200 flex items-center justify-between bg-white select-none">
               <div className="flex items-center gap-1.5">
-                <div className="w-6 h-6 rounded-lg bg-orange-50 flex items-center justify-center text-[#E0562D] border border-orange-200">
-                  <Sparkles className="w-3.5 h-3.5 text-[#E0562D] stroke-[2.4]" />
+                <div className="w-6 h-6 rounded-lg bg-green-50 flex items-center justify-center text-[#16A34A] border border-green-200">
+                  <Sparkles className="w-3.5 h-3.5 text-[#16A34A] stroke-[2.4]" />
                 </div>
                 <h3 className="text-xs font-bold text-slate-900">STudy</h3>
               </div>
@@ -274,7 +274,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 onClick={() => setPaperStudyTab('summary')}
                 className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer ${
                   paperStudyTab === 'summary'
-                    ? 'border-[#E0562D] text-[#E0562D] bg-white'
+                    ? 'border-[#16A34A] text-[#16A34A] bg-white'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -285,7 +285,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 onClick={() => setPaperStudyTab('quiz')}
                 className={`flex items-center justify-center gap-1.5 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer ${
                   paperStudyTab === 'quiz'
-                    ? 'border-[#E0562D] text-[#E0562D] bg-white'
+                    ? 'border-[#16A34A] text-[#16A34A] bg-white'
                     : 'border-transparent text-slate-500 hover:text-slate-800'
                 }`}
               >
@@ -324,11 +324,11 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               className="border-b border-slate-200 pb-2.5 mb-3 cursor-grab active:cursor-grabbing select-none"
             >
               <div className="flex items-center justify-between text-[10px] font-mono font-bold text-slate-500 mb-1">
-                <span className="px-2 py-0.5 rounded-full bg-[#FFF7ED] text-[#9A3412] border border-[#FFEDD5]">
+                <span className="px-2 py-0.5 rounded-full bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0]">
                   BÀI LUYỆN TẬP
                 </span>
                 <span className="flex items-center gap-1 text-slate-700 font-semibold bg-slate-100 px-2 py-0.5 rounded-full">
-                  <Clock className="w-3 h-3 text-[#E0562D]" /> {exam.timeLimitMinutes || 15} phút
+                  <Clock className="w-3 h-3 text-[#16A34A]" /> {exam.timeLimitMinutes || 15} phút
                 </span>
               </div>
               <h3 className="text-sm font-black text-slate-900 tracking-tight leading-snug">
@@ -383,7 +383,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                                 : isWrongChoice
                                 ? 'bg-[#FEF2F2] border-[#DC2626] text-[#DC2626] font-bold anim-wrong-shake'
                                 : isChosen
-                                ? 'bg-[#FFF7ED] border-[#E0562D] text-slate-900 font-bold shadow-xs'
+                                ? 'bg-[#F0FDF4] border-[#16A34A] text-slate-900 font-bold shadow-xs'
                                 : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-300 hover:translate-x-1 text-slate-800'
                             }`}
                           >
@@ -394,7 +394,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                                   : isWrongChoice
                                   ? 'bg-[#DC2626] border-[#DC2626] text-white'
                                   : isChosen
-                                  ? 'bg-[#E0562D] border-[#E0562D] text-white anim-badge-pop'
+                                  ? 'bg-[#16A34A] border-[#16A34A] text-white anim-badge-pop'
                                   : 'bg-slate-50 border-slate-300 text-slate-700 group-hover:border-slate-400'
                               }`}>
                                 {String.fromCharCode(65 + oIdx)}
@@ -426,7 +426,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               {exam.isGraded ? (
                 <div className="flex items-center justify-between gap-3 w-full">
                   <div className="flex items-center gap-2.5">
-                    <div className="bg-[#E0562D] text-white px-3 py-1.5 rounded-xl text-center flex-shrink-0 shadow-xs">
+                    <div className="bg-[#16A34A] text-white px-3 py-1.5 rounded-xl text-center flex-shrink-0 shadow-xs">
                       <div className="text-[9px] text-orange-100 font-bold uppercase">Điểm thi</div>
                       <div className="text-base font-black text-white">{exam.score} / 10</div>
                     </div>
@@ -446,7 +446,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               ) : (
                 <div className="flex items-center justify-between w-full">
                   <span className="text-[11px] text-slate-600 font-medium">
-                    Đã chọn: <strong className="text-[#E0562D]">{Object.keys(exam.userAnswers).length}</strong> / {exam.questions.length} câu
+                    Đã chọn: <strong className="text-[#16A34A]">{Object.keys(exam.userAnswers).length}</strong> / {exam.questions.length} câu
                   </span>
                   <button
                     type="button"
@@ -464,7 +464,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                         }).catch(() => {});
                       }
                     }}
-                    className="px-4 py-2 bg-[#E0562D] hover:bg-[#FF5722] text-white text-xs font-bold rounded-full shadow-[0_4px_16px_rgba(224,86,45,0.35)] transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
+                    className="px-4 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-full shadow-[0_4px_16px_rgba(224,86,45,0.35)] transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
                   >
                     <Award className="w-3.5 h-3.5 text-white" />
                     <span>Nộp bài & Chấm điểm</span>
@@ -513,10 +513,10 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                       title="Bấm để đổi tên tài liệu"
                       className="flex items-center gap-1.5 group/editTitle cursor-pointer truncate"
                     >
-                      <span className="text-xs font-bold text-stone-800 tracking-tight truncate group-hover/editTitle:text-[#E0562D]">
+                      <span className="text-xs font-bold text-stone-800 tracking-tight truncate group-hover/editTitle:text-[#16A34A]">
                         {cleanTitle}
                       </span>
-                      <Pencil className="w-2.5 h-2.5 text-stone-400 group-hover/editTitle:text-[#E0562D] opacity-0 group-hover/editTitle:opacity-100 transition-opacity flex-shrink-0" />
+                      <Pencil className="w-2.5 h-2.5 text-stone-400 group-hover/editTitle:text-[#16A34A] opacity-0 group-hover/editTitle:opacity-100 transition-opacity flex-shrink-0" />
                     </div>
                   )}
                 </div>
@@ -583,9 +583,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             <button
               title="STudy: Tóm tắt & Trắc nghiệm"
               onClick={() => setIsStudyOpen(true)}
-              className="p-1.5 hover:bg-[#FFF7ED] rounded-lg text-[#E0562D] transition-colors cursor-pointer"
+              className="p-1.5 hover:bg-[#F0FDF4] rounded-lg text-[#16A34A] transition-colors cursor-pointer"
             >
-              <Sparkles className="w-4 h-4 text-[#E0562D] stroke-[2.4]" />
+              <Sparkles className="w-4 h-4 text-[#16A34A] stroke-[2.4]" />
             </button>
 
             {/* Thẻ Ghi Nhớ: Ấn là trích xuất ngay ra bàn học cạnh tài liệu không hiện overlay */}
@@ -604,7 +604,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
         <button
           title="Tập trung đọc: Căn giữa và phóng to tài liệu vừa vặn màn hình"
           onClick={handleFocusRead}
-          className="p-1.5 hover:bg-orange-50 rounded-lg text-slate-700 hover:text-[#E0562D] transition-colors cursor-pointer"
+          className="p-1.5 hover:bg-green-50 rounded-lg text-slate-700 hover:text-[#16A34A] transition-colors cursor-pointer"
         >
           <BookOpen className="w-4 h-4 stroke-[2.4]" />
         </button>
@@ -644,7 +644,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
           {/* Header */}
           <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-stone-200 text-xs">
             <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <Lightbulb className="w-4 h-4 text-[#E0562D]" />
+              <Lightbulb className="w-4 h-4 text-[#16A34A]" />
               <span className="text-xs font-black tracking-tight">Inteline — Hỏi đáp & Phân tích</span>
             </div>
             <button 
@@ -688,21 +688,21 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               <button
                 disabled={selectionPopover.loading}
                 onClick={() => handleQuickAsk('Giải thích ngắn gọn đoạn này')}
-                className="px-2 py-0.5 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[10.5px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                className="px-2 py-0.5 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[10.5px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
               >
                 Giải thích ngắn
               </button>
               <button
                 disabled={selectionPopover.loading}
                 onClick={() => handleQuickAsk('Cho ví dụ thực tế về đoạn này')}
-                className="px-2 py-0.5 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[10.5px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                className="px-2 py-0.5 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[10.5px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
               >
                 Cho ví dụ
               </button>
               <button
                 disabled={selectionPopover.loading}
                 onClick={() => handleQuickAsk('Tóm 1 ý chính quan trọng nhất')}
-                className="px-2 py-0.5 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[10.5px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                className="px-2 py-0.5 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[10.5px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
               >
                 Ý chính
               </button>
@@ -727,12 +727,12 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 }
               }}
               disabled={selectionPopover.loading}
-              className="flex-1 px-2.5 py-1 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:border-[#E0562D] focus:bg-white text-slate-900"
+              className="flex-1 px-2.5 py-1 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:border-[#16A34A] focus:bg-white text-slate-900"
             />
             <button
               onClick={() => handleQuickAsk()}
               disabled={selectionPopover.loading || !selectionPopover.question.trim()}
-              className="p-1.5 bg-[#E0562D] hover:bg-[#FF5722] text-white rounded-lg transition-colors cursor-pointer disabled:opacity-40"
+              className="p-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg transition-colors cursor-pointer disabled:opacity-40"
             >
               <Send className="w-3.5 h-3.5" />
             </button>

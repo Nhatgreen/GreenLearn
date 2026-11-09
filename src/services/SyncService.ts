@@ -13,10 +13,10 @@ export class SyncService {
     if (typeof window === 'undefined') return false;
 
     // Check if already migrated for this user
-    const flag = localStorage.getItem(`vitudy_migrated_${userId}`);
+    const flag = localStorage.getItem(`greenlearn_migrated_${userId}`) || localStorage.getItem(`vitudy_migrated_${userId}`);
     if (flag === 'true') return false;
 
-    const raw = localStorage.getItem('vitudy_spaces');
+    const raw = localStorage.getItem('greenlearn_spaces') || localStorage.getItem('vitudy_spaces');
     if (!raw) return false;
 
     try {
@@ -42,7 +42,7 @@ export class SyncService {
       return result;
     }
 
-    const raw = localStorage.getItem('vitudy_spaces');
+    const raw = localStorage.getItem('greenlearn_spaces') || localStorage.getItem('vitudy_spaces');
     if (!raw) return result;
 
     try {
@@ -96,7 +96,7 @@ export class SyncService {
       }
 
       // Mark user as migrated
-      localStorage.setItem(`vitudy_migrated_${userId}`, 'true');
+      localStorage.setItem(`greenlearn_migrated_${userId}`, 'true');
 
     } catch (err: any) {
       result.errors.push(err.message || 'Lỗi trong quá trình di chuyển dữ liệu');

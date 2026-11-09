@@ -136,7 +136,7 @@ export function FullScreenDocModal({
 
           {/* Doc Title */}
           <div className="flex items-center gap-2 overflow-hidden">
-            <div className="w-7 h-7 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center flex-shrink-0 text-[#E0562D]">
+            <div className="w-7 h-7 rounded-lg bg-green-50 border border-green-200 flex items-center justify-center flex-shrink-0 text-[#16A34A]">
               {isExam ? (
                 <FileText className="w-3.5 h-3.5 stroke-[2.4]" />
               ) : item.type === 'book' ? (
@@ -171,7 +171,7 @@ export function FullScreenDocModal({
               </button>
 
               <div className="flex items-center gap-1 text-xs font-mono font-bold px-1.5">
-                <span className="text-[#E0562D]">{isTwoPageSpread ? `${leftIndex + 1}${rightLeaf ? `-${Math.min(rightIndex + 1, totalLeaves)}` : ''}` : currentPage + 1}</span>
+                <span className="text-[#16A34A]">{isTwoPageSpread ? `${leftIndex + 1}${rightLeaf ? `-${Math.min(rightIndex + 1, totalLeaves)}` : ''}` : currentPage + 1}</span>
                 <span className="text-slate-400">/</span>
                 <span className="text-slate-700">{totalLeaves}</span>
               </div>
@@ -299,7 +299,7 @@ export function FullScreenDocModal({
                   <div 
                     className={`w-full aspect-[1/1.3] bg-white rounded-md p-2.5 flex flex-col justify-between border transition-all overflow-hidden ${
                       isSelectedPage
-                        ? 'ring-2 ring-[#E0562D] border-[#E0562D] shadow-md scale-102'
+                        ? 'ring-2 ring-[#16A34A] border-[#16A34A] shadow-md scale-102'
                         : 'border-slate-300 hover:border-slate-400 shadow-2xs hover:shadow-sm'
                     }`}
                   >
@@ -330,7 +330,7 @@ export function FullScreenDocModal({
 
                   {/* Page Label */}
                   <span className={`text-[10.5px] font-mono font-bold transition-colors ${
-                    isSelectedPage ? 'text-[#E0562D]' : 'text-slate-600 group-hover:text-slate-900'
+                    isSelectedPage ? 'text-[#16A34A]' : 'text-slate-600 group-hover:text-slate-900'
                   }`}>
                     Trang {leaf.pageNumber}
                   </span>
@@ -407,7 +407,7 @@ export function FullScreenDocModal({
 
                               let optClass = "border-slate-200 bg-white hover:border-slate-400 text-slate-800";
                               if (isSelectedOption && !exam.isGraded) {
-                                optClass = "border-[#E0562D] bg-[#FFF7ED] text-[#9A3412] font-semibold";
+                                optClass = "border-[#16A34A] bg-[#F0FDF4] text-[#166534] font-semibold";
                               } else if (exam.isGraded) {
                                 if (isAnswerCorrect) {
                                   optClass = "border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold";

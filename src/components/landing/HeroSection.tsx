@@ -12,7 +12,7 @@ interface HeroSectionProps {
 function HandDrawnUnderline() {
   return (
     <svg
-      className="absolute -bottom-2 left-0 w-full h-3 text-[#E0562D] pointer-events-none"
+      className="absolute -bottom-2 left-0 w-full h-3 text-[#16A34A] pointer-events-none"
       viewBox="0 0 300 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ function HandDrawnUnderline() {
 function HandDrawnArrow() {
   return (
     <svg
-      className="w-12 h-9 text-[#E0562D] -rotate-12 pointer-events-none flex-shrink-0"
+      className="w-12 h-9 text-[#16A34A] -rotate-12 pointer-events-none flex-shrink-0"
       viewBox="0 0 64 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +81,7 @@ export function HeroSection({ onEnterDesk }: HeroSectionProps) {
       {/* Tiêu đề ngắn gọn, dùng font serif học thuật, đồng bộ từ "bàn học" */}
       <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif text-slate-900 tracking-tight leading-[1.2] max-w-4xl mx-auto mb-5">
         Trải giáo trình, đề thi và vở nháp{' '}
-        <span className="relative inline-block text-[#E0562D] whitespace-nowrap">
+        <span className="relative inline-block text-[#16A34A] whitespace-nowrap">
           trên cùng một bàn học.
           <HandDrawnUnderline />
         </span>
@@ -100,7 +100,7 @@ export function HeroSection({ onEnterDesk }: HeroSectionProps) {
         <button
           type="button"
           onClick={onEnterDesk}
-          className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-sm font-bold shadow-md shadow-orange-500/20 transition-all hover:scale-102 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-bold shadow-md shadow-orange-500/20 transition-all hover:scale-102 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
         >
           <span>Vào bàn học</span>
           <ArrowRight className="w-4 h-4" />
@@ -128,8 +128,8 @@ export function HeroSection({ onEnterDesk }: HeroSectionProps) {
         {/* Thanh trạng thái phía trên bàn học với đệm thoáng và tương phản cao */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 px-3 py-2.5 rounded-xl bg-white/70 border border-slate-200/80 shadow-2xs z-20 relative">
           <div className="text-slate-800 text-xs sm:text-sm font-medium flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#E0562D]" />
-            <span className="font-bold text-[#E0562D]">Mẹo nhỏ:</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-[#16A34A]" />
+            <span className="font-bold text-[#16A34A]">Mẹo nhỏ:</span>
             <span>Nét bút dạ quang bám theo từng trang sách, khi di chuyển hay thu nhỏ bàn học nét vẽ vẫn ở nguyên chỗ cũ.</span>
           </div>
           <div className="text-xs font-mono font-semibold text-slate-600 sm:text-right flex-shrink-0">
@@ -225,7 +225,7 @@ export function HeroSection({ onEnterDesk }: HeroSectionProps) {
             {/* Mũi tên và chú thích căn sát mẩu giấy, viết hoa chuẩn mực */}
             <div className="hidden lg:flex items-center gap-1.5 pl-1 mt-1">
               <HandDrawnArrow />
-              <span className="font-note text-sm text-[#E0562D] -rotate-3 font-bold leading-tight">
+              <span className="font-note text-sm text-[#16A34A] -rotate-3 font-bold leading-tight">
                 Kéo mẩu giấy này sang bên cạnh để nháp bài.
               </span>
             </div>

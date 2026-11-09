@@ -13,13 +13,13 @@ export default function PrivacyPage() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-[#E0562D] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-[#16A34A] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Quay lại bàn học</span>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-[#E0562D] text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-6 h-6 rounded-lg bg-[#16A34A] text-white flex items-center justify-center font-bold text-xs">
               <BookOpen className="w-3.5 h-3.5" />
             </div>
             <span className="font-bold text-sm text-slate-900">Bảo mật thông tin</span>
@@ -44,7 +44,7 @@ export default function PrivacyPage() {
         <div className="space-y-6 text-sm text-slate-700 leading-relaxed">
           <section className="space-y-2">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Lock className="w-4 h-4 text-[#E0562D]" />
+              <Lock className="w-4 h-4 text-[#16A34A]" />
               <span>1. Những thông tin được lưu lại</span>
             </h2>
             <p>

@@ -28,7 +28,7 @@ export function TourStep({
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-2xl p-5 max-w-sm w-full text-slate-800 animate-in fade-in zoom-in-95 duration-200 pointer-events-auto">
       <div className="flex items-center justify-between gap-3 mb-2">
-        <span className="text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-orange-50 text-[#E0562D] border border-orange-200">
+        <span className="text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-green-50 text-[#16A34A] border border-green-200">
           Bước {stepIndex + 1}/{totalSteps}
         </span>
         <button
@@ -55,7 +55,7 @@ export function TourStep({
         <button
           type="button"
           onClick={onNext}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-semibold shadow-sm transition-all active:scale-95"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-semibold shadow-sm transition-all active:scale-95"
         >
           <span>{isLast ? 'Bắt đầu học ngay' : 'Tiếp tục'}</span>
           {isLast ? <Check className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}

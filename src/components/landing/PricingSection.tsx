@@ -105,13 +105,13 @@ export function PricingSection({ onSelectPackage }: PricingSectionProps) {
               key={pkg.id}
               className={`relative rounded-2xl p-5 border text-left flex flex-col justify-between transition-all ${
                 pkg.isPopular
-                  ? 'bg-orange-50/40 border-[#E0562D] ring-2 ring-[#E0562D]/30 shadow-md'
+                  ? 'bg-green-50/40 border-[#16A34A] ring-2 ring-[#16A34A]/30 shadow-md'
                   : 'bg-white border-slate-200 shadow-2xs hover:border-slate-300'
               }`}
             >
               {/* Huy hiệu Được chọn nhiều cho gói phổ biến */}
               {pkg.isPopular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E0562D] text-white text-[11px] font-bold px-3 py-0.5 rounded-full shadow-xs whitespace-nowrap">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#16A34A] text-white text-[11px] font-bold px-3 py-0.5 rounded-full shadow-xs whitespace-nowrap">
                   Được chọn nhiều
                 </div>
               )}
@@ -133,7 +133,7 @@ export function PricingSection({ onSelectPackage }: PricingSectionProps) {
                     {formattedPrice}{' '}
                     <span className="text-xs font-sans text-slate-500 font-normal">đ</span>
                   </div>
-                  <div className="text-xs font-bold text-[#E0562D] mt-0.5 font-mono">
+                  <div className="text-xs font-bold text-[#16A34A] mt-0.5 font-mono">
                     Nhận {formattedTokens} ViToken
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export function PricingSection({ onSelectPackage }: PricingSectionProps) {
                 onClick={() => onSelectPackage?.(pkg.id)}
                 className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-2xs active:scale-95 cursor-pointer text-center ${
                   pkg.isPopular
-                    ? 'bg-[#E0562D] hover:bg-[#c9451e] text-white shadow-orange-500/20'
+                    ? 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-orange-500/20'
                     : 'bg-slate-900 hover:bg-black text-white'
                 }`}
               >

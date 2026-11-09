@@ -28,7 +28,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     try {
-      const stored = sessionStorage.getItem('vitudy_last_view');
+      const stored = sessionStorage.getItem('greenlearn_last_view') || sessionStorage.getItem('vitudy_last_view');
       if (stored === 'home' || stored === 'desk') {
         setReturnDestination(stored);
       }
@@ -110,7 +110,7 @@ export default function DashboardPage() {
   if (status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#E0562D]" />
+        <Loader2 className="w-6 h-6 animate-spin text-[#16A34A]" />
       </div>
     );
   }
@@ -135,7 +135,7 @@ export default function DashboardPage() {
             <div className="h-4 w-px bg-slate-300 hidden sm:block" />
 
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
+              <div className="w-7 h-7 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
                 <BarChart2 className="w-4 h-4 stroke-[2.4]" />
               </div>
               <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
@@ -156,7 +156,7 @@ export default function DashboardPage() {
             </div>
             <Link
               href="/auth"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold shadow-2xs transition-all flex-shrink-0 self-start sm:self-center cursor-pointer active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-2xs transition-all flex-shrink-0 self-start sm:self-center cursor-pointer active:scale-95"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>Đăng nhập ngay</span>

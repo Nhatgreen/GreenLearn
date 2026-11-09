@@ -23,9 +23,9 @@ export function TokenHistory({ transactions, balance }: TokenHistoryProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 border border-orange-200 rounded-xl">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 border border-green-200 rounded-xl">
           <span className="text-xs text-slate-600 font-medium">Hiện có:</span>
-          <span className="font-mono font-black text-sm text-[#E0562D]">
+          <span className="font-mono font-black text-sm text-[#16A34A]">
             {balance.toLocaleString('vi-VN')} ViToken
           </span>
         </div>

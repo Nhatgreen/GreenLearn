@@ -1,20 +1,20 @@
 {
-  "name": "ViTudy — Bàn Học Tri Thức",
-  "short_name": "ViTudy",
-  "description": "Không gian học thức tích hợp AI 2.5D, hỗ trợ ôn thi thông minh.",
+  "name": "GreenLearn — Bàn Học Tri Thức 2.5D",
+  "short_name": "GreenLearn",
+  "description": "Không gian học tập trực quan 2.5D miễn phí, tích hợp trợ lý AI thông minh.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#E0562D",
+  "theme_color": "#16A34A",
   "icons": [
     {
-      "src": "./icons/vitudy.png",
-      "sizes": "512x512",
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./icon.png",
-      "sizes": "192x192",
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]

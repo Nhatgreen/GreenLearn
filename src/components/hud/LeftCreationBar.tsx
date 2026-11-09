@@ -386,7 +386,7 @@ export function LeftCreationBar() {
                 title="Nét mảnh (Nhỏ)"
                 onClick={() => setPenWidthLevel('small')}
                 className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                  penWidthLevel === 'small' ? 'bg-slate-100 ring-2 ring-[#E0562D]' : 'hover:bg-slate-100'
+                  penWidthLevel === 'small' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
                 }`}
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-slate-900" />
@@ -395,7 +395,7 @@ export function LeftCreationBar() {
                 title="Nét vừa (Trung bình)"
                 onClick={() => setPenWidthLevel('medium')}
                 className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                  penWidthLevel === 'medium' ? 'bg-slate-100 ring-2 ring-[#E0562D]' : 'hover:bg-slate-100'
+                  penWidthLevel === 'medium' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
                 }`}
               >
                 <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
@@ -404,7 +404,7 @@ export function LeftCreationBar() {
                 title="Nét dày (Lớn)"
                 onClick={() => setPenWidthLevel('large')}
                 className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                  penWidthLevel === 'large' ? 'bg-slate-100 ring-2 ring-[#E0562D]' : 'hover:bg-slate-100'
+                  penWidthLevel === 'large' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
                 }`}
               >
                 <div className="w-3.5 h-3.5 rounded-full bg-slate-900" />
@@ -419,7 +419,7 @@ export function LeftCreationBar() {
                 title="Bấm để đổi màu nét vẽ (Mở bảng 6 màu)"
                 onClick={() => setIsPenColorPickerOpen(!isPenColorPickerOpen)}
                 style={{ backgroundColor: penColor }}
-                className="w-7 h-7 rounded-full border-2 border-white ring-2 ring-[#E0562D] shadow-xs hover:scale-115 transition-transform cursor-pointer flex items-center justify-center"
+                className="w-7 h-7 rounded-full border-2 border-white ring-2 ring-[#16A34A] shadow-xs hover:scale-115 transition-transform cursor-pointer flex items-center justify-center"
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
               </button>
@@ -437,7 +437,7 @@ export function LeftCreationBar() {
                       }}
                       style={{ backgroundColor: c.value }}
                       className={`w-7 h-7 rounded-full border border-black/15 transition-transform hover:scale-115 cursor-pointer flex items-center justify-center ${
-                        penColor === c.value ? 'ring-2 ring-[#E0562D] scale-105' : ''
+                        penColor === c.value ? 'ring-2 ring-[#16A34A] scale-105' : ''
                       }`}
                     >
                       {penColor === c.value && (
@@ -477,7 +477,7 @@ export function LeftCreationBar() {
                     {tool.icon}
                   </div>
                   <div className="overflow-hidden">
-                    <div className="text-xs font-bold text-slate-900 group-hover:text-[#E0562D] transition-colors leading-tight">
+                    <div className="text-xs font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors leading-tight">
                       {tool.title}
                     </div>
                     <div className="text-[11px] text-slate-500 truncate leading-tight mt-0.5">

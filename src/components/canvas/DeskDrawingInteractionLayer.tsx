@@ -346,7 +346,7 @@ export function DeskDrawingInteractionLayer() {
       {/* Floating Mode Tooltip Guide (Miro-style clean white) */}
       {showTooltip && (
         <div className="fixed bottom-14 left-1/2 -translate-x-1/2 z-40 pointer-events-none flex items-center gap-2 bg-white/95 text-slate-800 text-xs px-4 py-2 rounded-full shadow-xl border border-slate-200/90 backdrop-blur-md animate-fade-in font-medium transition-opacity duration-300">
-          <span className="w-2 h-2 rounded-full bg-[#E0562D] animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
           <span>
             {isCreateNote && (stickyCreationTemplate
               ? `Nhấp chuột vào bất kỳ vị trí nào trên bàn học để đặt: ${stickyCreationTemplate.typeLabel}`

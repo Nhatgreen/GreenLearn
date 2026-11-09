@@ -16,8 +16,8 @@ import {
 
 const CORE_EXPERIENCES = [
   {
-    icon: <BookOpen className="w-5 h-5 text-[#E0562D]" />,
-    iconBg: 'bg-orange-50 border-orange-200',
+    icon: <BookOpen className="w-5 h-5 text-[#16A34A]" />,
+    iconBg: 'bg-green-50 border-green-200',
     title: 'Mở nhiều tài liệu cùng lúc',
     description: 'Đặt giáo trình, slide bài giảng và đề thi cạnh nhau trên một bàn học để vừa đọc sách vừa đối chiếu kiến thức.',
     tag: 'Không gian mở',
@@ -118,17 +118,17 @@ export function FeatureGrid() {
           className="w-full flex items-center justify-between text-left cursor-pointer group"
         >
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#E0562D]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#16A34A]">
               Nền tảng công nghệ
             </span>
-            <h3 className="text-lg font-bold text-slate-900 mt-0.5 group-hover:text-[#E0562D] transition-colors">
+            <h3 className="text-lg font-bold text-slate-900 mt-0.5 group-hover:text-[#16A34A] transition-colors">
               Chi tiết thông số kỹ thuật
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
               Dành cho bạn quan tâm đến thuật toán và cách hệ thống xử lý đồ họa
             </p>
           </div>
-          <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 group-hover:border-[#E0562D] group-hover:text-[#E0562D] transition-colors flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 group-hover:border-[#16A34A] group-hover:text-[#16A34A] transition-colors flex-shrink-0">
             {showTechDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </div>
         </button>

@@ -16,12 +16,12 @@ export default function AuthCallbackPage() {
       const getBasePath = () => {
         if (typeof window === 'undefined') return '';
         if (process.env.NEXT_PUBLIC_BASE_PATH) return process.env.NEXT_PUBLIC_BASE_PATH;
-        return window.location.pathname.startsWith('/ViTudy') ? '/ViTudy' : '';
+        return window.location.pathname.startsWith('/GreenLearn') ? '/GreenLearn' : '';
       };
 
       const navigateToDesk = () => {
         if (typeof window !== 'undefined') {
-          localStorage.setItem('vitudy_has_visited_desk', 'true');
+          localStorage.setItem('greenlearn_has_visited_desk', 'true');
           window.location.href = `${window.location.origin}${getBasePath()}/`;
         }
       };
@@ -87,7 +87,7 @@ export default function AuthCallbackPage() {
           <div className="text-red-600 text-sm font-medium">{errorMsg}</div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-6 h-6 animate-spin text-[#E0562D]" />
+            <Loader2 className="w-6 h-6 animate-spin text-[#16A34A]" />
             <p className="text-sm font-semibold text-slate-800">Đang hoàn tất đăng nhập...</p>
             <p className="text-xs text-slate-400">Vui lòng đợi trong giây lát</p>
           </div>

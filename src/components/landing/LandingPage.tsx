@@ -22,20 +22,20 @@ export function LandingPage({ onEnterDesk }: LandingPageProps) {
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 px-6 py-3.5">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#E0562D] text-white flex items-center justify-center font-bold shadow-2xs">
+            <div className="w-8 h-8 rounded-xl bg-[#16A34A] text-white flex items-center justify-center font-bold shadow-2xs">
               <BookOpen className="w-4 h-4" />
             </div>
             <span className="text-base font-bold tracking-tight text-slate-900">ViTudy</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-700">
-            <Link href="/market" className="hover:text-[#E0562D] transition-colors">
+            <Link href="/market" className="hover:text-[#16A34A] transition-colors">
               Chợ tài liệu
             </Link>
-            <Link href="/dashboard" className="hover:text-[#E0562D] transition-colors">
+            <Link href="/dashboard" className="hover:text-[#16A34A] transition-colors">
               Nhật ký học
             </Link>
-            <Link href="/faq" className="hover:text-[#E0562D] transition-colors">
+            <Link href="/faq" className="hover:text-[#16A34A] transition-colors">
               Hỏi đáp
             </Link>
           </nav>
@@ -61,7 +61,7 @@ export function LandingPage({ onEnterDesk }: LandingPageProps) {
             <button
               type="button"
               onClick={onEnterDesk}
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold shadow-2xs transition-all active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-2xs transition-all active:scale-95 cursor-pointer"
             >
               <span>Vào bàn học</span>
               <ArrowRight className="w-3.5 h-3.5" />

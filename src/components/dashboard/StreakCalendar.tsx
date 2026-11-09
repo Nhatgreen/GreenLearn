@@ -18,9 +18,9 @@ const WEEK_DAYS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 export function StreakCalendar({ activityGrid }: StreakCalendarProps) {
   const getColorClass = (minutes: number) => {
     if (minutes === 0) return 'bg-slate-100/90 border-slate-200/80 text-slate-600';
-    if (minutes < 15) return 'bg-orange-100 border-orange-200 text-orange-900';
-    if (minutes < 45) return 'bg-orange-300 border-orange-400 text-orange-950 font-bold';
-    return 'bg-[#E0562D] border-[#c9451e] text-white font-bold';
+    if (minutes < 15) return 'bg-green-100 border-green-200 text-green-900';
+    if (minutes < 45) return 'bg-green-300 border-green-400 text-green-950 font-bold';
+    return 'bg-[#16A34A] border-[#15803D] text-white font-bold';
   };
 
   const todayStr = new Date().toISOString().split('T')[0];
@@ -29,7 +29,7 @@ export function StreakCalendar({ activityGrid }: StreakCalendarProps) {
     <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
+          <div className="w-8 h-8 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
             <Calendar className="w-4 h-4 stroke-[2.4]" />
           </div>
           <div>
@@ -42,9 +42,9 @@ export function StreakCalendar({ activityGrid }: StreakCalendarProps) {
         <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
           <span>Ít</span>
           <div className="w-3.5 h-3.5 rounded bg-slate-100 border border-slate-200" title="0 phút" />
-          <div className="w-3.5 h-3.5 rounded bg-orange-100 border border-orange-200" title="< 15 phút" />
-          <div className="w-3.5 h-3.5 rounded bg-orange-300 border border-orange-400" title="15 - 45 phút" />
-          <div className="w-3.5 h-3.5 rounded bg-[#E0562D] border-[#c9451e]" title="≥ 45 phút" />
+          <div className="w-3.5 h-3.5 rounded bg-green-100 border border-green-200" title="< 15 phút" />
+          <div className="w-3.5 h-3.5 rounded bg-green-300 border border-green-400" title="15 - 45 phút" />
+          <div className="w-3.5 h-3.5 rounded bg-[#16A34A] border-[#15803D]" title="≥ 45 phút" />
           <span>Nhiều</span>
         </div>
       </div>
@@ -73,7 +73,7 @@ export function StreakCalendar({ activityGrid }: StreakCalendarProps) {
                   item.minutes
                 )} ${
                   isToday
-                    ? 'ring-2 ring-[#E0562D] ring-offset-2 z-10 shadow-xs'
+                    ? 'ring-2 ring-[#16A34A] ring-offset-2 z-10 shadow-xs'
                     : 'hover:border-slate-400'
                 }`}
               >

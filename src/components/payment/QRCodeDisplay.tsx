@@ -134,7 +134,7 @@ export function QRCodeDisplay({
                   <button
                     type="button"
                     onClick={onRetry}
-                    className="px-3.5 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer active:scale-95"
+                    className="px-3.5 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer active:scale-95"
                   >
                     Tạo mã mới
                   </button>
@@ -156,8 +156,8 @@ export function QRCodeDisplay({
         {/* Transfer Details Column */}
         <div className="space-y-2.5 text-xs">
           {/* Transfer Code Highlight */}
-          <div className="p-3 bg-orange-50/70 border border-orange-200 rounded-2xl">
-            <div className="text-[11px] font-bold text-[#E0562D] uppercase tracking-wider mb-1 flex items-center justify-between">
+          <div className="p-3 bg-green-50/70 border border-green-200 rounded-2xl">
+            <div className="text-[11px] font-bold text-[#16A34A] uppercase tracking-wider mb-1 flex items-center justify-between">
               <span>Nội dung chuyển khoản (BẮT BUỘC)</span>
               <span className="text-[10px] text-orange-700 font-semibold">Nhập đúng nội dung này để hệ thống nhận diện</span>
             </div>
@@ -168,7 +168,7 @@ export function QRCodeDisplay({
               <button
                 type="button"
                 onClick={handleCopyCode}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-[11px] font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-[11px] font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
               >
                 {copiedCode ? (
                   <>
@@ -226,7 +226,7 @@ export function QRCodeDisplay({
             <div className="flex items-center justify-between pt-1 border-t border-slate-200">
               <span className="text-slate-600 text-[11px]">Số tiền thanh toán:</span>
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-black font-mono text-[#E0562D]">
+                <span className="text-sm font-black font-mono text-[#16A34A]">
                   {request.amountVnd.toLocaleString('vi-VN')} VNĐ
                 </span>
                 <button
@@ -240,9 +240,9 @@ export function QRCodeDisplay({
               </div>
             </div>
 
-            <div className="flex items-center justify-between bg-orange-50/50 p-1.5 rounded-lg border border-orange-100">
+            <div className="flex items-center justify-between bg-green-50/50 p-1.5 rounded-lg border border-orange-100">
               <span className="text-slate-600 text-[11px]">Bạn nhận:</span>
-              <span className="text-xs font-black font-mono text-[#E0562D]">
+              <span className="text-xs font-black font-mono text-[#16A34A]">
                 +{request.tokenAmount.toLocaleString('vi-VN')} ViToken
               </span>
             </div>
@@ -250,7 +250,7 @@ export function QRCodeDisplay({
 
           {/* Trạng thái chờ xử lý thời gian thực */}
           <div className="flex items-center justify-center gap-2 py-1.5 text-xs text-slate-600 font-medium">
-            <span className="w-2 h-2 rounded-full bg-[#E0562D] animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-ping" />
             <span>Đang chờ chuyển khoản từ ứng dụng ngân hàng...</span>
           </div>
 
@@ -263,7 +263,7 @@ export function QRCodeDisplay({
                 disabled={isSimulating || isExpired}
                 className="w-full py-2 px-3 rounded-2xl border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-50 text-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center justify-center gap-2 cursor-pointer"
               >
-                <PlayCircle className="w-4 h-4 text-[#E0562D]" />
+                <PlayCircle className="w-4 h-4 text-[#16A34A]" />
                 <span>{isSimulating ? 'Đang kích hoạt...' : 'Giả lập đã nhận tiền (Dành cho Báo cáo Giảng viên)'}</span>
               </button>
               {simulateError && (

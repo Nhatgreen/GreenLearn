@@ -1,6 +1,6 @@
 export type ByokProvider = 'openai' | 'gemini' | 'chatgpt_oauth';
 
-const STORAGE_PREFIX = 'vitudy_byok_';
+const STORAGE_PREFIX = 'greenlearn_byok_';
 
 export class ByokStore {
   static get(provider: ByokProvider): string | null {

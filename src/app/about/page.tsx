@@ -8,7 +8,7 @@ import { getAssetPath } from '@/lib/assets';
 
 export default function AboutPage() {
   return (
-    <div className="w-full min-h-screen bg-[#faf8f5] text-stone-900 flex flex-col font-sans selection:bg-orange-100 selection:text-[#E0562D]">
+    <div className="w-full min-h-screen bg-[#faf8f5] text-stone-900 flex flex-col font-sans selection:bg-green-100 selection:text-[#16A34A]">
       {/* Header bar */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200/80 px-6 py-3.5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
@@ -22,14 +22,17 @@ export default function AboutPage() {
             <div className="flex items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={getAssetPath('/icons/vitudy.png')}
-                alt="ViTudy"
+                src={getAssetPath('/icons/greenlearn-icon.png')}
+                alt="GreenLearn"
                 width={32}
                 height={32}
                 className="w-8 h-8 rounded-xl object-contain shadow-xs flex-shrink-0"
                 style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px' }}
               />
-              <span className="text-base font-bold tracking-tight text-stone-900">ViTudy</span>
+              <span className="text-base font-bold tracking-tight text-stone-900">
+                <span className="text-[#16A34A]">Green</span>
+                <span className="text-[#242D3D]">Learn</span>
+              </span>
             </div>
           </div>
 
@@ -42,7 +45,7 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/?view=desk"
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold shadow-xs transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs transition-all active:scale-95"
             >
               <span>Vào bàn học</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -55,15 +58,15 @@ export default function AboutPage() {
       <main className="flex-1 max-w-4xl mx-auto px-6 py-12 md:py-16">
         {/* Hero Section cho khách */}
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100/80 text-[#9A3412] text-[11px] font-bold mb-4">
-            <Sparkles className="w-3 h-3 text-[#E0562D]" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100/80 text-[#166534] text-[11px] font-bold mb-4">
+            <Sparkles className="w-3 h-3 text-[#16A34A]" />
             Không gian học thức tích hợp AI 2.5D
           </span>
           <h1 className="text-3xl md:text-5xl font-serif text-stone-900 tracking-tight leading-tight mb-5">
             Trải giáo trình, đề thi và vở nháp trên cùng một bàn học
           </h1>
           <p className="text-sm md:text-base text-stone-600 leading-relaxed mb-8">
-            ViTudy số hóa trải nghiệm học tập thực tế: bạn không phải chuyển qua lại giữa các tab rời rạc, mà có thể dàn trải đồng thời giáo trình, tờ bài tập và giấy ghi chú trên một mặt bàn vô cực mượt mà.
+            GreenLearn số hóa trải nghiệm học tập thực tế: bạn không phải chuyển qua lại giữa các tab rời rạc, mà có thể dàn trải đồng thời giáo trình, tờ bài tập và giấy ghi chú trên một mặt bàn vô cực mượt mà.
           </p>
 
           <div className="flex items-center justify-center gap-3">
@@ -75,9 +78,9 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/?view=desk"
-              className="px-5 py-2.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold shadow-xs transition-all active:scale-95"
+              className="px-5 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs transition-all active:scale-95"
             >
-              Vào học ngay (Bản thử)
+              Vào học ngay (Miễn phí)
             </Link>
           </div>
         </div>
@@ -131,14 +134,14 @@ export default function AboutPage() {
           <div className="mb-8">
             <h2 className="text-xl md:text-2xl font-serif text-stone-900">Chi tiết kỹ thuật nền tảng</h2>
             <p className="text-xs md:text-sm text-stone-500 mt-1">
-              Các giải pháp công nghệ giúp ViTudy đạt hiệu năng tối đa và tính công thái học cao.
+              Các giải pháp công nghệ giúp GreenLearn đạt hiệu năng tối đa và tính công thái học cao.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Spec 1: KaTeX */}
             <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-2xs flex flex-col">
-              <div className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D] mb-4">
+              <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A] mb-4">
                 <Cpu className="w-5 h-5 stroke-[2.2]" />
               </div>
               <h3 className="text-sm font-bold text-stone-900 mb-1">KaTeX Math Rendering</h3>

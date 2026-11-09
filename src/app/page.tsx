@@ -38,7 +38,7 @@ function StudySpacePageContent() {
   // Lưu trạng thái view hiện tại vào sessionStorage để các trang con (như /profile, /market) quay về đúng nơi
   useEffect(() => {
     try {
-      sessionStorage.setItem('vitudy_last_view', isDeskView ? 'desk' : 'home');
+      sessionStorage.setItem('greenlearn_last_view', isDeskView ? 'desk' : 'home');
     } catch {
       // ignore
     }

@@ -151,7 +151,7 @@ export function KnowInheritPublishModal({
 
         {/* Header */}
         <div className="flex items-center gap-2.5 mb-1 flex-shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-[#FFF7ED] border border-orange-200 flex items-center justify-center text-[#E0562D]">
+          <div className="w-9 h-9 rounded-xl bg-[#F0FDF4] border border-green-200 flex items-center justify-center text-[#16A34A]">
             <Store className="w-5 h-5 stroke-[2.2]" />
           </div>
           <div>
@@ -163,8 +163,8 @@ export function KnowInheritPublishModal({
         </div>
 
         {/* 85% Concrete Example Pill */}
-        <div className="bg-orange-50/70 border border-orange-200/80 rounded-xl p-2.5 my-2.5 text-xs text-slate-700 flex-shrink-0 leading-relaxed">
-          <strong className="text-[#E0562D]">Chính sách chia sẻ 85/15:</strong> Bạn nhận 85% giá bán (Ví dụ: giá 50 ViToken, bạn nhận <strong>42,5 ViToken</strong> mỗi lượt mở khóa). ViToken tích lũy dùng để mở khóa tài liệu khác hoặc hỏi đáp AI.
+        <div className="bg-green-50/70 border border-green-200/80 rounded-xl p-2.5 my-2.5 text-xs text-slate-700 flex-shrink-0 leading-relaxed">
+          <strong className="text-[#16A34A]">Chính sách chia sẻ 85/15:</strong> Bạn nhận 85% giá bán (Ví dụ: giá 50 ViToken, bạn nhận <strong>42,5 ViToken</strong> mỗi lượt mở khóa). ViToken tích lũy dùng để mở khóa tài liệu khác hoặc hỏi đáp AI.
         </div>
 
         <div className="overflow-y-auto pr-1 flex-1">
@@ -201,7 +201,7 @@ export function KnowInheritPublishModal({
                       onClick={() => setDocType(t.id)}
                       className={`p-2 rounded-xl border text-xs flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
                         docType === t.id
-                          ? 'border-[#E0562D] bg-[#FFF7ED] text-[#E0562D] font-bold ring-1 ring-[#E0562D]'
+                          ? 'border-[#16A34A] bg-[#F0FDF4] text-[#16A34A] font-bold ring-1 ring-[#16A34A]'
                           : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -243,7 +243,7 @@ export function KnowInheritPublishModal({
                       type="checkbox"
                       checked={isAnonymous}
                       onChange={(e) => handleToggleAnonymous(e.target.checked)}
-                      className="accent-[#E0562D] rounded cursor-pointer"
+                      className="accent-[#16A34A] rounded cursor-pointer"
                     />
                     <span>Dùng bút danh ẩn danh</span>
                   </label>
@@ -311,11 +311,11 @@ export function KnowInheritPublishModal({
                   required
                   checked={hasCopyrightConsent}
                   onChange={(e) => setHasCopyrightConsent(e.target.checked)}
-                  className="w-4 h-4 accent-[#E0562D] rounded cursor-pointer mt-0.5 flex-shrink-0"
+                  className="w-4 h-4 accent-[#16A34A] rounded cursor-pointer mt-0.5 flex-shrink-0"
                 />
                 <span className="leading-snug">
                   Tôi xác nhận có quyền chia sẻ tài liệu này, không vi phạm bản quyền và cam kết tuân thủ{' '}
-                  <a href="/terms" target="_blank" rel="noreferrer" className="text-[#E0562D] underline font-semibold inline-flex items-center gap-0.5">
+                  <a href="/terms" target="_blank" rel="noreferrer" className="text-[#16A34A] underline font-semibold inline-flex items-center gap-0.5">
                     Điều khoản chia sẻ tri thức
                     <ExternalLink className="w-2.5 h-2.5" />
                   </a>{' '}
@@ -335,7 +335,7 @@ export function KnowInheritPublishModal({
                 <button
                   type="submit"
                   disabled={isAuditing || !hasCopyrightConsent}
-                  className="px-5 py-2 bg-[#E0562D] hover:bg-[#c9451e] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer"
+                  className="px-5 py-2 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-xs transition-all active:scale-95 cursor-pointer"
                 >
                   <UploadCloud className="w-4 h-4" />
                   <span>{isAuditing ? 'Đang thẩm định...' : 'Kiểm tra & Báo giá'}</span>
@@ -358,7 +358,7 @@ export function KnowInheritPublishModal({
                   </div>
                   <div className="bg-white p-2.5 rounded-xl border border-slate-200 text-center">
                     <div className="text-slate-400 text-[10px] font-semibold">Giá niêm yết</div>
-                    <div className="text-base font-bold text-[#E0562D] font-mono mt-0.5">{auditResult.price} ViToken</div>
+                    <div className="text-base font-bold text-[#16A34A] font-mono mt-0.5">{auditResult.price} ViToken</div>
                   </div>
                   <div className="bg-white p-2.5 rounded-xl border border-emerald-300 text-center bg-emerald-50/30">
                     <div className="text-emerald-700 text-[10px] font-semibold">Bạn nhận (85%)</div>
@@ -384,7 +384,7 @@ export function KnowInheritPublishModal({
                 <button
                   type="button"
                   onClick={handleConfirmPublish}
-                  className="px-5 py-2 bg-[#E0562D] hover:bg-[#c9451e] text-white font-bold rounded-xl text-xs shadow-xs transition-all active:scale-95 cursor-pointer"
+                  className="px-5 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold rounded-xl text-xs shadow-xs transition-all active:scale-95 cursor-pointer"
                 >
                   Xác nhận đưa lên Chợ
                 </button>

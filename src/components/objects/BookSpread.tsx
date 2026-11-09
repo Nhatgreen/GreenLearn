@@ -442,7 +442,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               <button
                 onClick={() => setIsFullScreen(true)}
                 title="Đọc toàn màn hình (Xem chuẩn PDF Reader)"
-                className="h-8 w-[48px] group-hover/tab:w-[110px] bg-orange-600 hover:bg-orange-500 active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
+                className="h-8 w-[48px] group-hover/tab:w-[110px] bg-orange-600 hover:bg-green-500 active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
                 style={{
                   clipPath: 'polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%)'
                 }}
@@ -963,7 +963,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             {/* Header */}
             <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-stone-200 text-xs">
               <div className="flex items-center gap-1.5 font-bold text-slate-900">
-                <Lightbulb className="w-4 h-4 text-[#E0562D]" />
+                <Lightbulb className="w-4 h-4 text-[#16A34A]" />
                 <span className="text-xs font-black tracking-tight">Inteline — Hỏi đáp & Phân tích</span>
               </div>
               <button 
@@ -1007,21 +1007,21 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 <button
                   disabled={selectionPopover.loading}
                   onClick={() => handleQuickAsk('Giải thích ngắn gọn đoạn này')}
-                  className="px-2.5 py-1 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[11px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                  className="px-2.5 py-1 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[11px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
                 >
                   Giải thích ngắn
                 </button>
                 <button
                   disabled={selectionPopover.loading}
                   onClick={() => handleQuickAsk('Cho ví dụ thực tế về đoạn này')}
-                  className="px-2.5 py-1 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[11px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                  className="px-2.5 py-1 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[11px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
                 >
                   Cho ví dụ
                 </button>
                 <button
                   disabled={selectionPopover.loading}
                   onClick={() => handleQuickAsk('Tóm 1 ý chính quan trọng nhất')}
-                  className="px-2.5 py-1 bg-[#FFF7ED] hover:bg-[#FFEDD5] text-[#9A3412] text-[11px] font-bold rounded-full border border-[#FFEDD5] transition-all cursor-pointer active:scale-95"
+                  className="px-2.5 py-1 bg-[#F0FDF4] hover:bg-[#FFEDD5] text-[#166534] text-[11px] font-bold rounded-full border border-[#BBF7D0] transition-all cursor-pointer active:scale-95"
                 >
                   Ý chính
                 </button>
@@ -1046,12 +1046,12 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                   }
                 }}
                 disabled={selectionPopover.loading}
-                className="flex-1 px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:border-[#E0562D] focus:bg-white text-slate-900"
+                className="flex-1 px-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-lg outline-none focus:border-[#16A34A] focus:bg-white text-slate-900"
               />
               <button
                 onClick={() => handleQuickAsk()}
                 disabled={selectionPopover.loading || !selectionPopover.question.trim()}
-                className="p-2 bg-[#E0562D] hover:bg-[#FF5722] disabled:opacity-40 text-white rounded-lg transition-all flex items-center justify-center cursor-pointer shadow-xs active:scale-95"
+                className="p-2 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-40 text-white rounded-lg transition-all flex items-center justify-center cursor-pointer shadow-xs active:scale-95"
               >
                 {selectionPopover.loading ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />

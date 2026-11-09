@@ -383,19 +383,19 @@ export function BottomLeftKnowledge() {
         disabled={isParsingDoc}
         onClick={() => fileInputRef.current?.click()}
         title={isParsingDoc ? "Đang trích xuất tài liệu..." : "Tải lên tài liệu (PDF, Word, Text, Ảnh...)"}
-        className="w-10 h-10 rounded-xl bg-white hover:bg-orange-50/80 text-[#E0562D] shadow-sm border border-slate-300 hover:border-orange-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group disabled:opacity-75 disabled:cursor-wait"
+        className="w-10 h-10 rounded-xl bg-white hover:bg-green-50/80 text-[#16A34A] shadow-sm border border-slate-300 hover:border-green-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group disabled:opacity-75 disabled:cursor-wait"
       >
         {isParsingDoc ? (
-          <Loader2 className="w-4.5 h-4.5 text-[#E0562D] animate-spin" />
+          <Loader2 className="w-4.5 h-4.5 text-[#16A34A] animate-spin" />
         ) : (
-          <Upload className="w-4.5 h-4.5 text-[#E0562D] stroke-[2.4] group-hover:scale-110 transition-transform" />
+          <Upload className="w-4.5 h-4.5 text-[#16A34A] stroke-[2.4] group-hover:scale-110 transition-transform" />
         )}
       </button>
 
       {/* Parsing PDF Indicator Toast */}
       {isParsingDoc && mounted && createPortal(
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] bg-white text-slate-800 px-4 py-2.5 rounded-full shadow-xl border border-orange-200 flex items-center gap-2.5 font-sans text-xs font-semibold animate-pulse">
-          <Loader2 className="w-4 h-4 text-[#E0562D] animate-spin flex-shrink-0" />
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] bg-white text-slate-800 px-4 py-2.5 rounded-full shadow-xl border border-green-200 flex items-center gap-2.5 font-sans text-xs font-semibold animate-pulse">
+          <Loader2 className="w-4 h-4 text-[#16A34A] animate-spin flex-shrink-0" />
           <span>Đang trích xuất các trang tài liệu PDF...</span>
         </div>,
         document.body
@@ -466,7 +466,7 @@ export function BottomLeftKnowledge() {
             >
               <div className="flex items-center gap-2.5">
                 {includeMic ? (
-                  <Mic className="w-4 h-4 text-[#E0562D] stroke-[2.4]" />
+                  <Mic className="w-4 h-4 text-[#16A34A] stroke-[2.4]" />
                 ) : (
                   <MicOff className="w-4 h-4 text-slate-400 stroke-[2.4]" />
                 )}
@@ -478,7 +478,7 @@ export function BottomLeftKnowledge() {
                 </div>
               </div>
 
-              <div className={`w-9 h-5 rounded-full p-0.5 transition-colors ${includeMic ? 'bg-[#E0562D]' : 'bg-slate-300'}`}>
+              <div className={`w-9 h-5 rounded-full p-0.5 transition-colors ${includeMic ? 'bg-[#16A34A]' : 'bg-slate-300'}`}>
                 <div className={`w-4 h-4 rounded-full bg-white transition-transform ${includeMic ? 'translate-x-4' : 'translate-x-0'}`} />
               </div>
             </div>
@@ -494,7 +494,7 @@ export function BottomLeftKnowledge() {
               <button
                 type="button"
                 onClick={handleStartRecording}
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#E0562D] hover:bg-[#c9451e] text-white transition-all shadow-xs cursor-pointer active:scale-95 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-[#16A34A] hover:bg-[#15803D] text-white transition-all shadow-xs cursor-pointer active:scale-95 flex items-center gap-1.5"
               >
                 <Video className="w-3.5 h-3.5 text-white stroke-[2.4]" />
                 <span>Bắt đầu ghi hình</span>
@@ -552,7 +552,7 @@ export function BottomLeftKnowledge() {
                 <button
                   type="button"
                   onClick={handleDownloadVideo}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#E0562D] hover:bg-[#c9451e] text-white transition-all shadow-md cursor-pointer active:scale-95 flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-[#16A34A] hover:bg-[#15803D] text-white transition-all shadow-md cursor-pointer active:scale-95 flex items-center gap-1.5"
                 >
                   <Download className="w-4 h-4 text-white stroke-[2.4]" />
                   <span>Tải video về máy</span>
@@ -587,7 +587,7 @@ export function BottomLeftKnowledge() {
             <div className="bg-slate-50 border border-slate-200 rounded-lg p-2.5 mb-4 text-xs flex items-center justify-between text-slate-600">
               <span className="font-medium truncate mr-2">{pendingDoc.file.name}</span>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="bg-orange-50 text-[#E0562D] border border-orange-200 px-1.5 py-0.5 rounded font-bold text-[10px]">
+                <span className="bg-green-50 text-[#16A34A] border border-green-200 px-1.5 py-0.5 rounded font-bold text-[10px]">
                   {pendingDoc.pages.length} trang
                 </span>
                 <span className="font-mono text-[11px] text-slate-400">{pendingDoc.fileSize}</span>
@@ -633,7 +633,7 @@ export function BottomLeftKnowledge() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-[#E0562D] hover:bg-[#c9451e] text-white transition-colors shadow-sm cursor-pointer"
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-[#16A34A] hover:bg-[#15803D] text-white transition-colors shadow-sm cursor-pointer"
                 >
                   Đặt lên bàn học
                 </button>
@@ -657,7 +657,7 @@ export function BottomLeftKnowledge() {
             </button>
 
             <div className="flex items-center gap-2 mb-1.5">
-              <div className="w-8 h-8 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D]">
+              <div className="w-8 h-8 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
                 <Users className="w-4.5 h-4.5 stroke-[2.4]" />
               </div>
               <h3 className="text-base font-bold text-slate-900">Mời bạn cùng học</h3>
@@ -671,7 +671,7 @@ export function BottomLeftKnowledge() {
               <label className="text-xs font-semibold text-slate-700 block mb-1">
                 Liên kết phòng học
               </label>
-              <div className="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-2 focus-within:border-[#E0562D] focus-within:bg-white transition-colors">
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-2 focus-within:border-[#16A34A] focus-within:bg-white transition-colors">
                 <input
                   type="text"
                   readOnly
@@ -688,7 +688,7 @@ export function BottomLeftKnowledge() {
                       setTimeout(() => setCopiedLink(false), 2000);
                     }
                   }}
-                  className="px-3 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer whitespace-nowrap active:scale-95"
+                  className="px-3 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer whitespace-nowrap active:scale-95"
                 >
                   {copiedLink ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedLink ? 'Đã sao chép' : 'Sao chép'}</span>
@@ -704,13 +704,13 @@ export function BottomLeftKnowledge() {
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <button
                   type="button"
-                  className="p-2.5 rounded-xl border border-[#E0562D] bg-orange-50/60 text-slate-900 font-bold text-left flex items-center justify-between shadow-2xs cursor-pointer"
+                  className="p-2.5 rounded-xl border border-[#16A34A] bg-green-50/60 text-slate-900 font-bold text-left flex items-center justify-between shadow-2xs cursor-pointer"
                 >
                   <div>
                     <div>Cùng chỉnh sửa</div>
                     <div className="text-[10px] text-slate-500 font-normal mt-0.5">Viết note, giải đề, vẽ bút</div>
                   </div>
-                  <div className="w-3.5 h-3.5 rounded-full bg-[#E0562D] text-white flex items-center justify-center">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#16A34A] text-white flex items-center justify-center">
                     <Check className="w-2.5 h-2.5 stroke-[3]" />
                   </div>
                 </button>

@@ -13,13 +13,13 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-[#E0562D] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 hover:text-[#16A34A] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Quay lại bàn học</span>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-[#E0562D] text-white flex items-center justify-center font-bold text-xs">
+            <div className="w-6 h-6 rounded-lg bg-[#16A34A] text-white flex items-center justify-center font-bold text-xs">
               <BookOpen className="w-3.5 h-3.5" />
             </div>
             <span className="font-bold text-sm text-slate-900">Điều khoản sử dụng</span>
@@ -30,7 +30,7 @@ export default function TermsPage() {
       {/* Content */}
       <main className="flex-1 max-w-4xl mx-auto px-6 py-12 w-full">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-4 border border-slate-200">
-          <ShieldCheck className="w-3.5 h-3.5 text-[#E0562D]" />
+          <ShieldCheck className="w-3.5 h-3.5 text-[#16A34A]" />
           <span>Quy định sử dụng bàn học ViTudy</span>
         </div>
 

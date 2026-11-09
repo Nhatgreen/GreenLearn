@@ -531,7 +531,7 @@ export const STICKER_CATEGORIES: StickerCategory[] = [
         isSvg: true,
         width: 130,
         height: 140,
-        content: `<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 10 C50 30 75 40 75 64 A25 25 0 0 1 25 64 C25 44 40 34 50 10 Z" fill="#E0562D" stroke="#9a3412" stroke-width="3"/><path d="M50 38 C50 50 64 56 64 68 A14 14 0 0 1 36 68 C36 56 45 50 50 38 Z" fill="#fef08a"/></svg>`
+        content: `<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M50 10 C50 30 75 40 75 64 A25 25 0 0 1 25 64 C25 44 40 34 50 10 Z" fill="#16A34A" stroke="#9a3412" stroke-width="3"/><path d="M50 38 C50 50 64 56 64 68 A14 14 0 0 1 36 68 C36 56 45 50 50 38 Z" fill="#fef08a"/></svg>`
       },
       {
         id: 'st-study-idea',

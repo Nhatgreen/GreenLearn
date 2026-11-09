@@ -268,7 +268,7 @@ export function TopRightWallet() {
           {wallet.streakDays > 0 ? (
             <div className="relative flex items-center justify-center w-10 h-10">
               {/* Ngọn lửa Cam ViT với bụng tròn ôm trọn số chuỗi ngày */}
-              <Flame className="w-8.5 h-8.5 text-[#E0562D] fill-[#E0562D] drop-shadow-xs transition-transform group-hover:scale-105" />
+              <Flame className="w-8.5 h-8.5 text-[#16A34A] fill-[#16A34A] drop-shadow-xs transition-transform group-hover:scale-105" />
               {/* Số chuỗi căn chuẩn xác 100% vào tâm bụng tròn ngọn lửa (x=50%, y=64%) */}
               <span className="absolute top-[62%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[11px] font-black font-mono text-white select-none pointer-events-none leading-none">
                 {wallet.streakDays}
@@ -339,7 +339,7 @@ export function TopRightWallet() {
               setIsTopUpOpen(true);
             }}
             title="Nạp ViToken (VietQR)"
-            className="flex items-center justify-center w-7 h-9 rounded-lg bg-[#E0562D] hover:bg-[#c9451e] text-white transition-all shadow-xs active:scale-95 cursor-pointer ml-0.5"
+            className="flex items-center justify-center w-7 h-9 rounded-lg bg-[#16A34A] hover:bg-[#15803D] text-white transition-all shadow-xs active:scale-95 cursor-pointer ml-0.5"
           >
             <Plus className="w-3.5 h-3.5 stroke-[3]" />
           </button>
@@ -395,8 +395,8 @@ export function TopRightWallet() {
               <X className="w-4 h-4" />
             </button>
 
-            <div className="w-12 h-12 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center mx-auto mb-2.5">
-              <Flame className="w-7 h-7 text-[#E0562D] fill-[#E0562D]" />
+            <div className="w-12 h-12 rounded-full bg-green-50 border border-orange-100 flex items-center justify-center mx-auto mb-2.5">
+              <Flame className="w-7 h-7 text-[#16A34A] fill-[#16A34A]" />
             </div>
 
             <h3 className="text-base font-black text-slate-900 mb-1">
@@ -425,11 +425,11 @@ export function TopRightWallet() {
                         isClaimed
                           ? 'bg-emerald-500 border-emerald-600 text-white font-bold'
                           : isToday && !isTodayClaimed
-                          ? 'bg-[#FFF7ED] border-[#E0562D] text-[#9A3412] font-black ring-2 ring-[#E0562D] ring-offset-2 animate-pulse'
+                          ? 'bg-[#F0FDF4] border-[#16A34A] text-[#166534] font-black ring-2 ring-[#16A34A] ring-offset-2 animate-pulse'
                           : isToday && isTodayClaimed
                           ? 'bg-emerald-500 border-emerald-600 text-white font-bold ring-2 ring-emerald-500 ring-offset-1'
                           : isSunday
-                          ? 'bg-orange-50 border-orange-300 text-[#E0562D] font-black'
+                          ? 'bg-green-50 border-green-300 text-[#16A34A] font-black'
                           : isMissed
                           ? 'bg-slate-100 border-dashed border-slate-300 text-slate-400 opacity-60'
                           : 'bg-slate-50 border-slate-200 text-slate-800'
@@ -451,7 +451,7 @@ export function TopRightWallet() {
 
                     <span
                       className={`text-[11px] font-bold mt-1.5 select-none ${
-                        isToday ? 'text-[#E0562D] font-black' : 'text-slate-600'
+                        isToday ? 'text-[#16A34A] font-black' : 'text-slate-600'
                       }`}
                     >
                       {day.label}
@@ -465,13 +465,13 @@ export function TopRightWallet() {
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3 mb-3 text-left">
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                  <Flame className="w-4 h-4 text-[#E0562D] fill-[#E0562D]" />
+                  <Flame className="w-4 h-4 text-[#16A34A] fill-[#16A34A]" />
                   <span>Chuỗi {wallet.streakDays} ngày</span>
                   <span className="text-[10.5px] font-mono font-bold text-slate-500 bg-white px-1.5 py-0.2 rounded border border-slate-200">
                     {(wallet.streakDays % 7) || (wallet.streakDays > 0 ? 7 : 0)}/7 ngày
                   </span>
                 </div>
-                <span className="text-[11px] font-bold text-[#E0562D]">
+                <span className="text-[11px] font-bold text-[#16A34A]">
                   {wallet.streakDays < 7 
                     ? `Mốc 7 ngày: +20 ViToken` 
                     : `Mốc 14 ngày: +50 ViToken`}
@@ -479,7 +479,7 @@ export function TopRightWallet() {
               </div>
               <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1.5">
                 <div 
-                  className="bg-[#E0562D] h-full rounded-full transition-all duration-500"
+                  className="bg-[#16A34A] h-full rounded-full transition-all duration-500"
                   style={{ width: `${Math.min(100, Math.max(12, (((wallet.streakDays % 7) || (wallet.streakDays > 0 ? 7 : 0)) / 7) * 100))}%` }}
                 />
               </div>
@@ -503,7 +503,7 @@ export function TopRightWallet() {
                     localStorage.setItem('vitudy_daily_reminder', String(checked));
                   } catch (err) {}
                 }}
-                className="w-3.5 h-3.5 accent-[#E0562D] rounded cursor-pointer"
+                className="w-3.5 h-3.5 accent-[#16A34A] rounded cursor-pointer"
               />
               <span className="flex items-center gap-1 font-medium text-slate-700">
                 <Bell className="w-3.5 h-3.5 text-slate-500" />
@@ -527,7 +527,7 @@ export function TopRightWallet() {
             ) : (
               <button
                 onClick={handleClaim}
-                className="w-full py-2.5 bg-[#E0562D] hover:bg-[#c9451e] text-white font-bold rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <ViTokenCoin className="w-4 h-4" />
                 <span>Nhận ViToken ngay</span>
@@ -577,7 +577,7 @@ export function TopRightWallet() {
                   setIsHistoryModalOpen(false);
                   setIsTopUpOpen(true);
                 }}
-                className="px-3 py-1.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
+                className="px-3 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[3]" />
                 <span>Nạp ViToken</span>
@@ -672,9 +672,9 @@ export function TopRightWallet() {
                       id: 'system' as AiProvider,
                       name: 'ViTudy (Hệ thống)',
                       badge: 'Mặc định',
-                      badgeStyle: 'bg-orange-50 text-[#E0562D] border-orange-200',
+                      badgeStyle: 'bg-green-50 text-[#16A34A] border-green-200',
                       desc: 'Sẵn sàng dùng ngay. Tự động trừ ViToken theo lượt dùng.',
-                      icon: <Sparkles className="w-4 h-4 text-[#E0562D]" />
+                      icon: <Sparkles className="w-4 h-4 text-[#16A34A]" />
                     },
                     {
                       id: 'byok_gemini' as AiProvider,
@@ -710,7 +710,7 @@ export function TopRightWallet() {
                         onClick={() => handleSelectProvider(opt.id)}
                         className={`p-2.5 rounded-2xl border text-xs cursor-pointer flex flex-col justify-between transition-all select-none ${
                           isSelected
-                            ? 'bg-orange-50/40 border-[#E0562D] ring-1 ring-[#E0562D]'
+                            ? 'bg-green-50/40 border-[#16A34A] ring-1 ring-[#16A34A]'
                             : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
                         }`}
                       >
@@ -724,7 +724,7 @@ export function TopRightWallet() {
                             name="ai_provider_radio"
                             checked={isSelected}
                             onChange={() => handleSelectProvider(opt.id)}
-                            className="accent-[#E0562D] cursor-pointer"
+                            className="accent-[#16A34A] cursor-pointer"
                           />
                         </div>
 
@@ -759,7 +759,7 @@ export function TopRightWallet() {
                       href="https://aistudio.google.com/app/apikey"
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[#E0562D] hover:underline flex items-center gap-1 text-[11px] font-bold"
+                      className="text-[#16A34A] hover:underline flex items-center gap-1 text-[11px] font-bold"
                     >
                       <span>Lấy Khóa API Google Gemini</span>
                       <ExternalLink className="w-3 h-3" />
@@ -770,7 +770,7 @@ export function TopRightWallet() {
                       href="https://platform.openai.com/api-keys"
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[#E0562D] hover:underline flex items-center gap-1 text-[11px] font-bold"
+                      className="text-[#16A34A] hover:underline flex items-center gap-1 text-[11px] font-bold"
                     >
                       <span>Lấy Khóa API OpenAI</span>
                       <ExternalLink className="w-3 h-3" />
@@ -781,7 +781,7 @@ export function TopRightWallet() {
                       href="https://chatgpt.com"
                       target="_blank"
                       rel="noreferrer"
-                      className="text-[#E0562D] hover:underline flex items-center gap-1 text-[11px] font-bold"
+                      className="text-[#16A34A] hover:underline flex items-center gap-1 text-[11px] font-bold"
                     >
                       <span>Mở ChatGPT Plus</span>
                       <ExternalLink className="w-3 h-3" />
@@ -792,7 +792,7 @@ export function TopRightWallet() {
                 {selectedProvider === 'system' && (
                   <div className="text-xs text-slate-700 bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between leading-relaxed">
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#E0562D] flex-shrink-0" />
+                      <Sparkles className="w-4 h-4 text-[#16A34A] flex-shrink-0" />
                       <span>Hệ thống ViTudy tích hợp sẵn, không cần khóa API. Chi phí ước tính: <strong>0,05 ViToken</strong> / lượt hỏi (khoảng 50đ).</span>
                     </div>
                   </div>
@@ -885,7 +885,7 @@ export function TopRightWallet() {
                     disabled={testConnectionStatus === 'testing'}
                     className="py-2 px-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 disabled:opacity-50 text-xs font-bold transition-all border border-slate-300 flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 flex-shrink-0"
                   >
-                    <Zap className="w-3.5 h-3.5 text-[#E0562D]" />
+                    <Zap className="w-3.5 h-3.5 text-[#16A34A]" />
                     <span>{testConnectionStatus === 'testing' ? 'Đang đo ms...' : 'Kiểm tra kết nối'}</span>
                   </button>
                 </div>
@@ -931,7 +931,7 @@ export function TopRightWallet() {
                     type="submit"
                     disabled={!hasAiChanges}
                     title={!hasAiChanges ? 'Chưa có thay đổi cấu hình' : 'Lưu cài đặt kết nối'}
-                    className="px-5 py-2 rounded-xl text-xs font-bold bg-[#E0562D] hover:bg-[#c9451e] disabled:opacity-40 disabled:cursor-not-allowed text-white shadow-xs cursor-pointer transition-all active:scale-95"
+                    className="px-5 py-2 rounded-xl text-xs font-bold bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-40 disabled:cursor-not-allowed text-white shadow-xs cursor-pointer transition-all active:scale-95"
                   >
                     Lưu cấu hình
                   </button>

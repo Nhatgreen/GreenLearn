@@ -151,15 +151,15 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
         <div className="mb-2.5">
           <label className={`flex items-center justify-between px-3 py-2 rounded-xl border transition-all cursor-pointer ${
             useAi 
-              ? 'bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 border-[#E0562D]/60 shadow-2xs ring-1 ring-[#E0562D]/20' 
+              ? 'bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 border-[#16A34A]/60 shadow-2xs ring-1 ring-[#16A34A]/20' 
               : 'bg-slate-50 border-slate-200 hover:border-slate-300'
           }`}>
             <div className="flex items-center gap-2">
-              <Sparkles className={`w-3.5 h-3.5 ${useAi ? 'text-[#E0562D] animate-pulse' : 'text-slate-400'}`} />
-              <span className={`text-xs font-black ${useAi ? 'text-[#E0562D]' : 'text-slate-700'}`}>
+              <Sparkles className={`w-3.5 h-3.5 ${useAi ? 'text-[#16A34A] animate-pulse' : 'text-slate-400'}`} />
+              <span className={`text-xs font-black ${useAi ? 'text-[#16A34A]' : 'text-slate-700'}`}>
                 Sử dụng AI.
               </span>
-              <span className="text-[9.5px] px-1.5 py-0.5 rounded-full bg-[#FFF7ED] text-[#9A3412] font-bold border border-[#FFEDD5]">
+              <span className="text-[9.5px] px-1.5 py-0.5 rounded-full bg-[#F0FDF4] text-[#166534] font-bold border border-[#BBF7D0]">
                 Chuyên sâu
               </span>
             </div>
@@ -167,7 +167,7 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
               type="checkbox"
               checked={useAi}
               onChange={(e) => setUseAi(e.target.checked)}
-              className="w-4 h-4 rounded accent-[#E0562D] cursor-pointer"
+              className="w-4 h-4 rounded accent-[#16A34A] cursor-pointer"
             />
           </label>
         </div>
@@ -177,7 +177,7 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
           <button
             onClick={handleGenerateQuestions}
             disabled={loading}
-            className="px-4 py-2 bg-[#E0562D] hover:bg-[#c9451e] active:scale-95 text-white rounded-xl text-xs font-bold whitespace-nowrap shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            className="px-4 py-2 bg-[#16A34A] hover:bg-[#15803D] active:scale-95 text-white rounded-xl text-xs font-bold whitespace-nowrap shadow-xs transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
           >
             <Sparkles className="w-3.5 h-3.5 text-white stroke-[2.4]" />
             <span>{loading ? 'Đang tạo đề...' : questions.length > 0 ? 'Tạo Đề Mới' : 'Sinh Câu Hỏi'}</span>
@@ -210,7 +210,7 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
                               : isWrong
                               ? 'bg-[#FEF2F2] border-[#DC2626] text-[#DC2626] font-bold'
                               : isChosen
-                              ? 'bg-[#FFF7ED] border-[#E0562D] text-slate-900 font-bold'
+                              ? 'bg-[#F0FDF4] border-[#16A34A] text-slate-900 font-bold'
                               : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700'
                           }`}
                         >
@@ -238,7 +238,7 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
           <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 mt-3">
             <button
               onClick={handleExportToExamSheet}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E0562D] hover:bg-[#c9451e] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer whitespace-nowrap active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer whitespace-nowrap active:scale-95"
             >
               <FileText className="w-3.5 h-3.5 stroke-[2.4]" />
               <span>Xuất Đề Thi Ra Bàn</span>

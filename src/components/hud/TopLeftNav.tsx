@@ -106,7 +106,7 @@ export function TopLeftNav() {
   };
 
   const getItemTypeIcon = (item: typeof activeSpace.items[0]) => {
-    if (item.isExamSheet) return <GraduationCap className="w-3.5 h-3.5 text-[#E0562D] flex-shrink-0" />;
+    if (item.isExamSheet) return <GraduationCap className="w-3.5 h-3.5 text-[#16A34A] flex-shrink-0" />;
     if (item.type === 'book') return <BookOpen className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />;
     if (item.type === 'sticky_note') return <StickyNote className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />;
     return <FileText className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />;
@@ -118,31 +118,32 @@ export function TopLeftNav() {
     <div className="relative flex flex-col gap-2 pointer-events-auto">
       {/* HUD Pill: Brand & Space Selector & Slide-out Search (+30% size, bold strokes) */}
       <div className="flex items-center gap-2.5 bg-white/95 border border-slate-300 rounded-2xl px-4 py-2.5 shadow-sm backdrop-blur-md text-slate-900">
-        {/* Brand Text ViTudy in Cam ViT (#E0562D) & Biểu tượng chính thức vitudy.svg */}
+        {/* Brand Text GreenLearn in Green (#16A34A) & Dark (#242D3D) */}
         <div className="flex items-center gap-1.5 pr-3 border-r border-slate-200">
           <Link
             href="/?view=home"
             onClick={() => {
               if (typeof window !== 'undefined') {
-                try { localStorage.setItem('vitudy_current_view', 'home'); } catch (e) {}
+                try { localStorage.setItem('greenlearn_current_view', 'home'); } catch (e) {}
               }
             }}
-            title="Trang chủ ViTudy"
+            title="Trang chủ GreenLearn"
             className="flex items-center gap-1.5 cursor-pointer hover:opacity-90 transition-opacity"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
-              src={getAssetPath('/icons/vitudy.png')} 
-              alt="ViTudy" 
+              src={getAssetPath('/icons/greenlearn-icon.png')} 
+              alt="GreenLearn" 
               width={24}
               height={24}
               className="w-6 h-6 object-contain flex-shrink-0" 
               style={{ width: '24px', height: '24px', maxWidth: '24px', maxHeight: '24px' }}
             />
             <span 
-              className="text-lg font-black tracking-tight text-[#E0562D] select-none leading-none"
+              className="text-lg font-black tracking-tight select-none leading-none"
             >
-              ViTudy
+              <span className="text-[#16A34A]">Green</span>
+              <span className="text-[#242D3D]">Learn</span>
             </span>
           </Link>
         </div>
@@ -260,7 +261,7 @@ export function TopLeftNav() {
                       <div className="flex-shrink-0">
                         {getItemTypeIcon(item)}
                       </div>
-                      <span className="truncate font-semibold text-slate-800 group-hover:text-[#E0562D] flex-1">
+                      <span className="truncate font-semibold text-slate-800 group-hover:text-[#16A34A] flex-1">
                         {item.title}
                       </span>
                     </button>
@@ -285,7 +286,7 @@ export function TopLeftNav() {
             <Link
               href="/profile?from=desk"
               title={`Hồ sơ cá nhân (${profile?.display_name || user.email})`}
-              className="w-7 h-7 rounded-lg overflow-hidden border border-slate-300 hover:border-[#E0562D] transition-colors flex items-center justify-center bg-[#FFF7ED] text-[#E0562D] font-bold text-xs shadow-xs"
+              className="w-7 h-7 rounded-lg overflow-hidden border border-slate-300 hover:border-[#16A34A] transition-colors flex items-center justify-center bg-[#F0FDF4] text-[#16A34A] font-bold text-xs shadow-xs"
             >
               {profile?.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -302,7 +303,7 @@ export function TopLeftNav() {
             <Link
               href="/auth"
               title="Đăng nhập tài khoản"
-              className="px-2.5 py-1 bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
+              className="px-2.5 py-1 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
             >
               <LogIn className="w-3.5 h-3.5 stroke-[2.4]" />
               <span className="hidden sm:inline">Đăng nhập</span>

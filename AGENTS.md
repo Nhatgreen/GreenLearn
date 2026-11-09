@@ -17,18 +17,17 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
 
 * **Bảng màu HUD / Hệ thống:**
   * Nền tảng: Sử dụng **Trắng (`#ffffff`)**, **Slate-50 (`#f8fafc`)**, **Đen (`#0f172a`)** và dải thang độ xám (`slate-100` đến `slate-800`).
-  * **Màu điểm nhấn nhận diện — Thống nhất mã màu Cam ViT (Signature Brand Accent):**
-    * Tên chuẩn: **Cam ViT** — Mã màu chính thức: **`#E0562D`** (trạng thái hover: **`#c9451e`**).
-    * Phạm vi áp dụng đồng bộ: Nút Tải lên, nút Mở bản đồ khi ẩn, nút "Nhận ViToken" điểm danh, nút "Mở tài liệu" ở Chợ, ngọn lửa chuỗi học tập khi có chuỗi, điểm tiến độ, nút nộp bài, các huy hiệu trạng thái chính.
-    * Hệ sắc độ đệm: Nền mềm `--accent-soft: #FFF7ED`, viền `--accent-border: #FFEDD5`, chữ `--accent-text: #9A3412` (chuẩn WCAG AA).
-  * **Biểu Tượng Thương Hiệu ViTudy & Icon ViToken Chính Thức (Official Brand Logo & ViToken Coin):**
-    * **Biểu tượng thương hiệu ViTudy (Logo đại diện Web ViTudy - Ảnh 1)**: Sử dụng hình ảnh `assets/icon/logo.png` (`/icons/vitudy.png`, `favicon.ico`, `src/app/icon.png`) làm logo đại diện chính thức của ViTudy trên toàn bộ thanh điều hướng `TopLeftNav`, trang chủ `HomePage`, trang giới thiệu `AboutPage`, và tiêu đề tab trình duyệt (Favicon).
-    * **Kiểu chữ (Typography) thương hiệu ViTudy thống nhất:** Chữ "ViTudy" bên cạnh logo ở toàn bộ các màn hình (cả `TopLeftNav` lẫn thanh bên `HomePage`) bắt buộc sử dụng chuẩn nhận diện thương hiệu màu Cam ViT in đậm: `text-lg font-black tracking-tight text-[#E0562D] select-none leading-none`.
-    * **Lược bỏ nút Home trên thanh TopLeftNav:** Do nhấp vào logo hoặc chữ "ViTudy" ở đầu thanh đã điều hướng về trang chủ (`/?view=home`), nút Home riêng biệt được lược bỏ để giữ thanh điều hướng tinh gọn và thanh thoát.
-    * **Biểu tượng ViToken (Coin ViToken / Credit - Ảnh 2)**: Sử dụng vector `assets/icon/vitoken.svg` (`/icons/vitoken.svg`) làm đồng tiền ViToken chính thức trong toàn bộ số dư ví, ô credit trên HUD (`TopRightWallet`), danh sách giao dịch, bảng nạp VietQR, và các nơi hiển thị token trong Chợ tài liệu.
+  * **Màu điểm nhấn nhận diện — Thống nhất mã màu Xanh Lá GreenLearn (Signature Brand Accent):**
+    * Tên chuẩn: **Xanh Lá GreenLearn** — Mã màu chính thức: **`#16A34A`** (trạng thái hover: **`#15803D`**).
+    * Kết hợp thẩm mỹ: **Xanh lá cây (`#16A34A`) + Nền Trắng (`#ffffff`) + Viền Đen / Slate (`#0f172a`, `#242D3D`)**.
+    * Hệ sắc độ đệm: Nền mềm `--accent-soft: #F0FDF4`, viền `--accent-border: #BBF7D0`, chữ `--accent-text: #166534` (chuẩn WCAG AA).
+  * **Biểu Tượng Thương Hiệu GreenLearn Chính Thức:**
+    * **Biểu tượng thương hiệu GreenLearn**: Sử dụng hình ảnh `public/icons/greenlearn-icon.png` (kèm vector SVG `public/icons/greenlearn-icon.svg`, `public/favicon.ico`, `src/app/icon.png`) làm logo đại diện chính thức của GreenLearn trên toàn bộ thanh điều hướng `TopLeftNav`, trang chủ `HomePage`, trang giới thiệu `AboutPage`, và tiêu đề tab trình duyệt (Favicon).
+    * **Kiểu chữ (Typography) thương hiệu GreenLearn thống nhất:** Chữ "GreenLearn" bên cạnh logo ở toàn bộ các màn hình (cả `TopLeftNav` lẫn thanh bên `HomePage`) bắt buộc sử dụng chuẩn nhận diện: chữ "Green" màu Xanh lá in đậm `text-[#16A34A]`, chữ "Learn" màu Xám đen navy `text-[#242D3D]`.
+    * **Lược bỏ nút Home trên thanh TopLeftNav:** Do nhấp vào logo hoặc chữ "GreenLearn" ở đầu thanh đã điều hướng về trang chủ (`/?view=home`), nút Home riêng biệt được lược bỏ để giữ thanh điều hướng tinh gọn và thanh thoát.
     * **Tương Thích Đường Dẫn Tài Nguyên Tĩnh (Static Asset Base Path Helper — `getAssetPath`):**
-      * Khi triển khai trên môi trường có subpath như GitHub Pages (`basePath: "/ViTudy"`), toàn bộ thẻ `<img>` và đường dẫn file tĩnh trong `public/` (ví dụ `/icons/vitudy.png`, `/icons/vitoken.svg`, `/icon.svg`, `/manifest.json`) **BẮT BUỘC** được bọc qua hàm `getAssetPath(path)` (`@/lib/assets`).
-      * Hàm `getAssetPath` tự động phát hiện `basePath` từ runtime (`window.location.pathname.startsWith('/ViTudy')`) hoặc biến môi trường `process.env.NEXT_PUBLIC_BASE_PATH`, ngăn chặn hoàn toàn lỗi ảnh 404 (broken image icon) trên GitHub Pages.
+      * Khi triển khai trên môi trường có subpath như GitHub Pages (`basePath: "/GreenLearn"`), toàn bộ thẻ `<img>` và đường dẫn file tĩnh trong `public/` (ví dụ `/icons/greenlearn-icon.png`, `/icons/greenlearn-icon.svg`, `/icon.svg`, `/manifest.json`) **BẮT BUỘC** được bọc qua hàm `getAssetPath(path)` (`@/lib/assets`).
+      * Hàm `getAssetPath` tự động phát hiện `basePath` từ runtime (`window.location.pathname.startsWith('/GreenLearn')`) hoặc biến môi trường `process.env.NEXT_PUBLIC_BASE_PATH`, ngăn chặn hoàn toàn lỗi ảnh 404 (broken image icon) trên GitHub Pages.
     * **Quy Chuẩn Khống Chế Kích Thước Ảnh & SVG (Strict Image & SVG Size Containment):**
       * File vector SVG ViToken (`vitoken.svg`) bắt buộc dùng `viewBox="0 0 1500 1500" width="100%" height="100%"`, triệt tiêu hoàn toàn kích thước tĩnh `width="2000" height="2000"`.
       * Mọi thẻ `<img>` hiển thị logo hoặc coin bắt buộc sử dụng class Tailwind hợp lệ (như `w-5 h-5`, `w-6 h-6`, `w-8 h-8`), kèm thuộc tính HTML `width={...} height={...}` và inline style phòng vệ `style={{ width, height, maxWidth, maxHeight }}`. Nghiêm cấm sử dụng các class không có trong bảng quy cách của Tailwind (như `w-5.5`), bảo đảm 100% icon luôn nằm đúng kích thước vị trí nó đứng, tuyệt đối không bị bung to che tràn màn hình.

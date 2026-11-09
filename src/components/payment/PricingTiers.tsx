@@ -45,13 +45,13 @@ export function PricingTiers({
               onClick={() => onSelectPackage(pkg)}
               className={`relative rounded-2xl p-3 border transition-all cursor-pointer flex flex-col justify-between text-left ${
                 isSelected
-                  ? 'border-[#E0562D] bg-orange-50/50 ring-2 ring-[#E0562D]/40 shadow-xs'
+                  ? 'border-[#16A34A] bg-green-50/50 ring-2 ring-[#16A34A]/40 shadow-xs'
                   : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60'
               }`}
             >
               {/* Huy hiệu nổi bật */}
               {isPopular && (
-                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#E0562D] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-2xs whitespace-nowrap">
+                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#16A34A] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-2xs whitespace-nowrap">
                   Được chọn nhiều
                 </div>
               )}
@@ -71,7 +71,7 @@ export function PricingTiers({
                     {pkg.priceVnd.toLocaleString('vi-VN')}{' '}
                     <span className="text-[10px] font-sans font-normal text-slate-500">đ</span>
                   </div>
-                  <div className="text-[11px] font-bold text-[#E0562D] mt-1.5 font-mono whitespace-nowrap">
+                  <div className="text-[11px] font-bold text-[#16A34A] mt-1.5 font-mono whitespace-nowrap">
                     Nhận {pkg.tokenAmount.toLocaleString('vi-VN')} ViToken
                   </div>
                 </div>
@@ -81,7 +81,7 @@ export function PricingTiers({
                 <div
                   className={`w-4 h-4 rounded-full flex items-center justify-center transition-all ${
                     isSelected
-                      ? 'bg-[#E0562D] text-white ring-1 ring-[#E0562D]'
+                      ? 'bg-[#16A34A] text-white ring-1 ring-[#16A34A]'
                       : 'border border-slate-300 text-transparent'
                   }`}
                 >

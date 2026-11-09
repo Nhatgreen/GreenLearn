@@ -54,7 +54,7 @@ export function DeleteAccount({ userEmail }: DeleteAccountProps) {
         // Collect localStorage items
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
-          if (key && key.startsWith('vitudy:')) {
+          if (key && (key.startsWith('greenlearn') || key.startsWith('vitudy'))) {
             try {
               dataToExport[key] = JSON.parse(localStorage.getItem(key) || '{}');
             } catch {
@@ -68,7 +68,7 @@ export function DeleteAccount({ userEmail }: DeleteAccountProps) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `vitudy_data_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `greenlearn_data_backup_${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -133,7 +133,7 @@ export function DeleteAccount({ userEmail }: DeleteAccountProps) {
       await signOut();
       router.replace('/');
     } catch (err: any) {
-      setErrorMsg(err.message || 'Không thể xóa tài khoản. Vui lòng liên hệ support@vitudy.edu.vn.');
+      setErrorMsg(err.message || 'Không thể xóa tài khoản. Vui lòng liên hệ hỗ trợ qua GitHub.');
       setIsDeleting(false);
     }
   };

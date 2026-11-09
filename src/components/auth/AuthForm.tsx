@@ -63,7 +63,7 @@ export function AuthForm({ mode, onSignIn, onSignUp, isLoading = false, error: e
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="Ví dụ: Nguyễn Văn A"
-              className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E0562D] focus:border-transparent transition-all"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#16A34A] focus:border-transparent transition-all"
             />
           </div>
         </div>
@@ -82,7 +82,7 @@ export function AuthForm({ mode, onSignIn, onSignUp, isLoading = false, error: e
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="ten@vidu.com"
-            className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E0562D] focus:border-transparent transition-all"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#16A34A] focus:border-transparent transition-all"
           />
         </div>
       </div>
@@ -100,7 +100,7 @@ export function AuthForm({ mode, onSignIn, onSignUp, isLoading = false, error: e
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Tối thiểu 6 ký tự"
-            className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E0562D] focus:border-transparent transition-all"
+            className="w-full pl-9 pr-10 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#16A34A] focus:border-transparent transition-all"
           />
           <button
             type="button"
@@ -123,7 +123,7 @@ export function AuthForm({ mode, onSignIn, onSignUp, isLoading = false, error: e
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-2.5 px-4 bg-[#E0562D] hover:bg-[#c9451e] text-white text-sm font-bold rounded-lg shadow-sm hover:shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-2.5 px-4 bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-bold rounded-lg shadow-sm hover:shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isLoading ? (
           <>

@@ -196,7 +196,7 @@ export default function MarketPage() {
           </Link>
 
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-orange-50 border border-orange-200 flex items-center justify-center text-[#E0562D] shadow-xs">
+            <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A] shadow-xs">
               <Store className="w-5 h-5" />
             </div>
             <div>
@@ -227,7 +227,7 @@ export default function MarketPage() {
                 style={{ width: '20px', height: '20px', maxWidth: '20px', maxHeight: '20px' }}
               />
               <span className="text-xs text-stone-600 font-medium">Ví:</span>
-              <span className="font-mono font-black text-xs text-[#E0562D]">{wallet.balance} ViToken</span>
+              <span className="font-mono font-black text-xs text-[#16A34A]">{wallet.balance} ViToken</span>
             </div>
           </div>
         </div>
@@ -289,7 +289,7 @@ export default function MarketPage() {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   selectedCategory === cat.id
-                    ? 'bg-[#E0562D] text-white shadow-xs'
+                    ? 'bg-[#16A34A] text-white shadow-xs'
                     : 'bg-stone-100 text-stone-600 hover:bg-stone-200/80'
                 }`}
               >
@@ -342,7 +342,7 @@ export default function MarketPage() {
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="flex items-center gap-1 text-[11.5px] font-bold text-[#E0562D] hover:text-[#c9451e] bg-orange-50 hover:bg-orange-100 border border-orange-200 px-2.5 py-1.5 rounded-xl transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-[11.5px] font-bold text-[#16A34A] hover:text-[#15803D] bg-green-50 hover:bg-green-100 border border-green-200 px-2.5 py-1.5 rounded-xl transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>Đặt lại</span>
@@ -370,7 +370,7 @@ export default function MarketPage() {
               {hasActiveFilters && (
                 <button
                   onClick={handleResetFilters}
-                  className="mt-3.5 inline-flex items-center gap-1.5 text-xs font-bold text-[#E0562D] bg-orange-50 hover:bg-orange-100 border border-orange-200 px-3.5 py-1.5 rounded-xl transition-colors cursor-pointer"
+                  className="mt-3.5 inline-flex items-center gap-1.5 text-xs font-bold text-[#16A34A] bg-green-50 hover:bg-green-100 border border-green-200 px-3.5 py-1.5 rounded-xl transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Đặt lại tất cả bộ lọc</span>
@@ -402,7 +402,7 @@ export default function MarketPage() {
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-sm font-black text-stone-900 group-hover:text-[#E0562D] transition-colors line-clamp-2 leading-snug mb-1.5">
+                    <h3 className="text-sm font-black text-stone-900 group-hover:text-[#16A34A] transition-colors line-clamp-2 leading-snug mb-1.5">
                       {item.title}
                     </h3>
 
@@ -432,7 +432,7 @@ export default function MarketPage() {
 
                   {/* Footer: Price & Actions */}
                   <div className="pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 font-mono font-black text-[#E0562D]">
+                    <div className="flex items-center gap-1.5 font-mono font-black text-[#16A34A]">
                       <img 
                         src={getAssetPath('/icons/vitoken.svg')} 
                         alt="ViToken" 
@@ -467,7 +467,7 @@ export default function MarketPage() {
                         <button
                           type="button"
                           onClick={() => handlePurchase(item)}
-                          className="px-3 py-1.5 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer active:scale-95"
+                          className="px-3 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold flex items-center gap-1 transition-all shadow-xs cursor-pointer active:scale-95"
                         >
                           <span>Mua {item.price} V</span>
                         </button>
@@ -493,7 +493,7 @@ export default function MarketPage() {
             </button>
 
             <div className="mb-3">
-              <span className="text-[10.5px] font-bold font-mono px-2 py-0.5 rounded-full bg-orange-50 text-[#E0562D] border border-orange-200 uppercase">
+              <span className="text-[10.5px] font-bold font-mono px-2 py-0.5 rounded-full bg-green-50 text-[#16A34A] border border-green-200 uppercase">
                 Bản xem trước bảo mật • {getTypeLabel(previewItem.type)}
               </span>
               <h2 className="text-base font-black text-stone-900 mt-2 leading-tight">
@@ -559,7 +559,7 @@ export default function MarketPage() {
               </div>
             ) : (
               <div className="flex items-center justify-between pt-3 border-t border-stone-200">
-                <div className="flex items-center gap-1.5 font-mono font-black text-base text-[#E0562D]">
+                <div className="flex items-center gap-1.5 font-mono font-black text-base text-[#16A34A]">
                   <img 
                     src={getAssetPath('/icons/vitoken.svg')} 
                     alt="ViToken" 
@@ -593,7 +593,7 @@ export default function MarketPage() {
                     <button
                       type="button"
                       onClick={() => handlePurchase(previewItem)}
-                      className="px-5 py-2 rounded-xl bg-[#E0562D] hover:bg-[#c9451e] text-white text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
+                      className="px-5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
                     >
                       Mua tài liệu ngay
                     </button>
@@ -617,7 +617,7 @@ export default function MarketPage() {
             </button>
 
             <div className="mb-4">
-              <span className="text-[10.5px] font-bold font-mono px-2 py-0.5 rounded-full bg-orange-50 text-[#E0562D] border border-orange-200 uppercase">
+              <span className="text-[10.5px] font-bold font-mono px-2 py-0.5 rounded-full bg-green-50 text-[#16A34A] border border-green-200 uppercase">
                 Đóng góp tri thức
               </span>
               <h2 className="text-base font-black text-stone-900 mt-2">

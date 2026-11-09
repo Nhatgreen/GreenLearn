@@ -57,7 +57,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
   // Load recents on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('vitudy:recent-emojis');
+      const saved = localStorage.getItem('greenlearn:recent-emojis') || localStorage.getItem('vitudy:recent-emojis');
       if (saved) {
         setRecentEmojis(JSON.parse(saved));
       }
@@ -96,7 +96,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
     const updated = [item, ...recentEmojis.filter((r) => r.id !== item.id)].slice(0, 14);
     setRecentEmojis(updated);
     try {
-      localStorage.setItem('vitudy:recent-emojis', JSON.stringify(updated));
+      localStorage.setItem('greenlearn:recent-emojis', JSON.stringify(updated));
     } catch {
       // ignore
     }
@@ -106,6 +106,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
   const handleClearRecents = () => {
     setRecentEmojis([]);
     try {
+      localStorage.removeItem('greenlearn:recent-emojis');
       localStorage.removeItem('vitudy:recent-emojis');
     } catch {
       // ignore
@@ -182,7 +183,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                 ? 'Tìm kiếm ảnh GIF trực tuyến...'
                 : 'Tìm kiếm biểu tượng cảm xúc (emoji)...'
             }
-            className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-[#E0562D] focus:bg-white transition-colors"
+            className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 placeholder-slate-400 outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
           />
         </div>
         <button
@@ -213,7 +214,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
               onClick={() => setActiveTab(tab)}
               className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
                 isSelected
-                  ? 'bg-[#E0562D] text-white shadow-xs font-bold'
+                  ? 'bg-[#16A34A] text-white shadow-xs font-bold'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -233,7 +234,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Đã dùng gần đây"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'recent'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -247,7 +248,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Biểu cảm & Con người"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'people'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -261,7 +262,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Động vật & Tự nhiên"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'nature'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -275,7 +276,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Đồ ăn & Thức uống"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'food'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -291,7 +292,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Hoạt động & Thể thao"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'activities'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -308,7 +309,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Du lịch & Địa điểm"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'travel'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -322,7 +323,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Đồ vật & Dụng cụ"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'objects'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -336,7 +337,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Ký hiệu & Biểu trưng"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'symbols'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -350,7 +351,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Cờ các quốc gia"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'flags'
-                ? 'bg-orange-100 text-[#E0562D] ring-1 ring-orange-300 font-bold'
+                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -393,7 +394,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                 onClick={() => setSearchQuery(tag)}
                 className={`px-2.5 py-0.5 rounded-full whitespace-nowrap transition-colors cursor-pointer text-[11px] font-semibold ${
                   searchQuery.toLowerCase() === tag.toLowerCase()
-                    ? 'bg-[#E0562D] text-white'
+                    ? 'bg-[#16A34A] text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >
@@ -425,7 +426,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                   {recentEmojis.length > 0 && (
                     <button
                       onClick={handleClearRecents}
-                      className="text-[11px] text-[#E0562D] hover:underline font-medium cursor-pointer"
+                      className="text-[11px] text-[#16A34A] hover:underline font-medium cursor-pointer"
                     >
                       Xóa lịch sử
                     </button>
@@ -505,7 +506,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                                 title={tone.label}
                                 aria-label={tone.label}
                                 className={`w-7 h-7 rounded-lg flex items-center justify-center text-lg hover:bg-slate-100 transition-transform hover:scale-120 cursor-pointer ${
-                                  selectedSkinTone === tone.id ? 'bg-orange-50 ring-1 ring-[#E0562D]' : ''
+                                  selectedSkinTone === tone.id ? 'bg-green-50 ring-1 ring-[#16A34A]' : ''
                                 }`}
                               >
                                 {tone.icon}
@@ -570,7 +571,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                         onClick={() => onSelect(item)}
                         title={item.name}
                         aria-label={item.name}
-                        className="aspect-square p-2.5 rounded-2xl border border-slate-200 hover:border-[#E0562D] hover:bg-orange-50/30 flex items-center justify-center transition-all hover:scale-105 cursor-pointer bg-white shadow-2xs"
+                        className="aspect-square p-2.5 rounded-2xl border border-slate-200 hover:border-[#16A34A] hover:bg-green-50/30 flex items-center justify-center transition-all hover:scale-105 cursor-pointer bg-white shadow-2xs"
                       >
                         <div
                           className="w-full h-full flex items-center justify-center pointer-events-none [&>svg]:w-full [&>svg]:h-full"
@@ -604,7 +605,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
 
             {isLoadingGifs && (
               <div className="flex flex-col items-center justify-center py-14 text-slate-400 gap-2">
-                <Loader2 className="w-6 h-6 animate-spin text-[#E0562D]" />
+                <Loader2 className="w-6 h-6 animate-spin text-[#16A34A]" />
                 <span className="text-xs">Đang tìm kiếm kho GIF trực tuyến...</span>
               </div>
             )}
@@ -623,7 +624,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                     onClick={() => onSelect(item)}
                     title={item.name}
                     aria-label={item.name}
-                    className="group/gif relative aspect-video rounded-xl overflow-hidden border border-slate-200 hover:border-[#E0562D] hover:shadow-md transition-all hover:scale-[1.02] cursor-pointer bg-slate-950 flex items-center justify-center"
+                    className="group/gif relative aspect-video rounded-xl overflow-hidden border border-slate-200 hover:border-[#16A34A] hover:shadow-md transition-all hover:scale-[1.02] cursor-pointer bg-slate-950 flex items-center justify-center"
                   >
                     <img
                       src={item.url}
@@ -652,7 +653,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                 <span className="text-xs font-bold text-slate-700">Hình dán tiêu biểu</span>
                 <button
                   onClick={() => setActiveTab('stickers')}
-                  className="text-[11px] text-[#E0562D] hover:underline font-medium cursor-pointer"
+                  className="text-[11px] text-[#16A34A] hover:underline font-medium cursor-pointer"
                 >
                   Xem tất cả
                 </button>
@@ -664,7 +665,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                     onClick={() => onSelect(item)}
                     title={item.name}
                     aria-label={item.name}
-                    className="aspect-square p-2 rounded-xl border border-slate-200 hover:border-[#E0562D] hover:bg-orange-50/30 flex items-center justify-center transition-all hover:scale-105 cursor-pointer bg-white"
+                    className="aspect-square p-2 rounded-xl border border-slate-200 hover:border-[#16A34A] hover:bg-green-50/30 flex items-center justify-center transition-all hover:scale-105 cursor-pointer bg-white"
                   >
                     <div
                       className="w-full h-full flex items-center justify-center pointer-events-none [&>svg]:w-full [&>svg]:h-full"
@@ -681,7 +682,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
                 <span className="text-xs font-bold text-slate-700">Biểu tượng cảm xúc</span>
                 <button
                   onClick={() => setActiveTab('emojis')}
-                  className="text-[11px] text-[#E0562D] hover:underline font-medium cursor-pointer"
+                  className="text-[11px] text-[#16A34A] hover:underline font-medium cursor-pointer"
                 >
                   Xem tất cả
                 </button>

@@ -7,14 +7,16 @@
   --background: #f8fafc;
   --foreground: #0f172a;
 
-  /* Signature Coral Orange Brand Accent (from Java Study System) */
-  --accent: #E0562D;
-  --accent-hover: #FF5722;
-  --accent-active: #C4431C;
-  --accent-soft: #FFF7ED;
-  --accent-border: #FFEDD5;
-  --accent-text: #9A3412;
-  --accent-glow: rgba(224, 86, 45, 0.35);
+  /* Signature GreenLearn Brand Accent: Green + White + Black/Dark Border */
+  --accent: #16A34A;
+  --accent-hover: #15803D;
+  --accent-active: #166534;
+  --accent-soft: #F0FDF4;
+  --accent-border: #BBF7D0;
+  --accent-text: #166534;
+  --accent-glow: rgba(22, 163, 74, 0.35);
+  --brand-dark: #242D3D;
+  --brand-black: #0F172A;
 
   /* Status Tokens (WCAG AA >= 4.5:1) */
   --ok: #15803D;

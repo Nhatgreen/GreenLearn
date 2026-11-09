@@ -11,7 +11,7 @@ describe('GuestBanner', () => {
   });
 
   it('does not render banner when user is authenticated', () => {
-    const mockUser = { id: 'u-123', email: 'test@vitudy.com' } as User;
+    const mockUser = { id: 'u-123', email: 'test@greenlearn.com' } as User;
     render(<GuestBanner user={mockUser} />);
     expect(screen.queryByText(/Đăng nhập để lưu/)).toBeNull();
   });

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import { User, Session } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { isDiscordActivity } from '@/lib/discord/detect';
+import { migrateLegacyStorage } from '@/lib/storageMigration';
 
 export type AuthStatus = 'loading' | 'guest' | 'authenticated';
 
@@ -66,6 +67,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user?.id, fetchProfile]);
 
   useEffect(() => {
+    migrateLegacyStorage();
+
     const supabase = getSupabase();
     if (!supabase) {
       setStatus('guest');

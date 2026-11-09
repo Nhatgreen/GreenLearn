@@ -16,7 +16,7 @@ export function ProfileHeader({ profile, email }: ProfileHeaderProps) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const displayName = profile?.display_name || email.split('@')[0] || 'Học viên ViTudy';
+  const displayName = profile?.display_name || email.split('@')[0] || 'Học viên GreenLearn';
   const initial = displayName.charAt(0).toUpperCase();
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +83,7 @@ export function ProfileHeader({ profile, email }: ProfileHeaderProps) {
     <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-5">
       {/* Avatar Container */}
       <div className="relative group">
-        <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-[#FFF7ED] to-orange-100 border-2 border-orange-200 flex items-center justify-center text-2xl font-black text-[#E0562D] shadow-sm">
+        <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-[#F0FDF4] to-green-100 border-2 border-green-200 flex items-center justify-center text-2xl font-black text-[#16A34A] shadow-sm">
           {profile?.avatar_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img 
@@ -101,7 +101,7 @@ export function ProfileHeader({ profile, email }: ProfileHeaderProps) {
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
           aria-label="Thay đổi ảnh đại diện"
-          className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg bg-slate-900 hover:bg-[#E0562D] text-white flex items-center justify-center shadow-md transition-colors disabled:opacity-50"
+          className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg bg-slate-900 hover:bg-[#16A34A] text-white flex items-center justify-center shadow-md transition-colors disabled:opacity-50"
         >
           {isUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
         </button>
@@ -121,12 +121,12 @@ export function ProfileHeader({ profile, email }: ProfileHeaderProps) {
         <p className="text-xs text-slate-500 font-medium mt-0.5">{email}</p>
 
         {/* ViToken Badge */}
-        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-[#FFF7ED] border border-orange-200/80 rounded-xl">
-          <div className="w-5 h-5 rounded-full bg-[#E0562D] text-white flex items-center justify-center font-black text-[11px]">
+        <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-[#F0FDF4] border border-green-200/80 rounded-xl">
+          <div className="w-5 h-5 rounded-full bg-[#16A34A] text-white flex items-center justify-center font-black text-[11px]">
             V
           </div>
           <span className="text-xs text-slate-600">Số dư khả dụng:</span>
-          <span className="text-xs font-black font-mono text-[#9A3412]">
+          <span className="text-xs font-black font-mono text-[#166534]">
             {profile?.vitoken_balance ?? 0} ViToken
           </span>
         </div>

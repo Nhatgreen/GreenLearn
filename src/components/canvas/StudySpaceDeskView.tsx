@@ -83,7 +83,7 @@ export default function StudySpaceDeskView() {
             type="button"
             onClick={() => setShowTopLeftInFocus(prev => !prev)}
             title={showTopLeftInFocus ? "Thu gọn thanh tiêu đề lên trên" : "Mở thanh tiêu đề bàn học"}
-            className="absolute top-full left-6 mt-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#E0562D] border border-slate-300 rounded-b-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
+            className="absolute top-full left-6 mt-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#16A34A] border border-slate-300 rounded-b-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
           >
             {showTopLeftInFocus ? (
               <ChevronUp className="w-3.5 h-3.5 stroke-[2.4]" />
@@ -109,7 +109,7 @@ export default function StudySpaceDeskView() {
             type="button"
             onClick={() => setShowTopRightInFocus(prev => !prev)}
             title={showTopRightInFocus ? "Thu gọn thanh ví & chuỗi lên trên" : "Mở thanh ví & chuỗi điểm danh"}
-            className="absolute top-full right-6 mt-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#E0562D] border border-slate-300 rounded-b-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
+            className="absolute top-full right-6 mt-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#16A34A] border border-slate-300 rounded-b-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
           >
             {showTopRightInFocus ? (
               <ChevronUp className="w-3.5 h-3.5 stroke-[2.4]" />
@@ -135,7 +135,7 @@ export default function StudySpaceDeskView() {
             type="button"
             onClick={() => setShowLeftInFocus(prev => !prev)}
             title={showLeftInFocus ? "Thu gọn thanh công cụ vào vách" : "Mở thanh công cụ vẽ & ghi chú"}
-            className="absolute left-full top-1/2 -translate-y-1/2 ml-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#E0562D] border border-slate-300 rounded-r-xl p-1 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
+            className="absolute left-full top-1/2 -translate-y-1/2 ml-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#16A34A] border border-slate-300 rounded-r-xl p-1 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
           >
             {showLeftInFocus ? (
               <ChevronLeft className="w-3.5 h-3.5 stroke-[2.4]" />
@@ -161,7 +161,7 @@ export default function StudySpaceDeskView() {
             type="button"
             onClick={() => setShowBottomLeftInFocus(prev => !prev)}
             title={showBottomLeftInFocus ? "Thu gọn bộ nút tải lên xuống dưới" : "Mở bộ nút tải lên & ghi hình"}
-            className="absolute bottom-full left-6 mb-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#E0562D] border border-slate-300 rounded-t-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
+            className="absolute bottom-full left-6 mb-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#16A34A] border border-slate-300 rounded-t-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
           >
             {showBottomLeftInFocus ? (
               <ChevronDown className="w-3.5 h-3.5 stroke-[2.4]" />
@@ -187,7 +187,7 @@ export default function StudySpaceDeskView() {
             type="button"
             onClick={() => setShowBottomRightInFocus(prev => !prev)}
             title={showBottomRightInFocus ? "Thu gọn thanh điều khiển xuống dưới" : "Mở thanh zoom & điều khiển bàn học"}
-            className="absolute bottom-full right-6 mb-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#E0562D] border border-slate-300 rounded-t-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
+            className="absolute bottom-full right-6 mb-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#16A34A] border border-slate-300 rounded-t-xl px-2.5 py-0.5 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
           >
             {showBottomRightInFocus ? (
               <ChevronDown className="w-3.5 h-3.5 stroke-[2.4]" />

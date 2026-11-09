@@ -84,7 +84,7 @@ export async function setDiscordPresence(details: string, state?: string): Promi
         activity: {
           type: 0, // Playing / Studying
           details,
-          state: state || 'Bàn học ViTudy 2.5D',
+          state: state || 'Bàn học GreenLearn 2.5D',
           timestamps: {
             start: Math.floor(now / 1000),
           },
