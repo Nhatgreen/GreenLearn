@@ -38,7 +38,7 @@ export default function PrivacyPage() {
           Chính sách quyền riêng tư
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mb-8">
-          Cách ViTudy lưu trữ và bảo vệ bài học, ghi chú và tài khoản của bạn.
+          Cách GreenLearn lưu trữ và bảo vệ bài học, ghi chú và tài khoản của bạn.
         </p>
 
         <div className="space-y-6 text-sm text-slate-700 leading-relaxed">
@@ -48,44 +48,45 @@ export default function PrivacyPage() {
               <span>1. Những thông tin được lưu lại</span>
             </h2>
             <p>
-              ViTudy chỉ lưu các thông tin cần thiết để bàn học của bạn hoạt động:
+              GreenLearn chỉ lưu các thông tin kỹ thuật cần thiết để bàn học của bạn hoạt động liền mạch:
             </p>
             <ul className="list-disc pl-5 space-y-1 text-xs text-slate-600">
               <li>Địa chỉ email khi bạn tạo tài khoản để đồng bộ dữ liệu giữa các máy tính.</li>
               <li>Vị trí sách, mẩu giấy ghi chú và nét vẽ trên bàn học của bạn.</li>
-              <li>Lịch sử các câu hỏi trắc nghiệm bạn đã làm để tính chu kỳ nhắc ôn lại.</li>
+              <li>Lịch sử các câu hỏi trắc nghiệm bạn đã làm để tính chu kỳ nhắc ôn lại (thuật toán SM-2).</li>
             </ul>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Key className="w-4 h-4 text-amber-600" />
-              <span>2. Khóa API cá nhân (BYOK)</span>
+              <Key className="w-4 h-4 text-emerald-600" />
+              <span>2. Khóa API OpenAI cá nhân (BYOK)</span>
             </h2>
             <p>
-              Nếu bạn chọn dùng khóa Gemini hoặc OpenAI của riêng mình:
+              Khi bạn kết nối Khóa API OpenAI (ChatGPT) của riêng mình:
             </p>
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 space-y-1.5">
-              <p className="font-semibold text-slate-900">• Khóa API chỉ lưu trực tiếp trên trình duyệt của máy bạn.</p>
-              <p>• Khi gửi câu hỏi, trình duyệt kết nối thẳng tới máy chủ của Google hoặc OpenAI qua kênh mã hóa.</p>
-              <p>• Máy chủ của ViTudy không lưu giữ khóa API của bạn.</p>
+              <p className="font-semibold text-slate-900">• Khóa API chỉ lưu trực tiếp trên trình duyệt của máy bạn (localStorage).</p>
+              <p>• Tuyệt đối không bao giờ được gửi lên cơ sở dữ liệu Supabase hay bất kỳ máy chủ trung gian nào.</p>
+              <p>• Khi gửi câu hỏi hoặc phân tích tài liệu, trình duyệt của bạn kết nối thẳng tới <code>api.openai.com</code> qua kênh HTTPS mã hóa.</p>
+              <p className="text-amber-800 font-medium pt-1">• Khuyến cáo bảo mật: Không nhập khóa trên máy tính công cộng. Bạn có thể xóa khóa khỏi trình duyệt bất cứ lúc nào trong bảng Cài đặt AI.</p>
             </div>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
               <Database className="w-4 h-4 text-sky-600" />
-              <span>3. Bảo vệ dữ liệu cá nhân</span>
+              <span>3. Bảo vệ dữ liệu trên Supabase</span>
             </h2>
             <p>
-              Cơ sở dữ liệu đám mây áp dụng quy tắc phân quyền theo từng tài khoản. Người khác không thể xem hoặc sửa bàn học riêng của bạn trừ khi bạn chủ động chia sẻ đường dẫn phòng học.
+              Dữ liệu bàn học và bài thi thử của bạn được bảo vệ bởi cơ chế phân quyền cấp hàng (Row Level Security - RLS) trên Supabase. Người khác không thể xem hoặc sửa bàn học riêng của bạn trừ khi bạn chủ động chia sẻ đường dẫn phòng học trực tiếp.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-base font-bold text-slate-900">4. Quyền xóa dữ liệu</h2>
+            <h2 className="text-base font-bold text-slate-900">4. Quyền xuất và xóa dữ liệu</h2>
             <p>
-              Bạn có thể xóa tài khoản và toàn bộ bàn học của mình bất kỳ lúc nào tại trang Hồ sơ cá nhân.
+              Bạn có toàn quyền tải bản sao lưu dữ liệu bàn học (dưới dạng JSON) về máy hoặc xóa vĩnh viễn tài khoản của mình bất kỳ lúc nào tại trang Hồ sơ cá nhân.
             </p>
           </section>
         </div>

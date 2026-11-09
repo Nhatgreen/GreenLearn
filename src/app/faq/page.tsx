@@ -34,7 +34,7 @@ function GithubIcon({ className = 'w-4 h-4' }: { className?: string }) {
   );
 }
 
-type FaqCategoryKey = 'all' | 'ban_hoc' | 'on_tap' | 'vitoken' | 'cho_tai_lieu' | 'tai_khoan_bao_mat';
+type FaqCategoryKey = 'all' | 'ban_hoc' | 'on_tap' | 'ai_openai' | 'tai_khoan_bao_mat';
 
 interface FaqCategory {
   key: FaqCategoryKey;
@@ -45,8 +45,7 @@ const CATEGORIES: FaqCategory[] = [
   { key: 'all', label: 'Tất cả' },
   { key: 'ban_hoc', label: 'Bàn học 2.5D' },
   { key: 'on_tap', label: 'Ôn tập & SM-2' },
-  { key: 'vitoken', label: 'ViToken & Nạp tiền' },
-  { key: 'cho_tai_lieu', label: 'Chợ tài liệu' },
+  { key: 'ai_openai', label: 'Trợ lý AI & OpenAI BYOK' },
   { key: 'tai_khoan_bao_mat', label: 'Tài khoản & Bảo mật' },
 ];
 
@@ -61,15 +60,15 @@ interface FaqItem {
 
 const FAQ_LIST: FaqItem[] = [
   {
-    id: 'ban-hoc-vitudy-dung-nhu-the-nao',
+    id: 'ban-hoc-greenlearn-dung-nhu-the-nao',
     category: 'ban_hoc',
     categoryLabel: 'Bàn học 2.5D',
-    question: 'Bàn học ViTudy dùng như thế nào và có gì khác phần mềm thông thường?',
+    question: 'Bàn học GreenLearn dùng như thế nào và có gì khác phần mềm thông thường?',
     keywords: ['bàn học', '2.5D', 'sách', 'tài liệu', 'ghi chú', 'cách dùng', 'giao diện'],
     answer: (
       <div className="space-y-3">
         <p>
-          Khác với các ứng dụng đọc PDF truyền thống chỉ cho phép xem từng tab rời rạc, ViTudy mang đến một <strong>mặt bàn học không gian 2.5D vô hạn</strong>. Bạn có thể mở đồng thời sách giáo trình, đề thi trắc nghiệm, tờ tóm tắt và các mẩu giấy ghi chú cạnh nhau hệt như ngồi học tại bàn thực tế.
+          Khác với các ứng dụng đọc PDF truyền thống chỉ cho phép xem từng tab rời rạc, GreenLearn mang đến một <strong>mặt bàn học không gian 2.5D vô hạn</strong>. Bạn có thể mở đồng thời sách giáo trình, đề thi trắc nghiệm, tờ tóm tắt và các mẩu giấy ghi chú cạnh nhau hệt như ngồi học tại bàn thực tế.
         </p>
         <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
           <li><strong>Mở nhiều tài liệu:</strong> Sắp xếp giáo trình bên trái, đề thi hoặc flashcard bên phải để đối chiếu kiến thức trực tiếp.</li>
@@ -89,7 +88,7 @@ const FAQ_LIST: FaqItem[] = [
       <div className="space-y-3">
         <p>Hệ thống hỗ trợ thao tác điều hướng cực kỳ mượt mà với tốc độ 60 khung hình/giây:</p>
         <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li><strong>Phóng to / Thu nhỏ (Zoom):</strong> Cuộn con lăn chuột hoặc dùng thao tác chụm 2 ngón tay trên bàn rê (Trackpad). ViTudy sử dụng thuật toán gom chuyển động RAF Coalescing giúp chữ KaTeX và văn bản luôn sắc nét 100%, không bị vỡ hạt ở mọi mức zoom.</li>
+          <li><strong>Phóng to / Thu nhỏ (Zoom):</strong> Cuộn con lăn chuột hoặc dùng thao tác chụm 2 ngón tay trên bàn rê (Trackpad). GreenLearn sử dụng thuật toán gom chuyển động RAF Coalescing giúp chữ KaTeX và văn bản luôn sắc nét 100%, không bị vỡ hạt ở mọi mức zoom.</li>
           <li><strong>Di chuyển mặt bàn (Pan):</strong> Ở chế độ con trỏ chuột mặc định, bạn giữ chuột trái vào khoảng trống mặt bàn và kéo. Khi đang cầm bút vẽ, hãy giữ phím <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-xs font-mono">Alt</kbd> và kéo chuột để di chuyển canvas.</li>
           <li><strong>Điều hướng bằng bàn phím:</strong> Bấm giữ các phím <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-xs font-mono">W</kbd>, <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-xs font-mono">A</kbd>, <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-xs font-mono">S</kbd>, <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-xs font-mono">D</kbd> hoặc 4 phím mũi tên để lia tầm nhìn nhanh chóng.</li>
           <li><strong>Bản đồ thu nhỏ (Minimap):</strong> Nhấn phím <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-xs font-mono">M</kbd> để bật/tắt bản đồ thu nhỏ ở góc phải màn hình, giúp định vị nhanh các tài liệu ở xa.</li>
@@ -125,7 +124,7 @@ const FAQ_LIST: FaqItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          ViTudy áp dụng thuật toán lặp lại ngắt quãng khoa học <strong>SuperMemo SM-2</strong> (được chứng minh giúp ghi nhớ kiến thức dài hạn tối ưu và chống hiện tượng đường cong quên lãng Ebbinghaus).
+          GreenLearn áp dụng thuật toán lặp lại ngắt quãng khoa học <strong>SuperMemo SM-2</strong> (được chứng minh giúp ghi nhớ kiến thức dài hạn tối ưu và chống hiện tượng đường cong quên lãng Ebbinghaus).
         </p>
         <p>Sau mỗi lần bạn tự kiểm tra một thẻ flashcard, hãy bấm chọn 1 trong 4 mức phản hồi:</p>
         <ul className="list-disc pl-5 space-y-1 text-slate-700">
@@ -160,138 +159,98 @@ const FAQ_LIST: FaqItem[] = [
     ),
   },
   {
-    id: 'chuyen-khoan-vietqr-chua-thay-vitoken',
-    category: 'vitoken',
-    categoryLabel: 'ViToken & Nạp tiền',
-    question: 'Tôi đã quét mã VietQR chuyển khoản nhưng chưa thấy cộng ViToken?',
-    keywords: ['chuyển khoản', 'vietqr', 'sepay', 'mbbank', 'chưa nhận điểm', 'nạp tiền', 'hỗ trợ', 'lỗi nạp'],
+    id: 'greenlearn-co-thu-phi-khong',
+    category: 'ai_openai',
+    categoryLabel: 'Trợ lý AI & OpenAI BYOK',
+    question: 'GreenLearn có thu phí sử dụng hay bán tài liệu không?',
+    keywords: ['miễn phí', 'chi phí', 'giá', 'thu phí', 'tiền', 'vitoken', 'mua bán'],
     answer: (
       <div className="space-y-3">
         <p>
-          Hệ thống nạp ViToken qua cổng VietQR được tự động hóa hoàn toàn 24/7 thông qua cổng thanh toán SePay và ngân hàng Quân Đội MBBank. Thông thường, số dư ViToken sẽ được cộng vào ví của bạn trong vòng <strong>30 giây đến 2 phút</strong> sau khi app ngân hàng báo chuyển tiền thành công.
+          <strong>Hoàn toàn không. GreenLearn là nền tảng học tập 100% miễn phí và phi lợi nhuận.</strong>
         </p>
-        <p>Nếu sau 5 phút bạn vẫn chưa thấy điểm cập nhật, nguyên nhân thường do:</p>
-        <ul className="list-disc pl-5 space-y-1 text-slate-700">
-          <li>Bạn sửa đổi nội dung chuyển khoản khiến hệ thống không đối soát tự động được mã đơn.</li>
-          <li>Hệ thống Napas liên ngân hàng đang trong kỳ đối soát bảo trì đêm.</li>
+        <p>Hệ thống đã loại bỏ hoàn toàn các loại token, ví điểm và giao dịch thương mại:</p>
+        <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
+          <li>Toàn bộ tính năng bàn học 2.5D, đọc sách, tạo đề thi trắc nghiệm, ghi chú, flashcard SM-2 và học nhóm Realtime đều mở tự do cho mọi người học.</li>
+          <li>Bạn không phải trả bất kỳ khoản phí nào cho GreenLearn để sử dụng các tính năng học tập.</li>
+        </ul>
+      </div>
+    ),
+  },
+  {
+    id: 'kich-hoat-tro-ly-ai-openai',
+    category: 'ai_openai',
+    categoryLabel: 'Trợ lý AI & OpenAI BYOK',
+    question: 'Làm thế nào để kích hoạt trợ lý AI trên GreenLearn?',
+    keywords: ['kích hoạt', 'openai', 'api key', 'hướng dẫn', 'cài đặt ai', 'byok'],
+    answer: (
+      <div className="space-y-3">
+        <p>
+          GreenLearn áp dụng cơ chế <strong>Bring Your Own Key (BYOK)</strong> với OpenAI:
+        </p>
+        <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
+          <li><strong>Bước 1:</strong> Đăng nhập vào bảng điều khiển nhà phát triển của OpenAI tại <a href="https://platform.openai.com/api-keys" target="_blank" rel="noreferrer" className="text-[#16A34A] underline font-bold">platform.openai.com/api-keys</a> và tạo một Khóa API mới (bắt đầu bằng <code>sk-proj-...</code> hoặc <code>sk-...</code>).</li>
+          <li><strong>Bước 2:</strong> Trên bàn học GreenLearn, bấm vào biểu tượng <strong>Bot AI</strong> ở góc trên bên phải (hoặc vào trang Hồ sơ cá nhân).</li>
+          <li><strong>Bước 3:</strong> Dán Khóa API và bấm <em>Kiểm tra key</em> để đo độ trễ ms, sau đó bấm <em>Lưu cấu hình</em>.</li>
         </ul>
         <div className="p-3.5 bg-green-50 border border-green-200/80 rounded-xl text-xs text-[#166534] leading-relaxed">
-          <strong>Cách xử lý ngay:</strong> Bạn hãy gửi email đến <a href="mailto:support@vitudy.edu.vn" className="underline font-bold">support@vitudy.edu.vn</a> kèm ảnh chụp biên lai giao dịch thành công. Ban quản trị sẽ tra soát đối soát Napas và cộng bù ViToken cho bạn trong vòng tối đa 15 phút.
+          Mô hình mặc định được thiết lập là <strong>GPT-4o Mini</strong> — cực kỳ thông minh, phản hồi nhanh và siêu tiết kiệm chi phí (khoảng 50 VNĐ cho một đề thi 50 câu).
         </div>
       </div>
     ),
   },
   {
-    id: 'quy-doi-vitoken-va-chi-phi-ai',
-    category: 'vitoken',
-    categoryLabel: 'ViToken & Nạp tiền',
-    question: '1 ViToken bằng bao nhiêu đồng và mỗi lượt hỏi AI tốn bao nhiêu điểm?',
-    keywords: ['quy đổi', 'tỷ lệ', 'giá', 'chi phí', '1 vitoken', 'bao nhiêu tiền', 'ai tốn điểm'],
+    id: 'chatgpt-plus-co-dung-duoc-khong',
+    category: 'ai_openai',
+    categoryLabel: 'Trợ lý AI & OpenAI BYOK',
+    question: 'Tài khoản ChatGPT Plus có dùng trực tiếp được trên GreenLearn không?',
+    keywords: ['chatgpt plus', 'openai api', 'khác nhau', 'gói plus', 'tài khoản'],
     answer: (
       <div className="space-y-3">
         <p>
-          Tỷ lệ quy đổi tiêu chuẩn của hệ sinh thái ViTudy là: <strong>1.000 VNĐ = 1 ViToken</strong> (1 V = 1 ViToken).
+          <strong>Không dùng trực tiếp được gói đăng ký ChatGPT Plus.</strong> Theo chính sách của OpenAI:
         </p>
-        <p>Biểu phí sử dụng các tính năng AI hệ thống rất tiết kiệm:</p>
         <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li><strong>Hỏi bài Inteline / Giải thích thuật ngữ:</strong> Khoảng <strong>0,05 ViToken</strong> (tương đương 50 đồng / lần hỏi).</li>
-          <li><strong>Sinh đề thi trắc nghiệm (10 câu):</strong> Khoảng <strong>0,5 ViToken</strong> (tương đương 500 đồng).</li>
-          <li><strong>Dùng API Key cá nhân (BYOK):</strong> Nếu bạn cấu hình khóa API riêng của Google Gemini hoặc OpenAI trong mục Cài đặt AI, mọi lượt hỏi bài và sinh đề sẽ là <strong>0 ViToken (Hoàn toàn miễn phí)</strong>.</li>
+          <li><strong>ChatGPT Plus (20 USD/tháng):</strong> Là gói thuê bao dành riêng cho giao diện web/ứng dụng người tiêu dùng của ChatGPT. Gói này không cấp quyền gọi API cho ứng dụng bên ngoài.</li>
+          <li><strong>OpenAI Platform API:</strong> Là dịch vụ tính phí riêng theo mức sử dụng thực tế (pay-as-you-go). Bạn chỉ cần nạp khoảng 5 USD vào tài khoản OpenAI Platform là đã có thể học tập và sinh hàng trăm đề thi trong nhiều tháng.</li>
         </ul>
       </div>
     ),
   },
   {
-    id: 'chinh-sach-hoan-tien',
-    category: 'vitoken',
-    categoryLabel: 'ViToken & Nạp tiền',
-    question: 'ViToken có thời hạn sử dụng không và có được hoàn tiền không?',
-    keywords: ['hoàn tiền', 'hạn sử dụng', 'hết hạn', 'chính sách hoàn tiền', 'rút tiền', 'nạp nhầm'],
+    id: 'khoa-api-co-an-toan-khong',
+    category: 'ai_openai',
+    categoryLabel: 'Trợ lý AI & OpenAI BYOK',
+    question: 'Khóa API OpenAI của tôi có bị lộ hoặc lưu trữ trên máy chủ không?',
+    keywords: ['an toàn', 'bảo mật', 'lộ key', 'localstorage', 'quyền riêng tư'],
     answer: (
       <div className="space-y-3">
         <p>
-          <strong>ViToken trong tài khoản của bạn KHÔNG CÓ THỜI HẠN SỬ DỤNG.</strong> Điểm số đã nạp hoặc nhận thưởng từ điểm danh sẽ được bảo lưu vĩnh viễn trong tài khoản cho đến khi bạn sử dụng.
+          <strong>Khóa API của bạn được bảo mật tuyệt đối 100%:</strong>
         </p>
-        <p><strong>Chính sách hoàn tiền (Refund Policy):</strong></p>
         <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li>ViTudy hỗ trợ hoàn trả 100% số tiền chuyển khoản đối với các giao dịch nạp nhầm hoặc chuyển dư trong vòng <strong>24 giờ</strong> kể từ lúc phát sinh giao dịch, với điều kiện số ViToken đó chưa bị trừ vào việc hỏi AI hoặc mua tài liệu.</li>
-          <li>Để yêu cầu hoàn tiền, bạn chỉ cần gửi email về <a href="mailto:support@vitudy.edu.vn" className="underline font-bold">support@vitudy.edu.vn</a> ghi rõ thông tin tài khoản ngân hàng nhận lại tiền. Chúng tôi sẽ xử lý chuyển khoản hoàn trả trong vòng 1 ngày làm việc.</li>
+          <li>Khóa chỉ được lưu trong bộ nhớ trình duyệt cục bộ (<code>localStorage</code>) trên thiết bị của bạn.</li>
+          <li>Mọi yêu cầu phân tích hay sinh câu hỏi đều do trình duyệt của bạn gọi trực tiếp đến <code>https://api.openai.com/v1/chat/completions</code>. Không có bất kỳ máy chủ trung gian nào chặn bắt hay đọc trộm key của bạn.</li>
+          <li><em>Lưu ý an toàn:</em> Bạn không nên nhập Khóa API trên máy tính công cộng hoặc máy dùng chung để tránh người khác sao chép.</li>
         </ul>
       </div>
     ),
   },
   {
-    id: 'diem-danh-chuoi-ngay-nhan-thuong',
-    category: 'vitoken',
-    categoryLabel: 'ViToken & Nạp tiền',
-    question: 'Điểm danh hàng ngày và chuỗi ngày học tập được tính điểm thưởng ra sao?',
-    keywords: ['điểm danh', 'chuỗi ngày', 'streak', 'thưởng', 'miễn phí', 'nhận vitoken'],
+    id: 'diem-danh-chuoi-ngay-streak',
+    category: 'ai_openai',
+    categoryLabel: 'Trợ lý AI & OpenAI BYOK',
+    question: 'Chuỗi ngày học tập (Streak) và thú cưng hoạt động như thế nào?',
+    keywords: ['chuỗi ngày', 'streak', 'thú cưng', 'điểm danh', 'trang phục', 'thưởng'],
     answer: (
       <div className="space-y-3">
         <p>
-          ViTudy khuyến khích thói quen học tập đều đặn hàng ngày thông qua cơ chế thưởng ViToken miễn phí:
+          GreenLearn duy trì cơ chế <strong>Ngọn lửa chuỗi ngày (Daily Streak)</strong> kết hợp cùng thú cưng đồng hành để khích lệ bạn học tập mỗi ngày:
         </p>
         <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li><strong>Điểm danh mỗi ngày (Thứ 2 đến Thứ 7):</strong> Nhận ngay <strong>+5 ViToken</strong>/ngày.</li>
-          <li><strong>Chủ Nhật nhân đôi năng lượng:</strong> Nhận ngay <strong>+10 ViToken</strong>.</li>
-          <li><strong>Thưởng duy trì chuỗi 7 ngày liên tục:</strong> Đạt mốc tròn 7 ngày điểm danh không đứt quãng, bạn được tặng thêm một phần thưởng lớn <strong>+20 ViToken</strong>.</li>
-          <li><em>Lưu ý:</em> Nếu bạn bỏ lỡ một ngày không đăng nhập điểm danh, ngọn lửa chuỗi ngày sẽ được đặt lại về ngày 1.</li>
-        </ul>
-      </div>
-    ),
-  },
-  {
-    id: 'so-huu-tai-lieu-cho',
-    category: 'cho_tai_lieu',
-    categoryLabel: 'Chợ tài liệu',
-    question: 'Sau khi mua tài liệu trên Chợ Tài Liệu, tôi có được dùng lại vĩnh viễn không?',
-    keywords: ['chợ tài liệu', 'mua tài liệu', 'vĩnh viễn', 'sở hữu', 'thêm vào bàn học'],
-    answer: (
-      <div className="space-y-3">
-        <p>
-          <strong>Có, bạn được sở hữu vĩnh viễn.</strong> Sau khi dùng ViToken mở khóa thành công một cuốn sách, tờ tóm tắt hay bộ đề thi từ Chợ Tài Liệu:
-        </p>
-        <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li>Tài liệu đó được gắn vĩnh viễn vào tủ sách cá nhân trong tài khoản của bạn.</li>
-          <li>Bạn có thể bấm nút <strong>Thêm vào bàn học</strong> bao nhiêu lần tùy thích trên mọi bàn học mà không phải trả thêm bất kỳ ViToken nào.</li>
-          <li>Mọi ghi chú, nét vẽ gạch chân cá nhân của bạn trên tài liệu đó đều được lưu trữ riêng biệt, không ảnh hưởng đến bản gốc.</li>
-        </ul>
-      </div>
-    ),
-  },
-  {
-    id: 'chia-se-tai-lieu-nhan-85-phan-tram',
-    category: 'cho_tai_lieu',
-    categoryLabel: 'Chợ tài liệu',
-    question: 'Chia sẻ tài liệu lên Chợ Tài Liệu thì tôi nhận được bao nhiêu ViToken?',
-    keywords: ['chia sẻ', 'bán tài liệu', '85%', 'thu nhập', 'tác giả', 'hoa hồng'],
-    answer: (
-      <div className="space-y-3">
-        <p>
-          ViTudy là nền tảng tri thức mở cùng sẻ chia vì sinh viên. Khi bạn tải lên một tài liệu học tập hữu ích do mình biên soạn (giáo trình tóm tắt, sơ đồ tư duy, bộ đề ôn thi) và chia sẻ lên Chợ:
-        </p>
-        <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li>Bạn nhận được <strong>85% doanh thu ViToken</strong> cho mỗi lượt người học khác mở khóa tài liệu. Hệ thống chỉ giữ lại 15% để duy trì hạ tầng máy chủ và chi phí đối soát.</li>
-          <li>Ví dụ: Một cuốn sách bạn định giá 50 ViToken, mỗi khi có bạn học mở khóa, ví của bạn sẽ được cộng tự động <strong>42,5 ViToken</strong>.</li>
-          <li>Số ViToken kiếm được bạn có thể sử dụng để hỏi đáp AI chuyên sâu hoặc mở khóa các tài liệu giá trị khác từ cộng đồng.</li>
-        </ul>
-      </div>
-    ),
-  },
-  {
-    id: 'bao-ve-ban-quyen-tai-lieu',
-    category: 'cho_tai_lieu',
-    categoryLabel: 'Chợ tài liệu',
-    question: 'Tài liệu của tôi khi chia sẻ lên Chợ có bị người khác tải lậu file gốc không?',
-    keywords: ['bản quyền', 'tải lậu', 'file gốc', 'bảo mật tài liệu', 'chống copy'],
-    answer: (
-      <div className="space-y-3">
-        <p>
-          <strong>Tài liệu của bạn được bảo vệ bản quyền tối đa.</strong> Hệ thống ViTudy được thiết kế theo cơ chế xem và tương tác tương tác 2.5D độc quyền:
-        </p>
-        <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li>Người mua chỉ có quyền mở và đọc tài liệu dưới dạng trang sách lật trực quan 2.5D ngay trên mặt bàn học của ViTudy.</li>
-          <li>Hệ thống <strong>không cung cấp nút tải về tệp tin gốc (Download raw PDF)</strong> và mã hóa đường dẫn lưu trữ, ngăn chặn triệt để tình trạng tài liệu tâm huyết của bạn bị sao chép hoặc phát tán trái phép ra ngoài.</li>
+          <li>Mỗi ngày dành ít nhất 3 phút học tập trên bàn học, bạn có thể bấm biểu tượng ngọn lửa để điểm danh duy trì chuỗi ngày.</li>
+          <li>Chuỗi ngày càng dài, thú cưng học tập của bạn sẽ càng mở khóa được nhiều trang phục độc đáo và phụ kiện học giả (mũ cử nhân, kính tri thức, áo choàng...).</li>
+          <li>Tất cả trang phục và chuỗi ngày đều hoàn toàn miễn phí, mang tính khích lệ tinh thần và không liên quan đến tiền bạc.</li>
         </ul>
       </div>
     ),
@@ -300,15 +259,15 @@ const FAQ_LIST: FaqItem[] = [
     id: 'luu-tru-khoa-api-va-bao-mat',
     category: 'tai_khoan_bao_mat',
     categoryLabel: 'Tài khoản & Bảo mật',
-    question: 'Khóa API cá nhân (Gemini, OpenAI) và dữ liệu học tập của tôi được lưu ở đâu?',
-    keywords: ['api key', 'gemini', 'openai', 'bảo mật', 'dữ liệu', 'mã hóa', 'quyền riêng tư'],
+    question: 'Khóa API OpenAI và dữ liệu học tập của tôi được lưu ở đâu?',
+    keywords: ['api key', 'openai', 'bảo mật', 'dữ liệu', 'mã hóa', 'quyền riêng tư', 'localstorage'],
     answer: (
       <div className="space-y-3">
         <p>
           Chúng tôi đặt quyền riêng tư và an toàn thông tin của người học lên hàng đầu:
         </p>
         <ul className="list-disc pl-5 space-y-1.5 text-slate-700">
-          <li><strong>Khóa API cá nhân (BYOK):</strong> Khi bạn nhập API Key của Google Gemini hoặc OpenAI, khóa này được <strong>lưu trữ cục bộ 100% trong bộ nhớ trình duyệt (LocalStorage)</strong> trên chính thiết bị của bạn. Máy chủ ViTudy tuyệt đối không thu thập hay lưu trữ khóa API cá nhân của bạn dưới bất kỳ hình thức nào.</li>
+          <li><strong>Khóa API cá nhân (BYOK):</strong> Khi bạn nhập API Key của OpenAI, khóa này được <strong>lưu trữ cục bộ 100% trong bộ nhớ trình duyệt (localStorage)</strong> trên chính thiết bị của bạn. Máy chủ GreenLearn tuyệt đối không thu thập hay lưu trữ khóa API cá nhân của bạn dưới bất kỳ hình thức nào.</li>
           <li><strong>Dữ liệu bàn học:</strong> Tọa độ các vật thể, ghi chú và nét vẽ trên bàn học được đồng bộ an toàn qua dịch vụ đám mây Supabase với chính sách bảo mật cấp dòng (Row-Level Security - RLS), chỉ có chính tài khoản của bạn mới có quyền truy xuất.</li>
         </ul>
       </div>
@@ -326,7 +285,7 @@ const FAQ_LIST: FaqItem[] = [
           <strong>Học nhóm trực tuyến (Realtime Multiplayer):</strong> Bạn bấm nút chia sẻ ở góc dưới bên trái để lấy liên kết phòng học có tham số <code className="px-1.5 py-0.5 bg-slate-100 rounded text-xs font-mono">?room=...</code> rồi gửi cho bạn bè. Khi bạn bè vào phòng, hai người sẽ cùng nhìn thấy con trỏ chuột của nhau khi cùng giải bài tập. Khi muốn học một mình, chỉ cần bấm nút <em>Thoát</em> trên thanh trạng thái bên dưới.
         </p>
         <p>
-          <strong>Quyền xóa tài khoản:</strong> Bạn có toàn quyền xóa tài khoản của mình bất cứ lúc nào trong trang Hồ sơ cá nhân. Khi chọn xóa tài khoản, toàn bộ dữ liệu bàn học, các mẩu giấy ghi chú, lịch sử ôn tập và số dư ViToken sẽ bị hủy bỏ vĩnh viễn và không thể phục hồi theo đúng quy định về quyền riêng tư dữ liệu.
+          <strong>Quyền xóa tài khoản:</strong> Bạn có toàn quyền xóa tài khoản của mình bất cứ lúc nào trong trang Hồ sơ cá nhân. Khi chọn xóa tài khoản, toàn bộ dữ liệu bàn học, các mẩu giấy ghi chú và lịch sử ôn tập sẽ bị hủy bỏ vĩnh viễn và không thể phục hồi theo đúng quy định về quyền riêng tư dữ liệu.
         </p>
       </div>
     ),
@@ -344,7 +303,7 @@ function FaqContent() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<FaqCategoryKey>('all');
-  const [openIds, setOpenIds] = useState<Set<string>>(new Set(['ban-hoc-vitudy-dung-nhu-the-nao']));
+  const [openIds, setOpenIds] = useState<Set<string>>(new Set(['ban-hoc-greenlearn-dung-nhu-the-nao']));
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [feedbackState, setFeedbackState] = useState<Record<string, 'up' | 'down'>>({});
 
@@ -459,7 +418,7 @@ function FaqContent() {
             Câu Hỏi Thường Gặp
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
-            Giải đáp cặn kẽ về bàn học không gian 2.5D, thuật toán ôn tập SuperMemo SM-2, nạp điểm ViToken qua VietQR, bản quyền Chợ tài liệu và chính sách bảo mật.
+            Giải đáp cặn kẽ về bàn học không gian 2.5D, thuật toán ôn tập SuperMemo SM-2, kết nối trợ lý AI OpenAI (BYOK) và chính sách bảo mật dữ liệu.
           </p>
         </div>
 
@@ -472,7 +431,7 @@ function FaqContent() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Tìm kiếm câu hỏi, từ khóa (VD: VietQR, SM-2, hoàn tiền, flashcard, bản quyền...)"
+            placeholder="Tìm kiếm câu hỏi, từ khóa (VD: OpenAI, SM-2, API Key, flashcard, streak...)"
             className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#16A34A]/20 focus:border-[#16A34A] focus:bg-white transition-all shadow-2xs"
           />
           {searchQuery && (
@@ -669,18 +628,18 @@ function FaqContent() {
               Bạn vẫn còn câu hỏi khác hoặc cần hỗ trợ gấp?
             </h4>
             <p className="text-xs sm:text-sm text-slate-600 mb-5 leading-relaxed">
-              Đội ngũ kỹ thuật ViTudy luôn sẵn sàng trợ giúp bạn về tài khoản, tra soát chuyển khoản VietQR hoặc giải đáp cách sử dụng. Thời gian phản hồi trong vòng <strong>2 – 4 giờ làm việc</strong>.
+              Đội ngũ kỹ thuật GreenLearn luôn sẵn sàng trợ giúp bạn về tài khoản, cấu hình OpenAI API hoặc giải đáp cách sử dụng. Thời gian phản hồi trong vòng <strong>2 – 4 giờ làm việc</strong>.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <a
-                href="mailto:support@vitudy.edu.vn"
+                href="mailto:support@greenlearn.edu.vn"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
               >
                 <Mail className="w-4 h-4" />
-                <span>Liên hệ hỗ trợ: support@vitudy.edu.vn</span>
+                <span>Liên hệ hỗ trợ: support@greenlearn.edu.vn</span>
               </a>
               <a
-                href="https://github.com/namtacozz/ViTudy"
+                href="https://github.com/Nhatgreen/GreenLearn"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-xs font-bold transition-all shadow-2xs cursor-pointer"

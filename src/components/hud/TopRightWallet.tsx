@@ -15,6 +15,7 @@ import {
   EyeOff,
   Check,
   AlertCircle,
+  AlertTriangle,
   ShieldCheck,
   Zap,
   Bell
@@ -446,6 +447,17 @@ export function TopRightWallet() {
                   <span>
                     Khóa chỉ lưu trên trình duyệt của bạn (localStorage) và gọi thẳng <code>api.openai.com</code>. Không gửi tới máy chủ trung gian.
                   </span>
+                </div>
+
+                {/* Security Warning Box */}
+                <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl text-xs text-amber-900 space-y-1">
+                  <div className="flex items-start gap-1.5 font-semibold">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <span>Cảnh báo bảo mật:</span>
+                  </div>
+                  <p className="text-[11px] leading-relaxed text-amber-800">
+                    Khóa chỉ lưu trên trình duyệt của bạn. <strong>Không dùng trên máy công cộng</strong>. Lưu ý rằng gói <strong>ChatGPT Plus không bao gồm API</strong>; API tính phí riêng theo mức sử dụng thực tế của tài khoản OpenAI của bạn.
+                  </p>
                 </div>
               </div>
 

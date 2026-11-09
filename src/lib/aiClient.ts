@@ -18,17 +18,24 @@ export interface AskAiResult {
   balanceAfter?: number;
 }
 
+export const OPENAI_MODELS = [
+  { id: 'gpt-4o-mini', name: 'GPT-4o Mini', tag: 'Khuyên dùng - Phản hồi nhanh & tiết kiệm chi phí' },
+  { id: 'gpt-4o', name: 'GPT-4o', tag: 'Flagship - Trả lời xuất sắc và chi tiết nhất' },
+  { id: 'o3-mini', name: 'o3-mini', tag: 'Mô hình lý luận toán học & lập trình sâu' },
+  { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', tag: 'Đa nhiệm nâng cao' },
+];
+
 export async function askAi(req: AskAiRequest): Promise<AskAiResult> {
   const resolvedApiKey = req.apiKey || ByokStore.get('openai') || '';
 
   if (!resolvedApiKey) {
     return {
       reply: `[GreenLearn Trợ Lý Học Tập]
-Chưa tìm thấy Khóa API OpenAI của bạn.
+Chưa cấu hình Khóa API OpenAI.
 Để kích hoạt trợ lý AI thông minh:
-1. Nhấp vào biểu tượng Bot AI ở góc trên bên phải màn hình (hoặc vào Trang cá nhân).
-2. Dán Khóa API OpenAI (sk-proj-...) của bạn.
-3. Khóa được lưu trực tiếp trên trình duyệt của bạn, hoàn toàn bảo mật và không gửi lên bất kỳ máy chủ trung gian nào.`,
+1. Bấm vào biểu tượng Bot AI ở góc trên bên phải màn hình (hoặc vào trang Hồ sơ cá nhân).
+2. Dán Khóa API OpenAI (bắt đầu bằng sk-proj-... hoặc sk-...) của bạn.
+3. Khóa chỉ lưu trực tiếp trên trình duyệt của bạn (localStorage), bảo mật 100% và không gửi lên máy chủ trung gian.`,
       provider: 'byok_openai',
     };
   }
@@ -69,14 +76,17 @@ Chưa tìm thấy Khóa API OpenAI của bạn.
     clearTimeout(timeoutId);
 
     if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      const errMsg = errData.error?.message || `Lỗi HTTP ${res.status}`;
       if (res.status === 401) {
-        throw new Error('Khóa API OpenAI không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại khóa API.');
+        throw new Error('Khóa API OpenAI không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại tại platform.openai.com.');
       }
       if (res.status === 429) {
-        throw new Error('Tài khoản OpenAI của bạn đã vượt quá giới hạn (Rate limit hoặc hết credit).');
+        throw new Error('Tài khoản OpenAI của bạn đã hết hạn mức credit hoặc vượt giới hạn tần suất. Vui lòng kiểm tra số dư tại platform.openai.com.');
       }
+      if (res.status >= 500) {
+        throw new Error('Máy chủ OpenAI đang bận hoặc gặp sự cố tạm thời. Vui lòng thử lại sau giây lát.');
+      }
+      const errData = await res.json().catch(() => ({}));
+      const errMsg = errData.error?.message || `Lỗi HTTP ${res.status}`;
       throw new Error(`OpenAI API: ${errMsg}`);
     }
 
@@ -90,7 +100,10 @@ Chưa tìm thấy Khóa API OpenAI của bạn.
   } catch (error: any) {
     clearTimeout(timeoutId);
     if (error.name === 'AbortError') {
-      throw new Error('Yêu cầu AI đã quá thời gian phản hồi (30 giây). Vui lòng thử lại.');
+      throw new Error('Yêu cầu đã quá thời gian phản hồi (30 giây). Vui lòng thử lại với đoạn văn bản ngắn hơn.');
+    }
+    if (error.message && (error.message.includes('Failed to fetch') || error.message.includes('NetworkError'))) {
+      throw new Error('Không thể kết nối đến máy chủ OpenAI (api.openai.com). Vui lòng kiểm tra kết nối mạng hoặc tiện ích chặn quảng cáo/VPN.');
     }
     throw error;
   }
@@ -109,7 +122,7 @@ export async function testAiConnection(params: {
     return {
       success: false,
       latencyMs: 0,
-      message: 'Vui lòng nhập OpenAI API Key trước khi kiểm tra.',
+      message: 'Chưa cấu hình Khóa API OpenAI. Vui lòng nhập OpenAI API Key trước khi kiểm tra.',
     };
   }
 
@@ -132,22 +145,29 @@ export async function testAiConnection(params: {
     const latencyMs = Date.now() - startTime;
 
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      const msg = err.error?.message || `Lỗi HTTP ${res.status}`;
       if (res.status === 401) {
         return {
           success: false,
           latencyMs,
-          message: 'Khóa API không hợp lệ (401 Unauthorized). Hãy kiểm tra lại key.',
+          message: 'Khóa API OpenAI không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại tại platform.openai.com.',
         };
       }
       if (res.status === 429) {
         return {
           success: false,
           latencyMs,
-          message: 'Hết hạn mức hoặc bị giới hạn tần suất (429 Rate Limit).',
+          message: 'Tài khoản OpenAI của bạn đã hết hạn mức credit hoặc vượt giới hạn tần suất. Vui lòng kiểm tra số dư tại platform.openai.com.',
         };
       }
+      if (res.status >= 500) {
+        return {
+          success: false,
+          latencyMs,
+          message: 'Máy chủ OpenAI đang bận hoặc gặp sự cố tạm thời. Vui lòng thử lại sau giây lát.',
+        };
+      }
+      const err = await res.json().catch(() => ({}));
+      const msg = err.error?.message || `Lỗi HTTP ${res.status}`;
       return {
         success: false,
         latencyMs,
@@ -161,9 +181,17 @@ export async function testAiConnection(params: {
       message: `Kết nối thành công! OpenAI (${model}) phản hồi sau ${latencyMs}ms.`,
     };
   } catch (err: any) {
+    const latencyMs = Date.now() - startTime;
+    if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
+      return {
+        success: false,
+        latencyMs,
+        message: 'Không thể kết nối đến máy chủ OpenAI (api.openai.com). Vui lòng kiểm tra kết nối mạng hoặc tiện ích chặn quảng cáo/VPN.',
+      };
+    }
     return {
       success: false,
-      latencyMs: Date.now() - startTime,
+      latencyMs,
       message: err.message || 'Kiểm tra thất bại. Vui lòng kiểm tra kết nối mạng.',
     };
   }

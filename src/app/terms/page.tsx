@@ -31,7 +31,7 @@ export default function TermsPage() {
       <main className="flex-1 max-w-4xl mx-auto px-6 py-12 w-full">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-4 border border-slate-200">
           <ShieldCheck className="w-3.5 h-3.5 text-[#16A34A]" />
-          <span>Quy định sử dụng bàn học ViTudy</span>
+          <span>Quy định sử dụng bàn học GreenLearn</span>
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-serif text-slate-900 tracking-tight mb-2">
@@ -43,35 +43,34 @@ export default function TermsPage() {
 
         <div className="space-y-6 text-sm text-slate-700 leading-relaxed">
           <section className="space-y-2">
-            <h2 className="text-base font-bold text-slate-900">1. Mục đích của ViTudy</h2>
+            <h2 className="text-base font-bold text-slate-900">1. Mục đích của GreenLearn</h2>
             <p>
-              ViTudy là bàn học trực tuyến giúp bạn gom sách giáo trình, ghi chú và bài tập vào cùng một màn hình để ôn thi. Khi sử dụng trang web, bạn đồng ý với các quy định được nêu tại trang này.
+              GreenLearn là không gian bàn học trực tuyến 2.5D miễn phí giúp bạn gom sách giáo trình, ghi chú và đề thi vào cùng một màn hình để ôn tập trực quan. Khi sử dụng ứng dụng, bạn đồng ý với các quy định được nêu tại trang này.
             </p>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-base font-bold text-slate-900">2. Quyền đối với tài liệu bạn tải lên</h2>
             <p>
-              Tài liệu, đề thi và mẩu ghi chú bạn tải lên thuộc quyền sở hữu của bạn. Khi chia sẻ tài liệu lên Chợ, bạn chịu trách nhiệm đảm bảo tài liệu không vi phạm bản quyền hay chứa nội dung độc hại.
+              Tài liệu, đề thi, hình ảnh và mẩu ghi chú bạn tải lên hoàn toàn thuộc quyền sở hữu của bạn. Dữ liệu được lưu trữ an toàn trong không gian học cá nhân của bạn trên trình duyệt và cơ sở dữ liệu Supabase được bảo vệ bằng cơ chế RLS.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-base font-bold text-slate-900">3. Điểm ViToken và thanh toán</h2>
+            <h2 className="text-base font-bold text-slate-900">3. Nền tảng miễn phí & Dịch vụ AI BYOK</h2>
             <p>
-              ViToken dùng để đặt câu hỏi cho AI và tải tài liệu ôn tập do người khác chia sẻ trên Chợ.
+              GreenLearn là nền tảng học tập cộng đồng hoàn toàn phi lợi nhuận:
             </p>
-            <ul className="list-disc pl-5 space-y-1 text-xs text-slate-600">
-              <li>Mỗi yêu cầu nạp tiền qua VietQR có hiệu lực trong 15 phút kèm mã chuyển khoản riêng.</li>
-              <li>Hệ thống cộng điểm vào tài khoản ngay khi ngân hàng xác nhận nhận tiền thành công.</li>
-              <li>ViToken là điểm nội bộ trong ứng dụng, không quy đổi lại thành tiền mặt.</li>
+            <ul className="list-disc pl-5 space-y-1.5 text-xs text-slate-600">
+              <li><strong>Hoàn toàn miễn phí:</strong> Mọi tính năng bàn học 2.5D, tạo đề thi, chia sẻ ghi chú và học nhóm Realtime đều được cung cấp miễn phí 100%, không có token hay tiền tệ nội bộ.</li>
+              <li><strong>Khóa AI của bạn (BYOK):</strong> Tính năng trợ lý AI hoạt động thông qua cơ chế người dùng tự cung cấp Khóa API OpenAI (Bring Your Own Key). Mọi chi phí sử dụng API (nếu có) được tính trực tiếp bởi OpenAI theo giá niêm yết của họ, GreenLearn không thu bất kỳ khoản phí trung gian nào.</li>
             </ul>
           </section>
 
           <section className="space-y-2">
             <h2 className="text-base font-bold text-slate-900">4. Nội dung do AI tạo ra</h2>
             <p>
-              Các phần giải thích bài tập hay câu hỏi trắc nghiệm do AI tạo ra chỉ mang tính tham khảo khi tự học. Bạn nên đối chiếu lại với sách giáo trình chính khóa của thầy cô trước khi làm bài thi thật.
+              Các phần giải thích bài tập, tóm tắt kiến thức hay câu hỏi trắc nghiệm do AI tạo ra chỉ mang tính tham khảo khi tự học. Bạn nên đối chiếu lại với sách giáo trình chính khóa của thầy cô trước khi làm bài thi thật.
             </p>
           </section>
         </div>

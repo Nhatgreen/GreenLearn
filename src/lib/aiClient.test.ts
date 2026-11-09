@@ -42,6 +42,41 @@ describe('aiClient', () => {
     expect(res.reply).toBe('Định lý Pythagoras là a^2 + b^2 = c^2 trong tam giác vuông.');
   });
 
+  it('handles 401 invalid key error with clear Vietnamese message', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 401,
+      json: async () => ({ error: { message: 'Incorrect API key' } }),
+    });
+    vi.stubGlobal('fetch', mockFetch);
+
+    await expect(askAi({ apiKey: 'sk-invalid', prompt: 'test' })).rejects.toThrow(
+      'Khóa API OpenAI không hợp lệ hoặc đã hết hạn'
+    );
+  });
+
+  it('handles 429 rate limit error with clear Vietnamese message', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 429,
+      json: async () => ({ error: { message: 'Rate limit reached' } }),
+    });
+    vi.stubGlobal('fetch', mockFetch);
+
+    await expect(askAi({ apiKey: 'sk-quota-exceeded', prompt: 'test' })).rejects.toThrow(
+      'Tài khoản OpenAI của bạn đã hết hạn mức credit'
+    );
+  });
+
+  it('handles network / fetch failure with friendly message', async () => {
+    const mockFetch = vi.fn().mockRejectedValue(new Error('Failed to fetch'));
+    vi.stubGlobal('fetch', mockFetch);
+
+    await expect(askAi({ apiKey: 'sk-valid', prompt: 'test' })).rejects.toThrow(
+      'Không thể kết nối đến máy chủ OpenAI'
+    );
+  });
+
   it('should test connection successfully with valid mock response', async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -58,5 +93,22 @@ describe('aiClient', () => {
 
     expect(res.success).toBe(true);
     expect(res.message).toContain('Kết nối thành công');
+  });
+
+  it('handles 401 in testAiConnection gracefully', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 401,
+      json: async () => ({ error: { message: 'Invalid API key' } }),
+    });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const res = await testAiConnection({
+      apiKey: 'sk-bad',
+      model: 'gpt-4o-mini',
+    });
+
+    expect(res.success).toBe(false);
+    expect(res.message).toContain('Khóa API OpenAI không hợp lệ');
   });
 });
