@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Open_Sans, Patrick_Hand, Lora } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
-import { ViTokenProvider } from '@/context/ViTokenContext';
 import { StudySpaceProvider } from '@/context/StudySpaceContext';
 
 const openSans = Open_Sans({
@@ -59,11 +58,9 @@ export default function RootLayout({
         className="font-sans bg-white text-slate-800 antialiased selection:bg-slate-200 selection:text-slate-900"
       >
         <AuthProvider>
-          <ViTokenProvider>
-            <StudySpaceProvider>
-              {children}
-            </StudySpaceProvider>
-          </ViTokenProvider>
+          <StudySpaceProvider>
+            {children}
+          </StudySpaceProvider>
         </AuthProvider>
       </body>
     </html>

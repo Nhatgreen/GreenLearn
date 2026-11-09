@@ -27,7 +27,6 @@ import { StudyToolsModal } from '../modals/StudyToolsModal';
 import { FullScreenDocModal } from '../modals/FullScreenDocModal';
 import { paginateDocument, PaginatedLeaf } from '@/utils/pagination';
 import { useDeskItemInteraction } from '@/hooks/useDeskItemInteraction';
-import { useViToken } from '@/context/ViTokenContext';
 import { askAi } from '@/lib/aiClient';
 import { ItemDrawingOverlay } from '../canvas/ItemDrawingOverlay';
 
@@ -92,8 +91,6 @@ export function BookSpreadComponent({ item, isSelected }: BookSpreadProps) {
     exitFocusMode,
     updateBookCoverColor
   } = useStudySpace();
-
-  const { spendTokens, aiConfig } = useViToken();
 
   const [isStudyOpen, setIsStudyOpen] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -247,21 +244,13 @@ export function BookSpreadComponent({ item, isSelected }: BookSpreadProps) {
     setSelectionPopover(prev => prev ? { ...prev, loading: true, question: q } : null);
 
     try {
-      const prompt = `Bạn là trợ lý học tập ViTudy (Inteline). Hãy trả lời câu hỏi của học sinh về đoạn văn bản sau đây:
+      const prompt = `Bạn là trợ lý học tập GreenLearn (Inteline). Hãy trả lời câu hỏi của học sinh về đoạn văn bản sau đây:
 Đoạn trích: "${selectionPopover.text}"
 Câu hỏi: "${q}"
 Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối đa 3-4 câu).`;
 
-      spendTokens?.(2, 'Hỏi nhanh AI Inteline');
-
       const data = await askAi({
-        provider: aiConfig?.provider || 'system',
-        model: aiConfig?.model,
-        apiKey: aiConfig?.apiKey,
-        prompt: `Bạn là trợ lý học tập ViTudy (Inteline). Hãy trả lời câu hỏi của học sinh về đoạn văn bản sau đây:
-Đoạn trích: "${selectionPopover.text}"
-Câu hỏi: "${q}"
-Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối đa 3-4 câu).`,
+        prompt,
       });
 
       const reply = data.reply || 'Không nhận được câu trả lời từ AI. Vui lòng thử lại.';

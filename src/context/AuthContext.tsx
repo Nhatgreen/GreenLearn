@@ -13,7 +13,6 @@ export interface UserProfile {
   email: string;
   display_name: string | null;
   avatar_url: string | null;
-  vitoken_balance: number;
 }
 
 export interface AuthResult {
@@ -49,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, email, display_name, avatar_url, vitoken_balance')
+        .select('id, email, display_name, avatar_url')
         .eq('id', userId)
         .single();
       if (!error && data) {

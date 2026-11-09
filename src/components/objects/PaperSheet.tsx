@@ -3,7 +3,6 @@
 import React, { useState, useRef } from 'react';
 import { DeskItem } from '@/types/studyspace';
 import { useStudySpace } from '@/context/StudySpaceContext';
-import { useViToken } from '@/context/ViTokenContext';
 import { askAi } from '@/lib/aiClient';
 import { useDeskItemInteraction } from '@/hooks/useDeskItemInteraction';
 import { normalizeNFC } from '@/utils/textNormalization';
@@ -55,8 +54,6 @@ export function PaperSheetComponent({ item, isSelected }: PaperSheetProps) {
     enterFocusMode,
     exitFocusMode
   } = useStudySpace();
-
-  const { spendTokens, aiConfig } = useViToken();
 
   const [isStudyOpen, setIsStudyOpen] = useState(false);
   const [paperStudyTab, setPaperStudyTab] = useState<'summary' | 'quiz'>('summary');
@@ -163,21 +160,13 @@ export function PaperSheetComponent({ item, isSelected }: PaperSheetProps) {
     setSelectionPopover(prev => prev ? { ...prev, loading: true, question: q } : null);
 
     try {
-      const prompt = `Bạn là trợ lý học tập ViTudy (Inteline). Hãy trả lời câu hỏi của học sinh về đoạn văn bản sau đây:
+      const prompt = `Bạn là trợ lý học tập GreenLearn (Inteline). Hãy trả lời câu hỏi của học sinh về đoạn văn bản sau đây:
 Đoạn trích: "${selectionPopover.text}"
 Câu hỏi: "${q}"
 Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối đa 3-4 câu).`;
 
-      spendTokens?.(2, 'Hỏi nhanh AI Inteline');
-
       const data = await askAi({
-        provider: aiConfig?.provider || 'system',
-        model: aiConfig?.model,
-        apiKey: aiConfig?.apiKey,
-        prompt: `Bạn là trợ lý học tập ViTudy (Inteline). Hãy trả lời câu hỏi của học sinh về đoạn văn bản sau đây:
-Đoạn trích: "${selectionPopover.text}"
-Câu hỏi: "${q}"
-Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối đa 3-4 câu).`,
+        prompt,
       });
 
       const reply = data.reply || 'Không nhận được câu trả lời từ AI. Vui lòng thử lại.';

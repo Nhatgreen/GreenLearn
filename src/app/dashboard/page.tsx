@@ -2,17 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useViToken } from '@/context/ViTokenContext';
 import { StatsService, DayStudyTime, ExamStats } from '@/services/StatsService';
 import { StudyStats } from '@/components/dashboard/StudyStats';
 import { StreakCalendar } from '@/components/dashboard/StreakCalendar';
-import { TokenHistory } from '@/components/dashboard/TokenHistory';
 import { ArrowLeft, BarChart2, Loader2, LogIn } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
   const { user, status } = useAuth();
-  const { wallet } = useViToken();
 
   const [weeklyData, setWeeklyData] = useState<DayStudyTime[]>([]);
   const [examStats, setExamStats] = useState<ExamStats>({ averageScore: 0, totalExams: 0 });
@@ -168,14 +165,11 @@ export default function DashboardPage() {
         <StudyStats
           weeklyData={weeklyData}
           examStats={examStats}
-          streakDays={wallet.streakDays}
+          streakDays={1}
         />
 
         {/* 2. Monthly Contribution Matrix */}
         <StreakCalendar activityGrid={activityGrid} />
-
-        {/* 3. Token Transaction Ledger */}
-        <TokenHistory transactions={wallet.history} balance={wallet.balance} />
       </div>
     </div>
   );

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { generateClozeQuestions, QuizQuestion } from '@/lib/nonAiEngine';
 import { useStudySpace } from '@/context/StudySpaceContext';
-import { useViToken } from '@/context/ViTokenContext';
 import { askAi } from '@/lib/aiClient';
 import { 
   HelpCircle, 
@@ -26,7 +25,6 @@ interface QuizTabProps {
 
 export function QuizTab({ fullText, documentTitle, onCloseModal, isPaper, targetPos }: QuizTabProps) {
   const { addExamSheet } = useStudySpace();
-  const { aiConfig, spendTokens } = useViToken();
 
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [userAnswers, setUserAnswers] = useState<Record<string, number>>({});
@@ -46,18 +44,6 @@ export function QuizTab({ fullText, documentTitle, onCloseModal, isPaper, target
       return;
     }
 
-    if (aiConfig.provider === 'system') {
-      const ok = spendTokens(2, `Tạo trắc nghiệm AI: ${documentTitle.slice(0, 30)}`);
-      if (!ok) {
-        alert('Số dư ViToken không đủ để dùng AI Hệ Thống. Chuyển sang động cơ Non-AI miễn phí.');
-        setUseAi(false);
-        setQuestions(generateClozeQuestions(fullText, 4));
-        setUserAnswers({});
-        setIsGraded(false);
-        return;
-      }
-    }
-
     setLoading(true);
     try {
       const prompt = `Từ nội dung học tập sau đây, hãy tạo chính xác 3 câu hỏi trắc nghiệm kiểm tra hiểu bài (mỗi câu gồm 4 đáp án A, B, C, D, chỉ duy nhất 1 đáp án đúng).
@@ -72,9 +58,6 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
 ]`;
 
       const data = await askAi({
-        provider: aiConfig.provider,
-        model: aiConfig.model,
-        apiKey: aiConfig.apiKey,
         prompt,
         context: fullText.slice(0, 4000),
       });

@@ -25,13 +25,10 @@ export function LandingPage({ onEnterDesk }: LandingPageProps) {
             <div className="w-8 h-8 rounded-xl bg-[#16A34A] text-white flex items-center justify-center font-bold shadow-2xs">
               <BookOpen className="w-4 h-4" />
             </div>
-            <span className="text-base font-bold tracking-tight text-slate-900">ViTudy</span>
+            <span className="text-base font-bold tracking-tight text-slate-900">GreenLearn</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-700">
-            <Link href="/market" className="hover:text-[#16A34A] transition-colors">
-              Chợ tài liệu
-            </Link>
             <Link href="/dashboard" className="hover:text-[#16A34A] transition-colors">
               Nhật ký học
             </Link>

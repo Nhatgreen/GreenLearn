@@ -120,14 +120,14 @@ export function ProfileHeader({ profile, email }: ProfileHeaderProps) {
         <h2 className="text-lg font-bold text-slate-900 tracking-tight">{displayName}</h2>
         <p className="text-xs text-slate-500 font-medium mt-0.5">{email}</p>
 
-        {/* ViToken Badge */}
+        {/* GreenLearn Badge */}
         <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-[#F0FDF4] border border-green-200/80 rounded-xl">
           <div className="w-5 h-5 rounded-full bg-[#16A34A] text-white flex items-center justify-center font-black text-[11px]">
-            V
+            G
           </div>
-          <span className="text-xs text-slate-600">Số dư khả dụng:</span>
-          <span className="text-xs font-black font-mono text-[#166534]">
-            {profile?.vitoken_balance ?? 0} ViToken
+          <span className="text-xs text-slate-600">Gói thành viên:</span>
+          <span className="text-xs font-bold font-mono text-[#166534]">
+            GreenLearn Miễn Phí
           </span>
         </div>
 

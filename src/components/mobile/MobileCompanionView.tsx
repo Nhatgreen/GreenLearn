@@ -2,18 +2,15 @@
 
 import React, { useState } from 'react';
 import { useStudySpace } from '@/context/StudySpaceContext';
-import { useViToken } from '@/context/ViTokenContext';
 import { 
   BookOpen, 
   FileText, 
-  Coins, 
   ChevronRight, 
   ArrowLeft
 } from 'lucide-react';
 
 export function MobileCompanionView() {
   const { activeSpace } = useStudySpace();
-  const { wallet } = useViToken();
 
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
 
@@ -24,19 +21,17 @@ export function MobileCompanionView() {
       {/* Top Mobile Bar */}
       <header className="p-4 bg-white border-b border-slate-200 flex items-center justify-between sticky top-0 z-30 shadow-xs">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
-            V
+          <div className="w-7 h-7 rounded-lg bg-[#16A34A] text-white flex items-center justify-center font-bold text-xs">
+            G
           </div>
           <div>
-            <h1 className="text-sm font-bold text-slate-900 leading-tight">ViTudy Đồng Hành</h1>
+            <h1 className="text-sm font-bold text-slate-900 leading-tight">GreenLearn Đồng Hành</h1>
             <p className="text-[11px] text-slate-500 font-medium">{activeSpace.name}</p>
           </div>
         </div>
 
-        {/* ViToken Badge */}
-        <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-300 px-2.5 py-1 rounded-full text-slate-800 text-xs font-mono font-bold">
-          <Coins className="w-3.5 h-3.5 text-slate-700" />
-          <span>{wallet.balance} V</span>
+        <div className="flex items-center gap-1.5 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full text-[#166534] text-xs font-semibold">
+          <span>Miễn phí</span>
         </div>
       </header>
 

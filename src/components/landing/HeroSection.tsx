@@ -106,11 +106,11 @@ export function HeroSection({ onEnterDesk }: HeroSectionProps) {
           <ArrowRight className="w-4 h-4" />
         </button>
         <Link
-          href="/market"
+          href="/dashboard"
           className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-sm font-bold shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <BookOpen className="w-4 h-4 text-slate-600" />
-          <span>Xem chợ tài liệu</span>
+          <span>Nhật ký học tập</span>
         </Link>
       </div>
 

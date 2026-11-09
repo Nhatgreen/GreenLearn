@@ -12,7 +12,6 @@ import {
   X, 
   Download, 
   ShieldAlert, 
-  Coins, 
   BookOpen, 
   Clock 
 } from 'lucide-react';
@@ -44,7 +43,6 @@ export function DeleteAccount({ userEmail }: DeleteAccountProps) {
         user: {
           email: userEmail,
           displayName: profile?.display_name || '',
-          vitokenBalance: profile?.vitoken_balance || 0,
         },
         localNotes: [],
         spaces: [],
@@ -184,15 +182,9 @@ export function DeleteAccount({ userEmail }: DeleteAccountProps) {
             {/* Chi tiết hậu quả & Hạn ân hạn 3 ngày */}
             <div className="bg-rose-50/70 border border-rose-100 rounded-2xl p-3.5 space-y-2 mb-4 text-xs text-rose-900">
               <div className="flex items-start gap-2">
-                <Coins className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
-                <span>
-                  <strong>Số dư ViToken:</strong> Toàn bộ {profile?.vitoken_balance || 0} ViToken hiện có sẽ bị hủy bỏ và không thể quy đổi hoàn tiền.
-                </span>
-              </div>
-              <div className="flex items-start gap-2">
                 <BookOpen className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
                 <span>
-                  <strong>Tài liệu Chợ:</strong> Các tài liệu bạn đã chia sẻ sẽ được chuyển sang dạng vô danh lưu trữ công cộng hoặc gỡ bỏ.
+                  <strong>Dữ liệu bàn học:</strong> Toàn bộ không gian học, tài liệu cá nhân và ghi chú của bạn sẽ bị gỡ bỏ hoàn toàn.
                 </span>
               </div>
               <div className="flex items-start gap-2">

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { summarizeWithTextRank } from '@/lib/nonAiEngine';
 import { useStudySpace } from '@/context/StudySpaceContext';
-import { useViToken } from '@/context/ViTokenContext';
 import { askAi } from '@/lib/aiClient';
 import { Sparkles, Copy, Check, StickyNote } from 'lucide-react';
 
@@ -16,7 +15,6 @@ interface SummaryTabProps {
 
 export function SummaryTab({ fullText, documentTitle, isPaper, targetPos }: SummaryTabProps) {
   const { addStickyNote } = useStudySpace();
-  const { aiConfig, spendTokens } = useViToken();
 
   const [summaryResult, setSummaryResult] = useState<string>('');
   const [useAi, setUseAi] = useState(false);
@@ -33,24 +31,9 @@ export function SummaryTab({ fullText, documentTitle, isPaper, targetPos }: Summ
       return;
     }
 
-    // AI Enhanced Summarization
-    if (aiConfig.provider === 'system') {
-      const ok = spendTokens(2, `Tóm tắt chuyên sâu: ${documentTitle.slice(0, 30)}`);
-      if (!ok) {
-        alert('Số dư ViToken không đủ để dùng AI Hệ Thống. Chuyển sang động cơ Non-AI miễn phí.');
-        setUseAi(false);
-        const res = summarizeWithTextRank(fullText, 4);
-        setSummaryResult(res.join('\n\n'));
-        return;
-      }
-    }
-
     setLoading(true);
     try {
       const data = await askAi({
-        provider: aiConfig.provider,
-        model: aiConfig.model,
-        apiKey: aiConfig.apiKey,
         prompt: `Hãy tóm tắt văn bản sau thành 3 đến 5 gạch đầu dòng súc tích, làm nổi bật các khái niệm trọng tâm nhất để ôn thi:`,
         context: fullText.slice(0, 4000),
       });

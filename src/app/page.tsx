@@ -35,7 +35,7 @@ function StudySpacePageContent() {
   // URL có view=desk hoặc có room tham gia -> hiển thị Bàn học; ngược lại (view=home hoặc link gốc) -> Trang chủ
   const isDeskView = viewParam === 'desk' || Boolean(roomParam);
 
-  // Lưu trạng thái view hiện tại vào sessionStorage để các trang con (như /profile, /market) quay về đúng nơi
+  // Lưu trạng thái view hiện tại vào sessionStorage để các trang con (như /profile, /dashboard) quay về đúng nơi
   useEffect(() => {
     try {
       sessionStorage.setItem('greenlearn_last_view', isDeskView ? 'desk' : 'home');

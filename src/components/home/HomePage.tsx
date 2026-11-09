@@ -18,9 +18,7 @@ import {
   MousePointer2
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { useViToken } from '@/context/ViTokenContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
-import { TopUpModal } from '@/components/payment/TopUpModal';
 import { getAssetPath } from '@/lib/assets';
 import { StudySpace } from '@/types/studyspace';
 
@@ -31,20 +29,14 @@ interface HomePageProps {
 
 export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   const { user, profile, status } = useAuth();
-  const { wallet, claimDailyStreak } = useViToken();
   const { spaces, switchSpace, createSpaceFromTemplate } = useStudySpace();
   const router = useRouter();
 
-  const balance = wallet?.balance ?? 50;
-  const streakDays = wallet?.streakDays ?? 1;
-
-  // Streak status
-  const todayStr = new Date().toISOString().split('T')[0];
-  const isClaimedToday = wallet?.lastClaimDate === todayStr;
+  const [streakDays, setStreakDays] = useState(1);
+  const [isClaimedToday, setIsClaimedToday] = useState(false);
   const [claimFeedback, setClaimFeedback] = useState<string | null>(null);
 
   const [searchFilter, setSearchFilter] = useState('');
-  const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const [showAllSpaces, setShowAllSpaces] = useState(false);
   const [activeNav, setActiveNav] = useState<'home' | 'my_desks' | 'starred'>('home');
 
@@ -67,13 +59,9 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
   // Handle streak claim
   const handleClaimStreak = () => {
-    if (claimDailyStreak) {
-      const res = claimDailyStreak();
-      if (res.message) {
-        setClaimFeedback(res.message);
-        setTimeout(() => setClaimFeedback(null), 3500);
-      }
-    }
+    setIsClaimedToday(true);
+    setClaimFeedback('Điểm danh thành công! Duy trì chuỗi học nhé.');
+    setTimeout(() => setClaimFeedback(null), 3500);
   };
 
   // Handle template selection
@@ -209,13 +197,6 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </button>
 
             <Link
-              href="/market"
-              className="w-full block px-3.5 py-2 rounded-xl text-stone-700 hover:text-stone-900 hover:bg-[#f3eee7] transition-colors"
-            >
-              Chợ tài liệu
-            </Link>
-
-            <Link
               href="/dashboard"
               className="w-full block px-3.5 py-2 rounded-xl text-stone-700 hover:text-stone-900 hover:bg-[#f3eee7] transition-colors"
             >
@@ -255,33 +236,6 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <p className="text-[10px] text-stone-600 leading-tight">
               Hoàn thành 25 phút Pomodoro để duy trì chuỗi học.
             </p>
-          </div>
-
-          {/* Bottom Sidebar Card: Số dư ViToken */}
-          <div className="bg-[#f4efe8] border border-[#e8e1d7] rounded-2xl p-4">
-            <span className="text-[11px] font-bold text-stone-600 block uppercase tracking-wider">Số dư</span>
-            <div className="mt-1 flex items-center gap-1.5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src={getAssetPath('/icons/vitoken.svg')} 
-                alt="ViToken" 
-                width={24}
-                height={24}
-                className="w-6 h-6 object-contain flex-shrink-0" 
-                style={{ width: '24px', height: '24px', maxWidth: '24px', maxHeight: '24px' }}
-              />
-              <span className="text-2xl font-black text-stone-900 tracking-tight font-sans">
-                {typeof balance === 'number' ? balance : 50}
-              </span>
-              <span className="text-xs text-stone-600 font-semibold">ViToken</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsTopUpOpen(true)}
-              className="w-full mt-3 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs rounded-xl shadow-xs transition-colors text-center cursor-pointer active:scale-98"
-            >
-              Nạp ViToken
-            </button>
           </div>
         </div>
       </aside>
@@ -585,27 +539,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           </div>
         </section>
 
-        {/* ================= SECTION 3: Chợ tài liệu (Dải nhỏ ở đáy) ================= */}
-        <section className="mt-auto pt-4">
-          <div className="bg-white border border-stone-200/90 rounded-2xl p-4 md:p-5 flex items-center justify-between shadow-2xs">
-            <div>
-              <h3 className="text-sm font-bold text-stone-900">Chợ tài liệu</h3>
-              <p className="text-xs text-stone-600 mt-0.5">
-                Sách, tờ tóm tắt và đề thi do sinh viên khác chia sẻ.
-              </p>
-            </div>
-            <Link
-              href="/market"
-              className="px-4 py-2 rounded-xl border border-stone-300 text-xs font-bold text-stone-800 hover:bg-stone-50 transition-colors inline-flex items-center gap-1.5"
-            >
-              <span>Xem chợ tài liệu</span>
-            </Link>
-          </div>
-        </section>
       </main>
-
-      {/* ================= MODAL: Nạp ViToken qua VietQR ================= */}
-      <TopUpModal isOpen={isTopUpOpen} onClose={() => setIsTopUpOpen(false)} />
     </div>
   );
 }

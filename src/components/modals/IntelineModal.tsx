@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { DeskItem } from '@/types/studyspace';
 import { useStudySpace } from '@/context/StudySpaceContext';
-import { useViToken } from '@/context/ViTokenContext';
 import { askAi } from '@/lib/aiClient';
 import { 
   Sparkles, 
@@ -32,7 +31,6 @@ export function IntelineModal({
   onClose
 }: IntelineModalProps) {
   const { activeSpace, addIntelineThread } = useStudySpace();
-  const { wallet, aiConfig, spendTokens } = useViToken();
 
   const [question, setQuestion] = useState('');
   const [attachedDocIds, setAttachedDocIds] = useState<string[]>([]);
@@ -57,15 +55,6 @@ export function IntelineModal({
     const q = customQ || question;
     if (!q.trim()) return;
 
-    if (aiConfig.provider === 'system') {
-      const cost = 1;
-      if (wallet.balance < cost) {
-        alert('Số dư ViToken chưa đủ để đặt câu hỏi. Hãy điểm danh hàng ngày hoặc dùng khóa AI cá nhân.');
-        return;
-      }
-      spendTokens(cost, `Hỏi Inteline: "${q.slice(0, 30)}..."`);
-    }
-
     setLoading(true);
     setAnswer(null);
 
@@ -74,10 +63,7 @@ export function IntelineModal({
       const contextContent = attachedDocs.map(d => `--- TÀI LIỆU KÈM THEO: ${d.title} ---\n${d.pages[0]?.text || ''}`).join('\n\n');
 
       const data = await askAi({
-        provider: aiConfig.provider,
-        apiKey: aiConfig.apiKey,
-        model: aiConfig.model,
-        prompt: `Bạn là trợ lý học tập ViTudy. Hãy giải thích hoặc trả lời câu hỏi của người học dựa trên đoạn trích dẫn sau:
+        prompt: `Bạn là trợ lý học tập GreenLearn. Hãy giải thích hoặc trả lời câu hỏi của người học dựa trên đoạn trích dẫn sau:
 TÀI LIỆU NGUỒN: "${sourceItem.title}" (Trang ${pageNumber})
 ĐOẠN TRÍCH DẪN: "${selectedText}"
 ${contextContent ? `TÀI LIỆU ĐỐI CHIẾU:\n${contextContent}` : ''}

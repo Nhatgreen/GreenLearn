@@ -6,8 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { AccountSettings } from '@/components/profile/AccountSettings';
 import { DeleteAccount } from '@/components/profile/DeleteAccount';
-import { PaymentHistory } from '@/components/payment/PaymentHistory';
-import { ArrowLeft, LogOut, Loader2, CreditCard } from 'lucide-react';
+import { ArrowLeft, LogOut, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 function ProfilePageContent() {
@@ -97,22 +96,7 @@ function ProfilePageContent() {
         {/* 2. Account Settings (Name & BYOK) */}
         <AccountSettings profile={profile} />
 
-        {/* 3. Payment History Card */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
-              <CreditCard className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-sm font-black text-slate-900">Lịch sử nạp ViToken</h2>
-              <p className="text-xs text-slate-500">Các giao dịch chuyển khoản VietQR qua cổng tự động</p>
-            </div>
-          </div>
-
-          <PaymentHistory />
-        </div>
-
-        {/* 4. Delete Account Zone */}
+        {/* 3. Delete Account Zone */}
         <DeleteAccount userEmail={user.email || ''} />
       </div>
     </div>
