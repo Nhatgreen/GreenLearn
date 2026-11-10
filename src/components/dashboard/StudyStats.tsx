@@ -54,7 +54,7 @@ export function StudyStats({ weeklyData, examStats, streakDays }: StudyStatsProp
             </span>
             <span className="text-xs font-bold text-slate-500">ngày liên tục</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Duy trì điểm danh nhận ViToken</p>
+          <p className="text-[11px] text-slate-400 mt-1">Nuôi dưỡng thú cưng học tập</p>
         </div>
 
         {/* 3. Điểm thi trung bình */}

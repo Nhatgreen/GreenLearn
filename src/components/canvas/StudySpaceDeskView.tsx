@@ -100,7 +100,7 @@ export default function StudySpaceDeskView() {
         )}
       </div>
 
-      {/* ================= 2. TOP-RIGHT WALLET HUD (Chuỗi | Chợ | ViToken | AI) ================= */}
+      {/* ================= 2. TOP-RIGHT HUD (Chuỗi | Thú Cưng | AI) ================= */}
       <div 
         className={clsx(
           "fixed top-1 right-1 z-40 transition-transform duration-300 ease-out pointer-events-auto",

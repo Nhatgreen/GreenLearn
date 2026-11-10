@@ -38,8 +38,8 @@ const TOUR_STEPS: TourStepConfig[] = [
   },
   {
     targetSelector: '[data-tour="wallet-market"]',
-    title: 'Ví ViToken và Chợ',
-    description: 'Điểm danh nhận ViToken mỗi ngày để đổi tài liệu và câu hỏi ôn tập trên Chợ.',
+    title: 'Thú Cưng & Chuỗi Học Tập',
+    description: 'Điểm danh hoặc học tập 3 phút mỗi ngày để duy trì chuỗi liên tục và nuôi dưỡng thú cưng tiến hóa.',
     position: 'left',
   },
   {

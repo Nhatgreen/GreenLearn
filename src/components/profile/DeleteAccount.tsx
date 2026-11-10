@@ -143,7 +143,7 @@ export function DeleteAccount({ userEmail }: DeleteAccountProps) {
         <h3 className="text-sm font-bold">Khu vực nguy hiểm</h3>
       </div>
       <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-        Xóa tài khoản sẽ hủy bỏ vĩnh viễn toàn bộ bàn học, tài liệu, số dư ViToken và lịch sử học tập của bạn.
+        Xóa tài khoản sẽ hủy bỏ vĩnh viễn toàn bộ bàn học, tài liệu, tiến trình thú cưng và lịch sử học tập của bạn.
       </p>
 
       <button

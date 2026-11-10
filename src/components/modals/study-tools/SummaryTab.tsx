@@ -25,7 +25,7 @@ export function SummaryTab({ fullText, documentTitle, isPaper, targetPos }: Summ
     if (!fullText) return;
 
     if (!useAi) {
-      // Non-AI TextRank + TF-IDF summarization (Client-side, 0 ViToken)
+      // Non-AI TextRank + TF-IDF summarization (Client-side, 0đ)
       const res = summarizeWithTextRank(fullText, 4);
       setSummaryResult(res.join('\n\n'));
       return;
@@ -155,7 +155,7 @@ export function SummaryTab({ fullText, documentTitle, isPaper, targetPos }: Summ
           <h4 className="text-sm font-bold text-slate-900">Tóm Tắt Văn Bản Trọng Tâm</h4>
           <p className="text-xs text-slate-500">
             {useAi 
-              ? 'Mô hình AI chắt lọc các luận điểm logic (tiêu tốn 2 ViToken)'
+              ? 'Mô hình AI OpenAI chắt lọc các luận điểm logic (kết nối trực tiếp BYOK)'
               : 'Động cơ Non-AI TextRank phân tích tần suất câu (Miễn phí 100%)'}
           </p>
         </div>

@@ -15,7 +15,6 @@ export interface Database {
           email: string
           display_name: string | null
           avatar_url: string | null
-          vitoken_balance: number
           daily_streak_days: number
           last_claim_date: string | null
           custom_openai_key_encrypted: string | null
@@ -29,7 +28,6 @@ export interface Database {
           email: string
           display_name?: string | null
           avatar_url?: string | null
-          vitoken_balance?: number
           daily_streak_days?: number
           last_claim_date?: string | null
           custom_openai_key_encrypted?: string | null
@@ -43,7 +41,6 @@ export interface Database {
           email?: string
           display_name?: string | null
           avatar_url?: string | null
-          vitoken_balance?: number
           daily_streak_days?: number
           last_claim_date?: string | null
           custom_openai_key_encrypted?: string | null
@@ -273,111 +270,6 @@ export interface Database {
           created_at?: string
         }
       }
-      vitoken_transactions: {
-        Row: {
-          id: string
-          user_id: string
-          amount: number
-          balance_after: number
-          transaction_type: string
-          description: string
-          reference: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          amount: number
-          balance_after: number
-          transaction_type: string
-          description: string
-          reference?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          amount?: number
-          balance_after?: number
-          transaction_type?: string
-          description?: string
-          reference?: string | null
-          created_at?: string
-        }
-      }
-      know_inherit_listings: {
-        Row: {
-          id: string
-          author_id: string
-          title: string
-          summary: string
-          tier: 'C' | 'B' | 'A' | 'S'
-          ai_quality_score: number
-          max_similarity_score: number
-          price: number
-          preview_content: string | null
-          full_content_url: string
-          status: 'draft' | 'pending_review' | 'published' | 'rejected' | 'removed'
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          author_id: string
-          title: string
-          summary: string
-          tier: 'C' | 'B' | 'A' | 'S'
-          ai_quality_score: number
-          max_similarity_score?: number
-          price: number
-          preview_content?: string | null
-          full_content_url: string
-          status?: 'draft' | 'pending_review' | 'published' | 'rejected' | 'removed'
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          author_id?: string
-          title?: string
-          summary?: string
-          tier?: 'C' | 'B' | 'A' | 'S'
-          ai_quality_score?: number
-          max_similarity_score?: number
-          price?: number
-          preview_content?: string | null
-          full_content_url?: string
-          status?: 'draft' | 'pending_review' | 'published' | 'rejected' | 'removed'
-          created_at?: string
-        }
-      }
-      know_inherit_purchases: {
-        Row: {
-          id: string
-          listing_id: string
-          buyer_id: string
-          total_price: number
-          author_payout: number
-          platform_fee: number
-          purchased_at: string
-        }
-        Insert: {
-          id?: string
-          listing_id: string
-          buyer_id: string
-          total_price: number
-          author_payout: number
-          platform_fee: number
-          purchased_at?: string
-        }
-        Update: {
-          id?: string
-          listing_id?: string
-          buyer_id?: string
-          total_price?: number
-          author_payout?: number
-          platform_fee?: number
-          purchased_at?: string
-        }
-      }
       space_members: {
         Row: {
           id: string
@@ -399,32 +291,6 @@ export interface Database {
           user_id?: string
           role?: 'owner' | 'editor' | 'viewer'
           joined_at?: string
-        }
-      }
-      ai_model_costs: {
-        Row: {
-          model: string
-          vitoken_cost: number
-          enabled: boolean
-          description: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          model: string
-          vitoken_cost: number
-          enabled?: boolean
-          description?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          model?: string
-          vitoken_cost?: number
-          enabled?: boolean
-          description?: string | null
-          created_at?: string
-          updated_at?: string
         }
       }
       rate_limits: {
