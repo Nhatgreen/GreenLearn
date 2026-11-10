@@ -4,6 +4,45 @@
 
 ---
 
+## 2026-11-10 10:40 — refactor/greenlearn-free (Đại Tu Toàn Diện Nền Tảng GreenLearn 100% Miễn Phí & Thú Cưng Mầm Xanh 5 Cấp)
+- **Task:** Tái cấu trúc toàn diện từ ViTudy sang **GreenLearn** (`Nhatgreen/GreenLearn`):
+  1. **Nhận diện thương hiệu GreenLearn (Phase 1):**
+     - Đổi tên ứng dụng thành **GreenLearn**, palette xanh lá `#16A34A` (hover `#15803D`) và navy `#242D3D`.
+     - Cấu hình `basePath: /GreenLearn` trong `next.config.ts`, `build-pages.mjs`, `.github/workflows/deploy.yml`.
+     - Sinh trọn bộ asset vector/PNG chính thức: `greenlearn-icon.svg`, `greenlearn-logo-horizontal.svg`, `favicon.ico`, `icon.png`, `apple-touch-icon.png`, `og-image.png`.
+     - Chuyển đổi tên DB cục bộ `greenlearn_offline_db` và tiền tố storage key `greenlearn_*`.
+  2. **Loại bỏ 100% Monetization & Cập nhật Pháp lý (Phase 2):**
+     - Xóa bỏ 40 files liên quan đến tiền ảo ViToken, nạp tiền VietQR SePay, bảng giá và Chợ tài liệu 85/15.
+     - Cập nhật Điều khoản dịch vụ (`/terms`), Chính sách bảo mật (`/privacy`), và Hỏi đáp (`/faq`) cam kết 100% miễn phí trọn đời và phi lợi nhuận.
+  3. **Trợ Lý AI Trực Tiếp Client-Side OpenAI BYOK (Phase 3):**
+     - Triển khai `ByokStore` và `askAi` trực tiếp gọi `https://api.openai.com/v1/chat/completions` với mô hình mặc định `gpt-4o-mini`.
+     - Tích hợp timeout AbortController 30s, cắt ngắn 6.000 ký tự chống tràn token, cảnh báo máy tính công cộng.
+  4. **Supabase Migration 0017 & Storage Manager & Realtime Cursors (Phase 4):**
+     - Viết migration `0017_drop_monetization.sql` xóa bỏ các bảng, trigger và cột monetization.
+     - Xây dựng `useStorageManager` và `StorageManagerModal` hiển thị dung lượng trình duyệt thực tế, cảnh báo tài liệu >30 ngày và xuất/nhập sao lưu JSON.
+     - Kích hoạt Realtime Cursor Broadcast throttled 60ms cho học nhóm.
+  5. **Hệ Thống Thú Cưng Mầm Xanh 5 Cấp Độ & Dáng Thức/Ngủ (Phase 5):**
+     - Xử lý 10 hình ảnh thú cưng từ `brand/pet/` thành PNG trong suốt tối ưu (<1.8MB tổng).
+     - Định nghĩa `src/types/pet.ts` và `src/lib/petHelpers.ts` tính toán 5 cấp tiến hóa (1-2 ngày, 3-6 ngày, 7-13 ngày, 14-29 ngày, 30+ ngày) và trạng thái thức/ngủ say theo chuỗi streak.
+     - Viết hook `usePetMascot.ts` và component `PetMascotModal.tsx` với lịch 7 ngày, đổi tên thú cưng, thư viện 5 cấp và chuyển đổi dáng xem trước.
+     - Tích hợp vào `TopRightWallet`, `StudySpaceDeskView` (tự động nhận 20s heartbeat, đạt 180s tự động đánh thức), `DashboardPage`, `ProfilePage`, và `HomePage`.
+  6. **Làm Sạch Tồn Dư & Đồng Bộ Tài Liệu (Phase 6-8):**
+     - Viết lại `PricingSection` thành cam kết tự do học thuật 100% miễn phí 3 trụ cột.
+     - Loại bỏ toàn bộ từ khóa ViToken sót lại trong `SummaryTab`, `OnboardingTour`, `StudyStats`, `DeleteAccount`, `database.types.ts`.
+     - Cập nhật `README.md` lưu giữ đầy đủ sự ghi nhận đóng góp của tác giả gốc (Lê Võ Thanh Nam).
+- **Files Created/Modified:**
+  - `brand/pet/*`, `public/pet/*`, `src/types/pet.ts`, `src/lib/petHelpers.ts`, `src/lib/petHelpers.test.ts`, `src/hooks/usePetMascot.ts`, `src/hooks/usePetMascot.test.ts`, `src/components/pet/PetMascotModal.tsx`
+  - `src/components/hud/TopRightWallet.tsx`, `src/app/dashboard/page.tsx`, `src/app/profile/page.tsx`, `src/components/home/HomePage.tsx`, `src/components/canvas/StudySpaceDeskView.tsx`, `src/components/landing/PricingSection.tsx`
+  - `.github/workflows/deploy.yml`, `README.md`, `src/types/database.types.ts`, `docs/ai/03_SYMBOL_INDEX.md`
+- **Verified by:**
+  - `npx tsc --noEmit`: 0 lỗi type.
+  - `pnpm test`: 16/16 test suites passed (64/64 tests passed 100%).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công (tạo `out/.nojekyll`).
+  - `pnpm run docs:index` & `pnpm run docs:check`: OK (193 symbols).
+- **Branch:** `refactor/greenlearn-free`.
+
+---
+
 ## 2026-11-09 22:05 — main (Lược Bỏ Nút Home Dư Thừa, Đồng Bộ Chữ ViTudy Cam ViT In Đậm & Cập Nhật Favicon Tab Trình Duyệt)
 - **Task:** Tinh chỉnh nhận diện thương hiệu và công thái học theo yêu cầu:
   1. **Lược bỏ nút Home dư thừa trên thanh TopLeftNav:**
