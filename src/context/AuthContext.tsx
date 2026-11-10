@@ -229,7 +229,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         provider,
         options: {
           redirectTo: redirectUrl,
-          skipBrowserRedirect: false,
+          skipBrowserRedirect: true,
         },
       });
 
@@ -246,6 +246,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data?.url && typeof window !== 'undefined') {
+        // Pre-check xem provider đã được cấu hình trong Supabase chưa (chống crash sang trang lỗi JSON)
+        try {
+          const testRes = await fetch(data.url, { method: 'GET' });
+          if (!testRes.ok) {
+            const errJson = await testRes.json().catch(() => null);
+            if (errJson?.msg?.includes('not enabled') || errJson?.error_code === 'validation_failed') {
+              setIsLoading(false);
+              return {
+                success: false,
+                error: `Đăng nhập qua ${provider === 'google' ? 'Google' : 'Discord'} chưa được cấu hình Client ID trên Supabase của bạn. Bạn hãy đăng ký / đăng nhập nhanh bằng Email & Mật khẩu bên dưới nhé!`,
+              };
+            }
+          }
+        } catch {
+          // Nếu fetch bị CORS khi redirect sang Google thật thì cứ cho redirect bình thường
+        }
+
         window.location.href = data.url;
         return { success: true };
       }

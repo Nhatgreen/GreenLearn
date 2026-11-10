@@ -11,13 +11,18 @@ export function getSupabaseConfig(): { url: string; anonKey: string; isConfigure
   let url = envUrl;
   let anonKey = envKey;
 
-  // Đọc từ localStorage nếu người dùng đã cấu hình riêng
+  // Đọc từ localStorage nếu người dùng đã cấu hình riêng (loại bỏ dứt điểm URL ViTudy cũ)
   if (typeof window !== 'undefined') {
     const localUrl = localStorage.getItem('greenlearn_supabase_url') || localStorage.getItem('vitudy_supabase_url');
     const localKey = localStorage.getItem('greenlearn_supabase_anon_key') || localStorage.getItem('vitudy_supabase_anon_key');
-    if (localUrl && localKey) {
+    if (localUrl && localKey && !localUrl.includes('yndwxcnedlilmsbbydvb')) {
       url = localUrl;
       anonKey = localKey;
+    } else if (localUrl && localUrl.includes('yndwxcnedlilmsbbydvb')) {
+      localStorage.removeItem('greenlearn_supabase_url');
+      localStorage.removeItem('greenlearn_supabase_anon_key');
+      localStorage.removeItem('vitudy_supabase_url');
+      localStorage.removeItem('vitudy_supabase_anon_key');
     }
   }
 
