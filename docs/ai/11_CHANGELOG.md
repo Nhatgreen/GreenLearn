@@ -4,6 +4,25 @@
 
 ---
 
+## 2026-11-10 21:02 — main (Triển Khai Thành Công GreenLearn Lên GitHub Pages Trực Tuyến)
+- **Task:** Đẩy toàn bộ mã nguồn lên repository `Nhatgreen/GreenLearn`, tinh chỉnh GitHub Actions workflow và kích hoạt triển khai thành công 100% trang web tĩnh lên GitHub Pages:
+  1. **Tạo & Đồng Bộ Repo GitHub:**
+     - Đã thiết lập remote SSH `git@github.com:Nhatgreen/GreenLearn.git`.
+     - Fast-forward merge nhánh `refactor/greenlearn-free` vào `main` và đẩy cả hai nhánh lên GitHub.
+  2. **Khắc Phục & Tối Ưu GitHub Actions (`deploy.yml`):**
+     - Loại bỏ cờ `enablement: true` ở `actions/configure-pages@v5` giúp workflow tương thích hoàn toàn với chế độ GitHub Actions Pages của repository.
+     - Sử dụng trực tiếp `pnpm run build:pages` đảm bảo gắn `basePath: /GreenLearn` và tự động sinh file `.nojekyll`.
+  3. **Xác Minh Trực Tuyến (Production Live):**
+     - Workflow `Deploy Next.js to GitHub Pages` chạy thành công (Build: success, Deploy: success).
+     - Kiểm tra trực tuyến `https://nhatgreen.github.io/GreenLearn/`: Trả về `HTTP/2 200 OK`.
+     - Toàn bộ tài nguyên tĩnh (`/icons/greenlearn-icon.png`, `/pet/stage1.png`...) tải chuẩn xác 200 OK không bị lỗi 404.
+- **Verified by:**
+  - `curl -sIL https://nhatgreen.github.io/GreenLearn/`: `HTTP/2 200`.
+  - Tiêu đề trang: `<title>GreenLearn — Bàn Học Tri Thức 2.5D</title>`.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-10 11:25 — refactor/greenlearn-free (Phủ Mã Màu Xanh Lá GreenLearn `#16A34A` Lên Toàn Bộ Giao Diện & Desk)
 - **Task:** Triệt tiêu hoàn toàn tông màu be/nâu/cam tồn dư từ ViTudy cũ, đồng bộ tuyệt đối sắc thái thương hiệu **Xanh Lá GreenLearn `#16A34A`** (hover: `#15803D`, soft: `#F0FDF4`, border: `#BBF7D0`, text: `#166534`) trên toàn bộ hệ thống:
   1. **Trang Chủ (`HomePage.tsx`) & Giới Thiệu (`AboutPage.tsx`):**
