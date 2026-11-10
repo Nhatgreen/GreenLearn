@@ -426,12 +426,12 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               </button>
             </div>
 
-            {/* Tab 2: Orange (Cam) - Phóng to / Toàn màn hình */}
+            {/* Tab 2: GreenLearn Signature Green - Phóng to / Toàn màn hình */}
             <div className="relative group/tab flex items-center">
               <button
                 onClick={() => setIsFullScreen(true)}
                 title="Đọc toàn màn hình (Xem chuẩn PDF Reader)"
-                className="h-8 w-[48px] group-hover/tab:w-[110px] bg-orange-600 hover:bg-green-500 active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
+                className="h-8 w-[48px] group-hover/tab:w-[110px] bg-[#16A34A] hover:bg-[#15803D] active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
                 style={{
                   clipPath: 'polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%)'
                 }}
@@ -439,7 +439,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 <span className="text-xs font-bold text-white tracking-wide whitespace-nowrap max-w-0 opacity-0 group-hover/tab:max-w-[65px] group-hover/tab:opacity-100 transition-all duration-200 overflow-hidden">
                   Phóng to
                 </span>
-                <Maximize2 className="w-4 h-4 text-orange-100 flex-shrink-0" />
+                <Maximize2 className="w-4 h-4 text-green-100 flex-shrink-0" />
               </button>
             </div>
 

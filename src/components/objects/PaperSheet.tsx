@@ -416,7 +416,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 <div className="flex items-center justify-between gap-3 w-full">
                   <div className="flex items-center gap-2.5">
                     <div className="bg-[#16A34A] text-white px-3 py-1.5 rounded-xl text-center flex-shrink-0 shadow-xs">
-                      <div className="text-[9px] text-orange-100 font-bold uppercase">Điểm thi</div>
+                      <div className="text-[9px] text-green-100 font-bold uppercase">Điểm thi</div>
                       <div className="text-base font-black text-white">{exam.score} / 10</div>
                     </div>
                     <div className="text-xs text-slate-700 italic max-w-[200px] leading-tight">

@@ -76,7 +76,7 @@ export function SummaryTab({ fullText, documentTitle, isPaper, targetPos }: Summ
         <div className="mb-2.5">
           <label className={`flex items-center justify-between px-3 py-2 rounded-xl border transition-all cursor-pointer ${
             useAi 
-              ? 'bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 border-[#16A34A]/60 shadow-2xs ring-1 ring-[#16A34A]/20' 
+              ? 'bg-gradient-to-r from-green-50 via-emerald-50 to-green-50 border-[#16A34A]/60 shadow-2xs ring-1 ring-[#16A34A]/20' 
               : 'bg-slate-50 border-slate-200 hover:border-slate-300'
           }`}>
             <div className="flex items-center gap-2">

@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-11-10 11:25 — refactor/greenlearn-free (Phủ Mã Màu Xanh Lá GreenLearn `#16A34A` Lên Toàn Bộ Giao Diện & Desk)
+- **Task:** Triệt tiêu hoàn toàn tông màu be/nâu/cam tồn dư từ ViTudy cũ, đồng bộ tuyệt đối sắc thái thương hiệu **Xanh Lá GreenLearn `#16A34A`** (hover: `#15803D`, soft: `#F0FDF4`, border: `#BBF7D0`, text: `#166534`) trên toàn bộ hệ thống:
+  1. **Trang Chủ (`HomePage.tsx`) & Giới Thiệu (`AboutPage.tsx`):**
+     - Thay thế nền parchment ấm `#faf8f5` bằng nền hiện đại `bg-slate-50` / `bg-white` kết hợp viền sắc nét `border-slate-200`.
+     - Nút CTA chính đổi từ đen sang Xanh lá GreenLearn `bg-[#16A34A] hover:bg-[#15803D] text-white shadow-md shadow-green-600/20`.
+     - Thanh bên (Sidebar): Các mục active và badge số lượng sử dụng `bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0]`.
+     - Card widget học tập: Widget linh vật, thanh tiến độ chuỗi ngày học, viền hover thẻ đều mang sắc xanh tươi sáng.
+  2. **Thanh Công Cụ Mặt Bàn (`LeftCreationBar.tsx`):**
+     - Đổi trạng thái kích hoạt (Active) của mọi công cụ (Con trỏ Cursor, Giấy ghi chú Sticky Note, Bút vẽ Pen, Nút mở rộng +, Khóa xoay) từ xám nhạt `bg-slate-200` sang Xanh Lá GreenLearn `bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]`.
+     - Bút vẽ con trong sub-toolbar (Pen, Highlighter, Smart shape, Eraser, Area eraser) cũng đồng bộ nền xanh lá khi chọn.
+  3. **Vật Thể Trên Bàn Học & Modals:**
+     - Sách `BookSpread.tsx`: Tab 2 (Phóng to / Toàn màn hình) đổi sang `bg-[#16A34A] hover:bg-[#15803D]` và icon `text-green-100`.
+     - Tờ bài thi `PaperSheet.tsx`: Khối điểm thi đổi nhãn sang `text-green-100`.
+     - Thẻ trắc nghiệm `ExamQuizCard.tsx`: Trạng thái câu đã trả lời dùng `bg-green-100 text-[#166534] border-green-300`.
+     - Bộ chọn hình dán `StickerEmojiPickerFlyout.tsx`: Đổi toàn bộ 9 danh mục emoji active sang `bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold`.
+     - Modals `QuizTab.tsx` & `SummaryTab.tsx`: Dải gradient thẻ tóm tắt/trắc nghiệm chuyển sang `from-green-50 via-emerald-50 to-green-50`.
+     - Đọc toàn màn hình `FullScreenDocModal.tsx`: Đổi text selection sang `selection:bg-green-100 selection:text-[#166534]`.
+     - Navigation `TopLeftNav.tsx`: Dropdown chọn không gian bàn học dùng nền xanh dịu khi active và nút tạo bàn học dùng `#16A34A`.
+     - Ví / AI HUD `TopRightWallet.tsx`: Nút Bot AI khi active dùng `bg-[#16A34A] text-white border-[#15803D]`.
+- **Verified by:**
+  - `npx tsc --noEmit`: 0 lỗi type.
+  - `pnpm test`: 16/16 test suites passed (64/64 tests passed 100%).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+- **Branch:** `refactor/greenlearn-free`.
+
+---
+
 ## 2026-11-10 10:40 — refactor/greenlearn-free (Đại Tu Toàn Diện Nền Tảng GreenLearn 100% Miễn Phí & Thú Cưng Mầm Xanh 5 Cấp)
 - **Task:** Tái cấu trúc toàn diện từ ViTudy sang **GreenLearn** (`Nhatgreen/GreenLearn`):
   1. **Nhận diện thương hiệu GreenLearn (Phase 1):**

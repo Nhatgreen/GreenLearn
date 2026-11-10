@@ -234,7 +234,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Đã dùng gần đây"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'recent'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -248,7 +248,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Biểu cảm & Con người"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'people'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -262,7 +262,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Động vật & Tự nhiên"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'nature'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -276,7 +276,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Đồ ăn & Thức uống"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'food'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -292,7 +292,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Hoạt động & Thể thao"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'activities'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -309,7 +309,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Du lịch & Địa điểm"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'travel'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -323,7 +323,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Đồ vật & Dụng cụ"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'objects'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -337,7 +337,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Ký hiệu & Biểu trưng"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'symbols'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -351,7 +351,7 @@ export function StickerEmojiPickerFlyout({ isOpen, onClose, onSelect }: StickerE
             aria-label="Cờ các quốc gia"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
               activeEmojiCat === 'flags'
-                ? 'bg-orange-100 text-[#16A34A] ring-1 ring-orange-300 font-bold'
+                ? 'bg-green-100 text-[#166534] ring-1 ring-green-300 font-bold'
                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >

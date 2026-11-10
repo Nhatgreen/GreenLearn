@@ -100,7 +100,7 @@ export function HeroSection({ onEnterDesk }: HeroSectionProps) {
         <button
           type="button"
           onClick={onEnterDesk}
-          className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-bold shadow-md shadow-orange-500/20 transition-all hover:scale-102 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#16A34A] hover:bg-[#15803D] text-white text-sm font-bold shadow-md shadow-green-600/20 transition-all hover:scale-102 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
         >
           <span>Vào bàn học</span>
           <ArrowRight className="w-4 h-4" />

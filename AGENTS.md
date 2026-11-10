@@ -21,6 +21,8 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
     * Tên chuẩn: **Xanh Lá GreenLearn** — Mã màu chính thức: **`#16A34A`** (trạng thái hover: **`#15803D`**).
     * Kết hợp thẩm mỹ: **Xanh lá cây (`#16A34A`) + Nền Trắng (`#ffffff`) + Viền Đen / Slate (`#0f172a`, `#242D3D`)**.
     * Hệ sắc độ đệm: Nền mềm `--accent-soft: #F0FDF4`, viền `--accent-border: #BBF7D0`, chữ `--accent-text: #166534` (chuẩn WCAG AA).
+    * **Trạng thái kích hoạt công cụ (Active Tools on LeftCreationBar & Docks):** Sử dụng nền Xanh Lá `bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]`, đảm bảo icon và nhãn trắng tinh khiết nổi bật trên nền xanh nhận diện.
+    * **Thẻ & Nút CTA:** Sử dụng `bg-[#16A34A] hover:bg-[#15803D] text-white shadow-md shadow-green-600/20` cho tất cả các nút hành động chính (Vào bàn học, Bắt đầu học, Tạo bàn học...).
   * **Biểu Tượng Thương Hiệu GreenLearn Chính Thức:**
     * **Biểu tượng thương hiệu GreenLearn**: Sử dụng hình ảnh `public/icons/greenlearn-icon.png` (kèm vector SVG `public/icons/greenlearn-icon.svg`, `public/favicon.ico`, `src/app/icon.png`) làm logo đại diện chính thức của GreenLearn trên toàn bộ thanh điều hướng `TopLeftNav`, trang chủ `HomePage`, trang giới thiệu `AboutPage`, và tiêu đề tab trình duyệt (Favicon).
     * **Kiểu chữ (Typography) thương hiệu GreenLearn thống nhất:** Chữ "GreenLearn" bên cạnh logo ở toàn bộ các màn hình (cả `TopLeftNav` lẫn thanh bên `HomePage`) bắt buộc sử dụng chuẩn nhận diện: chữ "Green" màu Xanh lá in đậm `text-[#16A34A]`, chữ "Learn" màu Xám đen navy `text-[#242D3D]`.
@@ -51,11 +53,10 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
     * Toàn bộ các khung, nút ở HUD được đưa sát vào tường trình duyệt: khoảng cách từ mép hướng ra ngoài của HUD đến rìa web chỉ còn **4px (`1/4` so với 16px mặc định cũ: `top-1`, `bottom-1`, `left-1`, `right-1`)**.
     * Áp dụng đồng bộ cho: `TopLeftNav` (`top-1 left-1`), `TopRightWallet` (`top-1 right-1`), `LeftCreationBar` (`left-1`), `BottomLeftKnowledge` (`bottom-1 left-1`), `BottomRightToolkit` (`bottom-1 right-1`), và `MultiplayerBar` (`bottom-1 left-1/2 -translate-x-1/2` căn giữa sát mép dưới).
     * Tối ưu hóa triệt để không gian học tập trung tâm của mặt bàn, triệt tiêu khoảng hở thừa không cần thiết.
-  * **Biểu Tượng Chuỗi Ngày Học Tập (Streak Flame Icon):**
-    * Biểu tượng ngọn lửa (`w-8.5 h-8.5`) màu Cam ViT (`#E0562D`) với phần bụng tròn ôm trọn số ngày chuỗi học tập màu trắng ở bên trong.
-    * Tọa độ căn số tuyệt đối: `top-[62%] left-1/2 -translate-x-1/2 -translate-y-1/2`, số chuỗi nằm chính xác 100% trong tâm bụng lửa, cân đối 4 phía, không lệch, không che khuất và không tràn ra ngoài viền ngọn lửa.
+  * **Biểu Tượng Chuỗi Ngày Học Tập & Thú Cưng Học Tập (Pet Mascot & Streak):**
+    * Tích hợp linh vật học tập 5 cấp độ sinh trưởng kèm trạng thái ngủ khi nghỉ học, hiển thị số ngày chuỗi học tập với huy hiệu xanh lá GreenLearn (`bg-[#16A34A] text-white`).
   * **Quy Chuẩn Nút Mở Bản Đồ Khi Ẩn (Minimap Reopen Button):**
-    * Đồng bộ hoàn toàn style với Nút Tải lên tài liệu: khung vuông bo góc `rounded-xl`, kích thước chuẩn `w-10 h-10`, nền trắng `bg-white hover:bg-orange-50/80`, viền `border border-slate-300 hover:border-orange-300`, đổ bóng nhẹ `shadow-sm`, icon `Map` SVG màu Cam ViT (`#E0562D`, `stroke-[2.4]`). Tuyệt đối không dùng nút tròn nền cam độc lập.
+    * Khung vuông bo góc `rounded-xl`, kích thước chuẩn `w-10 h-10`, nền trắng `bg-white hover:bg-green-50/80`, viền `border border-slate-300 hover:border-green-300`, đổ bóng nhẹ `shadow-sm`, icon `Map` SVG màu Xanh Lá GreenLearn (`#16A34A`, `stroke-[2.4]`). Tuyệt đối không dùng nút tròn nền cam độc lập.
   * **Hệ thống màu trạng thái ngữ nghĩa (Status Tokens):**
     * **Đúng (Success / Correct):** Xanh lục bảo ngọc (`#15803D`), nền `#ECFDF5`, viền `#A7F3D0`.
     * **Sai (Danger / Wrong):** Đỏ ruby thanh nhã (`#DC2626`), nền `#FEF2F2`, viền `#FECACA`.

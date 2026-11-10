@@ -212,11 +212,11 @@ export function LeftCreationBar() {
           }}
           className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             activeTool === 'cursor'
-              ? 'bg-slate-200 text-slate-900 shadow-xs font-bold border border-slate-300'
+              ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <MousePointer className="w-5 h-5 text-slate-900 stroke-[2.4]" />
+          <MousePointer className={`w-5 h-5 stroke-[2.4] ${activeTool === 'cursor' ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
         {/* Sticky Note Button (+ Note with vertical color flyout) */}
@@ -229,11 +229,11 @@ export function LeftCreationBar() {
           }}
           className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             activeTool === 'create_note' || isNoteFlyoutOpen
-              ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-xs'
+              ? 'bg-[#16A34A] text-white border border-[#15803D] shadow-xs'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <StickyNote className="w-5 h-5 text-slate-900 stroke-[2.4]" />
+          <StickyNote className={`w-5 h-5 stroke-[2.4] ${activeTool === 'create_note' || isNoteFlyoutOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
         {/* Unified Pen Button with Miro-style Full Overlay Flyout */}
@@ -250,7 +250,7 @@ export function LeftCreationBar() {
           }}
           className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isDrawingActive || isPenFlyoutOpen
-              ? 'bg-slate-200 text-slate-900 shadow-xs font-bold border border-slate-300'
+              ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
@@ -270,11 +270,11 @@ export function LeftCreationBar() {
           }}
           className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isMoreToolsOpen
-              ? 'bg-slate-200 text-slate-900 shadow-xs font-bold border border-slate-300'
+              ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <Plus className="w-5 h-5 text-slate-900 stroke-[2.4]" />
+          <Plus className={`w-5 h-5 stroke-[2.4] ${isMoreToolsOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
         {/* Gạch chia vùng NẰM DƯỚI nút + */}
@@ -286,11 +286,11 @@ export function LeftCreationBar() {
           onClick={togglePanLock}
           className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isPanLocked
-              ? 'bg-slate-200 text-slate-900 shadow-xs font-bold border border-slate-300'
+              ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          {isPanLocked ? <Lock className="w-5 h-5 text-slate-900 stroke-[2.4]" /> : <Unlock className="w-5 h-5 text-slate-900 stroke-[2.4]" />}
+          {isPanLocked ? <Lock className="w-5 h-5 stroke-[2.4]" /> : <Unlock className="w-5 h-5 stroke-[2.4]" />}
         </button>
 
         {/* ================= VERTICALLY CENTERED NOTE COLOR FLYOUT ================= */}
@@ -319,11 +319,11 @@ export function LeftCreationBar() {
               onClick={() => setActiveTool('pen')}
               className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 activeTool === 'pen'
-                  ? 'bg-slate-200 text-slate-900 font-bold border border-slate-300'
+                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
                   : 'text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <PenTool className="w-4.5 h-4.5 text-slate-900 stroke-[2.4]" />
+              <PenTool className="w-4.5 h-4.5 stroke-[2.4]" />
             </button>
 
             {/* Tool 2: Highlighter (Bút dạ quang) */}
@@ -332,11 +332,11 @@ export function LeftCreationBar() {
               onClick={() => setActiveTool('highlighter')}
               className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 activeTool === 'highlighter'
-                  ? 'bg-slate-200 text-slate-900 font-bold border border-slate-300'
+                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
                   : 'text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <Highlighter className="w-4.5 h-4.5 text-slate-900 stroke-[2.4]" />
+              <Highlighter className="w-4.5 h-4.5 stroke-[2.4]" />
             </button>
 
             {/* Tool 3: Smart Shape (Vẽ thông minh) */}
@@ -345,11 +345,11 @@ export function LeftCreationBar() {
               onClick={() => setActiveTool('smart_shape')}
               className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 activeTool === 'smart_shape'
-                  ? 'bg-slate-200 text-slate-900 font-bold border border-slate-300'
+                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
                   : 'text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <Sparkles className="w-4.5 h-4.5 text-slate-900 stroke-[2.4]" />
+              <Sparkles className="w-4.5 h-4.5 stroke-[2.4]" />
             </button>
 
             {/* Tool 4: Click Eraser (Tẩy chọn nét) */}
@@ -358,11 +358,11 @@ export function LeftCreationBar() {
               onClick={() => setActiveTool('eraser')}
               className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 activeTool === 'eraser'
-                  ? 'bg-slate-200 text-slate-900 font-bold border border-slate-300'
+                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
                   : 'text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <Eraser className="w-4.5 h-4.5 text-slate-900 stroke-[2.4]" />
+              <Eraser className="w-4.5 h-4.5 stroke-[2.4]" />
             </button>
 
             {/* Tool 5: Area Eraser (Tẩy vùng kéo chọn) */}
@@ -371,11 +371,11 @@ export function LeftCreationBar() {
               onClick={() => setActiveTool('area_eraser')}
               className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 activeTool === 'area_eraser'
-                  ? 'bg-slate-200 text-slate-900 font-bold border border-slate-300'
+                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
                   : 'text-slate-900 hover:bg-slate-100'
               }`}
             >
-              <BoxSelect className="w-4.5 h-4.5 text-slate-900 stroke-[2.4]" />
+              <BoxSelect className="w-4.5 h-4.5 stroke-[2.4]" />
             </button>
 
             <div className="w-7 h-[1px] bg-slate-200 my-0.5" />

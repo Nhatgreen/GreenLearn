@@ -555,7 +555,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
                         cellStyle = 'bg-rose-600 text-white font-bold border-rose-700 shadow-2xs';
                       }
                     } else if (isAnswered) {
-                      cellStyle = 'bg-orange-100 text-[#16A34A] font-bold border-green-300';
+                      cellStyle = 'bg-green-100 text-[#166534] font-bold border-green-300';
                     }
 
                     return (

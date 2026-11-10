@@ -108,7 +108,7 @@ export function TopRightWallet() {
           }}
           title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • Chuỗi ${pet.streakDays} ngày liên tiếp (Bấm để xem và điểm danh)`}
           className={`relative flex items-center justify-center w-11 h-11 rounded-xl transition-all cursor-pointer group ${
-            isPetModalOpen ? 'bg-slate-200' : 'hover:bg-slate-100'
+            isPetModalOpen ? 'bg-green-100 border border-green-300' : 'hover:bg-slate-100'
           }`}
         >
           <div className="relative flex items-center justify-center w-10 h-10">
@@ -139,12 +139,12 @@ export function TopRightWallet() {
           }}
           className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all cursor-pointer ${
             isAiModalOpen 
-              ? 'bg-slate-200 text-slate-900' 
+              ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]' 
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
           title={`Cài đặt kết nối AI OpenAI (Mô hình: ${selectedModel})`}
         >
-          <Bot className="w-5 h-5 text-slate-900 stroke-[2.4]" />
+          <Bot className={`w-5 h-5 stroke-[2.4] ${isAiModalOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
       </div>
 

@@ -479,7 +479,7 @@ export function FullScreenDocModal({
                             </div>
                           </div>
                         ) : (
-                          <div className="text-[15.5px] leading-[1.8] text-slate-900 font-sans selection:bg-orange-100 flex-1 overflow-y-auto no-scrollbar">
+                          <div className="text-[15.5px] leading-[1.8] text-slate-900 font-sans selection:bg-green-100 selection:text-[#166534] flex-1 overflow-y-auto no-scrollbar">
                             <MathRenderer content={leftLeaf.text} />
                           </div>
                         )}
@@ -520,7 +520,7 @@ export function FullScreenDocModal({
                             </div>
                           </div>
                         ) : (
-                          <div className="text-[15.5px] leading-[1.8] text-slate-900 font-sans selection:bg-orange-100 flex-1 overflow-y-auto no-scrollbar">
+                          <div className="text-[15.5px] leading-[1.8] text-slate-900 font-sans selection:bg-green-100 selection:text-[#166534] flex-1 overflow-y-auto no-scrollbar">
                             <MathRenderer content={rightLeaf.text} />
                           </div>
                         )}
@@ -562,7 +562,7 @@ export function FullScreenDocModal({
                           </div>
                         </div>
                       ) : (
-                        <div className="text-[16px] leading-[1.8] text-slate-900 font-sans selection:bg-orange-100 flex-1 overflow-y-auto no-scrollbar">
+                        <div className="text-[16px] leading-[1.8] text-slate-900 font-sans selection:bg-green-100 selection:text-[#166534] flex-1 overflow-y-auto no-scrollbar">
                           <MathRenderer content={leftLeaf.text} />
                         </div>
                       )}

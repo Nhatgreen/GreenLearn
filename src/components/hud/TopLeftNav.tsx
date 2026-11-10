@@ -175,7 +175,7 @@ export function TopLeftNav() {
                     }}
                     className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors cursor-pointer ${
                       s.id === activeSpaceId 
-                        ? 'bg-slate-100 text-slate-900 border border-slate-300 font-bold' 
+                        ? 'bg-green-50 text-[#166534] border border-[#BBF7D0] font-bold' 
                         : 'text-slate-800 hover:bg-slate-50 font-semibold'
                     }`}
                   >
@@ -191,7 +191,7 @@ export function TopLeftNav() {
                     setIsSpaceMenuOpen(false);
                     setIsNewSpaceModalOpen(true);
                   }}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-slate-900 hover:bg-black text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
                 >
                   <Plus className="w-4 h-4 stroke-[2.4]" />
                   <span>Tạo bàn học mới</span>
@@ -331,7 +331,7 @@ export function TopLeftNav() {
                   placeholder="Ví dụ: Ôn thi giữa kỳ Machine Learning"
                   value={newSpaceName}
                   onChange={(e) => setNewSpaceName(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-800"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-green-200"
                 />
               </div>
               <div>
@@ -343,7 +343,7 @@ export function TopLeftNav() {
                   placeholder="Ví dụ: Toán ứng dụng, AI..."
                   value={newSpaceSubject}
                   onChange={(e) => setNewSpaceSubject(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-slate-800"
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-green-200"
                 />
               </div>
               <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
@@ -356,7 +356,7 @@ export function TopLeftNav() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-slate-900 hover:bg-black text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer"
+                  className="px-4 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer transition-colors"
                 >
                   Tạo bàn học
                 </button>
