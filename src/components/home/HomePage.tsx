@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
+import { usePetMascot } from '@/hooks/usePetMascot';
+import { PetMascotModal } from '@/components/pet/PetMascotModal';
 import { getAssetPath } from '@/lib/assets';
 import { StudySpace } from '@/types/studyspace';
 
@@ -30,10 +32,10 @@ interface HomePageProps {
 export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   const { user, profile, status } = useAuth();
   const { spaces, switchSpace, createSpaceFromTemplate } = useStudySpace();
+  const { pet, info, currentImageUrl, isClaimedToday, claimToday } = usePetMascot();
   const router = useRouter();
 
-  const [streakDays, setStreakDays] = useState(1);
-  const [isClaimedToday, setIsClaimedToday] = useState(false);
+  const [isPetModalOpen, setIsPetModalOpen] = useState(false);
   const [claimFeedback, setClaimFeedback] = useState<string | null>(null);
 
   const [searchFilter, setSearchFilter] = useState('');
@@ -59,8 +61,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
   // Handle streak claim
   const handleClaimStreak = () => {
-    setIsClaimedToday(true);
-    setClaimFeedback('Điểm danh thành công! Duy trì chuỗi học nhé.');
+    const res = claimToday();
+    if (res.success) {
+      setClaimFeedback(`Điểm danh thành công! Chuỗi ${res.newStreak} ngày. Thú cưng ${pet.name} đã thức giấc.`);
+    } else {
+      setClaimFeedback('Hôm nay bạn đã điểm danh rồi!');
+    }
     setTimeout(() => setClaimFeedback(null), 3500);
   };
 
@@ -221,14 +227,42 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
         {/* Sidebar Middle / Bottom Section */}
         <div className="pt-2 space-y-3">
+          {/* Widget: Thú cưng học tập */}
+          <button
+            type="button"
+            onClick={() => setIsPetModalOpen(true)}
+            className="w-full p-3 rounded-2xl bg-white border border-[#e8dfd3] hover:border-green-300 text-left transition-all cursor-pointer shadow-2xs group"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center p-1 flex-shrink-0">
+                <img
+                  src={currentImageUrl}
+                  alt={pet.name}
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-stone-900 truncate">{pet.name}</span>
+                  <span className="text-[10px] font-bold text-[#16A34A] bg-green-50 px-1.5 py-0.5 rounded-full">
+                    Cấp {pet.stage}
+                  </span>
+                </div>
+                <p className="text-[10px] text-stone-500 truncate">
+                  Chuỗi {pet.streakDays} ngày • {pet.isSleeping ? 'Đang ngủ' : 'Tỉnh táo'}
+                </p>
+              </div>
+            </div>
+          </button>
+
           {/* Widget: Mục tiêu học hôm nay */}
           <div className="p-3.5 rounded-2xl bg-[#f5efe6] border border-[#e8dfd3]">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[11px] font-bold text-stone-800 uppercase tracking-wider flex items-center gap-1.5">
-                <Target className="w-3.5 h-3.5 text-[#B8431A]" />
+                <Target className="w-3.5 h-3.5 text-[#16A34A]" />
                 Mục tiêu hôm nay
               </span>
-              <span className="text-[11px] font-bold text-[#B8431A]">1 / 4 phiên</span>
+              <span className="text-[11px] font-bold text-[#16A34A]">1 / 4 phiên</span>
             </div>
             <div className="w-full h-1.5 bg-stone-200/90 rounded-full overflow-hidden mb-1.5">
               <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: '25%' }} />
@@ -253,29 +287,23 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
           {/* Nút hành động bên phải */}
           <div className="flex items-center gap-3">
-            {/* Streak Badge có trạng thái rõ ràng */}
+            {/* Streak & Pet Badge */}
             <button
               type="button"
-              onClick={handleClaimStreak}
-              title={isClaimedToday ? "Hôm nay bạn đã điểm danh thành công" : "Nhấp để nhận ViToken điểm danh hôm nay"}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-2 active:scale-98 ${
+              onClick={() => setIsPetModalOpen(true)}
+              title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • Chuỗi ${pet.streakDays} ngày liên tiếp (Bấm để xem và điểm danh)`}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-2 active:scale-98 ${
                 isClaimedToday 
                   ? 'bg-emerald-50/90 border border-emerald-200 text-emerald-800'
                   : 'bg-white border border-stone-200/90 text-stone-800 hover:border-[#16A34A] hover:shadow-xs'
               }`}
             >
-              {isClaimedToday ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.4]" />
-              ) : (
-                <div className="flex items-center gap-1.5">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]"></span>
-                  </span>
-                  <Flame className="w-3.5 h-3.5 text-[#16A34A] fill-[#16A34A]" />
-                </div>
-              )}
-              <span>Chuỗi {streakDays || 1} ngày · {isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}</span>
+              <img
+                src={currentImageUrl}
+                alt={pet.name}
+                className="w-5 h-5 object-contain"
+              />
+              <span>Chuỗi {pet.streakDays} ngày · {isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}</span>
             </button>
 
             {/* Avatar tròn bên phải */}
@@ -292,7 +320,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-[#F0FDF4] text-[#B8431A] font-bold text-xs flex items-center justify-center select-none">
+                <div className="w-full h-full bg-[#F0FDF4] text-[#16A34A] font-bold text-xs flex items-center justify-center select-none">
                   {shortName.charAt(0).toUpperCase()}
                 </div>
               )}
@@ -302,16 +330,16 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
         {/* Thông báo điểm danh nổi ngắn */}
         {claimFeedback && (
-          <div className="mb-4 p-3 rounded-xl bg-green-50 border border-green-200 text-xs font-semibold text-[#B8431A] flex items-center justify-between animate-fade-in shadow-xs">
+          <div className="mb-4 p-3 rounded-xl bg-green-50 border border-green-200 text-xs font-semibold text-[#166534] flex items-center justify-between animate-fade-in shadow-xs">
             <span>{claimFeedback}</span>
-            <button onClick={() => setClaimFeedback(null)} className="text-stone-400 hover:text-stone-600 font-bold px-1.5">✕</button>
+            <button onClick={() => setClaimFeedback(null)} className="text-stone-400 hover:text-stone-600 font-bold px-1.5 cursor-pointer">✕</button>
           </div>
         )}
 
         {/* Lời chào: Căn trái cùng trục với các khối bên dưới, kích thước 36-40px gọn gàng */}
         <div className="mb-8 mt-1 text-left">
           <h1 className="text-3xl md:text-4xl font-serif text-stone-900 tracking-tight">
-            Ôn bài thôi, <span className="text-[#B8431A] font-serif font-normal">{shortName}</span>
+            Ôn bài thôi, <span className="text-[#16A34A] font-serif font-normal">{shortName}</span>
           </h1>
         </div>
 
@@ -345,7 +373,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 <Plus className="w-7 h-7 text-stone-400 group-hover:text-[#16A34A] stroke-[1.8] transition-colors" />
                 <span className="text-[11px] font-medium text-stone-600">Thả tài liệu vào đây</span>
               </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#B8431A] transition-colors">
+              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#16A34A] transition-colors">
                 Bàn học trống
               </span>
               <p className="text-[11px] text-stone-600 mt-0.5 leading-snug">
@@ -367,7 +395,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                     <div className="w-7 h-0.5 bg-stone-300 rounded-full" />
                   </div>
                   <div className="w-1/2 p-1.5 flex flex-col gap-1">
-                    <div className="w-7 h-0.5 bg-[#B8431A] rounded-full" />
+                    <div className="w-7 h-0.5 bg-[#16A34A] rounded-full" />
                     <div className="w-8 h-0.5 bg-stone-300 rounded-full" />
                     <div className="w-5 h-0.5 bg-stone-300 rounded-full" />
                   </div>
@@ -379,7 +407,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   <div className="w-7 h-0.5 bg-amber-600/40 rounded-full" />
                 </div>
               </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#B8431A] transition-colors">
+              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#16A34A] transition-colors">
                 Ôn thi giữa kỳ
               </span>
               <p className="text-[11px] text-stone-600 mt-0.5 leading-snug">
@@ -408,7 +436,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   <div className="absolute -bottom-1 -right-1 w-6 h-7 rounded-2xs bg-[#fef08a] border border-amber-200 shadow-xs" />
                 </div>
               </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#B8431A] transition-colors">
+              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#16A34A] transition-colors">
                 Giáo trình + đề thi
               </span>
               <p className="text-[11px] text-stone-600 mt-0.5 leading-snug">
@@ -445,7 +473,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   </span>
                 </div>
               </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#B8431A] transition-colors">
+              <span className="mt-3 text-xs md:text-sm font-bold text-stone-900 group-hover:text-[#16A34A] transition-colors">
                 Học nhóm
               </span>
               <p className="text-[11px] text-stone-600 mt-0.5 leading-snug">
@@ -463,7 +491,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <button
                 type="button"
                 onClick={() => setShowAllSpaces(!showAllSpaces)}
-                className="text-xs font-bold text-[#B8431A] hover:text-[#166534] hover:underline cursor-pointer"
+                className="text-xs font-bold text-[#16A34A] hover:text-[#166534] hover:underline cursor-pointer"
               >
                 {showAllSpaces ? 'Thu gọn' : 'Xem tất cả'}
               </button>
@@ -511,7 +539,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
                         {/* Text info */}
                         <div className="min-w-0">
-                          <div className="text-sm font-bold text-stone-900 group-hover:text-[#B8431A] transition-colors truncate">
+                          <div className="text-sm font-bold text-stone-900 group-hover:text-[#16A34A] transition-colors truncate">
                             {space.name}
                           </div>
                           {space.description && (
@@ -540,6 +568,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
         </section>
 
       </main>
+
+      {/* MODAL: Thú Cưng Học Tập & Điểm Danh */}
+      <PetMascotModal
+        isOpen={isPetModalOpen}
+        onClose={() => setIsPetModalOpen(false)}
+      />
     </div>
   );
 }

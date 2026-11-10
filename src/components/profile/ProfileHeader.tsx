@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { UserProfile, useAuth } from '@/hooks/useAuth';
 import { getSupabase } from '@/lib/supabase';
-import { Camera, Loader2, Coins } from 'lucide-react';
+import { Camera, Loader2 } from 'lucide-react';
 
 interface ProfileHeaderProps {
   profile: UserProfile | null;

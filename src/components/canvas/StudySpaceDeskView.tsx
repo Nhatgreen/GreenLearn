@@ -12,11 +12,13 @@ import { BottomRightToolkit } from '../hud/BottomRightToolkit';
 import { LeftCreationBar } from '../hud/LeftCreationBar';
 import { MultiplayerBar } from '../hud/MultiplayerBar';
 import { ActivityService } from '@/services/ActivityService';
+import { usePetMascot } from '@/hooks/usePetMascot';
 import { OnboardingTour } from '../onboarding/OnboardingTour';
 import { ChevronRight, ChevronLeft, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function StudySpaceDeskView() {
   const { focusedItemId } = useStudySpace();
+  const { addStudySeconds } = usePetMascot();
   const isFocusMode = !!focusedItemId;
 
   // Independent drawer states for each of the 5 HUD islands in focus mode
@@ -47,7 +49,11 @@ export default function StudySpaceDeskView() {
     window.addEventListener('pointerdown', handleActivity);
 
     const stopHeartbeat = ActivityService.startHeartbeat(() => {
-      return Date.now() - lastActivityTime < 60000;
+      const active = Date.now() - lastActivityTime < 60000;
+      if (active && document.visibilityState === 'visible') {
+        addStudySeconds(20);
+      }
+      return active;
     });
 
     return () => {

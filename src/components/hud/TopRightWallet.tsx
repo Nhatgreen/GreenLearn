@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ByokStore } from '@/lib/byokStore';
 import { testAiConnection } from '@/lib/aiClient';
+import { usePetMascot } from '@/hooks/usePetMascot';
+import { PetMascotModal } from '@/components/pet/PetMascotModal';
 import { 
   Flame, 
   Cpu, 
@@ -21,11 +23,6 @@ import {
   Bell
 } from 'lucide-react';
 
-interface StreakData {
-  streakDays: number;
-  lastClaimDate: string | null;
-}
-
 const OPENAI_MODELS = [
   { id: 'gpt-4o-mini', name: 'GPT-4o Mini', tag: 'Khuyên dùng - Phản hồi nhanh & tiết kiệm chi phí' },
   { id: 'gpt-4o', name: 'GPT-4o', tag: 'Flagship - Trả lời xuất sắc và chi tiết nhất' },
@@ -35,14 +32,11 @@ const OPENAI_MODELS = [
 
 export function TopRightWallet() {
   const [mounted, setMounted] = useState(false);
-  const [isDailyModalOpen, setIsDailyModalOpen] = useState(false);
+  const [isPetModalOpen, setIsPetModalOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
-  // Streak state
-  const [streak, setStreak] = useState<StreakData>({ streakDays: 1, lastClaimDate: null });
-  const [dailyClaimResult, setDailyClaimResult] = useState<string | null>(null);
-  const [dailyReminder, setDailyReminder] = useState(true);
-  const [timeLeftToMidnight, setTimeLeftToMidnight] = useState('');
+  // Pet Mascot & Streak Hook
+  const { pet, currentImageUrl } = usePetMascot();
 
   // AI state
   const [selectedModel, setSelectedModel] = useState<string>('gpt-4o-mini');
@@ -54,18 +48,6 @@ export function TopRightWallet() {
 
   useEffect(() => {
     setMounted(true);
-    // Load streak from localStorage
-    try {
-      const saved = localStorage.getItem('greenlearn_streak');
-      if (saved) {
-        setStreak(JSON.parse(saved));
-      } else {
-        const legacy = localStorage.getItem('vitudy_streak');
-        if (legacy) {
-          setStreak(JSON.parse(legacy));
-        }
-      }
-    } catch {}
 
     // Load AI config
     const key = ByokStore.get('openai') || '';
@@ -74,57 +56,19 @@ export function TopRightWallet() {
       const savedModel = localStorage.getItem('greenlearn_ai_model');
       if (savedModel) setSelectedModel(savedModel);
     } catch {}
-
-    // Daily reminder
-    try {
-      const savedReminder = localStorage.getItem('greenlearn_daily_reminder');
-      if (savedReminder !== null) setDailyReminder(savedReminder === 'true');
-    } catch {}
-  }, []);
-
-  // Countdown until midnight
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
-      const diffMs = tomorrow.getTime() - now.getTime();
-      const hours = Math.floor(diffMs / (1000 * 60 * 60));
-      const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-      setTimeLeftToMidnight(`${hours}h ${minutes}p`);
-    };
-    updateCountdown();
-    const timer = setInterval(updateCountdown, 60000);
-    return () => clearInterval(timer);
   }, []);
 
   // Keyboard shortcut Esc
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setIsDailyModalOpen(false);
+        setIsPetModalOpen(false);
         setIsAiModalOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  const todayDateStr = new Date().toISOString().split('T')[0];
-  const isTodayClaimed = streak.lastClaimDate === todayDateStr;
-  const currentDayOfWeek = (new Date().getDay() + 6) % 7; // 0 = T2, 6 = CN
-
-  const handleClaim = () => {
-    const nextDays = isTodayClaimed ? streak.streakDays : (streak.streakDays + 1);
-    const updated: StreakData = {
-      streakDays: nextDays,
-      lastClaimDate: todayDateStr,
-    };
-    setStreak(updated);
-    try {
-      localStorage.setItem('greenlearn_streak', JSON.stringify(updated));
-    } catch {}
-    setDailyClaimResult(`Tuyệt vời! Bạn đã duy trì chuỗi học tập ${nextDays} ngày liên tiếp.`);
-  };
 
   const handleTestConnection = async () => {
     setTestConnectionStatus('testing');
@@ -150,49 +94,37 @@ export function TopRightWallet() {
     }, 1000);
   };
 
-  const WEEK_DAYS = [
-    { key: 'mon', label: 'T2', fullLabel: 'Thứ Hai' },
-    { key: 'tue', label: 'T3', fullLabel: 'Thứ Ba' },
-    { key: 'wed', label: 'T4', fullLabel: 'Thứ Tư' },
-    { key: 'thu', label: 'T5', fullLabel: 'Thứ Năm' },
-    { key: 'fri', label: 'T6', fullLabel: 'Thứ Sáu' },
-    { key: 'sat', label: 'T7', fullLabel: 'Thứ Bảy' },
-    { key: 'sun', label: 'CN', fullLabel: 'Chủ Nhật' },
-  ];
-
   return (
     <>
       <div 
         data-tour="wallet-market"
         className="relative flex items-center bg-white/95 border border-slate-300 rounded-2xl p-1.5 shadow-sm backdrop-blur-md pointer-events-auto select-none"
       >
-        {/* Daily Streak Button */}
+        {/* Daily Streak & Pet Button */}
         <button
           onClick={() => {
-            setDailyClaimResult(null);
-            setIsDailyModalOpen(true);
+            setIsPetModalOpen(true);
             setIsAiModalOpen(false);
           }}
-          title={`Chuỗi học tập: ${streak.streakDays} ngày liên tiếp (Bấm để điểm danh)`}
+          title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • Chuỗi ${pet.streakDays} ngày liên tiếp (Bấm để xem và điểm danh)`}
           className={`relative flex items-center justify-center w-11 h-11 rounded-xl transition-all cursor-pointer group ${
-            isDailyModalOpen ? 'bg-slate-200' : 'hover:bg-slate-100'
+            isPetModalOpen ? 'bg-slate-200' : 'hover:bg-slate-100'
           }`}
         >
-          {streak.streakDays > 0 ? (
-            <div className="relative flex items-center justify-center w-10 h-10">
-              <Flame className="w-8.5 h-8.5 text-[#16A34A] fill-[#16A34A] drop-shadow-xs transition-transform group-hover:scale-105" />
-              <span className="absolute top-[62%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[11px] font-black font-mono text-white select-none pointer-events-none leading-none">
-                {streak.streakDays}
-              </span>
-            </div>
-          ) : (
-            <div className="relative flex items-center justify-center w-10 h-10">
-              <Flame className="w-7.5 h-7.5 text-slate-400 stroke-[2] transition-transform group-hover:scale-105" />
-              <span className="absolute top-[62%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10.5px] font-bold font-mono text-slate-500 select-none pointer-events-none leading-none">
-                0
-              </span>
-            </div>
-          )}
+          <div className="relative flex items-center justify-center w-10 h-10">
+            <img
+              src={currentImageUrl}
+              alt={pet.name}
+              className="w-7.5 h-7.5 object-contain transition-transform group-hover:scale-110 drop-shadow-xs"
+            />
+            <span
+              className={`absolute -bottom-0.5 -right-0.5 text-[9px] font-black font-mono px-1 rounded-full border border-white leading-tight shadow-xs ${
+                pet.streakDays > 0 ? 'bg-[#16A34A] text-white' : 'bg-slate-400 text-white'
+              }`}
+            >
+              {pet.streakDays}
+            </span>
+          </div>
         </button>
 
         <div className="w-[1px] h-6 bg-slate-200 my-auto mx-0.5" />
@@ -203,7 +135,7 @@ export function TopRightWallet() {
           data-tour="inteline-btn"
           onClick={() => {
             setIsAiModalOpen(true);
-            setIsDailyModalOpen(false);
+            setIsPetModalOpen(false);
           }}
           className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all cursor-pointer ${
             isAiModalOpen 
@@ -216,156 +148,11 @@ export function TopRightWallet() {
         </button>
       </div>
 
-      {/* MODAL: Điểm danh hằng ngày */}
-      {isDailyModalOpen && mounted && createPortal(
-        <div 
-          id="streak-modal-backdrop"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setIsDailyModalOpen(false);
-          }}
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-[9990] flex items-center justify-center p-4"
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white border border-slate-300 rounded-3xl w-full max-w-sm p-6 shadow-2xl relative text-center text-slate-900 animate-fade-in font-sans"
-          >
-            <button
-              id="close-streak-modal"
-              onClick={() => setIsDailyModalOpen(false)}
-              aria-label="Đóng điểm danh"
-              className="absolute top-3.5 right-3.5 w-11 h-11 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="w-12 h-12 rounded-full bg-green-50 border border-green-200 flex items-center justify-center mx-auto mb-2.5">
-              <Flame className="w-7 h-7 text-[#16A34A] fill-[#16A34A]" />
-            </div>
-
-            <h3 className="text-base font-black text-slate-900 mb-1">
-              Điểm danh hằng ngày
-            </h3>
-            <p className="text-xs text-slate-500 mb-3.5 leading-relaxed">
-              Duy trì thói quen học tập đều đặn để tích lũy chuỗi ngày và mở khóa trang phục thú cưng.
-            </p>
-
-            {/* 7 Day States Grid */}
-            <div className="grid grid-cols-7 gap-1.5 mb-3.5">
-              {WEEK_DAYS.map((day, idx) => {
-                const isToday = idx === currentDayOfWeek;
-                const isPast = idx < currentDayOfWeek;
-                const isClaimedToday = isToday && isTodayClaimed;
-                const isPastClaimed = isPast && (streak.streakDays >= (currentDayOfWeek - idx));
-                const isClaimed = isClaimedToday || isPastClaimed;
-                const isMissed = isPast && !isClaimed;
-
-                return (
-                  <div key={day.key} className="flex flex-col items-center">
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all border shadow-2xs select-none relative ${
-                        isClaimed
-                          ? 'bg-emerald-500 border-emerald-600 text-white font-bold'
-                          : isToday && !isTodayClaimed
-                          ? 'bg-[#F0FDF4] border-[#16A34A] text-[#166534] font-black ring-2 ring-[#16A34A] ring-offset-2 animate-pulse'
-                          : isToday && isTodayClaimed
-                          ? 'bg-emerald-500 border-emerald-600 text-white font-bold ring-2 ring-emerald-500 ring-offset-1'
-                          : isMissed
-                          ? 'bg-slate-100 border-dashed border-slate-300 text-slate-400 opacity-60'
-                          : 'bg-slate-50 border-slate-200 text-slate-800'
-                      }`}
-                    >
-                      {isClaimed ? (
-                        <Check className="w-4 h-4 stroke-[3]" />
-                      ) : isMissed ? (
-                        <span className="text-[10px] font-bold text-slate-400 font-mono">lỡ</span>
-                      ) : (
-                        <Flame className="w-4 h-4 text-[#16A34A]" />
-                      )}
-                    </div>
-
-                    <span
-                      className={`text-[11px] font-bold mt-1.5 select-none ${
-                        isToday ? 'text-[#16A34A] font-black' : 'text-slate-600'
-                      }`}
-                    >
-                      {day.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Streak Days Progress */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3 mb-3 text-left">
-              <div className="flex items-center justify-between mb-1">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                  <Flame className="w-4 h-4 text-[#16A34A] fill-[#16A34A]" />
-                  <span>Chuỗi {streak.streakDays} ngày liên tiếp</span>
-                </div>
-                <span className="text-[11px] font-bold text-[#16A34A]">
-                  Mốc 7 ngày
-                </span>
-              </div>
-              <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-1.5">
-                <div 
-                  className="bg-[#16A34A] h-full rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, Math.max(12, (((streak.streakDays % 7) || (streak.streakDays > 0 ? 7 : 0)) / 7) * 100))}%` }}
-                />
-              </div>
-              <div className="text-[10px] text-slate-400 mt-2 leading-tight">
-                Học tập ít nhất 3 phút mỗi ngày để duy trì ngọn lửa học tập xanh mát.
-              </div>
-            </div>
-
-            {/* Daily Reminder Toggle */}
-            <label className="flex items-center justify-center gap-2 text-[11.5px] text-slate-600 mb-3 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={dailyReminder}
-                onChange={(e) => {
-                  const checked = e.target.checked;
-                  setDailyReminder(checked);
-                  if (checked && typeof window !== 'undefined' && 'Notification' in window) {
-                    Notification.requestPermission();
-                  }
-                  try {
-                    localStorage.setItem('greenlearn_daily_reminder', String(checked));
-                  } catch {}
-                }}
-                className="w-3.5 h-3.5 accent-[#16A34A] rounded cursor-pointer"
-              />
-              <span className="flex items-center gap-1 font-medium text-slate-700">
-                <Bell className="w-3.5 h-3.5 text-slate-500" />
-                <span>Nhắc tôi qua thông báo trình duyệt mỗi ngày</span>
-              </span>
-            </label>
-
-            {dailyClaimResult ? (
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs mb-1 font-semibold flex items-center justify-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <span>{dailyClaimResult}</span>
-              </div>
-            ) : isTodayClaimed ? (
-              <button
-                disabled
-                className="w-full py-2.5 bg-slate-100 text-slate-500 border border-slate-200 font-bold rounded-xl text-xs cursor-not-allowed flex items-center justify-center gap-1.5"
-              >
-                <Check className="w-4 h-4 text-emerald-600" />
-                <span>Đã điểm danh hôm nay • Lần tiếp sau {timeLeftToMidnight}</span>
-              </button>
-            ) : (
-              <button
-                onClick={handleClaim}
-                className="w-full py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
-              >
-                <Flame className="w-4 h-4 fill-white text-white" />
-                <span>Điểm danh hôm nay</span>
-              </button>
-            )}
-          </div>
-        </div>,
-        document.body
-      )}
+      {/* MODAL: Thú Cưng Học Tập & Điểm Danh Chuỗi Ngày */}
+      <PetMascotModal
+        isOpen={isPetModalOpen}
+        onClose={() => setIsPetModalOpen(false)}
+      />
 
       {/* MODAL: Cài đặt kết nối AI (OpenAI BYOK) */}
       {isAiModalOpen && mounted && createPortal(
