@@ -207,7 +207,7 @@ export function MultiplayerBar() {
                 <input
                   type="text"
                   readOnly
-                  value={typeof window !== 'undefined' ? window.location.href : 'https://namtacozz.github.io/ViTudy/'}
+                  value={typeof window !== 'undefined' ? window.location.href : 'https://Nhatgreen.github.io/GreenLearn/'}
                   className="bg-transparent text-xs text-slate-800 flex-1 outline-none font-mono select-all"
                 />
                 <button

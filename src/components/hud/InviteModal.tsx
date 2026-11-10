@@ -37,7 +37,7 @@ export function InviteModal({ isOpen, onClose, spaceId, spaceName }: InviteModal
     if (typeof navigator !== 'undefined' && (navigator as any).share) {
       try {
         await (navigator as any).share({
-          title: `Cùng học tập tại ${spaceName} trên ViTudy`,
+          title: `Cùng học tập tại ${spaceName} trên GreenLearn`,
           text: `Tham gia bàn học 2.5D cùng mình tại không gian: ${spaceName}`,
           url: inviteUrl,
         });

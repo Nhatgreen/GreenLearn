@@ -91,7 +91,7 @@ export function HeroSection({ onEnterDesk }: HeroSectionProps) {
       <div className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed space-y-1.5">
         <p>Lúc ôn thi, bạn thường phải mở tài liệu, đề thi và vở nháp cùng một lúc.</p>
         <p className="font-semibold text-slate-800">
-          ViTudy gom tất cả lên một bàn học để bạn vừa đọc vừa ghi chú mà không cần chuyển qua lại giữa nhiều cửa sổ.
+          GreenLearn gom tất cả lên một bàn học để bạn vừa đọc vừa ghi chú mà không cần chuyển qua lại giữa nhiều cửa sổ.
         </p>
       </div>
 

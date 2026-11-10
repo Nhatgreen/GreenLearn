@@ -215,8 +215,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       let basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-      if (!basePath && typeof window !== 'undefined' && window.location.pathname.startsWith('/ViTudy')) {
-        basePath = '/ViTudy';
+      if (!basePath && typeof window !== 'undefined') {
+        if (window.location.pathname.startsWith('/GreenLearn')) {
+          basePath = '/GreenLearn';
+        } else if (window.location.pathname.startsWith('/ViTudy')) {
+          basePath = '/ViTudy';
+        }
       }
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
       const redirectUrl = `${origin}${basePath}/auth/callback`;
@@ -275,7 +279,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 function splitEmailName(email: string): string {
-  return email.split('@')[0] || 'Học viên ViTudy';
+  return email.split('@')[0] || 'Học viên GreenLearn';
 }
 
 export function useAuth() {

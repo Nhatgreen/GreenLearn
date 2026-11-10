@@ -550,7 +550,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               onMouseDown={handleMouseDown}
               className="pt-2 border-t border-stone-200 mt-2 flex items-center justify-between text-[10px] text-slate-600 font-semibold font-mono select-none cursor-grab active:cursor-grabbing"
             >
-              <span>ViTudy Doc</span>
+              <span>GreenLearn Doc</span>
               <span>1 trang</span>
             </div>
           </div>
