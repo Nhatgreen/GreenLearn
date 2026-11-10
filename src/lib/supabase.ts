@@ -4,8 +4,8 @@ import { applyDiscordUrlMappings } from './discord/urlMappings';
 const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const envKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-const DEFAULT_SUPABASE_URL = 'https://yndwxcnedlilmsbbydvb.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluZHd4Y25lZGxpbG1zYmJ5ZHZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczMDE3MjQsImV4cCI6MjEwMjg3NzcyNH0.9uTO5Vfg-eQvCIkiUcXFgH9vYsjnglicr4KbYnnl-E8';
+const DEFAULT_SUPABASE_URL = 'https://jzwmgflmhtaceasqzfop.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_JWNMIkBarfQNQLUm4SqEIQ_g02iEqFF';
 
 export function getSupabaseConfig(): { url: string; anonKey: string; isConfigured: boolean } {
   let url = envUrl;
