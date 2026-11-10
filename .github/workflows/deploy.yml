@@ -34,8 +34,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -46,9 +44,7 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: "/GreenLearn"
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-        run: |
-          pnpm build
-          touch out/.nojekyll
+        run: pnpm run build:pages
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
