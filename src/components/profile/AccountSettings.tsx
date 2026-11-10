@@ -17,8 +17,10 @@ import {
   ExternalLink,
   ShieldCheck,
   Mail,
-  AlertTriangle
+  AlertTriangle,
+  HardDrive
 } from 'lucide-react';
+import { StorageManagerModal } from '../modals/StorageManagerModal';
 import Link from 'next/link';
 
 interface AccountSettingsProps {
@@ -44,6 +46,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
 
   const [byokSaved, setByokSaved] = useState(false);
   const [testResult, setTestResult] = useState<{ status: 'loading' | 'success' | 'error'; message: string } | null>(null);
+  const [isStorageModalOpen, setIsStorageModalOpen] = useState(false);
 
   // Khởi tạo họ tên & nickname
   useEffect(() => {
@@ -364,6 +367,37 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
           </button>
         </form>
       </section>
+
+      {/* 3. Quản lý dung lượng bộ nhớ bàn học */}
+      <section className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <div className="flex items-center gap-2">
+            <HardDrive className="w-4 h-4 text-slate-700" />
+            <h3 className="text-sm font-bold text-slate-900">Quản lý bộ nhớ bàn học</h3>
+          </div>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-[#166534] border border-green-200">
+            Minh bạch &amp; An toàn
+          </span>
+        </div>
+        <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+          Tài liệu của bạn được bảo lưu vĩnh viễn trên thiết bị. Bạn có thể kiểm tra dung lượng thực tế, tải bản sao lưu JSON và chủ động dọn dẹp các tài liệu cũ không còn dùng.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => setIsStorageModalOpen(true)}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95"
+        >
+          <HardDrive className="w-4 h-4 text-emerald-400" />
+          <span>Mở Trình quản lý bộ nhớ</span>
+        </button>
+      </section>
+
+      {/* Storage Manager Modal */}
+      <StorageManagerModal
+        isOpen={isStorageModalOpen}
+        onClose={() => setIsStorageModalOpen(false)}
+      />
     </div>
   );
 }

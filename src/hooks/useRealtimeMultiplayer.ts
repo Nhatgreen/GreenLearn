@@ -146,6 +146,27 @@ export function useRealtimeMultiplayer(spaceId: string, currentUserName = 'Bạn
     });
   }, [isConnected, userId]);
 
+  // 60ms Throttled Cursor Broadcasting when peers are present
+  useEffect(() => {
+    if (!isConnected || peers.length === 0) return;
+
+    let lastSendTime = 0;
+    const THROTTLE_MS = 60;
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const now = Date.now();
+      if (now - lastSendTime >= THROTTLE_MS) {
+        lastSendTime = now;
+        broadcastCursor(e.clientX, e.clientY);
+      }
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+    };
+  }, [isConnected, peers.length, broadcastCursor]);
+
   // Broadcast camera transform for presenter follow
   const broadcastCamera = useCallback((camera: { x: number; y: number; scale: number; rotation: number }) => {
     if (!channelRef.current || !isConnected) return;

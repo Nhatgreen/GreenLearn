@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { useRealtimeMultiplayer, PeerUser } from '@/hooks/useRealtimeMultiplayer';
 import { getSupabaseConfig, saveSupabaseConfig, clearSupabaseConfig } from '@/lib/supabase';
+import { MultiplayerCursorsLayer } from '../canvas/MultiplayerCursorsLayer';
 import { 
   Users, 
   Share2, 
@@ -377,6 +378,11 @@ export function MultiplayerBar() {
             </form>
           </div>
         </div>,
+        document.body
+      )}
+      {/* Cursors Overlay for Multiplayer */}
+      {mounted && createPortal(
+        <MultiplayerCursorsLayer peers={peers} />,
         document.body
       )}
     </>
