@@ -28,7 +28,7 @@ export type DeskAction =
   | { type: 'CLEAR_STROKES' }
   | { type: 'REMOVE_STROKE'; payload: { id: string } }
   | { type: 'REQUEST_SPACE_STATE'; payload: { requesterId: string } }
-  | { type: 'SYNC_SPACE_STATE'; payload: { targetId?: string; items: DeskItem[]; strokes: DrawingStroke[] } };
+  | { type: 'SYNC_SPACE_STATE'; payload: { targetId?: string; spaceName?: string; items: DeskItem[]; strokes: DrawingStroke[] } };
 
 const DEFAULT_MOCK_PEERS: PeerUser[] = [
   { id: 'mock-1', name: 'Lê Hoàng (Khoa CNTT)', avatarColor: '#334155', status: 'Đang thuyết trình', role: 'editor', isPresenter: true },
@@ -102,8 +102,12 @@ export function useRealtimeMultiplayer(
 
   const [isHost, setIsHost] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      const hasRoom = !!new URLSearchParams(window.location.search).get('room');
-      if (hasRoom) return false; // Default guest when opening a shared link
+      const room = new URLSearchParams(window.location.search).get('room');
+      if (room) {
+        const isHostedLocally = localStorage.getItem('greenlearn_hosted_room_' + room) === 'true';
+        if (isHostedLocally) return true;
+        return false; // Default guest when opening a shared link
+      }
     }
     return isHostInitial;
   });
@@ -218,7 +222,7 @@ export function useRealtimeMultiplayer(
 
     // 1b. Presence Join: When a new peer enters
     channel.on('presence', { event: 'join' }, ({ key }) => {
-      if (key !== userId && isHost) {
+      if (key !== userId) {
         // Automatically sync host's canvas to newly joined peer
         onRequestSpaceStateRef.current?.(key);
       }
@@ -251,9 +255,7 @@ export function useRealtimeMultiplayer(
       }
 
       if (action.type === 'REQUEST_SPACE_STATE') {
-        if (isHost) {
-          onRequestSpaceStateRef.current?.(action.payload.requesterId);
-        }
+        onRequestSpaceStateRef.current?.(action.payload.requesterId);
         return;
       }
 
@@ -274,16 +276,23 @@ export function useRealtimeMultiplayer(
           joinedAt: Date.now()
         });
 
-        // If guest, request initial state
+        // If guest, request initial state with retry
         if (!isHost) {
-          channel.send({
-            type: 'broadcast',
-            event: 'desk_action',
-            payload: {
-              type: 'REQUEST_SPACE_STATE',
-              payload: { requesterId: userId }
+          const sendReq = () => {
+            if (channelRef.current) {
+              channelRef.current.send({
+                type: 'broadcast',
+                event: 'desk_action',
+                payload: {
+                  type: 'REQUEST_SPACE_STATE',
+                  payload: { requesterId: userId }
+                }
+              });
             }
-          });
+          };
+
+          sendReq();
+          setTimeout(sendReq, 1000);
         }
       } else {
         setIsConnected(false);
@@ -374,6 +383,7 @@ export function useRealtimeMultiplayer(
 
     if (typeof window !== 'undefined') {
       try {
+        localStorage.setItem('greenlearn_hosted_room_' + targetRoomId, 'true');
         const url = new URL(window.location.href);
         url.searchParams.set('room', targetRoomId);
         url.searchParams.set('perm', permission);
@@ -402,6 +412,11 @@ export function useRealtimeMultiplayer(
 
   // Explicitly leave the room and return to solo desk mode
   const leaveRoom = useCallback(() => {
+    if (activeRoomId && typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('greenlearn_hosted_room_' + activeRoomId);
+      } catch (e) {}
+    }
     if (channelRef.current) {
       try {
         channelRef.current.untrack();

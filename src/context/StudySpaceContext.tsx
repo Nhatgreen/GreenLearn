@@ -345,15 +345,34 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
           break;
         }
         case 'SYNC_SPACE_STATE': {
-          const { items, strokes: remoteStrokes } = action.payload;
+          const { items, strokes: remoteStrokes, spaceName } = action.payload as any;
           if (Array.isArray(items)) {
-            setSpaces(prev => prev.map(s => {
-              if (s.id !== curSpaceId) return s;
-              return {
-                ...s,
-                items
-              };
-            }));
+            setSpaces(prev => {
+              const targetId = activeSpaceIdRef.current;
+              const exists = prev.some(s => s.id === targetId);
+              if (exists) {
+                return prev.map(s => {
+                  if (s.id !== targetId) return s;
+                  return {
+                    ...s,
+                    name: spaceName && s.name.startsWith('Bàn học nhóm') ? `Bàn học cùng bạn: ${spaceName}` : s.name,
+                    items
+                  };
+                });
+              } else {
+                const newSharedSpace: StudySpace = {
+                  id: targetId,
+                  name: spaceName ? `Bàn học cùng bạn: ${spaceName}` : `Bàn học nhóm (${targetId.slice(-6).toUpperCase()})`,
+                  subject: 'Học nhóm trực tuyến',
+                  description: 'Bàn học được chia sẻ trực tuyến cùng bạn học',
+                  items,
+                  threads: [],
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString()
+                };
+                return [newSharedSpace, ...prev];
+              }
+            });
           }
           if (Array.isArray(remoteStrokes)) {
             setStrokes(remoteStrokes);
@@ -368,11 +387,12 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   const handleRequestSpaceState = useCallback((requesterId: string) => {
     const curSpace = spacesRef.current.find(s => s.id === activeSpaceIdRef.current) || spacesRef.current[0];
-    if (curSpace) {
+    if (curSpace && curSpace.items && curSpace.items.length > 0) {
       broadcastDeskActionRef.current({
         type: 'SYNC_SPACE_STATE',
         payload: {
           targetId: requesterId,
+          spaceName: curSpace.name,
           items: curSpace.items,
           strokes: strokesRef.current
         }
@@ -615,8 +635,22 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     const resolveTargetSpaceId = (spaceList: StudySpace[]) => {
       if (urlSpaceId && spaceList.some(s => s.id === urlSpaceId)) return urlSpaceId;
       if (urlRoomId) {
-        const found = spaceList.find(s => s.id === urlRoomId || urlRoomId.startsWith(s.id));
+        const found = spaceList.find(s => s.id === urlRoomId || s.id === `shared-${urlRoomId}`);
         if (found) return found.id;
+
+        // Nếu chưa có, tự động tạo mới một không gian bàn học nhóm riêng biệt lưu vào danh sách của bạn học
+        const newSharedSpace: StudySpace = {
+          id: urlRoomId,
+          name: `Bàn học nhóm (${urlRoomId.slice(-6).toUpperCase()})`,
+          subject: 'Học nhóm trực tuyến',
+          description: `Bàn học đồng bộ cùng bạn qua phòng ${urlRoomId}`,
+          items: [],
+          threads: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        spaceList.unshift(newSharedSpace);
+        return newSharedSpace.id;
       }
       if (localActiveId && spaceList.some(s => s.id === localActiveId)) return localActiveId;
       return spaceList[0]?.id || 'default';

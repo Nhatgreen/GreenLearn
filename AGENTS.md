@@ -142,10 +142,18 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
     * **Phân loại hình dán vector học thuật chuẩn:** Chia thành 4 nhóm thiết thực cho việc học tập trên bàn học: "Đã hiểu" (`da_hieu`), "Cần ôn" (`can_on`), "Quan trọng" (`quan_trong`), và "Công thức & Dụng cụ" (`cong_thuc`).
     * **Mặt nạ mờ dần 2 mép (Gradient Edge Fade Mask):** Triệt tiêu thanh cuộn thô dày ở danh mục chip ngang bằng mặt nạ gradient CSS mềm mại hai bên mép.
     * **Kích thước chạm chuẩn công thái học (44×44px):** Mỗi nút emoji đảm bảo kích thước tối thiểu `min-w-[44px] min-h-[44px] w-11 h-11`, có thuộc tính trợ năng `aria-label` và `title` hiển thị tên tiếng Việt.
-  * **Quy Chuẩn Modal Mời Bạn Cùng Học (`InviteModal` & `BottomLeftKnowledge`):**
-    * Tiêu đề thống nhất: **"Mời bạn cùng học"**.
-    * Thu gọn các thông số kỹ thuật nội bộ (Supabase) vào mục mở rộng nâng cao riêng biệt cho lập trình viên.
-    * Hiển thị đường dẫn phòng học gọn gàng, nút "Sao chép" có phản hồi thị giác tức thì ("Đã sao chép"), bổ sung tùy chọn phân quyền ("Cùng chỉnh sửa" / "Chỉ xem") và danh sách thành viên đang có mặt trong phòng kèm đèn tín hiệu xanh.
+  * **Quy Chuẩn Phòng Học Nhóm, Đồng Bộ 2 Chiều & Hệ Thống Bạn Bè Chuẩn ViTrainer (ViTrainer Social & Dual Desk Sync Standard):**
+    * **Đồng bộ bàn học 2 chiều và tự động lưu cả 2 bàn học (Persistent Dual Workspace Synchronization):**
+      * Khi người học truy cập qua liên kết phòng `?room=XYZ`: Hệ thống tự động tạo một bàn học nhóm độc lập trong danh sách không gian của người vào (`id: urlRoomId`), tránh hoàn toàn việc ghi đè lên các bàn học cá nhân hiện có.
+      * Khi Host gửi `SYNC_SPACE_STATE`, bàn học của Guest lập tức nhận toàn bộ vật thể và nét vẽ, đồng thời tự động cập nhật tên bàn học thành `Bàn học cùng bạn: [Tên bàn của Host]`.
+      * Cả bàn học của Host và bàn học của Guest đều được tự động lưu bền vững vào `localStorage` và Supabase Cloud. Mọi thao tác kéo thả, xoay vật thể, lật trang sách, vẽ nét bút, thêm giấy note hay xóa đối tượng từ bất kỳ bên nào đều phản hồi và đồng bộ 2 chiều thời gian thực và tự động lưu.
+      * Cơ chế nhận diện Host bền vững (`greenlearn_hosted_room_[roomId]`): Lưu cờ nhận diện Host trong `localStorage` để khi F5 / reload trang, Host vẫn giữ nguyên vai trò Host và tiếp tục phục vụ đồng bộ cho bạn học.
+    * **Hệ thống Bạn bè & Lời mời học chung thời gian thực (Kế thừa từ `namtacozz/ViTrainer`):**
+      * **2 tab điều hướng trong modal:** Tab 1 "Liên kết phòng" (mã phòng, liên kết chia sẻ, ô nhập Room ID vào nhanh, QR code, phân quyền) và Tab 2 "Bạn bè & Mời học" (danh sách bạn bè, trạng thái trực tuyến/đang trong phòng, form kết bạn, lời mời đến).
+      * **Kênh Realtime Social (`vitudy-social`):** Theo dõi trạng thái trực tuyến của bạn bè với đèn tín hiệu xanh lá GreenLearn nhấp nháy; cập nhật trạng thái khi bạn đang ở trong phòng học nào.
+      * **Nút "Mời học chung":** Host nhấp nút gửi broadcast `DESK_INVITE` tức thì qua kênh Realtime đến bạn học đang online.
+      * **Thông báo Toast nổi tương tác thời gian thực (`FriendInviteToast`):** Hiển thị thẻ thông báo nổi ở góc trên bên phải màn hình bạn học: `[Tên bạn] mời bạn cùng học tại [Tên bàn học]`. Bạn học chỉ cần nhấp một chạm vào nút **"Vào học ngay"** (Xanh Lá GreenLearn `#16A34A`) là hệ thống tự động kết nối và nạp ngay bàn học chung tức thì. Có nút "Để sau" và thanh đếm ngược tự đóng sau 60 giây.
+      * **Ô vào phòng bằng mã nhanh (Quick Join Box):** Cung cấp ô nhập Room ID trực tiếp với nút "Vào phòng" để người học có thể nhập mã và vào ngay bất kỳ phòng học nào mà không cần dán toàn bộ URL.
   * **Quy Chuẩn Nhật Ký Học Tập (`/dashboard`):**
     * Tiêu đề trang căn trái đồng trục với nút quay lại.
     * Biểu đồ nhịp điệu học tuần hiển thị rõ số phút khi rê chuột kèm đường mục tiêu đứt nét chuẩn (30 phút/ngày).

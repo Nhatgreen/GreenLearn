@@ -4,6 +4,39 @@
 
 ---
 
+## 2026-11-11 11:00 — main (Đồng Bộ 2 Bàn Học, Tự Lưu Bền Vững & Hệ Thống Bạn Bè Chuẩn ViTrainer)
+- **Task:** Triển khai toàn diện yêu cầu: "Khi chia sẻ có link thì phải đồng bộ 2 bàn học với nhau trên bàn học và tự lưu hai bàn học lại có thêm cơ chế kết bạn mời học chung":
+  1. **Đồng Bộ 2 Bàn Học & Tự Động Lưu Cả 2 Bàn Học (`useRealtimeMultiplayer.ts` & `StudySpaceContext.tsx`):**
+     - Sửa lỗi Host reload bị chuyển thành Guest: Lưu cờ nhận diện Host trong `localStorage` (`greenlearn_hosted_room_[roomId]`), đảm bảo Host sau khi F5/reload vẫn giữ nguyên vai trò Host và tiếp tục phát sóng đồng bộ cho bạn học.
+     - Khi Guest mở liên kết phòng `?room=XYZ`: Hệ thống tự động tạo một không gian bàn học nhóm riêng biệt (`newSharedSpace` với `id: urlRoomId`), ngăn chặn hoàn toàn việc ghi đè lên các bàn học cá nhân của Guest.
+     - Cơ chế `REQUEST_SPACE_STATE` kèm retry (sau 1000ms): Guest vừa vào phòng lập tức gửi yêu cầu xin dữ liệu; Host gửi `SYNC_SPACE_STATE` kèm tên bàn học (`spaceName`), danh sách vật thể (`items`) và nét vẽ (`strokes`).
+     - Tên bàn học bên phía Guest tự động cập nhật trực quan: `Bàn học cùng bạn: [Tên bàn học]`.
+     - Cả hai bàn học (của Host và Guest) đều được tự động lưu bền vững vào `localStorage` và Supabase Cloud theo thời gian thực.
+  2. **Hệ Thống Quản Lý Bạn Bè Chuẩn ViTrainer (`SocialFriendService.ts` & `useSocialPresence.ts`):**
+     - Học hỏi kiến trúc mạng xã hội bạn bè từ `namtacozz/ViTrainer` (`js/net/social.js`):
+       - Quản lý danh sách bạn bè với trạng thái: `'ok'` (bạn bè), `'in'` (lời mời đến), `'out'` (lời mời đã gửi).
+       - Kết bạn nhanh chóng bằng Nickname hoặc Email.
+       - Chấp nhận hoặc từ chối lời mời kết bạn, hủy kết bạn.
+     - Kênh Realtime Social toàn hệ thống (`vitudy-social`):
+       - Theo dõi trạng thái trực tuyến (Online/Offline) của bạn bè thời gian thực với đèn tín hiệu xanh lá GreenLearn nhấp nháy.
+       - Hiển thị bạn đang ở phòng học nào nếu đang tham gia phòng nhóm.
+  3. **Thông Báo Toast Mời Học Chung Nổi Thời Gian Thực (`FriendInviteToast.tsx`):**
+     - Khi Host bấm nút "Mời học" bên cạnh tên người bạn đang online trong danh sách bạn bè, hệ thống broadcast sự kiện `DESK_INVITE` tức thì.
+     - Phía bạn học lập tức xuất hiện thẻ Toast nổi công nghệ cao ở góc trên bên phải màn hình: `[Tên bạn] đã mời bạn vào bàn học!` kèm tên bàn học và mã phòng.
+     - Bạn học bấm nút **"Vào học ngay"** (Xanh Lá GreenLearn `#16A34A`): Hệ thống tự động chuyển vào bàn học nhóm, kết nối và đồng bộ 2 bàn học ngay lập tức.
+     - Nút "Để sau" kèm thanh đếm ngược tự động đóng sau 60 giây.
+  4. **Nâng Cấp Hộp Thoại Chia Sẻ Đa Năng (`BottomLeftKnowledge.tsx`):**
+     - Giao diện 2 tab hiện đại:
+       - Tab 1 **"Liên kết phòng"**: Ô nhập mã phòng (Room ID) vào nhanh (Quick Join Box), liên kết chia sẻ phòng kèm nút sao chép và mã QR, bộ chọn phân quyền ("Chỉ xem" / "Cùng chỉnh sửa"), danh sách người đang có mặt trong phòng, và cấu hình Supabase nâng cao.
+       - Tab 2 **"Bạn bè & Mời học"**: Thẻ tên hiển thị của bạn, form kết bạn, danh sách lời mời gửi đến với nút "Đồng ý" / "Từ chối", danh sách bạn bè kèm trạng thái trực tuyến và nút **"Mời học"**.
+- **Verified by:**
+  - `pnpm test`: 19/19 test suites passed (85/85 tests passed 100%), bao gồm bộ test mới `SocialFriendService.test.ts`.
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công hoàn toàn.
+  - `pnpm run docs:check`: Ký hiệu và chỉ mục bộ nhớ AI đạt chuẩn 100%.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 10:00 — main (Khắc Phục Lỗi Đồng Bộ Bàn Học & Kết Nối Bạn Bè Mời Cùng Học)
 - **Task:** Khắc phục triệt để lỗi "mời bạn cùng học bị lỗi chức năng không đồng bộ với nhau và chưa thấy được người vào":
   1. **Khắc Phục Lỗi Không Thấy Bạn Học Tham Gia (`useRealtimeMultiplayer.ts` & `BottomLeftKnowledge.tsx`):**
