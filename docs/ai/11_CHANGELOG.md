@@ -4,6 +4,41 @@
 
 ---
 
+## 2026-11-11 08:26 — main (Cào & Chuyển Giao Toàn Diện Các Tính Năng Nâng Cấp Từ ViTudy 2026-11-10)
+- **Task:** Rà soát và chuyển giao toàn bộ các cải tiến vượt bậc từ các commit ngày hôm qua của ViTudy (`namtacozz/ViTudy` từ commit `46aa868` đến `13a1069`) vào GreenLearn, duy trì chuẩn nhận diện Xanh Lá GreenLearn (`#16A34A`), miễn phí 100% (không token) và bảo mật BYOK:
+  1. **Trình Render Công Thức Toán KaTeX Nâng Cấp (`MathRenderer.tsx`):**
+     - Hỗ trợ tiêu đề Markdown (`##`, `###`), danh sách có gạch đầu dòng chuẩn Xanh GreenLearn (`text-[#16A34A]`), canh lề khối công thức display math `$$...$$` không bị lệch lề, bộ nhớ đệm KaTeX inline regex tối ưu hiệu năng.
+  2. **Bảng Dữ Liệu & Ghi Chú Trực Quan (`StickyNoteItem.tsx`):**
+     - Sửa trực tiếp từng ô bảng (`cell editing`) bằng thao tác nhấp đúp mà không cần mở toàn bộ văn bản.
+     - Tính tổng phần trăm tự động (`100%`) cho các cột phân bổ tỷ lệ.
+     - Nút "+ Thêm hàng" nhanh bên dưới bảng.
+     - Thanh công cụ điều khiển nổi nâng cao (`bottom-full mb-6`) với cầu rê chuột vô hình (invisible hover bridge) giúp thao tác mượt mà không che băng dính.
+     - Nút xóa an toàn 2 bước ("Xác nhận?" 3 giây) chống vô tình xóa mất ghi chú.
+  3. **Phòng Học Trực Tuyến & Phân Quyền (`BottomLeftKnowledge.tsx` & `MultiplayerBar.tsx`):**
+     - Phân quyền bạn học: "Chỉ xem" (mặc định an toàn) và "Cùng chỉnh sửa".
+     - Tùy chọn thời hạn liên kết phòng học (Hạn 1h, 24h, Không giới hạn).
+     - Tạo mã liên kết mới (`roomSalt`) để thu hồi liên kết cũ ngay tức thì.
+     - Chia sẻ nhanh qua Zalo, Messenger và mã QR trực quan (quét điện thoại để vào bàn học).
+     - Danh sách thành viên trong phòng với nút "Mời ra" (`UserMinus`). Phím tắt ESC đóng modal tức thì.
+  4. **Lưu Trữ & Khôi Phục Bàn Học Chống Mất Dữ Liệu (`StudySpaceContext.tsx` & `page.tsx`):**
+     - Bổ sung cờ `isLoaded` ngăn chặn tình trạng ghi đè bàn học trống khi vừa mở trang hoặc vừa reload.
+     - Tự động ghi nhớ `greenlearn_active_space_id` và khôi phục đúng bàn học đang mở.
+     - Hỗ trợ tham số URL `?space=XYZ` để mở trực tiếp bàn học cụ thể từ liên kết ngoài hoặc từ bảng bàn học gần đây.
+  5. **Bộ Công Cụ Học Tập In-Situ & KaTeX Trong Bài Học (`StudyToolsModal.tsx`, `QuizTab.tsx`, `SummaryTab.tsx`, `FlashcardTab.tsx`, `RoadmapTab.tsx`, `BookSpread.tsx`):**
+     - STudy hiển thị dạng overlay in-situ trực tiếp trên mặt sách (`BookSpread`), triệt tiêu hoàn toàn lỗi lệch khung modal hoặc che tràn màn hình.
+     - `QuizTab`: Tùy chọn số câu (3, 5, 10), độ khó (Dễ, Vừa, Khó), phạm vi (Trang hiện tại / Cả cuốn sách); render toàn bộ câu hỏi và đáp án bằng công thức KaTeX; nút "Làm lại câu sai" và "Lưu câu sai vào thẻ ghi nhớ"; lời giải chi tiết có thể thu gọn / mở rộng.
+     - `SummaryTab`: Render tóm tắt bằng KaTeX `MathRenderer`.
+     - `FlashcardTab` & `RoadmapTab`: Tích hợp chế độ AI chuyên sâu tạo thẻ và lộ trình học tập, render công thức toán học KaTeX trên từng chặng học.
+  6. **Trang Chủ Cải Tiến (`HomePage.tsx` & `demoSpace.ts`):**
+     - Bổ sung nút "Bắt đầu phiên 25p" trong widget Pomodoro.
+     - Bảng bàn học gần đây hiển thị huy hiệu "Mẫu" (`isDemo`) gọn gàng và tinh tế.
+- **Verified by:**
+  - `pnpm test`: 17/17 test suites passed (75/75 tests passed 100%).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công, 0 lỗi lint / type.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 08:02 — main (Nâng Cấp Kết Nối Đa Công Cụ AI: Google Gemini, OpenAI & ChatGPT OAuth PKCE)
 - **Task:** Đồng bộ các công cụ kết nối AI tiên tiến từ ViTudy vào GreenLearn, mở rộng khả năng kết nối linh hoạt cho học sinh / sinh viên:
   1. **Tích Hợp Google Gemini (BYOK Miễn Phí):**

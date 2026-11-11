@@ -31,9 +31,10 @@ function StudySpacePageContent() {
 
   const viewParam = searchParams.get('view');
   const roomParam = searchParams.get('room');
+  const spaceParam = searchParams.get('space');
 
-  // URL có view=desk hoặc có room tham gia -> hiển thị Bàn học; ngược lại (view=home hoặc link gốc) -> Trang chủ
-  const isDeskView = viewParam === 'desk' || Boolean(roomParam);
+  // URL có view=desk hoặc có room tham gia hoặc có space -> hiển thị Bàn học; ngược lại (view=home hoặc link gốc) -> Trang chủ
+  const isDeskView = viewParam === 'desk' || Boolean(roomParam) || Boolean(spaceParam);
 
   // Lưu trạng thái view hiện tại vào sessionStorage để các trang con (như /profile, /dashboard) quay về đúng nơi
   useEffect(() => {
@@ -53,8 +54,12 @@ function StudySpacePageContent() {
     }
   }, [roomParam, user?.id]);
 
-  const handleEnterDesk = (_spaceId?: string) => {
-    router.push('/?view=desk');
+  const handleEnterDesk = (spaceId?: string) => {
+    if (spaceId) {
+      router.push(`/?view=desk&space=${encodeURIComponent(spaceId)}`);
+    } else {
+      router.push('/?view=desk');
+    }
   };
 
   if (!isDeskView) {

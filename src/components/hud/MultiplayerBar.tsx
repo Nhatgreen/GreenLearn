@@ -51,6 +51,17 @@ export function MultiplayerBar() {
   }, []);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isShareModalOpen) setIsShareModalOpen(false);
+        if (isDbConfigOpen) setIsDbConfigOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isShareModalOpen, isDbConfigOpen]);
+
+  useEffect(() => {
     const cfg = getSupabaseConfig();
     setSupabaseUrlInput(cfg.url);
     setSupabaseKeyInput(cfg.anonKey);

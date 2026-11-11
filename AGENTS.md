@@ -34,6 +34,21 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
       * File vector SVG ViToken (`vitoken.svg`) bắt buộc dùng `viewBox="0 0 1500 1500" width="100%" height="100%"`, triệt tiêu hoàn toàn kích thước tĩnh `width="2000" height="2000"`.
       * Mọi thẻ `<img>` hiển thị logo, coin hoặc ảnh đại diện người dùng (`Avatar Profile`) bắt buộc sử dụng class Tailwind hợp lệ (như `w-7 h-7`, `w-8 h-8`, `w-20 h-20`), kèm thuộc tính HTML `width={...} height={...}` và inline style phòng vệ `style={{ width, height, maxWidth, maxHeight }}`. Nghiêm cấm sử dụng các class không có trong bảng quy cách của Tailwind (như `w-5.5`, `w-8.5`), bảo đảm 100% hình ảnh luôn nằm đúng kích thước chuẩn, tuyệt đối không bị bung to che tràn màn hình.
       * Trên thanh top bar `HomePage`, avatar profile được khống chế chuẩn công thái học `w-8 h-8` (32×32px, `rounded-full shrink-0`), đồng bộ chiều cao và cân xứng hoàn hảo với huy hiệu thú cưng / chuỗi ngày học (`py-1.5`).
+  * **Quy Chuẩn Lưu Trữ Bàn Học Bền Vững (Persistent Workspace & Workspace Reload Protection):**
+    * Bổ sung cờ `isLoaded` trong `StudySpaceContext`: Nghiêm cấm ghi đè bàn học vào localStorage / Supabase trước khi dữ liệu từ máy chủ hoặc bộ nhớ trình duyệt được nạp hoàn tất (`if (!isLoaded) return;`), triệt tiêu hoàn toàn lỗi trắng bàn học hoặc mất dữ liệu khi người dùng bấm F5 / reload trang.
+    * Ghi nhớ bàn học đang mở (`greenlearn_active_space_id`) và tự động phục hồi đúng bàn học sau khi tải lại trang.
+    * Hỗ trợ tham số URL `?space=XYZ` để mở trực tiếp bàn học tương ứng từ liên kết ngoài hoặc từ bảng bàn học gần đây ở trang chủ.
+  * **Quy Chuẩn Công Cụ Học Tập In-Situ & KaTeX (In-Situ Cockpit & Rich KaTeX Math Rendering):**
+    * STudy hiển thị dạng buồng lái in-situ (`absolute inset-0 z-40 bg-white rounded-2xl border border-slate-300`) trực tiếp trên mặt sách (`BookSpread`) thay vì mở modal portal nổi tách rời bên ngoài, triệt tiêu hoàn toàn lỗi đứt gãy tương tác và xé lớp hiển thị.
+    * Hỗ trợ phím tắt `Escape` để đóng nhanh buồng lái in-situ.
+    * Toàn bộ câu hỏi, phương án lựa chọn, lời giải chi tiết và nội dung tóm tắt trong `QuizTab`, `SummaryTab`, `FlashcardTab`, `RoadmapTab` bắt buộc render qua `<MathRenderer content={...} />` để hỗ trợ công thức toán KaTeX chuẩn (`\(...\)` / `\[...\]`).
+    * `QuizTab` cung cấp bộ điều khiển công thái học: Lựa chọn số câu (3, 5, 10), mức độ khó (Dễ, Vừa, Khó), phạm vi (Trang hiện tại / Cả cuốn sách), nút "Làm lại câu sai", và nút "Lưu câu sai vào thẻ ghi nhớ" trực tiếp lên bàn học.
+  * **Quy Chuẩn Bảng Dữ Liệu & Thanh Công Cụ Nổi Ghi Chú (Inline Table Editing & Elevated Toolbar):**
+    * Cho phép nhấp đúp vào từng ô dữ liệu của bảng trên `StickyNoteItem` để sửa nhanh tại chỗ mà không cần mở toàn bộ khung ghi chú.
+    * Tự động tính tổng tỷ lệ phần trăm (100%) cho các cột phân bổ.
+    * Cung cấp nút "+ Thêm hàng" nhanh bên dưới bảng.
+    * Thanh công cụ điều khiển nổi được nâng cao (`bottom-full mb-6`) kèm cầu rê chuột vô hình (invisible hover bridge: `before:absolute before:inset-x-0 before:-bottom-6 before:h-6 before:content-['']`), ngăn ngừa thanh công cụ che mất băng dính kéo thả và giữ rê chuột liền mạch.
+    * Nút xóa ghi chú tích hợp cơ chế an toàn 2 bước: Nhấp lần đầu chuyển thành "Xác nhận?" màu đỏ trong 3 giây trước khi thực hiện xóa vĩnh viễn.
   * **Quy Chuẩn React Portal Cho Toàn Bộ Hộp Thoại / Modal (Strict React Portal Rule — 100% Modals):**
     * Mọi hộp thoại (`Modal`, `Dialog`, `Overlay`) phải được bọc trong `createPortal(..., document.body)` với `z-[9990]..z-[9999]`.
     * Nghiêm cấm render modal trực tiếp bên trong container HUD có CSS `transform` (như `TopRightWallet`, `BottomLeftKnowledge`, `MultiplayerBar`), vì các thuộc tính CSS transform khiến phần tử con `fixed inset-0` bị giới hạn trong khung chứa của cha, dẫn đến việc modal bị co dúm thành thanh dọc 40px mép màn hình.

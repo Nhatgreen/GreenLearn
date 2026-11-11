@@ -144,6 +144,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   const { user, status } = useAuth();
   const [spaces, setSpaces] = useState<StudySpace[]>(INITIAL_SPACES);
   const [activeSpaceId, setActiveSpaceId] = useState<string>(INITIAL_SPACES[0].id);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [transform, setTransform] = useState<CanvasTransform>(DEFAULT_TRANSFORM);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -369,26 +370,13 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   // Load spaces on startup from Supabase Cloud (when authenticated) or localStorage (guest)
   useEffect(() => {
-    if (status === 'authenticated' && user?.id) {
-      StudySpaceService.loadSpaces(user.id).then((cloudSpaces) => {
-        if (cloudSpaces && cloudSpaces.length > 0) {
-          setSpaces(cloudSpaces);
-          setActiveSpaceId(cloudSpaces[0].id);
-        } else {
-          // Tài khoản mới chưa có bàn học -> Khởi tạo bàn học mẫu Demo
-          import('@/data/demoSpace').then(({ createDemoStudySpace }) => {
-            const demoSpace = createDemoStudySpace(user.id);
-            setSpaces([demoSpace]);
-            setActiveSpaceId(demoSpace.id);
-            StudySpaceService.saveSpace(demoSpace, user.id).catch(() => {});
-          });
-        }
-      });
-      return;
-    }
+    // 1. Đọc không gian đã lưu từ localStorage trước để đảm bảo dữ liệu không bị mất khi reload
+    let localSpaces: StudySpace[] | null = null;
+    let localActiveId: string | null = null;
 
     try {
       const saved = localStorage.getItem('greenlearn_spaces') || localStorage.getItem('vitudy_spaces');
+      localActiveId = localStorage.getItem('greenlearn_active_space_id') || localStorage.getItem('vitudy_active_space_id');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -404,19 +392,106 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
             }
             return data;
           };
-          setSpaces(deepNormalize(parsed));
-          setActiveSpaceId(parsed[0].id);
+          localSpaces = deepNormalize(parsed);
         }
       }
     } catch {
       // fallback
     }
+
+    // Đọc URL param ?space=XYZ nếu có
+    let urlSpaceId: string | null = null;
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      urlSpaceId = params.get('space');
+    }
+
+    if (status === 'authenticated' && user?.id) {
+      StudySpaceService.loadSpaces(user.id).then((cloudSpaces) => {
+        if (cloudSpaces && cloudSpaces.length > 0) {
+          setSpaces(cloudSpaces);
+          const targetId = (urlSpaceId && cloudSpaces.some(s => s.id === urlSpaceId))
+            ? urlSpaceId
+            : (localActiveId && cloudSpaces.some(s => s.id === localActiveId))
+            ? localActiveId
+            : cloudSpaces[0].id;
+          setActiveSpaceId(targetId);
+        } else if (localSpaces && localSpaces.length > 0) {
+          // Chưa có trên cloud nhưng có local -> sync local lên cloud
+          setSpaces(localSpaces);
+          const targetId = (urlSpaceId && localSpaces.some(s => s.id === urlSpaceId))
+            ? urlSpaceId
+            : (localActiveId && localSpaces.some(s => s.id === localActiveId))
+            ? localActiveId
+            : localSpaces[0].id;
+          setActiveSpaceId(targetId);
+          localSpaces.forEach(s => StudySpaceService.saveSpace(s, user.id).catch(() => {}));
+        } else {
+          // Tài khoản mới chưa có bàn học -> Khởi tạo bàn học mẫu Demo
+          import('@/data/demoSpace').then(({ createDemoStudySpace }) => {
+            const demoSpace = createDemoStudySpace(user.id);
+            setSpaces([demoSpace]);
+            setActiveSpaceId(demoSpace.id);
+            StudySpaceService.saveSpace(demoSpace, user.id).catch(() => {});
+          });
+        }
+        setIsLoaded(true);
+      });
+      return;
+    }
+
+    // Khi là khách (Guest)
+    if (localSpaces && localSpaces.length > 0) {
+      setSpaces(localSpaces);
+      const targetId = (urlSpaceId && localSpaces.some(s => s.id === urlSpaceId))
+        ? urlSpaceId
+        : (localActiveId && localSpaces.some(s => s.id === localActiveId))
+        ? localActiveId
+        : localSpaces[0].id;
+      setActiveSpaceId(targetId);
+    }
+    setIsLoaded(true);
   }, [status, user?.id]);
 
-  // Save spaces to localStorage & Supabase Cloud (debounce 500ms)
+  // Kiểm tra liên tục nếu URL thay đổi ?space=XYZ
   useEffect(() => {
+    if (typeof window !== 'undefined' && isLoaded) {
+      const params = new URLSearchParams(window.location.search);
+      const urlSpaceId = params.get('space');
+      if (urlSpaceId && spaces.some(s => s.id === urlSpaceId) && activeSpaceId !== urlSpaceId) {
+        setActiveSpaceId(urlSpaceId);
+      }
+    }
+  }, [isLoaded, spaces, activeSpaceId]);
+
+  // Kiểm tra nếu có tài liệu Chợ vừa thêm cần mở trên bàn học
+  useEffect(() => {
+    if (isLoaded && activeSpaceId) {
+      try {
+        const pendingDocStr = localStorage.getItem('greenlearn_pending_market_item') || localStorage.getItem('vitudy_pending_market_item');
+        if (pendingDocStr) {
+          const pendingItem = JSON.parse(pendingDocStr);
+          localStorage.removeItem('greenlearn_pending_market_item');
+          localStorage.removeItem('vitudy_pending_market_item');
+          if (pendingItem.type === 'exam' && pendingItem.examQuestions) {
+            addExamSheet(pendingItem.title, pendingItem.examQuestions, 20);
+          } else {
+            addUploadedDocument(pendingItem.title, pendingItem.pages || [{ title: pendingItem.title, text: pendingItem.summary }]);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }, [isLoaded, activeSpaceId]);
+
+  // Save spaces to localStorage & Supabase Cloud (chỉ lưu sau khi isLoaded === true để tránh ghi đè)
+  useEffect(() => {
+    if (!isLoaded) return;
+
     try {
       localStorage.setItem('greenlearn_spaces', JSON.stringify(spaces));
+      localStorage.setItem('greenlearn_active_space_id', activeSpaceId);
     } catch {
       // ignore
     }
@@ -438,7 +513,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
       return () => clearTimeout(timer);
     }
-  }, [spaces, strokes, status, user?.id, activeSpaceId]);
+  }, [spaces, strokes, status, user?.id, activeSpaceId, isLoaded]);
 
   const activeSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
 
@@ -646,6 +721,13 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
     if (status === 'authenticated' && user?.id) {
       StudySpaceService.saveSpace(newSpace, user.id);
+    }
+    try {
+      const updatedSpaces = [...spaces, newSpace];
+      localStorage.setItem('greenlearn_spaces', JSON.stringify(updatedSpaces));
+      localStorage.setItem('greenlearn_active_space_id', newSpaceId);
+    } catch {
+      // ignore
     }
     setSpaces(prev => [...prev, newSpace]);
     setActiveSpaceId(newSpace.id);

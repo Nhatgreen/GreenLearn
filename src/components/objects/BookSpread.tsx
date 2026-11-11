@@ -1051,6 +1051,17 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             </div>
           </div>
         )}
+
+        {/* In-Situ STudy Overlay directly on the Book */}
+        {isStudyOpen && (
+          <StudyToolsModal
+            item={item}
+            isOpen={isStudyOpen}
+            onClose={() => setIsStudyOpen(false)}
+            totalPages={totalPages}
+            activePageText={`${leftLeaf?.text || ''}\n\n${rightLeaf?.text || ''}`}
+          />
+        )}
       </div>
 
       {/* Safe Delete Confirmation Dialog */}
@@ -1108,12 +1119,6 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
         />
       )}
 
-      {/* STudy Tools Modal */}
-      <StudyToolsModal
-        item={item}
-        isOpen={isStudyOpen}
-        onClose={() => setIsStudyOpen(false)}
-      />
 
       {/* Full Inteline Modal for expanded multi-turn chat if needed */}
       {intelineModalState && (

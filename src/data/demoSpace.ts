@@ -78,7 +78,7 @@ $$\\min_{\\text{rank}(B) \\le k} \\|A - B\\|_F = \\|A - A_k\\|_F = \\sqrt{\\sum_
       zIndex: 2,
       pageCount: 1,
       currentPageIndex: 0,
-      stickyText: 'Chào mừng bạn đến với ViTudy — Không gian học thức tích hợp AI 2.5D!\n\n• Kéo chuột trên bàn học để di chuyển góc nhìn (Pan)\n• Cuộn chuột để phóng to/thu nhỏ (Zoom)\n• Bấm phím WASD hoặc phím mũi tên để lia bàn học\n• Nhấp vào sách để mở và lật trang 3D chân thực.',
+      stickyText: 'Chào mừng bạn đến với GreenLearn — Không gian học thức tích hợp AI 2.5D!\n\n• Kéo chuột trên bàn học để di chuyển góc nhìn (Pan)\n• Cuộn chuột để phóng to/thu nhỏ (Zoom)\n• Bấm phím WASD hoặc phím mũi tên để lia bàn học\n• Nhấp vào sách để mở và lật trang 3D chân thực.',
       stickyColor: '#fef08a',
       pages: []
     }
@@ -86,7 +86,7 @@ $$\\min_{\\text{rank}(B) \\le k} \\|A - B\\|_F = \\|A - A_k\\|_F = \\sqrt{\\sum_
 
   return {
     id: spaceId,
-    name: 'Bàn Học Khởi Đầu (Demo)',
+    name: 'Bàn học khởi đầu',
     subject: 'Khoa Học Máy Tính & AI',
     description: 'Không gian học tập mẫu trải nghiệm thực tế với sách và ghi chú 2.5D.',
     createdAt: new Date().toISOString(),

@@ -267,9 +267,16 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-1.5">
               <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: '25%' }} />
             </div>
-            <p className="text-[10px] text-slate-500 leading-tight">
-              Hoàn thành 25 phút Pomodoro để duy trì chuỗi học.
+            <p className="text-[10px] text-slate-500 leading-tight mb-2.5">
+              Hoàn thành phiên 25 phút Pomodoro để duy trì chuỗi học.
             </p>
+            <button
+              type="button"
+              onClick={() => onEnterDesk()}
+              className="w-full py-1.5 bg-green-50/80 hover:bg-green-100 border border-green-200 text-[#166534] text-[11px] font-bold rounded-xl transition-colors text-center cursor-pointer active:scale-98"
+            >
+              Bắt đầu phiên 25p
+            </button>
           </div>
         </div>
       </aside>
@@ -514,9 +521,9 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           {/* Table Container */}
           <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
             {/* Table Header: Chữ xám đậm đạt tương phản */}
-            <div className="grid grid-cols-12 text-xs font-bold text-slate-500 py-3 px-4 bg-slate-50/80 border-b border-slate-200 tracking-wider uppercase">
+            <div className="grid grid-cols-12 text-xs font-bold text-slate-500 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
               <div className="col-span-6">Tên bàn học</div>
-              <div className="col-span-3 text-left">Tài liệu & Ghi chú</div>
+              <div className="col-span-3 text-left">Tài liệu & ghi chú</div>
               <div className="col-span-3 text-right pr-2">Mở lần cuối</div>
             </div>
 
@@ -528,6 +535,9 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 </div>
               ) : (
                 displayedSpaces.map((space, idx) => {
+                  const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
+                  const isDemo = space.name.includes('(Demo)');
+
                   return (
                     <div
                       key={space.id}
@@ -552,8 +562,15 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
                         {/* Text info */}
                         <div className="min-w-0">
-                          <div className="text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors truncate">
-                            {space.name}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors truncate">
+                              {cleanSpaceName}
+                            </span>
+                            {isDemo && (
+                              <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 border border-green-200 px-1.5 py-0.2 rounded shrink-0">
+                                Mẫu
+                              </span>
+                            )}
                           </div>
                           {space.description && (
                             <div className="text-xs text-slate-500 truncate mt-0.5">
