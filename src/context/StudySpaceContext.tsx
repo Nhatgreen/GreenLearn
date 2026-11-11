@@ -20,6 +20,9 @@ export interface CreationPlacementTemplate {
   mindMapColor?: string;
   mindMapParentId?: string;
   mindMapShape?: 'pill' | 'rectangle' | 'cloud';
+  title?: string;
+  coverColor?: string;
+  pages?: { title?: string; text: string; image?: string }[];
   stickerData?: {
     type: 'emoji' | 'sticker' | 'gif';
     name: string;
@@ -71,6 +74,7 @@ interface StudySpaceContextType {
   updateStickyNoteTextAlign?: (id: string, align: 'left' | 'center' | 'right') => void;
   updateStickyNoteIsBold?: (id: string, isBold: boolean) => void;
   addStickyNote: (text?: string, x?: number, y?: number, color?: string, width?: number, height?: number) => string;
+  addBook: (title?: string, x?: number, y?: number, coverColor?: string, initialPages?: { title?: string; text: string; image?: string }[]) => string;
   addUploadedDocument: (title: string, pages: { title?: string; text: string; image?: string }[]) => void;
   removeDeskItem: (id: string) => void;
   setSearchQuery: (query: string) => void;
@@ -1500,6 +1504,106 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     return stickyId;
   };
 
+  const addBook = (
+    title = 'Sổ tay bài học',
+    x?: number,
+    y?: number,
+    coverColor = 'brown',
+    initialPages?: { title?: string; text: string; image?: string }[]
+  ): string => {
+    const bookId = `doc-book-${Date.now()}`;
+    const w = 980;
+    const h = 640;
+
+    let targetX = x;
+    let targetY = y;
+    if (targetX === undefined || targetY === undefined) {
+      const viewW = typeof window !== 'undefined' ? window.innerWidth : 1280;
+      const viewH = typeof window !== 'undefined' ? window.innerHeight : 800;
+      const curScale = transform.scale || 1;
+      targetX = Math.round((-transform.x + (viewW / 2)) / curScale - (w / 2));
+      targetY = Math.round((-transform.y + (viewH / 2)) / curScale - (h / 2));
+    }
+
+    const defaultPages = [
+      {
+        id: `p-${Date.now()}-1`,
+        pageNumber: 1,
+        title: 'Mục lục & Giới thiệu',
+        text: `# ${title}\n\nChào mừng bạn đến với cuốn sổ tay học tập trên GreenLearn.\n\n### Hướng dẫn sử dụng:\n- Sử dụng các tab bookmark bên cạnh phải để lật nhanh giữa các trang.\n- Bấm công cụ STudy hoặc Inteline để trò chuyện hỏi đáp sâu với AI.\n- Ghi chú hoặc vẽ tự do trực tiếp lên mặt sách.`
+      },
+      {
+        id: `p-${Date.now()}-2`,
+        pageNumber: 2,
+        title: 'Phần 1: Kiến thức trọng tâm',
+        text: `### 1. Khái niệm cốt lõi\n\nGhi chú các định nghĩa, định lý và công thức then chốt tại đây.\n\n$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$\n\n### 2. Điểm cần lưu ý\n- Nắm vững bản chất trước khi giải bài tập mẫu.\n- Liên kết với các sơ đồ tư duy liên quan trên bàn học.`
+      },
+      {
+        id: `p-${Date.now()}-3`,
+        pageNumber: 3,
+        title: 'Phần 2: Ví dụ minh họa & Ứng dụng',
+        text: `### Ví dụ áp dụng thực tế:\n\nCho hàm mục tiêu tối ưu hóa:\n$$\\min_{x} f(x) \\quad \\text{với ràng buộc} \\quad g(x) \\le 0$$\n\nCác bước giải chi tiết:\n1. Xác định hàm mục tiêu và tập ràng buộc khả thi.\n2. Lập hàm Lagrange tương ứng.\n3. Giải hệ phương trình điều kiện KKT.`
+      },
+      {
+        id: `p-${Date.now()}-4`,
+        pageNumber: 4,
+        title: 'Phần 3: Bài tập rèn luyện & Tổng kết',
+        text: `### Câu hỏi tự kiểm tra:\n1. Nêu sự khác biệt giữa hai phương pháp tiếp cận chính.\n2. Phân tích độ phức tạp thuật toán và đánh giá hiệu năng.\n\n*Ghi chú ôn tập:* Hoàn thành bộ thẻ ghi nhớ flashcards và bài kiểm tra AI tương ứng.`
+      }
+    ];
+
+    const pages: PageContent[] = initialPages && initialPages.length > 0
+      ? initialPages.map((p, idx) => ({
+          id: `p-${Date.now()}-${idx + 1}`,
+          pageNumber: idx + 1,
+          title: normalizeNFC(p.title || `Trang ${idx + 1}`),
+          text: normalizeNFC(p.text),
+          image: p.image
+        }))
+      : defaultPages.map(p => ({
+          ...p,
+          title: normalizeNFC(p.title),
+          text: normalizeNFC(p.text)
+        }));
+
+    const colorThemeMap: Record<string, string> = {
+      brown: '#5c3920',
+      burgundy: '#6b1d28',
+      navy: '#1e3a5f',
+      forest: '#1b4d3e',
+      plum: '#5b2149'
+    };
+
+    const newBook: DeskItem = {
+      id: bookId,
+      type: 'book',
+      title: normalizeNFC(title),
+      x: targetX,
+      y: targetY,
+      rotation: 0,
+      scale: 1,
+      zIndex: maxZIndex + 1,
+      pageCount: pages.length,
+      currentPageIndex: 0,
+      pages,
+      coverColor,
+      colorTheme: colorThemeMap[coverColor] || '#5c3920',
+      isBinder: false,
+      width: w,
+      height: h
+    };
+
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return { ...s, items: [...s.items, newBook] };
+      })
+    );
+    setMaxZIndex(prev => prev + 1);
+    setSelectedItemId(bookId);
+    return bookId;
+  };
+
   const addUploadedDocument = (title: string, rawPages: { title?: string; text: string; image?: string }[]) => {
     const pageCount = rawPages.length;
     const type: 'paper' | 'book' = pageCount <= 1 ? 'paper' : 'book';
@@ -1731,6 +1835,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         tidyUpDesk,
         fitAllToScreen,
         addStickyNote,
+        addBook,
         addCodeBlock,
         addMindMapNode,
         addSticker,

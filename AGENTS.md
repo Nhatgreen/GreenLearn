@@ -520,13 +520,14 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
       * **1 Ô Màu Hiện Tại & Bảng Màu Flyout:** Hiển thị **đúng 1 ô tròn là màu hiện tại của nét vẽ**. Nhấp vào ô tròn mới xổ ra bảng màu 6 màu (lưới 3x2) gọn gàng bên cạnh, triệt tiêu hoàn toàn tình trạng thanh bút quá dài tràn khung nhìn.
   * **Nút Thêm Công Cụ Mở Rộng (`+` More Tools):**
     * Vị trí: Đặt ngay **dưới nút Bút và trên nút Khóa bàn học**, có gạch phân cách mảnh nằm ở cả phía trên và phía dưới nút.
-    * Khi bấm, mở flyout panel phong cách Miro hiển thị danh sách 6 công cụ mở rộng (không có thanh tìm kiếm):
+    * Khi bấm, mở flyout panel phong cách Miro hiển thị danh sách 7 công cụ mở rộng (không có thanh tìm kiếm):
       1. **Shapes and lines:** Vẽ hình học và đường kẻ thông minh.
-      2. **Stickers:** Nhãn dán ghi chú trực quan.
-      3. **Emojis and GIFs:** Biểu cảm và minh họa học tập.
+      2. **Stickers, Emojis & GIFs:** Hình dán, biểu tượng cảm xúc và GIF động.
+      3. **Book cover:** Sách giáo trình & sổ tay bìa da cao cấp (hộp thoại 3D Live Preview, 5 màu da phong thủy, 4 chip gợi ý tiêu đề, 3 mẫu cấu trúc trang: Sổ tổng hợp, Sổ Cornell, Sổ tay trắng; hỗ trợ sinh giữa bàn hoặc stamp placement con trỏ đóng dấu lên bàn học).
       4. **Code block:** Khối mã nguồn lập trình có định dạng.
       5. **Table:** Bảng dữ liệu hàng và cột có cấu trúc.
       6. **Mind map:** Sơ đồ tư duy liên kết ý tưởng.
+      7. **Record screen:** Ghi hình bài giảng & màn hình học tập.
   * Danh mục công cụ thanh chính: Con trỏ di chuyển/chọn (`MousePointer`), Tạo ghi chú (`StickyNote`), Bút vẽ tích hợp (`PenTool`), Thêm công cụ mở rộng (`Plus`), Khóa góc nhìn (`Lock`), và cụm Hoàn tác/Xóa tròn (`Undo2` / `Trash2`).
 * **Tinh Gọn Hệ Thống HUD Ngoại Vi & Quy Chuẩn Nút Tròn (Distraction-Free Workspace):**
   * **Quy chuẩn Hình Dạng Nút Riêng Lẻ (Circular Button Standard):** Mọi nút thao tác riêng lẻ không gộp thành bộ trên giao diện (như nút Tải lên, Mời bạn, nút Mở bản đồ) bắt buộc sử dụng **khung hình tròn (`rounded-full`)** cùng icon SVG nổi bật thay vì vuông bo góc.

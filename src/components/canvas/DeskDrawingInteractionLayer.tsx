@@ -16,6 +16,7 @@ export function DeskDrawingInteractionLayer() {
     stickyCreationTemplate,
     setStickyCreationTemplate,
     addStickyNote,
+    addBook,
     addCodeBlock,
     addMindMapNode,
     addSticker,
@@ -239,6 +240,8 @@ export function DeskDrawingInteractionLayer() {
           addMindMapNode(template.text || '', finalX, finalY, undefined, template.mindMapColor || '#a855f7');
         } else if (template?.itemType === 'sticker' && template.stickerData) {
           addSticker(template.stickerData, finalX, finalY, finalW, finalH);
+        } else if (template?.itemType === 'book') {
+          addBook(template.title || 'Sổ tay bài học', finalX, finalY, template.coverColor || 'brown', template.pages);
         } else {
           addStickyNote(noteText, finalX, finalY, noteColor, finalW, finalH);
         }
@@ -289,6 +292,9 @@ export function DeskDrawingInteractionLayer() {
     }
     if (itemType === 'sticker' || typeLabel.includes('Hình dán')) {
       return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="%23fef9c3" stroke="%23eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5" fill="%23fef08a"/></svg>`;
+    }
+    if (itemType === 'book' || typeLabel.includes('Bìa da') || typeLabel.includes('bìa da') || typeLabel.includes('Sách')) {
+      return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="%235c3920" stroke="%23f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 2v20"/><path d="M10 7h6"/><path d="M10 11h6"/></svg>`;
     }
     return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="%23fdf2f8" stroke="%23db2777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
   };

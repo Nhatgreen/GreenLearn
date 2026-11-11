@@ -23,9 +23,11 @@ import {
   Table,
   Network,
   Video,
-  X
+  X,
+  BookOpen
 } from 'lucide-react';
 import { StickerEmojiPickerFlyout, StickerPickerItem } from '@/components/hud/StickerEmojiPickerFlyout';
+import { BookCoverModal, BookInitialPage } from '@/components/modals/BookCoverModal';
 
 export function LeftCreationBar() {
   const {
@@ -44,7 +46,8 @@ export function LeftCreationBar() {
     redoStroke,
     redoStack,
     clearStrokes,
-    addStickyNote
+    addStickyNote,
+    addBook
   } = useStudySpace();
 
   const [isNoteFlyoutOpen, setIsNoteFlyoutOpen] = useState(false);
@@ -52,6 +55,7 @@ export function LeftCreationBar() {
   const [isPenColorPickerOpen, setIsPenColorPickerOpen] = useState(false);
   const [isMoreToolsOpen, setIsMoreToolsOpen] = useState(false);
   const [isStickerPickerOpen, setIsStickerPickerOpen] = useState(false);
+  const [isBookCoverModalOpen, setIsBookCoverModalOpen] = useState(false);
 
   // Note pastel colors
   const stickyColors = [
@@ -85,6 +89,12 @@ export function LeftCreationBar() {
       title: 'Stickers, Emojis & GIFs',
       desc: 'Hình dán, biểu tượng cảm xúc và GIF động',
       icon: <Smile className="w-5 h-5 text-slate-800 stroke-[2.2]" />
+    },
+    {
+      id: 'book_cover',
+      title: 'Book cover',
+      desc: 'Sách giáo trình & sổ tay bìa da học tập',
+      icon: <BookOpen className="w-5 h-5 text-slate-800 stroke-[2.2]" />
     },
     {
       id: 'code_block',
@@ -147,6 +157,10 @@ export function LeftCreationBar() {
       setActiveTool('smart_shape');
       return;
     }
+    if (toolId === 'book_cover') {
+      setIsBookCoverModalOpen(true);
+      return;
+    }
     if (toolId === 'code_block') {
       setStickyCreationTemplate?.({
         itemType: 'code_block',
@@ -187,6 +201,23 @@ export function LeftCreationBar() {
       setIsStickerPickerOpen(true);
       return;
     }
+  };
+
+  const handlePlaceBookToCenter = (bookTitle: string, coverColor: string, pages: BookInitialPage[]) => {
+    addBook(bookTitle, undefined, undefined, coverColor, pages);
+  };
+
+  const handleStartStampPlacement = (bookTitle: string, coverColor: string, pages: BookInitialPage[]) => {
+    setStickyCreationTemplate?.({
+      itemType: 'book',
+      title: bookTitle,
+      coverColor,
+      pages,
+      width: 980,
+      height: 640,
+      typeLabel: `Sách bìa da: ${bookTitle}`
+    });
+    setActiveTool('create_note');
   };
 
   const currentPenIcon = (() => {
@@ -495,6 +526,14 @@ export function LeftCreationBar() {
           isOpen={isStickerPickerOpen}
           onClose={() => setIsStickerPickerOpen(false)}
           onSelect={handleSelectStickerItem}
+        />
+
+        {/* Book Cover Modal */}
+        <BookCoverModal
+          isOpen={isBookCoverModalOpen}
+          onClose={() => setIsBookCoverModalOpen(false)}
+          onPlaceToCenter={handlePlaceBookToCenter}
+          onStartStampPlacement={handleStartStampPlacement}
         />
       </div>
 

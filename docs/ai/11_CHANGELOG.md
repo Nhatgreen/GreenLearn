@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-11-11 09:05 — main (Thêm Công Cụ Tạo Sách & Sổ Tay Bìa Da "Book Cover" Trên Thanh Sáng Tạo LeftCreationBar)
+- **Task:** Thêm công cụ "Book cover" vào danh mục CÔNG CỤ MỞ RỘNG trên thanh sáng tạo `LeftCreationBar`, cho phép người dùng tùy biến và tạo sách giáo trình & sổ tay bìa da cao cấp trực tiếp lên bàn học:
+  1. **Component Mới `BookCoverModal.tsx` (`src/components/modals/BookCoverModal.tsx`):**
+     - Live 3D Preview bìa da thời gian thực với màu sắc, hiệu ứng ánh sáng gradient, đường viền nhũ vàng dập chìm, ruy-băng đánh dấu trang và bóng gáy sách chân thực.
+     - Bộ chọn 5 màu da cao cấp chuẩn `BOOK_COVER_PRESETS`: Nâu Da, Đỏ Đậm, Xanh Nước Đậm, Xanh Lá Đậm, Hồng Đậm.
+     - Ô nhập tên sách / sổ tay kèm 4 chip gợi ý nhanh: "Sổ tay ghi chép", "Giáo trình bài học", "Vở bài tập thực hành", "Sổ Cornell ôn thi".
+     - 3 Mẫu cấu trúc trang ban đầu:
+       - **Sổ tổng hợp (Khuyên dùng):** 4 trang mẫu gồm Mục lục, Kiến thức cốt lõi, Công thức toán KaTeX và Bài tập rèn luyện.
+       - **Sổ Cornell:** Cấu trúc 4 trang phân chia Từ khóa / Câu hỏi ôn tập, Ghi chú chi tiết và Tóm tắt cuối trang.
+       - **Sổ tay trắng:** 4 trang giấy trắng tinh để người dùng tự do viết vẽ, ghi chú và dán note.
+     - Hai chế độ đặt sách:
+       - **"Thêm vào giữa bàn":** Tự động sinh sách tại tâm góc nhìn hiện tại của bàn học.
+       - **"Chọn vị trí đặt":** Kích hoạt con trỏ đóng dấu (stamp placement) để nhấp chuột chọn vị trí đặt chính xác trên bàn học.
+     - Tuân thủ React Portal `createPortal(..., document.body)` với `z-[9990]`, phím tắt `Escape` và đóng khi click overlay.
+  2. **Mở Rộng Context & Layer Tương Tác (`StudySpaceContext.tsx` & `DeskDrawingInteractionLayer.tsx`):**
+     - Thêm phương thức `addBook` vào `StudySpaceContext` tự động sinh `DeskItem` loại `book`, khởi tạo 4 trang theo mẫu, định vị tọa độ và thiết lập màu da `coverColor`.
+     - Mở rộng `CreationPlacementTemplate` hỗ trợ `title`, `coverColor`, `pages`.
+     - Cập nhật `DeskDrawingInteractionLayer` xử lý `template?.itemType === 'book'` khi người dùng nhấp hoặc kéo thả chuột trên bàn học, kèm SVG cursor con trỏ bìa sách da viền vàng sắc nét.
+  3. **Tích Hợp Vào Thanh Công Cụ `LeftCreationBar.tsx`:**
+     - Bổ sung mục `Book cover` (icon `BookOpen`, mô tả "Sách giáo trình & sổ tay bìa da học tập") vào danh sách `extraTools` trong popover "CÔNG CỤ MỞ RỘNG".
+- **Verified by:**
+  - `pnpm test`: 17/17 test suites passed (75/75 tests passed 100%).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công, 0 lỗi lint / type.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 08:26 — main (Cào & Chuyển Giao Toàn Diện Các Tính Năng Nâng Cấp Từ ViTudy 2026-11-10)
 - **Task:** Rà soát và chuyển giao toàn bộ các cải tiến vượt bậc từ các commit ngày hôm qua của ViTudy (`namtacozz/ViTudy` từ commit `46aa868` đến `13a1069`) vào GreenLearn, duy trì chuẩn nhận diện Xanh Lá GreenLearn (`#16A34A`), miễn phí 100% (không token) và bảo mật BYOK:
   1. **Trình Render Công Thức Toán KaTeX Nâng Cấp (`MathRenderer.tsx`):**
