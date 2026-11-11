@@ -20,6 +20,7 @@ import {
   LogIn,
   User as UserIcon,
   BarChart2,
+  Share2,
   Info
 } from 'lucide-react';
 import { getAssetPath } from '@/lib/assets';
@@ -36,7 +37,10 @@ export function TopLeftNav() {
     selectItem,
     transform,
     resetDeskRotation,
-    setTransform
+    setTransform,
+    isMultiplayerConnected,
+    startHostingRoom,
+    multiplayerPermission
   } = useStudySpace();
 
   const { user, profile } = useAuth();
@@ -272,8 +276,26 @@ export function TopLeftNav() {
           )}
         </div>
 
-        {/* Dashboard & User Account / Login Button */}
+        {/* Direct Invite Button & Dashboard & User Account */}
         <div className="pl-2 border-l border-slate-200 flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              if (!isMultiplayerConnected) {
+                startHostingRoom(activeSpace.id, multiplayerPermission);
+              }
+              window.dispatchEvent(new CustomEvent('greenlearn:open-invite-modal'));
+            }}
+            title="Mời bạn cùng học (Multiplayer Realtime)"
+            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-green-50 hover:bg-green-100 text-[#16A34A] border border-green-200 text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-2xs"
+          >
+            <Share2 className="w-3.5 h-3.5 stroke-[2.4]" />
+            <span className="hidden sm:inline">Mời bạn</span>
+            {isMultiplayerConnected && (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-ping" />
+            )}
+          </button>
+
           <Link
             href="/dashboard"
             title="Thống kê học tập (Dashboard)"

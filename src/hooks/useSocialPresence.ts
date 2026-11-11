@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getSupabase } from '@/lib/supabase';
 import { RealtimeChannel } from '@supabase/supabase-js';
-import { SocialFriend, SocialFriendService, DeskInviteNotification } from '@/services/SocialFriendService';
+import { RecentBuddy, SocialFriendService, DeskInviteNotification } from '@/services/SocialFriendService';
 import { useAuth } from './useAuth';
 
 export function useSocialPresence(activeRoomId: string | null = null, currentSpaceName: string = 'Bàn học') {
   const { user } = useAuth();
   const [currentUser, setCurrentUser] = useState(() => SocialFriendService.getCurrentUser(user?.email));
-  const [friends, setFriends] = useState<SocialFriend[]>(() => SocialFriendService.getFriends());
+  const [buddies, setBuddies] = useState<RecentBuddy[]>(() => SocialFriendService.getRecentBuddies());
   const [incomingInvite, setIncomingInvite] = useState<DeskInviteNotification | null>(null);
   const [isSocialConnected, setIsSocialConnected] = useState(false);
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -59,14 +59,14 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
       });
 
       const updated = SocialFriendService.syncPresenceState(onlinePeers);
-      setFriends(updated);
+      setBuddies(updated);
     });
 
     // 2. Nhận lời mời học chung (DESK_INVITE)
     channel.on('broadcast', { event: 'desk_invite' }, (payload) => {
       const data = payload.payload as {
-        toId: string;
         toName?: string;
+        toId?: string;
         fromId: string;
         fromName: string;
         fromAvatarColor?: string;
@@ -78,8 +78,9 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
       if (!data) return;
 
       const isForMe = 
-        data.toId === currentUser.id || 
-        (data.toName && currentUser.name && data.toName.toLowerCase() === currentUser.name.toLowerCase());
+        (data.toId && data.toId === currentUser.id) || 
+        (data.toName && currentUser.name && data.toName.toLowerCase() === currentUser.name.toLowerCase()) ||
+        (data.toName && user?.email && data.toName.toLowerCase() === user.email.toLowerCase());
 
       if (isForMe && data.fromId !== currentUser.id) {
         setIncomingInvite({
@@ -119,56 +120,49 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
       } catch (e) {}
       channelRef.current = null;
     };
-  }, [currentUser.id, currentUser.name, currentUser.avatarColor, activeRoomId]);
+  }, [currentUser.id, currentUser.name, currentUser.avatarColor, activeRoomId, user?.email]);
 
-  // Gửi lời mời học chung đến bạn bè
-  const sendDeskInvite = useCallback((friend: SocialFriend, targetRoomId?: string) => {
-    if (!channelRef.current || !isSocialConnected) {
-      return { ok: false, msg: 'Chưa kết nối máy chủ để gửi lời mời.' };
+  // Gửi lời mời trực tiếp đến bạn học (bằng tên hoặc email hoặc đối tượng buddy)
+  const sendDeskInvite = useCallback((target: string | RecentBuddy, targetRoomId?: string) => {
+    const targetName = typeof target === 'string' ? target.trim() : target.name;
+    const targetEmail = typeof target === 'string' ? (target.includes('@') ? target.trim() : undefined) : target.email;
+
+    if (!targetName) {
+      return { ok: false, msg: 'Vui lòng nhập tên hoặc email bạn học.' };
     }
+
+    const rec = SocialFriendService.recordInvite(targetName);
+    setBuddies(SocialFriendService.getRecentBuddies());
 
     const roomId = targetRoomId || activeRoomId || `space-${Date.now()}`;
-    channelRef.current.send({
-      type: 'broadcast',
-      event: 'desk_invite',
-      payload: {
-        toId: friend.id,
-        toName: friend.name,
-        fromId: currentUser.id,
-        fromName: currentUser.name,
-        fromAvatarColor: currentUser.avatarColor,
-        roomId,
-        spaceName: currentSpaceName,
-        createdAt: Date.now()
-      }
-    });
 
-    return { ok: true, msg: `Đã gửi lời mời học chung đến "${friend.name}".` };
+    if (channelRef.current && isSocialConnected) {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'desk_invite',
+        payload: {
+          toName: targetName,
+          toEmail: targetEmail,
+          fromId: currentUser.id,
+          fromName: currentUser.name,
+          fromAvatarColor: currentUser.avatarColor,
+          roomId,
+          spaceName: currentSpaceName,
+          createdAt: Date.now()
+        }
+      });
+    }
+
+    return { 
+      ok: true, 
+      msg: `Đã phát lời mời học chung đến "${targetName}". ${isSocialConnected ? 'Đã gửi qua mạng trực tuyến!' : ''}`.trim()
+    };
   }, [isSocialConnected, activeRoomId, currentUser, currentSpaceName]);
 
-  // Thêm bạn mới
-  const addFriend = useCallback((target: string) => {
-    const res = SocialFriendService.addFriend(target);
-    if (res.ok) {
-      setFriends(SocialFriendService.getFriends());
-    }
-    return res;
-  }, []);
-
-  // Chấp nhận lời mời kết bạn
-  const acceptFriendRequest = useCallback((friendId: string) => {
-    const res = SocialFriendService.acceptFriend(friendId);
-    if (res.ok) {
-      setFriends(SocialFriendService.getFriends());
-    }
-    return res;
-  }, []);
-
-  // Xóa bạn
-  const removeFriend = useCallback((friendId: string) => {
-    const res = SocialFriendService.removeFriend(friendId);
-    setFriends(SocialFriendService.getFriends());
-    return res;
+  // Xóa bạn khỏi danh sách gần đây
+  const removeBuddy = useCallback((buddyId: string) => {
+    SocialFriendService.removeBuddy(buddyId);
+    setBuddies(SocialFriendService.getRecentBuddies());
   }, []);
 
   // Từ chối / đóng lời mời học chung
@@ -178,13 +172,13 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
 
   return {
     currentUser,
-    friends,
+    buddies,
+    friends: buddies, // Tương thích ngược
     incomingInvite,
     isSocialConnected,
     sendDeskInvite,
-    addFriend,
-    acceptFriendRequest,
-    removeFriend,
+    removeBuddy,
+    removeFriend: removeBuddy,
     declineInvite
   };
 }

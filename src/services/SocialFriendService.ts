@@ -1,19 +1,20 @@
 /**
  * SocialFriendService.ts
- * Quản lý danh sách bạn bè, lời mời kết bạn và trạng thái kết nối
- * Tham khảo và kế thừa kiến trúc từ ViTrainer (js/net/social.js)
+ * Quản lý lời mời cùng học và danh sách bạn học gần đây
+ * Tối ưu hóa theo chỉ đạo: Mời trực tiếp không cần kết bạn phức tạp
  */
 
-export interface SocialFriend {
+export interface RecentBuddy {
   id: string;
   name: string;
   email?: string;
   avatarColor: string;
-  status: 'ok' | 'in' | 'out'; // 'ok': bạn bè, 'in': lời mời đến, 'out': lời mời đã gửi
   online?: boolean;
   currentRoom?: string;
-  lastSeen?: number;
+  lastInvited?: number;
 }
+
+export type SocialFriend = RecentBuddy;
 
 export interface DeskInviteNotification {
   id: string;
@@ -25,7 +26,7 @@ export interface DeskInviteNotification {
   createdAt: number;
 }
 
-const STORAGE_KEY = 'greenlearn_friends_list';
+const STORAGE_KEY = 'greenlearn_recent_buddies';
 const STORAGE_NICK_KEY = 'greenlearn_nickname';
 
 const PRESET_COLORS = [
@@ -39,33 +40,30 @@ const PRESET_COLORS = [
   '#EA580C', // Orange
 ];
 
-const DEFAULT_FRIENDS: SocialFriend[] = [
+const DEFAULT_BUDDIES: RecentBuddy[] = [
   {
-    id: 'friend-demo-1',
+    id: 'buddy-demo-1',
     name: 'Hoàng Nam (CNTT)',
-    email: 'hoangnam.cntt@vitrainer.edu.vn',
+    email: 'hoangnam.cntt@greenlearn.edu.vn',
     avatarColor: '#2563EB',
-    status: 'ok',
     online: true,
-    lastSeen: Date.now()
+    lastInvited: Date.now() - 300000
   },
   {
-    id: 'friend-demo-2',
+    id: 'buddy-demo-2',
     name: 'Thu Trang (Sư phạm)',
-    email: 'thutrang.sp@vitrainer.edu.vn',
+    email: 'thutrang.sp@greenlearn.edu.vn',
     avatarColor: '#7C3AED',
-    status: 'ok',
     online: true,
-    lastSeen: Date.now() - 60000
+    lastInvited: Date.now() - 600000
   },
   {
-    id: 'friend-demo-3',
+    id: 'buddy-demo-3',
     name: 'Minh Đức (Toán Tin)',
-    email: 'minhduc.math@vitrainer.edu.vn',
+    email: 'minhduc.math@greenlearn.edu.vn',
     avatarColor: '#D97706',
-    status: 'ok',
     online: false,
-    lastSeen: Date.now() - 3600000
+    lastInvited: Date.now() - 86400000
   }
 ];
 
@@ -113,129 +111,107 @@ export class SocialFriendService {
     }
   }
 
-  /** Lấy danh sách bạn bè từ bộ nhớ */
-  static getFriends(): SocialFriend[] {
-    if (typeof window === 'undefined') return DEFAULT_FRIENDS;
+  /** Lấy danh sách bạn học đã mời gần đây */
+  static getRecentBuddies(): RecentBuddy[] {
+    if (typeof window === 'undefined') return DEFAULT_BUDDIES;
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {
       // ignore
     }
-    // Khởi tạo danh sách bạn bè mặc định
-    this.saveFriends(DEFAULT_FRIENDS);
-    return DEFAULT_FRIENDS;
+    // Khởi tạo danh sách mặc định
+    this.saveRecentBuddies(DEFAULT_BUDDIES);
+    return DEFAULT_BUDDIES;
   }
 
-  /** Lưu danh sách bạn bè vào localStorage */
-  static saveFriends(friends: SocialFriend[]): void {
+  /** Lưu danh sách bạn học vào localStorage */
+  static saveRecentBuddies(buddies: RecentBuddy[]): void {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(friends));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(buddies));
       } catch {
         // ignore
       }
     }
   }
 
-  /** Gửi yêu cầu kết bạn bằng Tên hoặc Email */
-  static addFriend(target: string): { ok: boolean; msg: string; friend?: SocialFriend } {
-    const cleanTarget = target.trim();
+  /** Ghi nhận hoặc thêm mới bạn học vào danh sách khi mời */
+  static recordInvite(targetNameOrEmail: string): { ok: boolean; msg: string; buddy?: RecentBuddy } {
+    const cleanTarget = targetNameOrEmail.trim();
     if (!cleanTarget || cleanTarget.length < 2) {
-      return { ok: false, msg: 'Vui lòng nhập tên hoặc email bạn bè (ít nhất 2 ký tự).' };
+      return { ok: false, msg: 'Vui lòng nhập tên hoặc email bạn học (ít nhất 2 ký tự).' };
     }
 
-    const friends = this.getFriends();
-    const existing = friends.find(
-      f => f.name.toLowerCase() === cleanTarget.toLowerCase() || (f.email && f.email.toLowerCase() === cleanTarget.toLowerCase())
+    const buddies = this.getRecentBuddies();
+    const existing = buddies.find(
+      b => b.name.toLowerCase() === cleanTarget.toLowerCase() || (b.email && b.email.toLowerCase() === cleanTarget.toLowerCase())
     );
 
     if (existing) {
-      if (existing.status === 'ok') {
-        return { ok: false, msg: `"${existing.name}" đã có trong danh sách bạn bè.` };
-      }
-      if (existing.status === 'out') {
-        return { ok: false, msg: `Bạn đã gửi lời mời kết bạn đến "${existing.name}". Đang chờ bạn ấy đồng ý.` };
-      }
-      if (existing.status === 'in') {
-        // Chấp nhận luôn nếu đối phương đã mời mình trước
-        return this.acceptFriend(existing.id);
-      }
+      existing.lastInvited = Date.now();
+      const reordered = [existing, ...buddies.filter(b => b.id !== existing.id)];
+      this.saveRecentBuddies(reordered);
+      return { ok: true, msg: `Đã gửi lời mời đến "${existing.name}".`, buddy: existing };
     }
 
-    // Chọn ngẫu nhiên màu avatar
-    const randomColor = PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)];
     const isEmail = cleanTarget.includes('@');
-    const newFriend: SocialFriend = {
-      id: `fr-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+    const randomColor = PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)];
+    const newBuddy: RecentBuddy = {
+      id: `buddy-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       name: isEmail ? cleanTarget.split('@')[0] : cleanTarget,
       email: isEmail ? cleanTarget : undefined,
       avatarColor: randomColor,
-      status: 'out', // Đã gửi lời mời
       online: true,
-      lastSeen: Date.now()
+      lastInvited: Date.now()
     };
 
-    const updated = [newFriend, ...friends];
-    this.saveFriends(updated);
-    return { ok: true, msg: `Đã gửi lời mời kết bạn đến "${newFriend.name}".`, friend: newFriend };
+    const updated = [newBuddy, ...buddies];
+    this.saveRecentBuddies(updated);
+    return { ok: true, msg: `Đã gửi lời mời đến "${newBuddy.name}".`, buddy: newBuddy };
   }
 
-  /** Chấp nhận lời mời kết bạn */
-  static acceptFriend(friendId: string): { ok: boolean; msg: string } {
-    const friends = this.getFriends();
-    const friend = friends.find(f => f.id === friendId);
-    if (!friend) return { ok: false, msg: 'Không tìm thấy người bạn này.' };
-
-    const updated = friends.map(f => {
-      if (f.id === friendId) {
-        return { ...f, status: 'ok' as const, online: true, lastSeen: Date.now() };
-      }
-      return f;
-    });
-
-    this.saveFriends(updated);
-    return { ok: true, msg: `Đã trở thành bạn bè với "${friend.name}".` };
+  /** Xóa một bạn học khỏi danh sách gần đây */
+  static removeBuddy(buddyId: string): void {
+    const buddies = this.getRecentBuddies();
+    const updated = buddies.filter(b => b.id !== buddyId);
+    this.saveRecentBuddies(updated);
   }
 
-  /** Từ chối lời mời hoặc hủy kết bạn */
-  static removeFriend(friendId: string): { ok: boolean; msg: string } {
-    const friends = this.getFriends();
-    const updated = friends.filter(f => f.id !== friendId);
-    this.saveFriends(updated);
-    return { ok: true, msg: 'Đã xóa bạn khỏi danh sách.' };
-  }
-
-  /** Cập nhật trạng thái trực tuyến cho danh sách bạn bè dựa trên Realtime presence */
+  /** Cập nhật trạng thái trực tuyến theo Realtime presence */
   static syncPresenceState(
     onlinePeerUids: Array<{ id: string; name?: string; currentRoom?: string }>
-  ): SocialFriend[] {
-    const friends = this.getFriends();
+  ): RecentBuddy[] {
+    const buddies = this.getRecentBuddies();
     let hasChange = false;
 
-    const updated = friends.map(f => {
-      const match = onlinePeerUids.find(p => p.id === f.id || (p.name && p.name.toLowerCase() === f.name.toLowerCase()));
+    const updated = buddies.map(b => {
+      const match = onlinePeerUids.find(p => p.id === b.id || (p.name && p.name.toLowerCase() === b.name.toLowerCase()));
       const isOnline = !!match;
       const room = match?.currentRoom;
 
-      if (f.online !== isOnline || f.currentRoom !== room) {
+      if (b.online !== isOnline || b.currentRoom !== room) {
         hasChange = true;
         return {
-          ...f,
+          ...b,
           online: isOnline,
-          currentRoom: room,
-          lastSeen: isOnline ? Date.now() : f.lastSeen
+          currentRoom: room
         };
       }
-      return f;
+      return b;
     });
 
     if (hasChange) {
-      this.saveFriends(updated);
+      this.saveRecentBuddies(updated);
     }
     return updated;
+  }
+
+  // Tương thích ngược
+  static getFriends(): any[] {
+    return this.getRecentBuddies().map(b => ({ ...b, status: 'ok' }));
   }
 }

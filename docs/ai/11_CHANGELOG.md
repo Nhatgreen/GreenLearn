@@ -4,6 +4,30 @@
 
 ---
 
+## 2026-11-11 11:30 — main (Tối Ưu Hóa Mời Trực Tiếp & Đưa Nút Mời Lên TopLeftNav)
+- **Task:** Xử lý triệt để phản hồi người dùng: "Kết bạn bị lỗi kết bạn + kết bạn để ở sâu quá không oke lắm, nó chỉ nên là mời thôi":
+  1. **Triệt Tiêu Hoàn Toàn Rào Cản Kết Bạn ("Chỉ nên là mời"):**
+     - Loại bỏ quy trình kết bạn chờ duyệt/chấp thuận 2 chiều phức tạp khiến việc mời bị chặn hoặc lỗi trạng thái.
+     - Cho phép nhập trực tiếp Tên hoặc Email của bất kỳ bạn học nào và bấm **"Mời ngay"** (`Send` button) để phát sóng lời mời Realtime tức thì.
+     - Tự động ghi nhận bạn học vào danh sách **"Đã mời gần đây"** (Recent Buddies) kèm nút **"Mời lại"** 1-chạm và đèn tín hiệu trực tuyến.
+  2. **Đưa Nút "Mời bạn" Lên Thanh Điều Hướng Trên Cùng (`TopLeftNav.tsx`):**
+     - Đặt nút **"Mời bạn"** (icon `Share2`, `bg-green-50 text-[#16A34A] border-green-200`) ngay cạnh thanh tìm kiếm và tiêu đề bàn học ở đầu màn hình.
+     - Người học chỉ cần bấm 1 click là mở ngay hộp thoại mời mà không cần phải tìm kiếm sâu ở góc màn hình.
+  3. **Hộp Thoại Mời Bạn Cùng Học Thống Nhất Một Mặt Phẳng (Zero Tabs):**
+     - Bỏ phân chia tab 1/tab 2 gây ẩn tính năng; gom tất cả vào một màn hình trực quan duy nhất:
+       - Khối 1: Mời bạn học trực tiếp (Form nhập + nút Mời ngay + danh sách Đã mời gần đây).
+       - Khối 2: Sao chép liên kết phòng học, chia sẻ Zalo/Messenger và quét mã QR.
+       - Khối 3: Bộ chọn phân quyền ("Chỉ xem" / "Cùng chỉnh sửa").
+       - Khối 4: Ô vào nhanh bằng mã phòng (Room ID Quick Join).
+       - Khối 5: Danh sách thành viên đang có mặt trực tuyến trên bàn học.
+- **Verified by:**
+  - `pnpm test`: 19/19 test suites passed (84/84 tests passed 100%).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+  - `pnpm run docs:check`: Ký hiệu và chỉ mục bộ nhớ AI đạt chuẩn 100%.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 11:00 — main (Đồng Bộ 2 Bàn Học, Tự Lưu Bền Vững & Hệ Thống Bạn Bè Chuẩn ViTrainer)
 - **Task:** Triển khai toàn diện yêu cầu: "Khi chia sẻ có link thì phải đồng bộ 2 bàn học với nhau trên bàn học và tự lưu hai bàn học lại có thêm cơ chế kết bạn mời học chung":
   1. **Đồng Bộ 2 Bàn Học & Tự Động Lưu Cả 2 Bàn Học (`useRealtimeMultiplayer.ts` & `StudySpaceContext.tsx`):**

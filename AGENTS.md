@@ -148,12 +148,17 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
       * Khi Host gửi `SYNC_SPACE_STATE`, bàn học của Guest lập tức nhận toàn bộ vật thể và nét vẽ, đồng thời tự động cập nhật tên bàn học thành `Bàn học cùng bạn: [Tên bàn của Host]`.
       * Cả bàn học của Host và bàn học của Guest đều được tự động lưu bền vững vào `localStorage` và Supabase Cloud. Mọi thao tác kéo thả, xoay vật thể, lật trang sách, vẽ nét bút, thêm giấy note hay xóa đối tượng từ bất kỳ bên nào đều phản hồi và đồng bộ 2 chiều thời gian thực và tự động lưu.
       * Cơ chế nhận diện Host bền vững (`greenlearn_hosted_room_[roomId]`): Lưu cờ nhận diện Host trong `localStorage` để khi F5 / reload trang, Host vẫn giữ nguyên vai trò Host và tiếp tục phục vụ đồng bộ cho bạn học.
-    * **Hệ thống Bạn bè & Lời mời học chung thời gian thực (Kế thừa từ `namtacozz/ViTrainer`):**
-      * **2 tab điều hướng trong modal:** Tab 1 "Liên kết phòng" (mã phòng, liên kết chia sẻ, ô nhập Room ID vào nhanh, QR code, phân quyền) và Tab 2 "Bạn bè & Mời học" (danh sách bạn bè, trạng thái trực tuyến/đang trong phòng, form kết bạn, lời mời đến).
+    * **Hệ thống Mời Cùng Học Trực Tiếp & Đã Mời Gần Đây (Direct Invite & Recent Buddies Standard):**
+      * **Triệt tiêu hoàn toàn rào cản kết bạn nhiều bước ("Chỉ nên là mời"):** Loại bỏ quy trình kết bạn chờ duyệt/chấp thuận phức tạp gây lỗi và phiền toái. Thay vào đó, người học có thể nhập trực tiếp Tên hoặc Email của bạn học và bấm **"Mời ngay"** để phát sóng thông báo học chung tức thì.
+      * **Nút "Mời bạn" ngay trên thanh TopLeftNav:** Bổ sung nút "Mời bạn" (icon `Share2`, nền xanh `bg-green-50 text-[#16A34A]`) ngay cạnh thanh tìm kiếm ở đầu trang, giúp người học mở ngay hộp thoại mời mà không cần phải tìm kiếm sâu ở góc màn hình.
+      * **Giao diện Hộp thoại Mời Bạn Cùng Học thống nhất (Zero Tabs Friction):** Không chia tab ẩn nội dung, bố trí toàn bộ trên một mặt phẳng tinh gọn:
+        1. Form nhập tên/email bạn học + Nút "Mời ngay" kèm danh sách "Đã mời gần đây" có nút "Mời lại" 1-chạm.
+        2. Hộp sao chép liên kết phòng học, chia sẻ Zalo/Messenger và quét mã QR.
+        3. Bộ chọn phân quyền: "Chỉ xem" / "Cùng chỉnh sửa".
+        4. Ô nhập mã phòng (Room ID) vào nhanh (Quick Join Box).
+        5. Danh sách thành viên đang có mặt trực tuyến trong phòng.
       * **Kênh Realtime Social (`vitudy-social`):** Theo dõi trạng thái trực tuyến của bạn bè với đèn tín hiệu xanh lá GreenLearn nhấp nháy; cập nhật trạng thái khi bạn đang ở trong phòng học nào.
-      * **Nút "Mời học chung":** Host nhấp nút gửi broadcast `DESK_INVITE` tức thì qua kênh Realtime đến bạn học đang online.
       * **Thông báo Toast nổi tương tác thời gian thực (`FriendInviteToast`):** Hiển thị thẻ thông báo nổi ở góc trên bên phải màn hình bạn học: `[Tên bạn] mời bạn cùng học tại [Tên bàn học]`. Bạn học chỉ cần nhấp một chạm vào nút **"Vào học ngay"** (Xanh Lá GreenLearn `#16A34A`) là hệ thống tự động kết nối và nạp ngay bàn học chung tức thì. Có nút "Để sau" và thanh đếm ngược tự đóng sau 60 giây.
-      * **Ô vào phòng bằng mã nhanh (Quick Join Box):** Cung cấp ô nhập Room ID trực tiếp với nút "Vào phòng" để người học có thể nhập mã và vào ngay bất kỳ phòng học nào mà không cần dán toàn bộ URL.
   * **Quy Chuẩn Nhật Ký Học Tập (`/dashboard`):**
     * Tiêu đề trang căn trái đồng trục với nút quay lại.
     * Biểu đồ nhịp điệu học tuần hiển thị rõ số phút khi rê chuột kèm đường mục tiêu đứt nét chuẩn (30 phút/ngày).
