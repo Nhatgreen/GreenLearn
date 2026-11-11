@@ -44,6 +44,10 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
   const [showOpenAi, setShowOpenAi] = useState(false);
   const [initialOpenAi, setInitialOpenAi] = useState('');
 
+  const [geminiKey, setGeminiKey] = useState('');
+  const [showGemini, setShowGemini] = useState(false);
+  const [initialGemini, setInitialGemini] = useState('');
+
   const [byokSaved, setByokSaved] = useState(false);
   const [testResult, setTestResult] = useState<{ status: 'loading' | 'success' | 'error'; message: string } | null>(null);
   const [isStorageModalOpen, setIsStorageModalOpen] = useState(false);
@@ -62,11 +66,15 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
       const storedOpenAi = ByokStore.get('openai') || '';
       setOpenAiKey(storedOpenAi);
       setInitialOpenAi(storedOpenAi);
+
+      const storedGemini = ByokStore.get('gemini') || '';
+      setGeminiKey(storedGemini);
+      setInitialGemini(storedGemini);
     }
   }, [profile?.display_name]);
 
   const hasNameChanged = displayName.trim() !== initialDisplayName.trim() || nickname.trim() !== initialNickname.trim();
-  const hasByokChanged = openAiKey.trim() !== initialOpenAi.trim();
+  const hasByokChanged = openAiKey.trim() !== initialOpenAi.trim() || geminiKey.trim() !== initialGemini.trim();
 
   // Xác định phương thức đăng nhập
   const provider = user?.app_metadata?.provider || 'email';
@@ -124,11 +132,13 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
     e.preventDefault();
     ByokStore.set('openai', openAiKey.trim());
     setInitialOpenAi(openAiKey.trim());
+    ByokStore.set('gemini', geminiKey.trim());
+    setInitialGemini(geminiKey.trim());
     setByokSaved(true);
     setTimeout(() => setByokSaved(false), 3000);
   };
 
-  const handleClearKey = () => {
+  const handleClearOpenAi = () => {
     ByokStore.clear('openai');
     setOpenAiKey('');
     setInitialOpenAi('');
@@ -136,7 +146,15 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
     setTimeout(() => setByokSaved(false), 2000);
   };
 
-  const handleTestKey = async () => {
+  const handleClearGemini = () => {
+    ByokStore.clear('gemini');
+    setGeminiKey('');
+    setInitialGemini('');
+    setByokSaved(true);
+    setTimeout(() => setByokSaved(false), 2000);
+  };
+
+  const handleTestOpenAi = async () => {
     if (!openAiKey.trim()) {
       setTestResult({
         status: 'error',
@@ -148,8 +166,32 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
     setTestResult({ status: 'loading', message: 'Đang kiểm tra kết nối OpenAI API...' });
 
     const res = await testAiConnection({
+      provider: 'byok_openai',
       apiKey: openAiKey.trim(),
       model: 'gpt-4o-mini',
+    });
+
+    setTestResult({
+      status: res.success ? 'success' : 'error',
+      message: res.message,
+    });
+  };
+
+  const handleTestGemini = async () => {
+    if (!geminiKey.trim()) {
+      setTestResult({
+        status: 'error',
+        message: 'Vui lòng nhập Khóa API Google Gemini trước khi kiểm tra.',
+      });
+      return;
+    }
+
+    setTestResult({ status: 'loading', message: 'Đang kiểm tra kết nối Google Gemini API...' });
+
+    const res = await testAiConnection({
+      provider: 'byok_gemini',
+      apiKey: geminiKey.trim(),
+      model: 'gemini-2.5-flash',
     });
 
     setTestResult({
@@ -251,12 +293,12 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
         </form>
       </section>
 
-      {/* 2. Khóa AI của riêng bạn (OpenAI BYOK) */}
+      {/* 2. Khóa AI của riêng bạn (Google Gemini & OpenAI BYOK) */}
       <section className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
         <div className="flex items-center justify-between gap-2 mb-1">
           <div className="flex items-center gap-2">
             <KeyRound className="w-4 h-4 text-slate-700" />
-            <h3 className="text-sm font-bold text-slate-900">Khóa AI của riêng bạn (OpenAI BYOK)</h3>
+            <h3 className="text-sm font-bold text-slate-900">Khóa AI của riêng bạn (Gemini &amp; OpenAI BYOK)</h3>
           </div>
           <Link
             href="/?view=desk"
@@ -268,7 +310,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
           </Link>
         </div>
         <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-          Khóa API cá nhân chỉ được lưu trữ cục bộ 100% trong trình duyệt máy của bạn (localStorage), không gửi về máy chủ GreenLearn hay bên thứ ba nào ngoài <code>api.openai.com</code>.
+          Khóa API cá nhân chỉ được lưu trữ cục bộ 100% trong trình duyệt máy của bạn (localStorage), không gửi về máy chủ GreenLearn hay bên thứ ba nào khác.
         </p>
 
         {/* Security Warning Box */}
@@ -278,11 +320,59 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
             <span>Cảnh báo bảo mật:</span>
           </div>
           <p className="text-[11.5px] leading-relaxed text-amber-800">
-            Khóa chỉ lưu trên trình duyệt của bạn. <strong>Không dùng trên máy công cộng</strong>. Lưu ý rằng gói <strong>ChatGPT Plus không bao gồm API</strong>; API tính phí riêng theo mức sử dụng thực tế của tài khoản OpenAI của bạn.
+            Khóa chỉ lưu trên trình duyệt của bạn. <strong>Không dùng trên máy công cộng</strong>. Google AI Studio cung cấp hạn mức miễn phí rộng rãi cho học tập; tài khoản OpenAI tính theo hạn mức riêng của bạn.
           </p>
         </div>
 
         <form onSubmit={handleSaveByok} className="space-y-4 max-w-lg">
+          {/* Google Gemini Key */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="byokGemini" className="text-xs font-semibold text-slate-700">
+                Google Gemini API Key (AIzaSy...)
+              </label>
+              {geminiKey && (
+                <button
+                  type="button"
+                  onClick={handleClearGemini}
+                  className="text-[10px] text-red-600 hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Trash2 className="w-2.5 h-2.5" />
+                  <span>Xóa khóa</span>
+                </button>
+              )}
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="relative flex-1">
+                <input
+                  id="byokGemini"
+                  type={showGemini ? 'text' : 'password'}
+                  value={geminiKey}
+                  onChange={(e) => setGeminiKey(e.target.value)}
+                  placeholder="AIzaSy... (Khóa miễn phí từ Google AI Studio)"
+                  className="w-full px-3 py-2 pr-9 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#16A34A]/20 focus:border-[#16A34A] font-mono transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowGemini(!showGemini)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  tabIndex={-1}
+                  title={showGemini ? 'Ẩn khóa' : 'Hiện khóa'}
+                >
+                  {showGemini ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={handleTestGemini}
+                className="px-2.5 py-2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl border border-slate-200 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap active:scale-95"
+              >
+                <Activity className="w-3 h-3 text-[#16A34A]" />
+                <span>Kiểm tra</span>
+              </button>
+            </div>
+          </div>
+
           {/* OpenAI Key */}
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -292,7 +382,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
               {openAiKey && (
                 <button
                   type="button"
-                  onClick={handleClearKey}
+                  onClick={handleClearOpenAi}
                   className="text-[10px] text-red-600 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Trash2 className="w-2.5 h-2.5" />
@@ -322,7 +412,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
               </div>
               <button
                 type="button"
-                onClick={handleTestKey}
+                onClick={handleTestOpenAi}
                 className="px-2.5 py-2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl border border-slate-200 transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap active:scale-95"
               >
                 <Activity className="w-3 h-3 text-[#16A34A]" />
@@ -363,7 +453,7 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
             disabled={!hasByokChanged}
             className="px-4 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer active:scale-95"
           >
-            Lưu khóa OpenAI
+            Lưu cài đặt khóa AI
           </button>
         </form>
       </section>

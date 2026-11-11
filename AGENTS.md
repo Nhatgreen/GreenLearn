@@ -40,12 +40,13 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
   * **Quy Chuẩn Thanh Học Nhóm Trực Tuyến (Multiplayer Presence Bar):**
     * Khi người dùng học cá nhân một mình (không có tham số `?room=` trên URL và không có bạn học cùng), thanh presence dưới đáy **tuyệt đối không hiển thị**.
     * Nút "Thoát" (`LogOut`) trên thanh sẽ ngắt kết nối kênh Realtime, dọn dẹp danh sách bạn bè, xóa tham số `room` khỏi URL và ẩn thanh ngay lập tức mà không cần tải lại trang.
-  * **Quy Chuẩn Cài Đặt AI & Kiểm Tra Kết Nối (AI Configuration & Live Test):**
-    * Giao diện cấu hình AI gồm 4 bước chuẩn mực:
-      1. Chọn nhà cung cấp: Hệ thống ViTudy (mặc định), Google Gemini (BYOK), OpenAI (BYOK), OpenAI OAuth (ChatGPT Plus).
-      2. Nhập thông tin xác thực tương ứng (Không cần với ViTudy; API Key kèm link lấy key cho Gemini/OpenAI; mã ủy quyền cho ChatGPT Plus).
-      3. Chọn mô hình AI: Dropdown đồng bộ theo nhà cung cấp, hiển thị rõ ràng tên mô hình và công năng.
-      4. Nút kiểm tra hoạt động (Test AI): Gửi truy vấn thực tế kiểm tra API và đo độ trễ mạng ms thời gian thực.
+  * **Quy Chuẩn Cài Đặt AI & Kiểm Tra Kết Nối Đa Công Cụ (Multi-Provider AI Configuration & Live Test):**
+    * Giao diện cấu hình AI gồm 3 bước chuẩn mực:
+      1. Chọn nhà cung cấp: Google Gemini (Miễn phí từ Google AI Studio), OpenAI API (BYOK với khóa riêng `sk-...`), Đăng nhập ChatGPT (OAuth 2.0 PKCE không cần API key).
+      2. Nhập thông tin xác thực tương ứng: API Key kèm link lấy key trực tiếp cho Gemini/OpenAI; luồng đăng nhập 2 bước kèm nút sao chép / dán URL callback cho ChatGPT OAuth.
+      3. Chọn mô hình AI: Dropdown đồng bộ theo nhà cung cấp, phân nhóm trực quan theo công năng và độ ưu tiên.
+      4. Nút kiểm tra hoạt động (Kiểm tra key): Gửi truy vấn thực tế kiểm tra API và đo độ trễ mạng ms thời gian thực.
+    * Toàn bộ khóa API và phiên ủy quyền được lưu trữ an toàn 100% trên trình duyệt cá nhân (localStorage qua `ByokStore`), bảo vệ quyền riêng tư tuyệt đối.
   * **Quy Chuẩn Thanh Toán VietQR & MBBank (SePay VietQR Standards):**
     * Sử dụng mã NAPAS BIN chính thức của MBBank: `970422` (hoặc `MB`) kèm template `compact2` để 100% ứng dụng ngân hàng và ví điện tử quét mã truy vấn thông tin thành công.
     * Tài khoản thụ hưởng mặc định: `99924052005` - `LE VO THANH NAM`.

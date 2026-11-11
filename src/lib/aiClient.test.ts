@@ -111,4 +111,43 @@ describe('aiClient', () => {
     expect(res.success).toBe(false);
     expect(res.message).toContain('Khóa API OpenAI không hợp lệ');
   });
+
+  it('should call direct Google Gemini if Gemini API key is provided', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [{ content: { parts: [{ text: 'Định lý Pythagoras từ Gemini' }] } }],
+      }),
+    });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const res = await askAi({
+      provider: 'byok_gemini',
+      apiKey: 'AIzaSy-test-gemini-key',
+      prompt: 'Pythagoras là gì',
+    });
+
+    expect(mockFetch).toHaveBeenCalled();
+    expect(res.reply).toBe('Định lý Pythagoras từ Gemini');
+    expect(res.provider).toBe('byok_gemini');
+  });
+
+  it('tests Gemini connection successfully with valid mock response', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        candidates: [{ content: { parts: [{ text: 'OK' }] } }],
+      }),
+    });
+    vi.stubGlobal('fetch', mockFetch);
+
+    const res = await testAiConnection({
+      provider: 'byok_gemini',
+      apiKey: 'AIzaSy-test-gemini-key',
+      model: 'gemini-2.5-flash',
+    });
+
+    expect(res.success).toBe(true);
+    expect(res.message).toContain('Kết nối thành công! Gemini');
+  });
 });

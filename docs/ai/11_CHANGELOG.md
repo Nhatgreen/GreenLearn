@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-11-11 08:02 — main (Nâng Cấp Kết Nối Đa Công Cụ AI: Google Gemini, OpenAI & ChatGPT OAuth PKCE)
+- **Task:** Đồng bộ các công cụ kết nối AI tiên tiến từ ViTudy vào GreenLearn, mở rộng khả năng kết nối linh hoạt cho học sinh / sinh viên:
+  1. **Tích Hợp Google Gemini (BYOK Miễn Phí):**
+     - Hỗ trợ gọi trực tiếp client-side API Google Gemini (`https://generativelanguage.googleapis.com/v1beta/models/...`) với Khóa API từ Google AI Studio (miễn phí hạn mức lớn).
+     - Hỗ trợ đầy đủ các mô hình: `gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-2.0-flash`, `gemini-1.5-pro`, `gemini-1.5-flash`.
+  2. **Tích Hợp Đăng Nhập ChatGPT (OAuth 2.0 PKCE):**
+     - Đưa module `openaiOAuth.ts` vào GreenLearn: Khởi tạo cặp S256 PKCE code_verifier/code_challenge, quy trình đăng nhập 2 bước, 1-click paste callback URL và lưu trữ an toàn trong `ByokStore`.
+     - Phân nhóm mô hình trực quan theo mục đích sử dụng (Siêu suy luận, Cân bằng & Đa dụng, Phản hồi nhanh & Tiết kiệm).
+  3. **Tối Ưu Modal Cài Đặt AI (`TopRightWallet.tsx`):**
+     - Giao diện 3 bước chuẩn mực: Chọn nhà cung cấp (Gemini, OpenAI, ChatGPT OAuth) $\rightarrow$ Nhập thông tin xác thực tương ứng kèm link hướng dẫn lấy key $\rightarrow$ Chọn mô hình và nút "Kiểm tra key" đo thời gian thực (ms).
+     - Thiết kế mang sắc thái nhận diện Xanh Lá GreenLearn (`#16A34A` / `#15803D`) sang trọng, sạch sẽ, bảo mật 100% trong localStorage.
+  4. **Đồng Bộ Trang Cài Đặt Tài Khoản (`AccountSettings.tsx`):**
+     - Hỗ trợ người dùng lưu trữ, kiểm tra và dọn dẹp cả Khóa Google Gemini và Khóa OpenAI độc lập.
+- **Verified by:**
+  - `pnpm test`: 17/17 test suites passed (75/75 tests passed 100%).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công, 0 lỗi lint / type.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 07:48 — main (Thu Nhỏ & Khống Chế Chuẩn Kích Thước Avatar Profile Trên Header)
 - **Task:** Thu nhỏ và khống chế kích thước ảnh đại diện cá nhân (`Avatar Profile`) trên thanh tiêu đề `HomePage` và thanh điều hướng `TopLeftNav`:
   1. **Khắc Phục Lỗi Kích Thước Lớn Bất Thường:**
