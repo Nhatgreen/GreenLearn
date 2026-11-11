@@ -4,6 +4,40 @@
 
 ---
 
+## 2026-11-12 00:15 — main (Thanh Ẩn Phải Bạn Bè Bàn Học, Dấu Cộng Lưu Bạn Nhanh & Mục Bạn Bè Màn Hình Chính)
+- **Task:** Triển khai toàn diện theo yêu cầu: "tạo thêm dấu cộng để lưu kết bạn lại, đưa giải pháp để hiện bạn bè như tạo thêm mục bạn bè ở màn hình chính, khi bấm thanh ẩn phải thì sẽ hiện bạn và tình trạng online":
+  1. **Nút Dấu Cộng `+` Thêm & Lưu Bạn Học Tức Thì (`SocialFriendService.addFriend`):**
+     - Thêm phương thức `addFriend(nameOrEmail)` lưu nhanh bạn học vào danh sách bạn bè bền vững `localStorage` (`greenlearn_recent_buddies`).
+     - Tích hợp nút `+` (Lưu bạn) ở: Thanh ẩn phải bàn học, modal mời học (`BottomLeftKnowledge`), và trang quản lý bạn bè `HomePage`.
+     - Loại bỏ mọi rào cản duyệt 2 chiều phức tạp; bấm 1 click là lưu ngay và sẵn sàng kết nối học chung.
+  2. **Thanh Ẩn Phải Trên Bàn Học (`FriendsRightDrawer.tsx`):**
+     - Vị trí bám sát vách phải bàn học (`fixed right-1 top-1/2 -translate-y-1/2 z-40`) theo đúng chuẩn Snug Spacing 4px.
+     - Khi đóng (collapsed): Tab dọc tinh gọn với icon `Users`, đèn tín hiệu trực tuyến xanh lá pulsing và huy hiệu số bạn bè online.
+     - Khi mở (expanded): Trượt ra bảng điều khiển hiển thị:
+       - Header kèm nút `+` thêm bạn nhanh và nút thu gọn (`ChevronRight`).
+       - Ô form thêm bạn bè có phản hồi trạng thái tức thì.
+       - Bộ lọc bạn bè ("Tất cả", "Đang online") và ô tìm kiếm.
+       - Danh sách bạn bè kèm trạng thái trực quan: 🟢 Trực tuyến, 🔵 Đang học tại: [Tên phòng / Bàn học], ⚪ Ngoại tuyến.
+       - Nút hành động trực tiếp: "Vào cùng" (nếu bạn bè đang ở phòng khác), "Mời học" (phát lời mời Realtime) và nút xóa bạn.
+       - Footer sao chép nhanh liên kết phòng bàn học.
+  3. **Mục Quản Lý Bạn Bè Trên Màn Hình Chính (`HomePage.tsx`):**
+     - Bổ sung mục "Bạn bè" vào thanh điều hướng Sidebar bên trái (`activeNav === 'friends'`) kèm huy hiệu số bạn bè online.
+     - Giao diện quản lý bạn bè chuyên dụng:
+       - 3 Thẻ thống kê: Tổng số bạn bè, Đang trực tuyến, Đang trong phòng học.
+       - Form `+ Thêm bạn bè` lớn kèm ô tìm kiếm và bộ lọc trạng thái.
+       - Danh sách thẻ bạn bè trực quan với nút "Mời vào bàn học" và "Vào học cùng".
+  4. **Kiến Trúc Realtime Presence Tập Trung (`SocialPresenceContext.tsx`):**
+     - Đặt `SocialPresenceProvider` tại tầng root layout (`layout.tsx`), duy trì duy nhất 1 kết nối Realtime `vitudy-social`.
+     - Triệt tiêu hoàn toàn lỗi xung đột `CHANNEL_ERROR duplicate topic` của Supabase Realtime khi nhiều component cùng theo dõi presence.
+     - Đồng bộ tức thì 100% mọi thay đổi bạn bè và lời mời trên toàn bộ ứng dụng.
+- **Verified by:**
+  - `pnpm test`: 19/19 test suites passed (84/84 tests passed).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+  - `pnpm run docs:index && pnpm run docs:check`: Ký hiệu và chỉ mục bộ nhớ AI đạt chuẩn 100%.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 11:30 — main (Tối Ưu Hóa Mời Trực Tiếp & Đưa Nút Mời Lên TopLeftNav)
 - **Task:** Xử lý triệt để phản hồi người dùng: "Kết bạn bị lỗi kết bạn + kết bạn để ở sâu quá không oke lắm, nó chỉ nên là mời thôi":
   1. **Triệt Tiêu Hoàn Toàn Rào Cản Kết Bạn ("Chỉ nên là mời"):**

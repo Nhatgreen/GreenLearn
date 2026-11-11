@@ -1,12 +1,19 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import { getSupabase } from '@/lib/supabase';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { RecentBuddy, SocialFriendService, DeskInviteNotification } from '@/services/SocialFriendService';
 import { useAuth } from './useAuth';
+import { useSocialPresenceContext } from '@/context/SocialPresenceContext';
 
 export function useSocialPresence(activeRoomId: string | null = null, currentSpaceName: string = 'Bàn học') {
+  const context = useSocialPresenceContext();
+  if (context) {
+    return context;
+  }
+
+  // Fallback độc lập khi component chạy ngoài SocialPresenceProvider (ví dụ trong unit tests)
   const { user } = useAuth();
   const [currentUser, setCurrentUser] = useState(() => SocialFriendService.getCurrentUser(user?.email));
   const [buddies, setBuddies] = useState<RecentBuddy[]>(() => SocialFriendService.getRecentBuddies());
@@ -66,6 +73,7 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
     channel.on('broadcast', { event: 'desk_invite' }, (payload) => {
       const data = payload.payload as {
         toName?: string;
+        toEmail?: string;
         toId?: string;
         fromId: string;
         fromName: string;
@@ -80,7 +88,8 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
       const isForMe = 
         (data.toId && data.toId === currentUser.id) || 
         (data.toName && currentUser.name && data.toName.toLowerCase() === currentUser.name.toLowerCase()) ||
-        (data.toName && user?.email && data.toName.toLowerCase() === user.email.toLowerCase());
+        (data.toName && user?.email && data.toName.toLowerCase() === user.email.toLowerCase()) ||
+        (data.toEmail && user?.email && data.toEmail.toLowerCase() === user.email.toLowerCase());
 
       if (isForMe && data.fromId !== currentUser.id) {
         setIncomingInvite({
@@ -159,6 +168,13 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
     };
   }, [isSocialConnected, activeRoomId, currentUser, currentSpaceName]);
 
+  // Thêm và lưu bạn bè mới (dấu +)
+  const addFriend = useCallback((nameOrEmail: string) => {
+    const res = SocialFriendService.addFriend(nameOrEmail);
+    setBuddies(SocialFriendService.getRecentBuddies());
+    return res;
+  }, []);
+
   // Xóa bạn khỏi danh sách gần đây
   const removeBuddy = useCallback((buddyId: string) => {
     SocialFriendService.removeBuddy(buddyId);
@@ -170,13 +186,19 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
     setIncomingInvite(null);
   }, []);
 
+  const onlineCount = buddies.filter(b => b.online).length;
+  const inDeskCount = buddies.filter(b => b.online && b.currentRoom).length;
+
   return {
     currentUser,
     buddies,
     friends: buddies, // Tương thích ngược
+    onlineCount,
+    inDeskCount,
     incomingInvite,
     isSocialConnected,
     sendDeskInvite,
+    addFriend,
     removeBuddy,
     removeFriend: removeBuddy,
     declineInvite

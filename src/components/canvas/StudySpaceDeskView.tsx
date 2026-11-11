@@ -11,6 +11,7 @@ import { BottomLeftKnowledge } from '../hud/BottomLeftKnowledge';
 import { BottomRightToolkit } from '../hud/BottomRightToolkit';
 import { LeftCreationBar } from '../hud/LeftCreationBar';
 import { MultiplayerBar } from '../hud/MultiplayerBar';
+import { FriendsRightDrawer } from '../hud/FriendsRightDrawer';
 import { ActivityService } from '@/services/ActivityService';
 import { usePetMascot } from '@/hooks/usePetMascot';
 import { OnboardingTour } from '../onboarding/OnboardingTour';
@@ -203,6 +204,9 @@ export default function StudySpaceDeskView() {
           </button>
         )}
       </div>
+
+      {/* ================= 6. RIGHT COLLAPSIBLE FRIENDS DRAWER (Thanh ẩn phải bạn bè & online) ================= */}
+      <FriendsRightDrawer isFocusMode={isFocusMode} />
 
       {/* ================= MULTIPLAYER PRESENCE BAR (fades in focus mode) ================= */}
       <div className={clsx("transition-opacity duration-300", isFocusMode ? "opacity-0 pointer-events-none" : "opacity-100")}>

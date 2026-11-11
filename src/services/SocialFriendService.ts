@@ -181,6 +181,21 @@ export class SocialFriendService {
     this.saveRecentBuddies(updated);
   }
 
+  /** Thêm và lưu bạn bè vào danh sách (dấu +) */
+  static addFriend(nameOrEmail: string): { ok: boolean; msg: string; friend?: RecentBuddy } {
+    const res = this.recordInvite(nameOrEmail);
+    return {
+      ok: res.ok,
+      msg: res.ok ? `Đã lưu "${res.buddy?.name}" vào danh sách bạn bè.` : res.msg,
+      friend: res.buddy
+    };
+  }
+
+  /** Xóa bạn khỏi danh sách */
+  static removeFriend(friendId: string): void {
+    this.removeBuddy(friendId);
+  }
+
   /** Cập nhật trạng thái trực tuyến theo Realtime presence */
   static syncPresenceState(
     onlinePeerUids: Array<{ id: string; name?: string; currentRoom?: string }>

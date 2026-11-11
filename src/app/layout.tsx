@@ -3,6 +3,7 @@ import { Open_Sans, Patrick_Hand, Lora } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { StudySpaceProvider } from '@/context/StudySpaceContext';
+import { SocialPresenceProvider } from '@/context/SocialPresenceContext';
 
 const openSans = Open_Sans({
   subsets: ['latin', 'latin-ext', 'vietnamese'],
@@ -59,7 +60,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <StudySpaceProvider>
-            {children}
+            <SocialPresenceProvider>
+              {children}
+            </SocialPresenceProvider>
           </StudySpaceProvider>
         </AuthProvider>
       </body>

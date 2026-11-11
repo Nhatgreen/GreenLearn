@@ -30,7 +30,8 @@ import {
   UserCheck,
   Send,
   Link2,
-  Clock
+  Clock,
+  Plus
 } from 'lucide-react';
 import { getSupabaseConfig, saveSupabaseConfig, clearSupabaseConfig, getSupabase } from '@/lib/supabase';
 import { parsePdfFile } from '@/services/PdfParserService';
@@ -80,6 +81,7 @@ export function BottomLeftKnowledge() {
     buddies,
     incomingInvite,
     sendDeskInvite,
+    addFriend,
     removeBuddy,
     declineInvite
   } = useSocialPresence(multiplayerRoomId || activeSpace.id, activeSpace.name);
@@ -780,6 +782,20 @@ export function BottomLeftKnowledge() {
                     className="flex-1 px-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:border-[#16A34A]"
                   />
                   <button
+                    type="button"
+                    onClick={() => {
+                      if (!inviteTargetInput.trim()) return;
+                      const res = addFriend(inviteTargetInput.trim());
+                      setInviteMsg({ text: res.msg, isError: !res.ok });
+                      if (res.ok) setInviteTargetInput('');
+                    }}
+                    title="Lưu vào danh sách bạn bè mà không gửi ngay (+)"
+                    className="px-2.5 py-1.5 bg-white hover:bg-green-50 text-[#16A34A] border border-green-300 text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap active:scale-95"
+                  >
+                    <Plus className="w-3.5 h-3.5 stroke-[2.4]" />
+                    <span>Lưu bạn</span>
+                  </button>
+                  <button
                     type="submit"
                     className="px-3.5 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap active:scale-95"
                   >
@@ -798,9 +814,14 @@ export function BottomLeftKnowledge() {
                 {/* Danh sách đã mời gần đây */}
                 {buddies.length > 0 && (
                   <div className="mt-3 pt-2.5 border-t border-green-200/60">
-                    <span className="text-[10.5px] font-bold text-slate-600 block mb-1.5">
-                      Đã mời gần đây (Mời lại nhanh):
-                    </span>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10.5px] font-bold text-slate-600 block">
+                        Đã mời gần đây (Mời lại nhanh):
+                      </span>
+                      <span className="text-[10.5px] text-slate-500 font-medium">
+                        {buddies.length} bạn
+                      </span>
+                    </div>
                     <div className="flex flex-wrap gap-1.5">
                       {buddies.slice(0, 5).map((b) => (
                         <div

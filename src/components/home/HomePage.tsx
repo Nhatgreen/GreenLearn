@@ -15,11 +15,19 @@ import {
   Clock,
   Target,
   FileText,
-  MousePointer2
+  MousePointer2,
+  Users,
+  Send,
+  LogIn,
+  Trash2,
+  UserPlus,
+  X,
+  Check
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { usePetMascot } from '@/hooks/usePetMascot';
+import { useSocialPresence } from '@/hooks/useSocialPresence';
 import { PetMascotModal } from '@/components/pet/PetMascotModal';
 import { getAssetPath } from '@/lib/assets';
 import { StudySpace } from '@/types/studyspace';
@@ -40,7 +48,24 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
   const [searchFilter, setSearchFilter] = useState('');
   const [showAllSpaces, setShowAllSpaces] = useState(false);
-  const [activeNav, setActiveNav] = useState<'home' | 'my_desks' | 'starred'>('home');
+  const [activeNav, setActiveNav] = useState<'home' | 'my_desks' | 'starred' | 'friends'>('home');
+
+  // Social Friends & Presence
+  const {
+    currentUser,
+    buddies,
+    onlineCount,
+    inDeskCount,
+    addFriend,
+    removeFriend,
+    sendDeskInvite
+  } = useSocialPresence();
+
+  const [friendsSearch, setFriendsSearch] = useState('');
+  const [friendsFilter, setFriendsFilter] = useState<'all' | 'online' | 'indesk'>('all');
+  const [isAddingFriendOpen, setIsAddingFriendOpen] = useState(false);
+  const [newFriendInput, setNewFriendInput] = useState('');
+  const [friendFeedback, setFriendFeedback] = useState<{ text: string; isError?: boolean } | null>(null);
 
   // Username display: profile display name -> user email prefix -> 'namtacozz'
   const userName = profile?.display_name || user?.email?.split('@')[0] || 'namtacozz';
@@ -202,6 +227,25 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <span>Đã gắn dấu sao</span>
             </button>
 
+            <button
+              onClick={() => setActiveNav('friends')}
+              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
+                activeNav === 'friends'
+                  ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <Users className="w-4 h-4 stroke-[2.2]" />
+                <span>Bạn bè</span>
+              </span>
+              {onlineCount > 0 && (
+                <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 text-[#166534] text-[10px] font-bold">
+                  {onlineCount} online
+                </span>
+              )}
+            </button>
+
             <Link
               href="/dashboard"
               className="w-full block px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold"
@@ -347,21 +391,345 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           </div>
         )}
 
-        {/* Lời chào: Căn trái cùng trục với các khối bên dưới */}
-        <div className="mb-8 mt-1 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-serif text-slate-900 tracking-tight">
-              Ôn bài thôi, <span className="text-[#16A34A] font-serif font-bold">{shortName}</span>
-            </h1>
-            <p className="text-xs text-slate-500 mt-1 font-medium">
-              Không gian học thức tích hợp AI 2.5D — Nền tảng học tập mở & miễn phí trọn đời
-            </p>
+        {activeNav === 'friends' ? (
+          /* ================= GIAO DIỆN QUẢN LÝ BẠN BÈ & NHÓM HỌC ================= */
+          <div className="flex-1 flex flex-col animate-fade-in">
+            {/* Tiêu đề & Nút Thêm bạn */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
+                    <Users className="w-5 h-5 stroke-[2.4]" />
+                  </div>
+                  <span>Bạn bè & Nhóm học</span>
+                </h1>
+                <p className="text-xs md:text-sm text-slate-500 font-medium mt-1">
+                  Kết nối với bạn học, theo dõi trạng thái online và cùng nhau học nhóm theo thời gian thực.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsAddingFriendOpen(prev => !prev)}
+                className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center gap-2 self-start sm:self-auto"
+              >
+                <Plus className="w-4 h-4 stroke-[2.4]" />
+                <span>Thêm bạn bè</span>
+              </button>
+            </div>
+
+            {/* 3 Thẻ thống kê */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              {/* Thẻ 1: Tổng bạn bè */}
+              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700">
+                  <Users className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-slate-900">{buddies.length}</div>
+                  <div className="text-xs text-slate-500 font-medium">Bạn bè đã lưu</div>
+                </div>
+              </div>
+
+              {/* Thẻ 2: Đang trực tuyến */}
+              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
+                  <Sparkles className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-[#166534] flex items-center gap-1.5">
+                    <span>{onlineCount}</span>
+                    {onlineCount > 0 && <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />}
+                  </div>
+                  <div className="text-xs text-slate-500 font-medium">Đang trực tuyến</div>
+                </div>
+              </div>
+
+              {/* Thẻ 3: Đang trong phòng học */}
+              <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600">
+                  <BookOpen className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-sky-700">{inDeskCount}</div>
+                  <div className="text-xs text-slate-500 font-medium">Đang ở bàn học</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Ô Form Thêm Bạn Bè Mới (Khi bấm +) */}
+            {isAddingFriendOpen && (
+              <div className="mb-6 p-4 rounded-2xl bg-white border-2 border-green-300 shadow-lg animate-fade-in">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xs md:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <UserPlus className="w-4 h-4 text-[#16A34A]" />
+                    <span>Lưu bạn học mới vào danh sách</span>
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingFriendOpen(false)}
+                    className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <p className="text-xs text-slate-500 mb-3">
+                  Nhập tên nickname hoặc địa chỉ email của bạn học. Sau khi lưu, bạn có thể mời học hoặc vào cùng phòng bất cứ lúc nào.
+                </p>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!newFriendInput.trim()) return;
+                    const res = addFriend(newFriendInput.trim());
+                    setFriendFeedback({ text: res.msg, isError: !res.ok });
+                    if (res.ok) {
+                      setNewFriendInput('');
+                      setTimeout(() => setFriendFeedback(null), 3000);
+                    }
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <input
+                    type="text"
+                    placeholder="Nhập tên hoặc email bạn học (ví dụ: An, minh@gmail.com)..."
+                    value={newFriendInput}
+                    onChange={(e) => {
+                      setNewFriendInput(e.target.value);
+                      if (friendFeedback) setFriendFeedback(null);
+                    }}
+                    autoFocus
+                    className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer active:scale-95 whitespace-nowrap"
+                  >
+                    Lưu bạn bè
+                  </button>
+                </form>
+
+                {friendFeedback && (
+                  <div className={`mt-2.5 text-xs font-semibold px-3 py-2 rounded-xl border ${
+                    friendFeedback.isError
+                      ? 'bg-red-50 text-red-600 border-red-200'
+                      : 'bg-green-50 text-[#166534] border-green-200'
+                  }`}>
+                    {friendFeedback.text}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Thanh Tìm Kiếm & Bộ Lọc */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold text-slate-600">
+                <button
+                  type="button"
+                  onClick={() => setFriendsFilter('all')}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                    friendsFilter === 'all'
+                      ? 'bg-white text-slate-900 shadow-2xs font-bold'
+                      : 'hover:text-slate-900'
+                  }`}
+                >
+                  Tất cả ({buddies.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFriendsFilter('online')}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                    friendsFilter === 'online'
+                      ? 'bg-white text-[#166534] shadow-2xs font-bold'
+                      : 'hover:text-slate-900'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Trực tuyến ({onlineCount})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFriendsFilter('indesk')}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                    friendsFilter === 'indesk'
+                      ? 'bg-white text-sky-700 shadow-2xs font-bold'
+                      : 'hover:text-slate-900'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-sky-500" />
+                  <span>Đang ở bàn học ({inDeskCount})</span>
+                </button>
+              </div>
+
+              <div className="relative min-w-[220px]">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm theo tên hoặc email..."
+                  value={friendsSearch}
+                  onChange={(e) => setFriendsSearch(e.target.value)}
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl outline-none focus:border-[#16A34A] transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Danh Sách Bạn Bè (Grid Cards) */}
+            {(() => {
+              const displayed = buddies.filter((b) => {
+                if (friendsFilter === 'online' && !b.online) return false;
+                if (friendsFilter === 'indesk' && (!b.online || !b.currentRoom)) return false;
+                if (!friendsSearch.trim()) return true;
+                const q = friendsSearch.toLowerCase().trim();
+                return (
+                  b.name.toLowerCase().includes(q) ||
+                  (b.email && b.email.toLowerCase().includes(q))
+                );
+              });
+
+              if (displayed.length === 0) {
+                return (
+                  <div className="py-16 text-center bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center p-6 shadow-2xs">
+                    <div className="w-16 h-16 rounded-full bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A] mb-3">
+                      <Users className="w-8 h-8 stroke-[1.8]" />
+                    </div>
+                    <h3 className="text-sm font-bold text-slate-900 mb-1">
+                      {friendsFilter === 'online' 
+                        ? 'Chưa có bạn bè nào đang trực tuyến'
+                        : friendsFilter === 'indesk'
+                        ? 'Chưa có bạn bè nào đang ở bàn học'
+                        : 'Chưa có bạn học nào trong danh sách'}
+                    </h3>
+                    <p className="text-xs text-slate-500 max-w-sm mb-4 leading-relaxed">
+                      {buddies.length === 0
+                        ? 'Bấm nút "Thêm bạn bè" ở góc trên hoặc nhập tên bạn học để lưu danh sách và cùng học nhóm.'
+                        : 'Không tìm thấy bạn học nào khớp với từ khóa tìm kiếm.'}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setIsAddingFriendOpen(true)}
+                      className="px-4 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer active:scale-95 flex items-center gap-1.5"
+                    >
+                      <Plus className="w-4 h-4 stroke-[2.4]" />
+                      <span>Thêm bạn bè</span>
+                    </button>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {displayed.map((buddy) => (
+                    <div
+                      key={buddy.id}
+                      className="bg-white border border-slate-200 hover:border-green-300 rounded-2xl p-4 shadow-2xs hover:shadow-md transition-all flex items-center justify-between gap-3 group"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="relative shrink-0">
+                          <div
+                            className="w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-xs"
+                            style={{ backgroundColor: buddy.avatarColor || '#16A34A' }}
+                          >
+                            {buddy.name.charAt(0).toUpperCase()}
+                          </div>
+                          <span
+                            className={`w-3 h-3 rounded-full absolute -bottom-0.5 -right-0.5 ring-2 ring-white ${
+                              buddy.online ? 'bg-emerald-500 animate-pulse' : 'bg-slate-300'
+                            }`}
+                            title={buddy.online ? 'Đang trực tuyến' : 'Ngoại tuyến'}
+                          />
+                        </div>
+
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-slate-900 truncate">
+                              {buddy.name}
+                            </span>
+                            {buddy.online && buddy.currentRoom && (
+                              <span className="text-[10px] font-bold text-sky-700 bg-sky-50 border border-sky-200 px-1.5 py-0.2 rounded-md shrink-0">
+                                Đang học
+                              </span>
+                            )}
+                          </div>
+                          {buddy.email && (
+                            <div className="text-[11px] text-slate-400 truncate">
+                              {buddy.email}
+                            </div>
+                          )}
+                          <div className="text-[11px] mt-0.5">
+                            {buddy.online && buddy.currentRoom ? (
+                              <span className="text-sky-600 font-semibold truncate block">
+                                Phòng: {buddy.currentRoom}
+                              </span>
+                            ) : buddy.online ? (
+                              <span className="text-emerald-600 font-semibold">Đang trực tuyến</span>
+                            ) : (
+                              <span className="text-slate-400">Ngoại tuyến</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        {buddy.online && buddy.currentRoom ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (typeof window !== 'undefined') {
+                                window.location.href = `/?room=${encodeURIComponent(buddy.currentRoom!)}&perm=edit`;
+                              }
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
+                          >
+                            <LogIn className="w-3.5 h-3.5" />
+                            <span>Vào học cùng</span>
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              onEnterDesk();
+                              setTimeout(() => {
+                                sendDeskInvite(buddy);
+                              }, 1000);
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-[#F0FDF4] hover:bg-green-100 text-[#166534] border border-[#BBF7D0] text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
+                          >
+                            <Send className="w-3.5 h-3.5 text-[#16A34A]" />
+                            <span>Mời học</span>
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => removeFriend(buddy.id)}
+                          title="Xóa bạn khỏi danh sách"
+                          className="p-1.5 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] text-xs font-bold self-start sm:self-auto shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-[#16A34A]" />
-            <span>Mầm Xanh: Cấp {pet.stage} • {info.title}</span>
-          </div>
-        </div>
+        ) : (
+          <>
+            {/* Lời chào: Căn trái cùng trục với các khối bên dưới */}
+            <div className="mb-8 mt-1 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-serif text-slate-900 tracking-tight">
+                  Ôn bài thôi, <span className="text-[#16A34A] font-serif font-bold">{shortName}</span>
+                </h1>
+                <p className="text-xs text-slate-500 mt-1 font-medium">
+                  Không gian học thức tích hợp AI 2.5D — Nền tảng học tập mở & miễn phí trọn đời
+                </p>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] text-xs font-bold self-start sm:self-auto shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#16A34A]" />
+                <span>Mầm Xanh: Cấp {pet.stage} • {info.title}</span>
+              </div>
+            </div>
 
         {/* ================= SECTION 1: Bắt đầu bàn học mới ================= */}
         <section className="mb-10">
@@ -596,6 +964,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </div>
           </div>
         </section>
+        </>
+        )}
 
       </main>
 
