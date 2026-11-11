@@ -1,12 +1,13 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { DeskItem, StudySpace, CanvasTransform, PageContent, IntelineThread } from '@/types/studyspace';
 import { INITIAL_SPACES } from '@/data/mockSpaces';
 import { recognizeSmartShape } from '@/utils/smartShape';
 import { useAuth } from '@/hooks/useAuth';
 import { StudySpaceService } from '@/services/StudySpaceService';
 import { OfflineQueue } from '@/services/OfflineQueue';
+import { useRealtimeMultiplayer, PeerUser, DeskAction } from '@/hooks/useRealtimeMultiplayer';
 
 export interface CreationPlacementTemplate {
   itemType?: import('@/types/studyspace').ItemType;
@@ -134,6 +135,19 @@ interface StudySpaceContextType {
   updateExamAnswer: (itemId: string, questionId: string, answerIdx: number) => void;
   gradeExam: (itemId: string) => void;
   resetExam: (itemId: string) => void;
+  // Multiplayer Realtime Synchronized State
+  multiplayerPeers: PeerUser[];
+  isMultiplayerConnected: boolean;
+  multiplayerRoomId: string | null;
+  isMultiplayerHost: boolean;
+  multiplayerPermission: 'view_only' | 'edit';
+  setMultiplayerPermission: (perm: 'view_only' | 'edit') => void;
+  startHostingRoom: (customRoomId?: string, permission?: 'view_only' | 'edit') => string;
+  joinMultiplayerRoom: (roomId: string, permission?: 'view_only' | 'edit') => void;
+  leaveMultiplayerRoom: () => void;
+  broadcastDeskAction: (action: DeskAction) => void;
+  isFollowPresenter: boolean;
+  setIsFollowPresenter: (follow: boolean) => void;
 }
 
 const DEFAULT_TRANSFORM: CanvasTransform = {
@@ -146,7 +160,7 @@ const DEFAULT_TRANSFORM: CanvasTransform = {
 const StudySpaceContext = createContext<StudySpaceContextType | null>(null);
 
 export function StudySpaceProvider({ children }: { children: React.ReactNode }) {
-  const { user, status } = useAuth();
+  const { user, status, profile } = useAuth();
   const [spaces, setSpaces] = useState<StudySpace[]>(INITIAL_SPACES);
   const [activeSpaceId, setActiveSpaceId] = useState<string>(INITIAL_SPACES[0].id);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -220,6 +234,179 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   const [strokes, setStrokes] = useState<import('@/types/studyspace').DrawingStroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<import('@/types/studyspace').DrawingStroke | null>(null);
 
+  // Multiplayer Realtime Synchronized State & Dispatcher
+  const isApplyingRemoteAction = useRef(false);
+  const spacesRef = useRef(spaces);
+  useEffect(() => {
+    spacesRef.current = spaces;
+  }, [spaces]);
+  const strokesRef = useRef(strokes);
+  useEffect(() => {
+    strokesRef.current = strokes;
+  }, [strokes]);
+  const activeSpaceIdRef = useRef(activeSpaceId);
+  useEffect(() => {
+    activeSpaceIdRef.current = activeSpaceId;
+  }, [activeSpaceId]);
+
+  const broadcastDeskActionRef = useRef<(action: DeskAction) => void>(() => {});
+
+  const currentUserName = profile?.display_name 
+    || (typeof window !== 'undefined' ? (localStorage.getItem('greenlearn_nickname') || localStorage.getItem('vitudy_nickname')) : '') 
+    || (user?.email ? user.email.split('@')[0] : 'Bạn học');
+
+  const handleRemoteDeskAction = useCallback((action: DeskAction) => {
+    isApplyingRemoteAction.current = true;
+    try {
+      const curSpaceId = activeSpaceIdRef.current;
+      switch (action.type) {
+        case 'ITEM_MOVE': {
+          const { id, x, y } = action.payload;
+          setSpaces(prev => prev.map(s => {
+            if (s.id !== curSpaceId) return s;
+            return {
+              ...s,
+              items: s.items.map(it => it.id === id ? { ...it, x, y } : it)
+            };
+          }));
+          break;
+        }
+        case 'ITEM_ROTATE': {
+          const { id, rotation } = action.payload;
+          setSpaces(prev => prev.map(s => {
+            if (s.id !== curSpaceId) return s;
+            return {
+              ...s,
+              items: s.items.map(it => it.id === id ? { ...it, rotation } : it)
+            };
+          }));
+          break;
+        }
+        case 'PAGE_TURN': {
+          const { id, pageIndex } = action.payload;
+          setSpaces(prev => prev.map(s => {
+            if (s.id !== curSpaceId) return s;
+            return {
+              ...s,
+              items: s.items.map(it => it.id === id ? { ...it, currentPageIndex: pageIndex } : it)
+            };
+          }));
+          break;
+        }
+        case 'ADD_ITEM': {
+          const { item } = action.payload;
+          setSpaces(prev => prev.map(s => {
+            if (s.id !== curSpaceId) return s;
+            if (s.items.some(it => it.id === item.id)) return s;
+            return {
+              ...s,
+              items: [...s.items, item]
+            };
+          }));
+          break;
+        }
+        case 'DELETE_ITEM': {
+          const { id } = action.payload;
+          setSpaces(prev => prev.map(s => {
+            if (s.id !== curSpaceId) return s;
+            return {
+              ...s,
+              items: s.items.filter(it => it.id !== id)
+            };
+          }));
+          break;
+        }
+        case 'UPDATE_ITEM_TEXT': {
+          const { id, text } = action.payload;
+          setSpaces(prev => prev.map(s => {
+            if (s.id !== curSpaceId) return s;
+            return {
+              ...s,
+              items: s.items.map(it => it.id === id ? { ...it, stickyText: text } : it)
+            };
+          }));
+          break;
+        }
+        case 'DRAW_STROKE': {
+          const { stroke } = action.payload;
+          setStrokes(prev => {
+            if (prev.some(st => st.id === stroke.id)) return prev;
+            return [...prev, stroke];
+          });
+          break;
+        }
+        case 'CLEAR_STROKES': {
+          setStrokes([]);
+          break;
+        }
+        case 'REMOVE_STROKE': {
+          const { id } = action.payload;
+          setStrokes(prev => prev.filter(st => st.id !== id));
+          break;
+        }
+        case 'SYNC_SPACE_STATE': {
+          const { items, strokes: remoteStrokes } = action.payload;
+          if (Array.isArray(items)) {
+            setSpaces(prev => prev.map(s => {
+              if (s.id !== curSpaceId) return s;
+              return {
+                ...s,
+                items
+              };
+            }));
+          }
+          if (Array.isArray(remoteStrokes)) {
+            setStrokes(remoteStrokes);
+          }
+          break;
+        }
+      }
+    } finally {
+      isApplyingRemoteAction.current = false;
+    }
+  }, []);
+
+  const handleRequestSpaceState = useCallback((requesterId: string) => {
+    const curSpace = spacesRef.current.find(s => s.id === activeSpaceIdRef.current) || spacesRef.current[0];
+    if (curSpace) {
+      broadcastDeskActionRef.current({
+        type: 'SYNC_SPACE_STATE',
+        payload: {
+          targetId: requesterId,
+          items: curSpace.items,
+          strokes: strokesRef.current
+        }
+      });
+    }
+  }, []);
+
+  const realtimeMultiplayer = useRealtimeMultiplayer({
+    spaceId: activeSpaceId,
+    currentUserName,
+    transform,
+    onDeskAction: handleRemoteDeskAction,
+    onRequestSpaceState: handleRequestSpaceState
+  });
+
+  const {
+    peers: multiplayerPeers,
+    isConnected: isMultiplayerConnected,
+    roomId: multiplayerRoomId,
+    isHost: isMultiplayerHost,
+    roomPermission: multiplayerPermission,
+    setRoomPermission: setMultiplayerPermission,
+    startHostingRoom,
+    joinRoom: joinMultiplayerRoom,
+    leaveRoom: leaveMultiplayerRoom,
+    broadcastDeskAction,
+    isFollowPresenter,
+    setIsFollowPresenter
+  } = realtimeMultiplayer;
+
+  useEffect(() => {
+    broadcastDeskActionRef.current = broadcastDeskAction;
+  }, [broadcastDeskAction]);
+
   // Auto-flush offline queue when back online
   useEffect(() => {
     return OfflineQueue.initAutoFlush();
@@ -285,10 +472,13 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
           }
         }
 
-        if (targetItem) {
-          setStrokes(s => [...s, { ...prev, points: localPoints, attachedToItemId: targetItem.id }]);
-        } else {
-          setStrokes(s => [...s, { ...prev, points: finalPoints, attachedToItemId: undefined }]);
+        const completedStroke: import('@/types/studyspace').DrawingStroke = targetItem
+          ? { ...prev, points: localPoints, attachedToItemId: targetItem.id }
+          : { ...prev, points: finalPoints, attachedToItemId: undefined };
+
+        setStrokes(s => [...s, completedStroke]);
+        if (!isApplyingRemoteAction.current) {
+          broadcastDeskActionRef.current({ type: 'DRAW_STROKE', payload: { stroke: completedStroke } });
         }
       }
       return null;
@@ -300,6 +490,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   const addStroke = (stroke: import('@/types/studyspace').DrawingStroke) => {
     setStrokes(prev => [...prev, stroke]);
     setRedoStack([]); // reset redo on new stroke
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'DRAW_STROKE', payload: { stroke } });
+    }
   };
 
   const undoStroke = () => {
@@ -323,10 +516,16 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   const clearStrokes = () => {
     setStrokes([]);
     setRedoStack([]);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'CLEAR_STROKES' });
+    }
   };
 
   const removeStrokeById = (id: string) => {
     setStrokes(prev => prev.filter(s => s.id !== id));
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'REMOVE_STROKE', payload: { id } });
+    }
   };
 
   const removeStrokesInBox = (box: { x1: number; y1: number; x2: number; y2: number }) => {
@@ -404,32 +603,34 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       // fallback
     }
 
-    // Đọc URL param ?space=XYZ nếu có
+    // Đọc URL param ?space=XYZ và ?room=XYZ nếu có
     let urlSpaceId: string | null = null;
+    let urlRoomId: string | null = null;
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       urlSpaceId = params.get('space');
+      urlRoomId = params.get('room');
     }
+
+    const resolveTargetSpaceId = (spaceList: StudySpace[]) => {
+      if (urlSpaceId && spaceList.some(s => s.id === urlSpaceId)) return urlSpaceId;
+      if (urlRoomId) {
+        const found = spaceList.find(s => s.id === urlRoomId || urlRoomId.startsWith(s.id));
+        if (found) return found.id;
+      }
+      if (localActiveId && spaceList.some(s => s.id === localActiveId)) return localActiveId;
+      return spaceList[0]?.id || 'default';
+    };
 
     if (status === 'authenticated' && user?.id) {
       StudySpaceService.loadSpaces(user.id).then((cloudSpaces) => {
         if (cloudSpaces && cloudSpaces.length > 0) {
           setSpaces(cloudSpaces);
-          const targetId = (urlSpaceId && cloudSpaces.some(s => s.id === urlSpaceId))
-            ? urlSpaceId
-            : (localActiveId && cloudSpaces.some(s => s.id === localActiveId))
-            ? localActiveId
-            : cloudSpaces[0].id;
-          setActiveSpaceId(targetId);
+          setActiveSpaceId(resolveTargetSpaceId(cloudSpaces));
         } else if (localSpaces && localSpaces.length > 0) {
           // Chưa có trên cloud nhưng có local -> sync local lên cloud
           setSpaces(localSpaces);
-          const targetId = (urlSpaceId && localSpaces.some(s => s.id === urlSpaceId))
-            ? urlSpaceId
-            : (localActiveId && localSpaces.some(s => s.id === localActiveId))
-            ? localActiveId
-            : localSpaces[0].id;
-          setActiveSpaceId(targetId);
+          setActiveSpaceId(resolveTargetSpaceId(localSpaces));
           localSpaces.forEach(s => StudySpaceService.saveSpace(s, user.id).catch(() => {}));
         } else {
           // Tài khoản mới chưa có bàn học -> Khởi tạo bàn học mẫu Demo
@@ -448,12 +649,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     // Khi là khách (Guest)
     if (localSpaces && localSpaces.length > 0) {
       setSpaces(localSpaces);
-      const targetId = (urlSpaceId && localSpaces.some(s => s.id === urlSpaceId))
-        ? urlSpaceId
-        : (localActiveId && localSpaces.some(s => s.id === localActiveId))
-        ? localActiveId
-        : localSpaces[0].id;
-      setActiveSpaceId(targetId);
+      setActiveSpaceId(resolveTargetSpaceId(localSpaces));
+    } else {
+      setActiveSpaceId(resolveTargetSpaceId(INITIAL_SPACES));
     }
     setIsLoaded(true);
   }, [status, user?.id]);
@@ -871,6 +1069,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         };
       })
     );
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ITEM_MOVE', payload: { id, x, y } });
+    }
   };
 
   const updateItemDimensions = (id: string, width: number, height: number) => {
@@ -1084,9 +1285,13 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         };
       })
     );
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ITEM_ROTATE', payload: { id, rotation: finalRot } });
+    }
   };
 
   const turnBookPage = (id: string, direction: 'prev' | 'next', maxPages?: number) => {
+    let nextIndex = 0;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1098,14 +1303,17 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
             const step = item.type === 'book' ? 2 : 1;
             const total = maxPages !== undefined ? maxPages : item.pageCount;
             const limit = Math.max(0, total - 1);
-            const newIndex = direction === 'next' 
+            nextIndex = direction === 'next' 
               ? Math.min(item.currentPageIndex + step, limit)
               : Math.max(item.currentPageIndex - step, 0);
-            return { ...item, currentPageIndex: newIndex };
+            return { ...item, currentPageIndex: nextIndex };
           })
         };
       })
     );
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'PAGE_TURN', payload: { id, pageIndex: nextIndex } });
+    }
   };
 
   const setBookPage = (id: string, pageIndex: number) => {
@@ -1116,11 +1324,15 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
           ...s,
           items: s.items.map(item => {
             if (item.id !== id) return item;
-            return { ...item, currentPageIndex: Math.min(Math.max(0, pageIndex), item.pageCount - 1) };
+            const targetPage = Math.min(Math.max(0, pageIndex), (item.pageCount || 1) - 1);
+            return { ...item, currentPageIndex: targetPage };
           })
         };
       })
     );
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'PAGE_TURN', payload: { id, pageIndex } });
+    }
   };
 
   // Combine non-destructive binder merging
@@ -1306,6 +1518,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       })
     );
     setSelectedItemId(noteId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newNote } });
+    }
     return noteId;
   };
 
@@ -1350,6 +1565,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       })
     );
     setSelectedItemId(codeId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newCodeItem } });
+    }
     return codeId;
   };
 
@@ -1395,6 +1613,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       })
     );
     setSelectedItemId(mindId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newNode } });
+    }
     return mindId;
   };
 
@@ -1443,6 +1664,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       })
     );
     setSelectedItemId(stickerId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newSticker } });
+    }
     return stickerId;
   };
 
@@ -1638,6 +1862,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     );
     setMaxZIndex(prev => prev + 1);
     setSelectedItemId(bookId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newBook } });
+    }
     return bookId;
   };
 
@@ -1674,6 +1901,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         return { ...s, items: [...s.items, newItem] };
       })
     );
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newItem } });
+    }
   };
 
   const addExamSheet = (
@@ -1723,6 +1953,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         return { ...s, items: [...s.items, examItem] };
       })
     );
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: examItem } });
+    }
 
     return sheetId;
   };
@@ -1823,6 +2056,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     );
     setStrokes(prev => prev.filter(s => s.attachedToItemId !== id));
     if (selectedItemId === id) setSelectedItemId(null);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'DELETE_ITEM', payload: { id } });
+    }
   };
 
   const togglePanLock = () => {
@@ -1913,7 +2149,20 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         threads: activeSpace.threads || [],
         addIntelineThread,
         isViewRotateMode,
-        setIsViewRotateMode
+        setIsViewRotateMode,
+        // Multiplayer Realtime Synchronized State & Dispatchers
+        multiplayerPeers,
+        isMultiplayerConnected,
+        multiplayerRoomId,
+        isMultiplayerHost,
+        multiplayerPermission,
+        setMultiplayerPermission,
+        startHostingRoom,
+        joinMultiplayerRoom,
+        leaveMultiplayerRoom,
+        broadcastDeskAction,
+        isFollowPresenter,
+        setIsFollowPresenter
       }}
     >
       {children}

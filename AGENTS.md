@@ -52,9 +52,18 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
   * **Quy Chuẩn React Portal Cho Toàn Bộ Hộp Thoại / Modal (Strict React Portal Rule — 100% Modals):**
     * Mọi hộp thoại (`Modal`, `Dialog`, `Overlay`) phải được bọc trong `createPortal(..., document.body)` với `z-[9990]..z-[9999]`.
     * Nghiêm cấm render modal trực tiếp bên trong container HUD có CSS `transform` (như `TopRightWallet`, `BottomLeftKnowledge`, `MultiplayerBar`), vì các thuộc tính CSS transform khiến phần tử con `fixed inset-0` bị giới hạn trong khung chứa của cha, dẫn đến việc modal bị co dúm thành thanh dọc 40px mép màn hình.
-  * **Quy Chuẩn Thanh Học Nhóm Trực Tuyến (Multiplayer Presence Bar):**
-    * Khi người dùng học cá nhân một mình (không có tham số `?room=` trên URL và không có bạn học cùng), thanh presence dưới đáy **tuyệt đối không hiển thị**.
-    * Nút "Thoát" (`LogOut`) trên thanh sẽ ngắt kết nối kênh Realtime, dọn dẹp danh sách bạn bè, xóa tham số `room` khỏi URL và ẩn thanh ngay lập tức mà không cần tải lại trang.
+  * **Quy Chuẩn Học Nhóm Trực Tuyến & Đồng Bộ Thời Gian Thực (Multiplayer Realtime Sync Standard):**
+    * **Khởi tạo và Kết nối Phòng Học Thống Nhất:** Khi Chủ bàn (Host) bấm nút "Chia sẻ" hoặc mở hộp thoại "Mời bạn cùng học", hệ thống tự động gọi `startHostingRoom()`, cập nhật URL trình duyệt thành `?room=XYZ&perm=view_only` (qua `window.history.replaceState` không tải lại trang) và kết nối tức thì vào kênh Realtime Supabase (`room-XYZ`).
+    * **Hiển Thị Người Tham Gia Thời Gian Thực:** Danh sách "Người trong phòng" trong modal chia sẻ và thanh bottom HUD `MultiplayerBar` được nuôi bằng state tập trung từ `StudySpaceContext`. Khi có bạn học truy cập liên kết, sự kiện Presence `sync` và `join` cập nhật danh sách ngay lập tức với tên, màu đại diện, vai trò (Chủ phòng, Chỉnh sửa, Chỉ xem) và đèn tín hiệu trực tuyến xanh lá GreenLearn nhấp nháy.
+    * **Đồng Bộ Hoạt Động Bàn Học 2 Chiều (Bidirectional Desk Operations Sync):**
+      * Đồng bộ di chuyển (`ITEM_MOVE` throttled 40ms) và xoay vật thể (`ITEM_ROTATE`).
+      * Đồng bộ lật trang sách (`PAGE_TURN`), đảm bảo tất cả bạn học cùng đọc đúng trang.
+      * Đồng bộ thêm (`ADD_ITEM`) và xóa vật thể (`DELETE_ITEM`) cho sổ tay, giấy note, code block, sơ đồ tư duy, sticker và đề thi.
+      * Đồng bộ nét vẽ bút và bút dạ quang (`DRAW_STROKE`, `CLEAR_STROKES`, `REMOVE_STROKE`).
+      * Cơ chế nạp đồng bộ bàn học ban đầu (`REQUEST_SPACE_STATE` / `SYNC_SPACE_STATE`): Bạn học mới vào phòng tự động nhận toàn bộ vật thể và nét vẽ từ bàn học của Host.
+      * Cờ chặn phản xạ lặp (`isApplyingRemoteAction`): Ngăn chặn vòng lặp vô tận (infinite echo loop) khi nhận broadcast từ bạn học khác.
+    * **Đồng Bộ Con Trỏ Chuột Tọa Độ Thế Giới (World Coordinates Cursor Projection):** Con trỏ chuột của người học được phát đi dưới dạng tọa độ bàn học thế giới `(wx, wy)`. Khi hiển thị qua `MultiplayerCursorsLayer`, tọa độ được chiếu ngược về màn hình cục bộ `(x * scale + transform.x, y * scale + transform.y)`, giúp con trỏ luôn trỏ chuẩn xác 100% vào đúng từng chữ và vị trí tài liệu dù các bạn học có kích thước màn hình hoặc mức zoom khác nhau.
+    * **Ẩn Thanh Khi Học Độc Lập & Thoát Sạch Sẽ:** Khi người dùng học cá nhân một mình (không có tham số `?room=` trên URL và không có bạn học cùng), thanh presence dưới đáy **tuyệt đối không hiển thị**. Nút "Thoát" (`LogOut`) trên thanh sẽ ngắt kết nối kênh Realtime, dọn dẹp danh sách bạn bè, xóa tham số `room` khỏi URL và ẩn thanh ngay lập tức mà không cần tải lại trang.
   * **Quy Chuẩn Cài Đặt AI & Kiểm Tra Kết Nối Đa Công Cụ (Multi-Provider AI Configuration & Live Test):**
     * Giao diện cấu hình AI gồm 3 bước chuẩn mực:
       1. Chọn nhà cung cấp: Google Gemini (Miễn phí từ Google AI Studio), OpenAI API (BYOK với khóa riêng `sk-...`), Đăng nhập ChatGPT (OAuth 2.0 PKCE không cần API key).

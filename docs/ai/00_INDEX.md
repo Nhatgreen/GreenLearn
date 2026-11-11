@@ -1,8 +1,8 @@
 # 00_INDEX.md — Chỉ Mục & Giao Thức Bộ Nhớ Dự Án ViTudy
 
 > **Commit Hash:** `Current Working Tree`  
-> **Cập nhật lần cuối:** `2026-11-08`  
-> **Trạng thái Codebase:** Đã hoàn thành toàn bộ E2E CDP Testing qua cổng 9222, sửa lỗi TopUpModal bằng createPortal, Dashboard Guest Mode, đồng bộ hóa 5 gói ViToken, 14/14 test suites pass, docs:check pass.
+> **Cập nhật lần cuối:** `2026-11-11`  
+> **Trạng thái Codebase:** Đã khắc phục triệt để lỗi học nhóm trực tuyến (kết nối realtime phòng học, hiển thị bạn học trong phòng, đồng bộ 2 chiều di chuyển/lật trang/vẽ nét, chiếu con trỏ chuột tọa độ thế giới), 18/18 test suites pass, docs:check pass.
 
 ---
 

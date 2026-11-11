@@ -41,7 +41,16 @@ interface PendingDocument {
 }
 
 export function BottomLeftKnowledge() {
-  const { addUploadedDocument, activeSpace } = useStudySpace();
+  const { 
+    addUploadedDocument, 
+    activeSpace,
+    multiplayerPeers,
+    isMultiplayerConnected,
+    multiplayerRoomId,
+    startHostingRoom,
+    multiplayerPermission,
+    setMultiplayerPermission
+  } = useStudySpace();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [mounted, setMounted] = useState(false);
   const [pendingDoc, setPendingDoc] = useState<PendingDocument | null>(null);
@@ -53,11 +62,9 @@ export function BottomLeftKnowledge() {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [roomPermission, setRoomPermission] = useState<'view_only' | 'edit'>('view_only');
   const [roomLinkExpiry, setRoomLinkExpiry] = useState<'24h' | '1h' | 'unlimited'>('24h');
   const [roomSalt, setRoomSalt] = useState('');
   const [showQrCode, setShowQrCode] = useState(false);
-  const [peersInRoom, setPeersInRoom] = useState<{ id: string; name: string; avatarColor: string }[]>([]);
 
   // Esc listener for ShareModal
   useEffect(() => {
@@ -440,14 +447,21 @@ export function BottomLeftKnowledge() {
 
       {/* 3. Button: Mời bạn bè & Supabase (Có đèn tín hiệu trạng thái) */}
       <button
-        onClick={() => setIsShareModalOpen(true)}
-        title="Phòng học nhóm & Cơ sở dữ liệu Supabase"
+        onClick={() => {
+          if (!isMultiplayerConnected) {
+            startHostingRoom(activeSpace.id, multiplayerPermission);
+          }
+          setIsShareModalOpen(true);
+        }}
+        title="Mời bạn cùng học (Multiplayer Realtime)"
         className="w-10 h-10 rounded-xl bg-white hover:bg-slate-100 text-slate-800 shadow-sm border border-slate-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group relative"
       >
         <Share2 className="w-4.5 h-4.5 text-slate-800 stroke-[2.4] group-hover:scale-110 transition-transform" />
-        {supabaseConfigState.isConfigured && (
+        {isMultiplayerConnected ? (
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute top-1.5 right-1.5 ring-2 ring-white animate-pulse" />
+        ) : supabaseConfigState.isConfigured ? (
           <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-1.5 right-1.5 ring-1 ring-white" />
-        )}
+        ) : null}
       </button>
 
       {/* MODAL 1: Cài đặt & Bắt đầu ghi hình */}
@@ -704,7 +718,9 @@ export function BottomLeftKnowledge() {
                   type="button"
                   onClick={() => {
                     const newSalt = Math.random().toString(36).substring(2, 8);
+                    const newRoom = `${activeSpace.id}-${newSalt}`;
                     setRoomSalt(newSalt);
+                    startHostingRoom(newRoom, multiplayerPermission);
                     setCopiedLink(false);
                   }}
                   className="text-[11px] font-bold text-[#16A34A] hover:underline flex items-center gap-1 cursor-pointer"
@@ -720,7 +736,7 @@ export function BottomLeftKnowledge() {
                   readOnly
                   value={
                     typeof window !== 'undefined'
-                      ? `${window.location.origin}${window.location.pathname}?room=${roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id}&perm=${roomPermission}`
+                      ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}`
                       : 'https://nhatgreen.github.io/GreenLearn/'
                   }
                   className="bg-transparent text-xs text-slate-800 flex-1 outline-none font-mono select-all"
@@ -729,7 +745,7 @@ export function BottomLeftKnowledge() {
                   type="button"
                   onClick={() => {
                     if (typeof window !== 'undefined') {
-                      const url = `${window.location.origin}${window.location.pathname}?room=${roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id}&perm=${roomPermission}`;
+                      const url = `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}`;
                       navigator.clipboard.writeText(url);
                       setCopiedLink(true);
                       setTimeout(() => setCopiedLink(false), 2500);
@@ -750,7 +766,7 @@ export function BottomLeftKnowledge() {
                   <button
                     type="button"
                     onClick={() => {
-                      const url = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id}&perm=${roomPermission}` : '';
+                      const url = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}` : '';
                       window.open(`https://zalo.me/share?url=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
                     }}
                     className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold transition-colors cursor-pointer"
@@ -760,7 +776,7 @@ export function BottomLeftKnowledge() {
                   <button
                     type="button"
                     onClick={() => {
-                      const url = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id}&perm=${roomPermission}` : '';
+                      const url = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}` : '';
                       window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
                     }}
                     className="px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 hover:bg-sky-100 font-bold transition-colors cursor-pointer"
@@ -798,7 +814,7 @@ export function BottomLeftKnowledge() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
-                      typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id}&perm=${roomPermission}` : ''
+                      typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}` : ''
                     )}`}
                     alt="Mã QR phòng học"
                     className="w-32 h-32 rounded-xl bg-white p-1 border border-slate-200 shadow-2xs"
@@ -808,7 +824,7 @@ export function BottomLeftKnowledge() {
               )}
             </div>
 
-            {/* 2. Room Permissions (Mặc định: Chỉ xem) */}
+            {/* 2. Room Permissions */}
             <div className="mb-4">
               <span className="text-xs font-semibold text-slate-700 block mb-1.5">
                 Quyền của bạn học tham gia
@@ -822,10 +838,10 @@ export function BottomLeftKnowledge() {
                 <button
                   type="button"
                   role="radio"
-                  aria-checked={roomPermission === 'view_only'}
-                  onClick={() => setRoomPermission('view_only')}
+                  aria-checked={multiplayerPermission === 'view_only'}
+                  onClick={() => setMultiplayerPermission('view_only')}
                   className={`p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
-                    roomPermission === 'view_only'
+                    multiplayerPermission === 'view_only'
                       ? 'border-[#16A34A] bg-green-50/60 text-slate-900 font-bold shadow-2xs ring-1 ring-[#16A34A]'
                       : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700'
                   }`}
@@ -834,7 +850,7 @@ export function BottomLeftKnowledge() {
                     <div className="font-bold text-slate-900">Chỉ xem</div>
                     <div className="text-[10px] text-slate-600 font-medium mt-0.5 leading-snug">Chỉ xem bàn học và con trỏ chuột</div>
                   </div>
-                  {roomPermission === 'view_only' && (
+                  {multiplayerPermission === 'view_only' && (
                     <div className="w-3.5 h-3.5 rounded-full bg-[#16A34A] text-white flex items-center justify-center shrink-0 ml-1">
                       <Check className="w-2.5 h-2.5 stroke-[3]" />
                     </div>
@@ -845,10 +861,10 @@ export function BottomLeftKnowledge() {
                 <button
                   type="button"
                   role="radio"
-                  aria-checked={roomPermission === 'edit'}
-                  onClick={() => setRoomPermission('edit')}
+                  aria-checked={multiplayerPermission === 'edit'}
+                  onClick={() => setMultiplayerPermission('edit')}
                   className={`p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
-                    roomPermission === 'edit'
+                    multiplayerPermission === 'edit'
                       ? 'border-[#16A34A] bg-green-50/60 text-slate-900 font-bold shadow-2xs ring-1 ring-[#16A34A]'
                       : 'border-slate-200 hover:border-slate-300 bg-white text-slate-700'
                   }`}
@@ -857,7 +873,7 @@ export function BottomLeftKnowledge() {
                     <div className="font-bold text-slate-900">Cùng chỉnh sửa</div>
                     <div className="text-[10px] text-slate-600 font-medium mt-0.5 leading-snug">Bất kỳ ai có link đều có thể viết note, giải đề</div>
                   </div>
-                  {roomPermission === 'edit' && (
+                  {multiplayerPermission === 'edit' && (
                     <div className="w-3.5 h-3.5 rounded-full bg-[#16A34A] text-white flex items-center justify-center shrink-0 ml-1">
                       <Check className="w-2.5 h-2.5 stroke-[3]" />
                     </div>
@@ -871,39 +887,37 @@ export function BottomLeftKnowledge() {
               <div className="flex items-center justify-between text-xs mb-2">
                 <span className="font-bold text-slate-800">Người trong phòng</span>
                 <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">
-                  {peersInRoom.length + 1} đang online
+                  {multiplayerPeers.length + 1} đang online
                 </span>
               </div>
               <div className="space-y-1.5 text-xs">
                 <div className="flex items-center justify-between text-slate-700">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <div className={`w-2 h-2 rounded-full ${isMultiplayerConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`} />
                     <span className="font-bold text-slate-800">Bạn (Chủ phòng)</span>
                   </div>
-                  <span className="text-[11px] text-slate-400">Trực tuyến</span>
+                  <span className="text-[11px] text-emerald-600 font-semibold">
+                    {isMultiplayerConnected ? 'Trực tuyến' : 'Đang kết nối...'}
+                  </span>
                 </div>
 
-                {peersInRoom.map((peer) => (
-                  <div key={peer.id} className="flex items-center justify-between text-slate-700">
+                {multiplayerPeers.map((peer) => (
+                  <div key={peer.id} className="flex items-center justify-between text-slate-700 animate-fade-in">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: peer.avatarColor }} />
-                      <span className="font-medium text-slate-800">{peer.name}</span>
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: peer.avatarColor }} />
+                      <span className="font-semibold text-slate-800">{peer.name}</span>
+                      <span className="text-[10px] px-1.5 py-0.2 bg-slate-200 text-slate-700 rounded font-medium">
+                        {peer.role === 'owner' ? 'Chủ phòng' : peer.role === 'editor' ? 'Chỉnh sửa' : 'Chỉ xem'}
+                      </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setPeersInRoom(prev => prev.filter(p => p.id !== peer.id))}
-                      className="text-[10.5px] font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer"
-                      title="Mời bạn học này ra khỏi phòng"
-                    >
-                      <UserMinus className="w-3 h-3" />
-                      <span>Mời ra</span>
-                    </button>
+                    <span className="text-[11px] text-emerald-600 font-medium">Đang học cùng</span>
                   </div>
                 ))}
 
-                {peersInRoom.length === 0 && (
-                  <div className="text-[11px] text-slate-600 font-medium italic pt-1">
-                    Đang đợi bạn học truy cập liên kết...
+                {multiplayerPeers.length === 0 && (
+                  <div className="text-[11px] text-slate-500 font-medium italic pt-1 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                    <span>Đang đợi bạn học truy cập liên kết phòng...</span>
                   </div>
                 )}
               </div>

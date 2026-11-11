@@ -199,3 +199,19 @@
   4. **Thanh công cụ ngữ cảnh nổi trên Sticky Note (`StickyNoteItem`):** Tích hợp bảng đổi 5 màu giấy note pastel (Vàng ấm, Cam đào, Xanh mint, Lam nhạt, Hồng phấn) và nút phóng to cỡ chữ (A/A+) một chạm.
   5. **Dây nối tư duy 2.5D phong cách Chỉ Ghim Thám Tử (`VisualLinkThreads`):** Chuyển từ dây laser phát sáng sang sợi chỉ đỏ vật lý có bóng đổ tự nhiên, độ chùng võng trọng lực (gravity sag) và hai đầu đinh ghim tròn kim loại đỏ kết nối từ Sách sang Ghi chú.
 * **Lý do:** Tối ưu hóa không gian hiển thị, tăng cường tính trực quan học tập và kế thừa những tinh hoa công thái học tốt nhất từ Miro.
+
+---
+
+### ADR-020 — Kiến Trúc Đồng Bộ Học Nhóm Thời Gian Thực 2 Chiều (Realtime Multiplayer Architecture & Centralized Desk Sync)
+* **Ngày quyết định:** `2026-11-11`
+* **Quyết định:**
+  1. **Đồng Bộ Phòng Học & Hiện Diện Tập Trung Qua Context:** Chuyển toàn bộ quản lý kết nối và danh sách bạn học `multiplayerPeers` vào `StudySpaceContext`. Khi Host mở hộp thoại chia sẻ, hệ thống tự động kích hoạt `startHostingRoom()`, cập nhật query param `?room=XYZ` trên URL mà không tải lại trang và kết nối tức thì vào kênh Realtime Supabase.
+  2. **Hệ Thống Bus Sự Kiện `DeskAction` Đa Luồng:**
+     - Phát sóng và xử lý 2 chiều các thao tác trên bàn học: di chuyển (`ITEM_MOVE`), xoay (`ITEM_ROTATE`), lật trang (`PAGE_TURN`), thêm/xóa vật thể (`ADD_ITEM`/`DELETE_ITEM`), nét vẽ tự do (`DRAW_STROKE`/`CLEAR_STROKES`).
+     - Tự động nạp đồng bộ bàn học ban đầu (`REQUEST_SPACE_STATE`/`SYNC_SPACE_STATE`) cho bạn học mới tham gia.
+     - Sử dụng cờ `isApplyingRemoteAction` loại bỏ hoàn toàn hiện tượng dội ngược lặp vô tận (infinite echo loop).
+  3. **Chiếu Con Trỏ Chuột Tọa Độ Thế Giới (`MultiplayerCursorsLayer`):**
+     - Phát đi tọa độ thế giới của bàn học `(wx, wy) = (clientX - transform.x) / scale`.
+     - Phía máy nhận chiếu ngược về pixel màn hình cục bộ `(wx * scale + transform.x, wy * scale + transform.y)`, bảo đảm con trỏ chuột luôn chỉ đúng chính xác vị trí tài liệu dù hai bên có độ thu phóng hay kích thước màn hình khác nhau.
+* **Lý do:** Khắc phục triệt để lỗi không thấy bạn học vào phòng và bàn học không đồng bộ thao tác giữa các thành viên, mang lại trải nghiệm học nhóm trực quan, liền mạch và sống động.
+* **Giải pháp thay thế bị bác bỏ:** Lưu từng thao tác kéo thả vào Database PostgreSQL qua REST API. Bị bác bỏ vì gây nghẽn database, độ trễ cao (>300ms) và làm giảm hiệu năng trải nghiệm kéo thả mượt mà 60fps.

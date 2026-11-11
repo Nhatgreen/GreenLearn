@@ -99,3 +99,32 @@ sequenceDiagram
     Modal->>Store: Lưu bản ghi vào know_inherit_listings
     Note over Store: Khi có người mua: Tác giả nhận 85% (12.75 ViToken), sàn thu 15% (2.25 ViToken)
 ```
+
+---
+
+### Luồng 4: Học Nhóm Trực Tuyến & Đồng Bộ Hoạt Động Thời Gian Thực (Multiplayer Realtime Sync)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Host as Chủ Bàn (Host)
+    participant HostCtx as Host StudySpaceContext
+    participant Channel as Supabase Realtime (room-XYZ)
+    participant GuestCtx as Guest StudySpaceContext
+    actor Guest as Bạn Học (Guest)
+
+    Host->>HostCtx: Mở modal "Mời bạn cùng học" -> gọi startHostingRoom()
+    HostCtx->>HostCtx: URL cập nhật ?room=XYZ&perm=view_only (replaceState)
+    HostCtx->>Channel: Subscribe & track Presence { id, name, role: 'owner' }
+    Guest->>GuestCtx: Mở link có ?room=XYZ&perm=view_only
+    GuestCtx->>Channel: Subscribe & track Presence { id, name, role: 'viewer' }
+    Channel-->>HostCtx: Presence sync: Bạn học xuất hiện trong danh sách!
+    Channel-->>GuestCtx: Presence sync: Chủ phòng & Bạn học kết nối!
+    GuestCtx->>Channel: Broadcast REQUEST_SPACE_STATE
+    Channel-->>HostCtx: Nhận yêu cầu nạp trạng thái
+    HostCtx->>Channel: Broadcast SYNC_SPACE_STATE (items, strokes)
+    Channel-->>GuestCtx: Guest nhận và hiển thị bàn học y hệt Host
+    Note over Host,Guest: Khi di chuyển đồ, lật trang sách, vẽ nét:
+    Host->>Channel: Broadcast DeskAction (ITEM_MOVE, PAGE_TURN, DRAW_STROKE)
+    Channel-->>GuestCtx: Áp dụng thay đổi tức thì (chặn echo loop)
+```

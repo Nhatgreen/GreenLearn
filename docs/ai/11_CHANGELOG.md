@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-11-11 10:00 — main (Khắc Phục Lỗi Đồng Bộ Bàn Học & Kết Nối Bạn Bè Mời Cùng Học)
+- **Task:** Khắc phục triệt để lỗi "mời bạn cùng học bị lỗi chức năng không đồng bộ với nhau và chưa thấy được người vào":
+  1. **Khắc Phục Lỗi Không Thấy Bạn Học Tham Gia (`useRealtimeMultiplayer.ts` & `BottomLeftKnowledge.tsx`):**
+     - Sửa nguyên nhân gốc rễ: Chủ bàn (Host) trước đây không tự động kết nối vào kênh Realtime do thiếu tham số `room=` trên URL của chính mình.
+     - Khi Host bấm nút "Chia sẻ" hoặc mở hộp thoại "Mời bạn cùng học", hệ thống tự động kích hoạt `startHostingRoom()`, ghi nhận `room` trên URL (qua `window.history.replaceState` an toàn không tải lại trang) và kết nối ngay lập tức vào Supabase Realtime channel `room-${effectiveRoomId}`.
+     - Thay thế state giả lập cục bộ `peersInRoom` trong `BottomLeftKnowledge.tsx` bằng `multiplayerPeers` từ `StudySpaceContext`. Khi bạn học vào phòng qua link chia sẻ, sự kiện Presence `sync` và `join` cập nhật danh sách "Người trong phòng" ngay lập tức với tên, màu đại diện, vai trò và trạng thái trực tuyến.
+     - Thanh bottom HUD `MultiplayerBar` tự động xuất hiện với avatar của tất cả thành viên trong phòng.
+  2. **Đồng Bộ Hoạt Động Bàn Học 2 Chiều (`StudySpaceContext.tsx` & `useRealtimeMultiplayer.ts`):**
+     - Bổ sung hệ thống định tuyến sự kiện `DeskAction` đa luồng trên Supabase Realtime:
+       - `ITEM_MOVE`: Đồng bộ di chuyển tài liệu, sách, note thời gian thực (throttled 40ms mượt mà).
+       - `ITEM_ROTATE`: Đồng bộ xoay vật thể 360 độ.
+       - `PAGE_TURN`: Đồng bộ lật trang sách hai chiều.
+       - `ADD_ITEM`: Đồng bộ tạo mới sổ tay, giấy note, code block, mind map, sticker, đề thi.
+       - `DELETE_ITEM`: Đồng bộ xóa vật thể trên bàn học.
+       - `DRAW_STROKE`, `CLEAR_STROKES`, `REMOVE_STROKE`: Đồng bộ nét vẽ tự do và tẩy xóa.
+       - `REQUEST_SPACE_STATE` / `SYNC_SPACE_STATE`: Khi bạn học vừa tham gia phòng, Host tự động gửi toàn bộ đối tượng và nét vẽ trên bàn học để bạn học thấy ngay bàn học giống hệt Host.
+     - Cờ `isApplyingRemoteAction` ngăn chặn triệt để vòng lặp dội ngược (infinite echo loop).
+  3. **Đồng Bộ Con Trỏ Chuột Tọa Độ Thế Giới (`MultiplayerCursorsLayer.tsx`):**
+     - Con trỏ chuột được tính toán theo tọa độ bàn học thế giới `(wx, wy) = (clientX - transform.x) / scale`.
+     - `MultiplayerCursorsLayer` chiếu ngược về màn hình cục bộ `(wx * scale + transform.x, wy * scale + transform.y)`, giúp con trỏ luôn trỏ đúng từng ký tự và vị trí tài liệu dù bạn học có kích thước màn hình hoặc độ thu phóng khác nhau.
+- **Verified by:**
+  - `pnpm test`: 18/18 test suites passed (80/80 tests passed 100%), bao gồm bộ test mới `useRealtimeMultiplayer.test.ts`.
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 09:25 — main (Khắc Phục Lỗi Cắt Trang Mất Bìa Sách & Thêm Bìa Trống Để Dán Trang Vào)
 - **Task:** Khắc phục triệt để lỗi khi người dùng bấm "Tách trang" làm mất luôn bìa sách da (bị biến thành tờ giấy `paper`), đồng thời hỗ trợ bìa sách trống và cơ chế dán trang vào bìa sách theo yêu cầu:
   1. **Khắc Phục Lỗi Tách Trang Mất Bìa Sách (`StudySpaceContext.tsx`):**
