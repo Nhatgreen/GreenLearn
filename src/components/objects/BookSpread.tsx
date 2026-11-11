@@ -18,7 +18,8 @@ import {
   BookOpen,
   Eye,
   Palette,
-  Check
+  Check,
+  Plus
 } from 'lucide-react';
 import { RotateTwoWay } from '@/components/icons/RotateTwoWay';
 import { MathRenderer } from '../common/MathRenderer';
@@ -84,6 +85,7 @@ export function BookSpreadComponent({ item, isSelected }: BookSpreadProps) {
     removeDeskItem,
     turnBookPage,
     detachPageFromBinder,
+    addPageToBook,
     addStickyNote,
     setTransform,
     focusedItemId,
@@ -443,25 +445,44 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               </button>
             </div>
 
-            {/* Tab 3: Blue (Xanh lam) - Tách trang */}
+            {/* Tab: Amber (Vàng) - Thêm trang */}
             <div className="relative group/tab flex items-center">
               <button
-                onClick={() => {
-                  const targetPage = rightPageIndex < totalPages ? rightPageIndex : leftPageIndex;
-                  detachPageFromBinder(item.id, targetPage);
-                }}
-                className="h-8 w-[48px] group-hover/tab:w-[124px] bg-sky-700 hover:bg-sky-600 active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
+                onClick={() => addPageToBook(item.id)}
+                className="h-8 w-[48px] group-hover/tab:w-[124px] bg-amber-600 hover:bg-amber-500 active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
                 style={{
                   clipPath: 'polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%)'
                 }}
-                title="Tách trang đang mở ra tờ rời trên bàn học"
+                title="Thêm một trang giấy trắng vào sách"
               >
                 <span className="text-xs font-bold text-white tracking-wide whitespace-nowrap max-w-0 opacity-0 group-hover/tab:max-w-[78px] group-hover/tab:opacity-100 transition-all duration-200 overflow-hidden">
-                  Tách trang
+                  Thêm trang
                 </span>
-                <Scissors className="w-4 h-4 text-sky-100 flex-shrink-0" />
+                <Plus className="w-4 h-4 text-amber-100 flex-shrink-0 stroke-[2.5]" />
               </button>
             </div>
+
+            {/* Tab 3: Blue (Xanh lam) - Tách trang */}
+            {item.pages.length > 0 && (
+              <div className="relative group/tab flex items-center">
+                <button
+                  onClick={() => {
+                    const targetPage = rightPageIndex < totalPages ? rightPageIndex : leftPageIndex;
+                    detachPageFromBinder(item.id, targetPage);
+                  }}
+                  className="h-8 w-[48px] group-hover/tab:w-[124px] bg-sky-700 hover:bg-sky-600 active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
+                  style={{
+                    clipPath: 'polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%)'
+                  }}
+                  title="Tách trang đang mở ra tờ rời trên bàn học"
+                >
+                  <span className="text-xs font-bold text-white tracking-wide whitespace-nowrap max-w-0 opacity-0 group-hover/tab:max-w-[78px] group-hover/tab:opacity-100 transition-all duration-200 overflow-hidden">
+                    Tách trang
+                  </span>
+                  <Scissors className="w-4 h-4 text-sky-100 flex-shrink-0" />
+                </button>
+              </div>
+            )}
 
             {/* Tab 4: Brown (Nâu) - Xoay */}
             <div className="relative group/tab flex items-center">
@@ -558,9 +579,37 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             className="w-full h-full rounded-xl flex relative overflow-visible shadow-inner bg-[#fdfbf7] z-20"
             style={{ perspective: '2000px' }}
           >
-            {/* Spine Shadow & Crease Effect — CONFINED ONLY INSIDE THE PAPER CONTAINER */}
-            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-10 pointer-events-none z-20 bg-gradient-to-r from-black/15 via-black/35 to-black/15" />
-            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-stone-400 z-20 opacity-50" />
+            {item.pages.length === 0 ? (
+              <div className="absolute inset-0 z-25 flex flex-col items-center justify-center p-8 bg-[#fdfbf7] rounded-xl text-center select-none paper-texture">
+                {/* Spine shadow in center */}
+                <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-8 pointer-events-none bg-gradient-to-r from-black/10 via-black/25 to-black/10" />
+                <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-stone-300 opacity-60" />
+
+                <div className="relative z-30 flex flex-col items-center max-w-md">
+                  <div className="w-16 h-16 rounded-2xl bg-amber-50 border-2 border-dashed border-amber-400 flex items-center justify-center text-amber-700 mb-3 shadow-xs">
+                    <BookOpen className="w-8 h-8 stroke-[1.8]" />
+                  </div>
+                  <h3 className="text-base font-black text-slate-800 tracking-tight mb-1">
+                    Bìa Sách Trống — {cleanTitle}
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed mb-6">
+                    Bìa sổ da đang trống (chưa có trang nào). Bạn có thể <strong>kéo thả tờ giấy hoặc tài liệu</strong> trên bàn học thả trực tiếp vào bìa này để dán trang vào sách, hoặc bấm nút bên dưới để thêm trang mới.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => addPageToBook(item.id)}
+                    className="px-5 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-green-600/20 transition-all cursor-pointer active:scale-95"
+                  >
+                    <Plus className="w-4 h-4 stroke-[2.5]" />
+                    <span>Thêm trang giấy đầu tiên</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Spine Shadow & Crease Effect — CONFINED ONLY INSIDE THE PAPER CONTAINER */}
+                <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-10 pointer-events-none z-20 bg-gradient-to-r from-black/15 via-black/35 to-black/15" />
+                <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-stone-400 z-20 opacity-50" />
 
             {/* ================= LEFT PAGE ================= */}
             <div 
@@ -926,6 +975,8 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                   </div>
                 )}
               </div>
+            )}
+            </>
             )}
           </div>
         </div>

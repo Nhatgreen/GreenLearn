@@ -20,7 +20,8 @@ import {
   Layers,
   FileText,
   HelpCircle,
-  BookOpen
+  BookOpen,
+  BookmarkPlus
 } from 'lucide-react';
 import { RotateTwoWay } from '@/components/icons/RotateTwoWay';
 import { MathRenderer } from '../common/MathRenderer';
@@ -45,6 +46,8 @@ export function PaperSheetComponent({ item, isSelected }: PaperSheetProps) {
   const { 
     selectItem, 
     removeDeskItem,
+    activeSpace,
+    combineIntoBinder,
     updateExamAnswer,
     gradeExam,
     resetExam,
@@ -112,6 +115,30 @@ export function PaperSheetComponent({ item, isSelected }: PaperSheetProps) {
     rotation: item.rotation,
     width: item.isExamSheet ? 460 : 360,
     height: item.isExamSheet ? 620 : 500,
+    onDropCheck: (latestX, latestY) => {
+      const paperW = item.isExamSheet ? 460 : 360;
+      const paperH = item.isExamSheet ? 620 : 500;
+      const paperCenterX = latestX + paperW / 2;
+      const paperCenterY = latestY + paperH / 2;
+
+      // Find any book or binder on the desk overlapping this dropped paper
+      const targetBook = activeSpace.items.find(other => {
+        if (other.id === item.id) return false;
+        if (other.type !== 'book' && !other.isBinder) return false;
+        const bW = other.width || 980;
+        const bH = other.height || 640;
+        return (
+          paperCenterX >= other.x &&
+          paperCenterX <= other.x + bW &&
+          paperCenterY >= other.y &&
+          paperCenterY <= other.y + bH
+        );
+      });
+
+      if (targetBook) {
+        combineIntoBinder(targetBook.id, item.id);
+      }
+    }
   });
 
   const activePage = item.pages[0] || {
@@ -589,6 +616,30 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             {/* 1 gạch phân vùng với 2 icon xoay góc phóng to */}
             <div className="w-[1px] h-4 bg-slate-200" />
           </>
+        )}
+        {/* Dán vào bìa sách: Gộp trang này vào cuốn sách gần nhất */}
+        {activeSpace.items.some(i => i.id !== item.id && (i.type === 'book' || i.isBinder)) && (
+          <button
+            title="Dán tờ giấy này vào bìa sách gần nhất trên bàn học"
+            onClick={() => {
+              const books = activeSpace.items.filter(i => i.id !== item.id && (i.type === 'book' || i.isBinder));
+              let closestBook = books[0];
+              let minDist = Infinity;
+              for (const b of books) {
+                const dist = Math.hypot(b.x - item.x, b.y - item.y);
+                if (dist < minDist) {
+                  minDist = dist;
+                  closestBook = b;
+                }
+              }
+              if (closestBook) {
+                combineIntoBinder(closestBook.id, item.id);
+              }
+            }}
+            className="p-1.5 hover:bg-green-50 rounded-lg text-slate-700 hover:text-[#16A34A] transition-colors cursor-pointer"
+          >
+            <BookmarkPlus className="w-4 h-4 stroke-[2.4]" />
+          </button>
         )}
         <button
           title="Tập trung đọc: Căn giữa và phóng to tài liệu vừa vặn màn hình"

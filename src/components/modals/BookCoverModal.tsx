@@ -28,7 +28,7 @@ interface BookCoverModalProps {
   onStartStampPlacement: (title: string, coverColor: string, pages: BookInitialPage[]) => void;
 }
 
-type BookTemplateType = 'general' | 'cornell' | 'blank';
+type BookTemplateType = 'empty' | 'general' | 'cornell';
 
 const QUICK_TITLE_CHIPS = [
   'Sổ tay ghi chép',
@@ -46,7 +46,7 @@ export function BookCoverModal({
   const [mounted, setMounted] = useState(false);
   const [title, setTitle] = useState('Sổ tay bài học');
   const [coverColor, setCoverColor] = useState('brown');
-  const [selectedTemplate, setSelectedTemplate] = useState<BookTemplateType>('general');
+  const [selectedTemplate, setSelectedTemplate] = useState<BookTemplateType>('empty');
 
   useEffect(() => {
     setMounted(true);
@@ -70,6 +70,10 @@ export function BookCoverModal({
 
   const getTemplatePages = (type: BookTemplateType, currentTitle: string): BookInitialPage[] => {
     const bookTitle = currentTitle.trim() || 'Sổ tay bài học';
+    if (type === 'empty') {
+      return [];
+    }
+
     if (type === 'cornell') {
       return [
         {
@@ -87,27 +91,6 @@ export function BookCoverModal({
         {
           title: 'Bài 4: Cornell Note — Ôn tập & Mở rộng',
           text: `## Cornell Note — Ôn tập tổng kết\n\n### Cột Khái Quát Hóa:\n- Bản đồ liên kết kiến thức.\n- Các câu hỏi chưa được giải đáp.\n\n### Cột Hành Động Tiếp Theo:\n- Tạo bộ Flashcard ôn tập định kỳ.\n- Thực hiện bài kiểm tra trắc nghiệm AI 15 phút.\n\n---\n### Tóm Tắt Toàn Cuốn (Master Summary):\n*Toàn bộ mục tiêu học tập của chuyên đề đã được tổng hợp đầy đủ.*`
-        }
-      ];
-    }
-
-    if (type === 'blank') {
-      return [
-        {
-          title: 'Trang 1: Bắt đầu',
-          text: `# ${bookTitle}\n\n*Trang ghi chép tự do. Nhấp đúp vào trang hoặc dùng bút vẽ để bắt đầu học tập.*`
-        },
-        {
-          title: 'Trang 2: Ghi chép',
-          text: `*Nhấp đúp chuột để nhập nội dung ghi chép cho trang này...*`
-        },
-        {
-          title: 'Trang 3: Thực hành',
-          text: `*Nhấp đúp chuột để nhập bài tập hoặc dán tài liệu vào trang này...*`
-        },
-        {
-          title: 'Trang 4: Tổng kết',
-          text: `*Ghi chú tổng kết các nội dung đã học...*`
         }
       ];
     }
@@ -224,7 +207,7 @@ export function BookCoverModal({
 
                   {/* Bottom Leaf Indicator */}
                   <div className="text-[10px] text-amber-200/60 font-mono tracking-wider">
-                    4 TRANG
+                    {selectedTemplate === 'empty' ? 'BÌA TRỐNG (0 TRANG)' : '4 TRANG'}
                   </div>
                 </div>
               </div>
@@ -314,6 +297,32 @@ export function BookCoverModal({
               3. Chọn mẫu cấu trúc trang ban đầu
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Empty Cover Template (Mặc định) */}
+              <button
+                type="button"
+                onClick={() => setSelectedTemplate('empty')}
+                className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                  selectedTemplate === 'empty'
+                    ? 'border-[#16A34A] bg-green-50/50 ring-2 ring-[#16A34A]/30 shadow-xs'
+                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <BookOpen className={`w-4 h-4 ${selectedTemplate === 'empty' ? 'text-[#16A34A]' : 'text-slate-500'}`} />
+                      <span className="text-xs font-bold text-slate-900">Bìa trống</span>
+                    </div>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-green-100 text-[#166534]">
+                      Khuyên dùng
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Bìa sổ da hoàn toàn trống (0 trang) để bạn dán trang, kéo thả tài liệu vào bìa sách.
+                  </p>
+                </div>
+              </button>
+
               {/* General Template */}
               <button
                 type="button"
@@ -330,8 +339,8 @@ export function BookCoverModal({
                       <Layers className={`w-4 h-4 ${selectedTemplate === 'general' ? 'text-[#16A34A]' : 'text-slate-500'}`} />
                       <span className="text-xs font-bold text-slate-900">Sổ tổng hợp</span>
                     </div>
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-green-100 text-[#166534]">
-                      Khuyên dùng
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600">
+                      Mẫu sẵn
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500 leading-relaxed">
@@ -362,32 +371,6 @@ export function BookCoverModal({
                   </div>
                   <p className="text-[11px] text-slate-500 leading-relaxed">
                     Chia cột Từ khóa / Câu hỏi gợi mở, Ghi chú chi tiết và Tóm tắt cuối trang chuẩn Cornell.
-                  </p>
-                </div>
-              </button>
-
-              {/* Blank Template */}
-              <button
-                type="button"
-                onClick={() => setSelectedTemplate('blank')}
-                className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                  selectedTemplate === 'blank'
-                    ? 'border-[#16A34A] bg-green-50/50 ring-2 ring-[#16A34A]/30 shadow-xs'
-                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-2">
-                      <FileText className={`w-4 h-4 ${selectedTemplate === 'blank' ? 'text-[#16A34A]' : 'text-slate-500'}`} />
-                      <span className="text-xs font-bold text-slate-900">Sổ tay trắng</span>
-                    </div>
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600">
-                      Tự do
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 leading-relaxed">
-                    4 trang giấy trắng tinh để bạn tự do viết vẽ, dán sticky note và ghi chú cá nhân.
                   </p>
                 </div>
               </button>

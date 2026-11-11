@@ -66,6 +66,7 @@ interface StudySpaceContextType {
   setBookPage: (id: string, pageIndex: number) => void;
   combineIntoBinder: (targetId: string, draggedId: string) => boolean;
   detachPageFromBinder: (bookId: string, pageIndex: number) => void;
+  addPageToBook: (bookId: string, pageData?: { title?: string; text?: string; image?: string }) => string;
   tidyUpDesk?: () => void;
   fitAllToScreen?: () => void;
   updateStickyNoteColor?: (id: string, color: string) => void;
@@ -1141,8 +1142,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     ];
 
     const totalPages = newPages.length;
-    // Automatically promote to Book if totalPages >= 5
-    const newType = totalPages >= 5 ? 'book' : targetItem.type;
+    // CRITICAL: A book with coverColor or item.type === 'book' ALWAYS remains a book!
+    const isCoverBook = targetItem.type === 'book' || !!targetItem.coverColor;
+    const newType = isCoverBook ? ('book' as const) : (totalPages >= 5 ? ('book' as const) : targetItem.type);
 
     setSpaces(sList =>
       sList.map(s => {
@@ -1156,10 +1158,12 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
               return {
                 ...i,
                 type: newType,
-                title: i.isBinder ? i.title : `Sổ tổng hợp: ${i.title}`,
+                title: isCoverBook ? i.title : (i.isBinder ? i.title : `Sổ tổng hợp: ${i.title}`),
                 isBinder: true,
                 pageCount: totalPages,
                 pages: newPages,
+                width: isCoverBook || newType === 'book' ? 980 : (i.width || 480),
+                height: isCoverBook || newType === 'book' ? 640 : (i.height || 640),
                 sourceDocuments: [
                   ...(i.sourceDocuments || [{ id: i.id, title: i.title, pageCount: i.pageCount }]),
                   { id: draggedItem.id, title: draggedItem.title, pageCount: draggedItem.pageCount }
@@ -1175,14 +1179,15 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   // Detach a page from a book/binder and place it as a single paper sheet on the desk
   const detachPageFromBinder = (bookId: string, pageIndex: number) => {
     const book = activeSpace.items.find(i => i.id === bookId);
-    if (!book || book.pages.length <= 1) return;
+    if (!book || book.pages.length === 0) return;
 
-    const detachedPage = book.pages[pageIndex];
+    const actualIndex = Math.min(Math.max(0, pageIndex), book.pages.length - 1);
+    const detachedPage = book.pages[actualIndex];
     if (!detachedPage) return;
 
     // Remaining pages re-indexed
     const remainingPages = book.pages
-      .filter((_, idx) => idx !== pageIndex)
+      .filter((_, idx) => idx !== actualIndex)
       .map((p, idx) => ({ ...p, pageNumber: idx + 1 }));
 
     const newPaperSheet: DeskItem = {
@@ -1209,9 +1214,12 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
             ...s.items.map(item => {
               if (item.id !== bookId) return item;
               const nextCount = remainingPages.length;
+              // CRITICAL FIX: A book with coverColor or item.type === 'book' ALWAYS remains a book!
+              // NEVER downgrade to 'paper' when pages are detached!
+              const isCoverBook = item.type === 'book' || !!item.coverColor;
               return {
                 ...item,
-                type: nextCount < 5 ? ('paper' as const) : ('book' as const),
+                type: isCoverBook ? ('book' as const) : (nextCount < 5 ? ('paper' as const) : ('book' as const)),
                 pageCount: nextCount,
                 currentPageIndex: Math.min(item.currentPageIndex, Math.max(0, nextCount - 1)),
                 pages: remainingPages
@@ -1222,6 +1230,35 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         };
       })
     );
+  };
+
+  const addPageToBook = (bookId: string, pageData?: { title?: string; text?: string; image?: string }): string => {
+    const pageId = `p-${Date.now()}`;
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return {
+          ...s,
+          items: s.items.map(item => {
+            if (item.id !== bookId) return item;
+            const newIndex = item.pages.length + 1;
+            const newPage: PageContent = {
+              id: pageId,
+              pageNumber: newIndex,
+              title: normalizeNFC(pageData?.title || `Trang ${newIndex}`),
+              text: normalizeNFC(pageData?.text || '')
+            };
+            const updatedPages = [...item.pages, newPage];
+            return {
+              ...item,
+              pageCount: updatedPages.length,
+              pages: updatedPages
+            };
+          })
+        };
+      })
+    );
+    return pageId;
   };
 
   const addStickyNote = (text = '', x?: number, y?: number, color = '#fef08a', width?: number, height?: number): string => {
@@ -1552,7 +1589,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       }
     ];
 
-    const pages: PageContent[] = initialPages && initialPages.length > 0
+    const pages: PageContent[] = initialPages !== undefined
       ? initialPages.map((p, idx) => ({
           id: `p-${Date.now()}-${idx + 1}`,
           pageNumber: idx + 1,
@@ -1827,6 +1864,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         setBookPage,
         combineIntoBinder,
         detachPageFromBinder,
+        addPageToBook,
         updateStickyNoteText,
         updateStickyNoteColor,
         updateBookCoverColor,

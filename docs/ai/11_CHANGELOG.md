@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-11-11 09:25 — main (Khắc Phục Lỗi Cắt Trang Mất Bìa Sách & Thêm Bìa Trống Để Dán Trang Vào)
+- **Task:** Khắc phục triệt để lỗi khi người dùng bấm "Tách trang" làm mất luôn bìa sách da (bị biến thành tờ giấy `paper`), đồng thời hỗ trợ bìa sách trống và cơ chế dán trang vào bìa sách theo yêu cầu:
+  1. **Khắc Phục Lỗi Tách Trang Mất Bìa Sách (`StudySpaceContext.tsx`):**
+     - Sửa hàm `detachPageFromBinder`: Triệt tiêu hoàn toàn logic hạ cấp `nextCount < 5 ? 'paper' : 'book'` đối với các đối tượng có `coverColor` hoặc `type === 'book'`. Sách bìa da luôn giữ nguyên định dạng `book` và kích thước bìa da (`980 × 640`), không bao giờ bị biến dạng thành tờ giấy.
+     - Cho phép tách trang xuống 0 trang: Ngay cả khi người dùng tách hết toàn bộ các trang ra ngoài bàn học, bìa sách da vẫn tồn tại nguyên vẹn trên mặt bàn học ở trạng thái bìa trống.
+  2. **Bìa Sách Mới Thêm Vào Là Bìa Trống (`BookCoverModal.tsx` & `StudySpaceContext.tsx`):**
+     - Chuyển mẫu mặc định khi mở hộp thoại `BookCoverModal` thành **"Bìa trống (Chưa có trang)"** với 0 trang ban đầu (`pages: []`).
+     - Sửa `addBook` trong `StudySpaceContext`: Cho phép nạp mảng trang rỗng `initialPages = []` để tạo bìa da hoàn toàn trống thay vì ép nạp 4 trang mặc định.
+  3. **Giao Diện Bìa Sách Trống Trực Quan (`BookSpread.tsx`):**
+     - Khi ruột sách chưa có trang (`item.pages.length === 0`), mặt sách hiển thị thông điệp hướng dẫn rõ ràng và nút "+ Thêm trang giấy đầu tiên" (`addPageToBook`).
+     - Bổ sung tab đánh dấu ruy-băng **"Thêm trang"** (Màu Hổ Phách `amber-600`, icon `Plus`) trên mép phải cuốn sách để người dùng có thể bổ sung trang trắng bất kỳ lúc nào.
+     - Tab **"Tách trang"** chỉ hiển thị khi sách có ít nhất 1 trang.
+  4. **Cơ Chế Dán Trang Vào Bìa Sách (`PaperSheet.tsx` & `useDeskItemInteraction.ts`):**
+     - Tích hợp `onDropCheck` vào `PaperSheet`: Khi người dùng kéo thả tờ giấy rời (hoặc trang vừa tách) thả lên bìa sách bất kỳ trên bàn học, hệ thống tự động gộp trang vào sách (`combineIntoBinder`) và dọn dẹp tờ giấy khỏi mặt bàn.
+     - Bổ sung nút **"Dán vào bìa sách"** (`BookmarkPlus`) trên thanh công cụ nổi của tờ giấy để dán nhanh vào cuốn sách gần nhất chỉ với 1 cú nhấp.
+- **Verified by:**
+  - `pnpm test`: 17/17 test suites passed (75/75 tests passed 100%).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công, 0 lỗi lint / type.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-11 09:05 — main (Thêm Công Cụ Tạo Sách & Sổ Tay Bìa Da "Book Cover" Trên Thanh Sáng Tạo LeftCreationBar)
 - **Task:** Thêm công cụ "Book cover" vào danh mục CÔNG CỤ MỞ RỘNG trên thanh sáng tạo `LeftCreationBar`, cho phép người dùng tùy biến và tạo sách giáo trình & sổ tay bìa da cao cấp trực tiếp lên bàn học:
   1. **Component Mới `BookCoverModal.tsx` (`src/components/modals/BookCoverModal.tsx`):**

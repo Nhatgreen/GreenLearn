@@ -299,13 +299,20 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
     * **Trạng thái bình thường (idle - chưa kéo):** Thanh nhắc thu gọn tinh tế (`w-[48px]`, chỉ lộ ra ngoài giấy 40px), icon vector nằm sát mép giấy trắng (chỉ hở một khoảng đệm nhỏ 8px). Khoảng cách giữa icon và rìa phải khuyết chữ V được bảo toàn nguyên vẹn (`pr-4` kèm notch 10px).
     * **Hiệu ứng trượt mở khi hover (Compact Slide-out Ribbon on Hover):** Khi rê chuột, thanh nhắc trượt mở sang phải với chiều dài vừa khít nội dung (`w-[86px]` đến `w-[124px]`). Chữ cái đầu tiên (ví dụ chữ "T" của "Tóm tắt") nằm ngay sát hở 8px so với tờ giấy trắng, triệt tiêu hoàn toàn khoảng trống thừa ở giữa và không kéo thanh nhắc ra dài quá đà.
     * Đầu ngoài thanh nhắc có hình chữ V khuyết lõm vào trong (`polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%)`).
-    * Sử dụng 6 màu chuẩn theo thứ tự từ trên xuống dưới:
+    * Sử dụng các màu chuẩn theo thứ tự từ trên xuống dưới:
       1. **Màu Xanh Lá (`emerald-600`):** Icon `Sparkles` + Chữ **"Tóm tắt"** (Mở STudy).
       2. **Màu Chàm (`indigo-600`):** Icon `Eye` + Chữ **"Tập trung"** (Giữ yên kéo ra khi bật, nhấp lại để thoát).
-      3. **Màu Cam (`orange-600`):** Icon `Maximize2` + Chữ **"Phóng to"** (Mở toàn màn hình PDF View).
-      4. **Màu Xanh Lam (`sky-700`):** Icon `Scissors` + Chữ **"Tách trang"** (Tách trang đang mở ra tờ rời trên bàn học).
-      5. **Màu Nâu (`#78350f`):** Icon `RotateTwoWay` + Chữ **"Xoay"** (Xoay tự do 360°, nhấn đúp căn $0^\circ$).
-      6. **Màu Đỏ (`rose-600`):** Icon `Trash2` + Chữ **"Xoá"** (Xóa sách khỏi bàn học, có vạch ngăn cách & xác nhận an toàn).
+      3. **Màu Xanh GreenLearn (`#16A34A`):** Icon `Maximize2` + Chữ **"Phóng to"** (Mở toàn màn hình PDF View).
+      4. **Màu Vàng Hổ Phách (`amber-600`):** Icon `Plus` + Chữ **"Thêm trang"** (Tạo thêm trang giấy trắng mới vào sách).
+      5. **Màu Xanh Lam (`sky-700`):** Icon `Scissors` + Chữ **"Tách trang"** (Tách trang đang mở ra tờ rời trên bàn học, chỉ hiện khi sách có ít nhất 1 trang).
+      6. **Màu Nâu (`#78350f`):** Icon `RotateTwoWay` + Chữ **"Xoay"** (Xoay tự do 360°, nhấn đúp căn $0^\circ$).
+      7. **Màu Đỏ (`rose-600`):** Icon `Trash2` + Chữ **"Xoá"** (Xóa sách khỏi bàn học, có vạch ngăn cách & xác nhận an toàn).
+  * **Quy Chuẩn Bảo Toàn Bìa Sách Khi Tách/Cắt Trang & Dán Trang Vào Bìa Sách Trống (Book Cover Preservation & Page Attachment Standards):**
+    * **Bảo toàn bìa da vĩnh viễn (Cover Never Downgrades to Paper):** Mọi đối tượng sách bìa da (`type: 'book'` hoặc có `coverColor`) **tuyệt đối không bao giờ bị hạ cấp thành tờ giấy rời (`paper`)** khi người dùng bấm "Tách trang". Dù người dùng cắt toàn bộ trang ra khỏi sách (xuống 0 trang), đối tượng bìa sách cứng vẫn tồn tại nguyên vẹn trên mặt bàn học.
+    * **Hiển thị Bìa Sách Trống Trực Quan (Interactive Empty Book Spread Dropzone):** Khi sách có 0 trang (`item.pages.length === 0`), mặt sách bên trong hiển thị lời chào bìa trống, hướng dẫn dán trang kèm nút bấm "+ Thêm trang giấy đầu tiên" (`addPageToBook`).
+    * **Kéo thả dán trang vào bìa sách (Drag-and-Drop Page Attachment):** Kéo thả bất kỳ tờ giấy rời (`PaperSheet`) nào trên bàn học và thả lên khu vực bìa sách sẽ tự động kích hoạt `onDropCheck` và gộp trang vào sách (`combineIntoBinder`). Tờ giấy trên bàn được dán vào bìa sách và tự động thu dọn khỏi mặt bàn.
+    * **Nút bấm dán nhanh trên thanh nổi tờ giấy (`BookmarkPlus`):** Tờ giấy rời cung cấp nút "Dán vào bìa sách gần nhất" trên floating toolbar để người dùng gộp trang chỉ bằng 1 cú nhấp.
+    * **Mặc định tạo Bìa Trống trong modal "Book cover":** Hộp thoại thêm bìa sách mặc định chọn mẫu "Bìa trống (Chưa có trang)" để người dùng sinh ra bìa da học tập sẵn sàng dán các trang tài liệu vào.
   * **Số Trang Đặt Ở Góc Trang Như Sách Thật (Physical Corner Pagination):**
     * Trang bên trái: Chỉ hiển thị duy nhất số trang ở **góc dưới cùng bên trái** (không có chữ ViTudy Desk thừa).
     * Trang bên phải: Chỉ hiển thị duy nhất số trang ở **góc dưới cùng bên phải** (không có tên sách thừa ở chân trang).
