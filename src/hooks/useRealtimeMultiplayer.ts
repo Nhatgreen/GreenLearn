@@ -221,10 +221,15 @@ export function useRealtimeMultiplayer(
     });
 
     // 1b. Presence Join: When a new peer enters
-    channel.on('presence', { event: 'join' }, ({ key }) => {
-      if (key !== userId && isHost) {
-        // Automatically sync host's canvas to newly joined peer
-        onRequestSpaceStateRef.current?.(key);
+    channel.on('presence', { event: 'join' }, ({ key, newPresences }: any) => {
+      const newPeer = newPresences?.[0];
+      const peerId = newPeer?.id || key;
+      if (peerId !== userId && isHost) {
+        // Automatically sync host's canvas to newly joined peer (immediate + retry)
+        onRequestSpaceStateRef.current?.(peerId);
+        setTimeout(() => {
+          onRequestSpaceStateRef.current?.(peerId);
+        }, 700);
       }
     });
 
@@ -250,7 +255,8 @@ export function useRealtimeMultiplayer(
       if (!action) return;
 
       // Handle targeted actions
-      if ((action as any).payload?.targetId && (action as any).payload.targetId !== userId) {
+      const targetId = (action as any).payload?.targetId;
+      if (targetId && targetId !== userId && targetId !== 'all') {
         return;
       }
 

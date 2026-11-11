@@ -1,9 +1,16 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Open_Sans, Patrick_Hand, Lora } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { StudySpaceProvider } from '@/context/StudySpaceContext';
 import { SocialPresenceProvider } from '@/context/SocialPresenceContext';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#16A34A',
+};
 
 const openSans = Open_Sans({
   subsets: ['latin', 'latin-ext', 'vietnamese'],
@@ -47,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${openSans.variable} ${patrickHand.variable} ${lora.variable}`} suppressHydrationWarning spellCheck={false}>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <link rel="manifest" href={`${basePath}/manifest.json`} />
         <link rel="icon" href={`${basePath}/icons/greenlearn-icon.png`} type="image/png" />
         <link rel="shortcut icon" href={`${basePath}/favicon.ico`} />

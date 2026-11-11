@@ -30,6 +30,8 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
   const [fontSize, setFontSize] = useState<number>(14);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isTypingRef = useRef(false);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const {
     isDragging,
@@ -46,10 +48,17 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
   });
 
   useEffect(() => {
+    if (isTypingRef.current) return;
     if (item.stickyText !== undefined && item.stickyText !== text) {
       setText(item.stickyText);
     }
   }, [item.stickyText]);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (item.mindMapColor) {
@@ -85,7 +94,20 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setText(val);
-    updateMindMapNode(item.id, val, color);
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    debounceTimerRef.current = setTimeout(() => {
+      updateMindMapNode(item.id, val, color);
+    }, 250);
+  };
+
+  const handleInputFocus = () => {
+    isTypingRef.current = true;
+  };
+
+  const handleInputBlur = () => {
+    isTypingRef.current = false;
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    updateMindMapNode(item.id, text, color);
   };
 
   const handleColorChange = (newColor: string, e: React.MouseEvent) => {
@@ -237,6 +259,8 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
           type="text"
           value={text}
           onChange={handleTextChange}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           onPointerDown={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
           placeholder="Nhập nội dung node..."

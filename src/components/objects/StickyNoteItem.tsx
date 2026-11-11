@@ -116,11 +116,23 @@ export function StickyNoteItemComponent({ item, isSelected }: StickyNoteItemProp
     { label: 'Xám đen than', value: '#1e293b', isDark: true }
   ];
 
+  const isTypingRef = useRef(false);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
+    // Không ghi đè nếu người dùng đang trực tiếp gõ vào note để bảo toàn 100% phím cách & bộ gõ IME tiếng Việt
+    if (isTypingRef.current) return;
     if (item.stickyText !== undefined && item.stickyText !== text) {
       setText(item.stickyText);
     }
   }, [item.stickyText]);
+
+  // Dọn dẹp timer debounce khi unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    };
+  }, []);
 
   // Hook for unified drag-and-move and continuous 360 rotation
   const { isDragging, handleMouseDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
@@ -133,10 +145,32 @@ export function StickyNoteItemComponent({ item, isSelected }: StickyNoteItemProp
   });
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = normalizeNFCPreserveWhitespace(e.target.value);
+    // Giữ nguyên chuỗi thô từ input ngay lập tức để không nuốt khoảng trắng khi IME tiếng Việt (Unikey/IBus) đang gõ
+    const val = e.target.value;
     setText(val);
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    // Debounce 280ms đồng bộ lên context & broadcast để không render lại liên tục làmIME mất ký tự space
+    debounceTimerRef.current = setTimeout(() => {
+      if (updateStickyNoteText) {
+        updateStickyNoteText(item.id, normalizeNFCPreserveWhitespace(val));
+      }
+    }, 280);
+  };
+
+  const handleTextFocus = () => {
+    isTypingRef.current = true;
+  };
+
+  const handleTextBlur = () => {
+    isTypingRef.current = false;
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
     if (updateStickyNoteText) {
-      updateStickyNoteText(item.id, val);
+      updateStickyNoteText(item.id, normalizeNFCPreserveWhitespace(text));
     }
   };
 
@@ -728,6 +762,8 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
           <textarea
             value={text}
             onChange={handleTextChange}
+            onFocus={handleTextFocus}
+            onBlur={handleTextBlur}
             onKeyDown={(e) => e.stopPropagation()}
             onMouseUp={handleTextMouseUp}
             placeholder="Ghi chú..."

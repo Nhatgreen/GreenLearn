@@ -215,3 +215,32 @@
      - Phía máy nhận chiếu ngược về pixel màn hình cục bộ `(wx * scale + transform.x, wy * scale + transform.y)`, bảo đảm con trỏ chuột luôn chỉ đúng chính xác vị trí tài liệu dù hai bên có độ thu phóng hay kích thước màn hình khác nhau.
 * **Lý do:** Khắc phục triệt để lỗi không thấy bạn học vào phòng và bàn học không đồng bộ thao tác giữa các thành viên, mang lại trải nghiệm học nhóm trực quan, liền mạch và sống động.
 * **Giải pháp thay thế bị bác bỏ:** Lưu từng thao tác kéo thả vào Database PostgreSQL qua REST API. Bị bác bỏ vì gây nghẽn database, độ trễ cao (>300ms) và làm giảm hiệu năng trải nghiệm kéo thả mượt mà 60fps.
+
+---
+
+### ADR-021 — Kiến Trúc Responsive Mobile-First Bảo Toàn Hoàn Toàn Giao Diện Desktop
+* **Ngày quyết định:** `2026-11-12`
+* **Quyết định:**
+  1. **Breakpoints chuẩn:** Mobile `<640px` (`sm`), Tablet `640px – 1023px`, Desktop `≥1024px` (`lg`).
+  2. **Thanh bên (Sidebar):** Thu gọn thành icon bar 72px trên tablet; ẩn trên mobile và thay bằng Mobile Drawer trượt (slide-in) kết hợp Bottom Navigation Bar 5 tab cố định ở đáy.
+  3. **Không gian an toàn (Safe Area Insets):** Tích hợp `viewport-fit=cover` và `env(safe-area-inset-*)` (`.pb-safe`, `.pt-safe`) chống tràn viền trên màn hình có notch/Dynamic Island.
+  4. **Bảng dữ liệu & Thẻ:** Bảng "Mở lại gần đây" tự động chuyển thành danh sách thẻ xếp dọc trên mobile, loại bỏ hoàn toàn thanh cuộn ngang trang.
+* **Lý do:** Đáp ứng nhu cầu học tập và quản lý bàn học linh hoạt trên điện thoại và máy tính bảng mà không làm thay đổi hay vỡ bố cục buồng lái 1920px trên Desktop.
+* **Giải pháp thay thế bị bác bỏ:** Ép co tỷ lệ màn hình desktop (`zoom: 0.5`) trên mobile. Bị bác bỏ vì chữ quá nhỏ, không thể chạm bằng ngón tay và vi phạm nghiêm trọng chuẩn WCAG AA.
+
+---
+
+### ADR-022 — Cách Ly Bộ Nhập Liệu Tiếng Việt Khi Soạn Thảo (IME Vietnamese Typing Buffer Isolation)
+* **Ngày quyết định:** `2026-11-12`
+* **Quyết định:** Tách biệt state soạn thảo nội bộ của `<textarea>` bằng `isTypingRef = useRef(false)`, khóa đồng bộ từ props cha trong lúc đang gõ, và áp dụng debounce 280ms cho broadcast đồng bộ.
+* **Lý do:** Khắc phục triệt để lỗi bộ gõ tiếng Việt (Unikey/IBus-Bamboo) bị nuốt phím cách (biến "lỗi ghi chú" thành "lỗigichú") do reconciliation của React gán đè lại `textarea.value` trên từng keystroke làm gãy buffer tổ hợp ký tự.
+* **Giải pháp thay thế bị bác bỏ:** Dùng uncontrolled textarea hoàn toàn. Bị bác bỏ vì không thể đồng bộ cập nhật từ các bạn học khác trong phòng khi người dùng ngừng gõ.
+
+---
+
+### ADR-023 — Bảo Toàn Tiền Tố Subpath GitHub Pages Khi Điều Hướng & Chia Sẻ Phòng
+* **Ngày quyết định:** `2026-11-12`
+* **Quyết định:** Tập trung hóa toàn bộ logic sinh URL chia sẻ và điều hướng phòng học vào `@/lib/assets` qua `getShareRoomUrl` và `navigateToRoom`.
+* **Lý do:** Triệt tiêu hoàn toàn lỗi 404 "There isn't a GitHub Pages site here" do điều hướng tương đối hoặc lấy `window.location.origin` làm rớt tiền tố repository `/GreenLearn`.
+* **Giải pháp thay thế bị bác bỏ:** Cấu hình CNAME tên miền riêng ngay lập tức. Bị bác bỏ vì repository cần chạy ổn định trên GitHub Pages mặc định `https://[username].github.io/GreenLearn` trước.
+

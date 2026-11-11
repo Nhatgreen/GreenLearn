@@ -47,7 +47,7 @@ describe('useRealtimeMultiplayer', () => {
   });
 
   afterEach(() => {
-    window.location = originalLocation;
+    (window as any).location = originalLocation;
     window.history.replaceState = originalReplaceState;
   });
 

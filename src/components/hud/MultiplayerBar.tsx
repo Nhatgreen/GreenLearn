@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { getSupabaseConfig, saveSupabaseConfig, clearSupabaseConfig } from '@/lib/supabase';
+import { getShareRoomUrl } from '@/lib/assets';
 import { MultiplayerCursorsLayer } from '../canvas/MultiplayerCursorsLayer';
 import { 
   Users, 
@@ -25,6 +26,7 @@ export function MultiplayerBar() {
     isMultiplayerConnected,
     isMultiplayerHost,
     multiplayerRoomId,
+    multiplayerPermission,
     leaveMultiplayerRoom,
     isFollowPresenter,
     setIsFollowPresenter
@@ -64,7 +66,7 @@ export function MultiplayerBar() {
 
   const handleCopyShareLink = () => {
     if (typeof window !== 'undefined') {
-      const shareUrl = `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || activeSpace.id}`;
+      const shareUrl = getShareRoomUrl(multiplayerRoomId || activeSpace.id, multiplayerPermission || 'edit');
       navigator.clipboard.writeText(shareUrl);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
@@ -219,11 +221,7 @@ export function MultiplayerBar() {
                 <input
                   type="text"
                   readOnly
-                  value={
-                    typeof window !== 'undefined'
-                      ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || activeSpace.id}`
-                      : 'https://nhatgreen.github.io/GreenLearn/'
-                  }
+                  value={getShareRoomUrl(multiplayerRoomId || activeSpace.id, multiplayerPermission || 'edit')}
                   className="bg-transparent text-xs text-slate-800 flex-1 outline-none font-mono select-all"
                 />
                 <button

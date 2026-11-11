@@ -10,6 +10,7 @@ import { useStudySpace } from './StudySpaceContext';
 import { HostApprovalModal } from '@/components/social/HostApprovalModal';
 import { PendingApprovalModal } from '@/components/social/PendingApprovalModal';
 import { FriendInviteToast } from '@/components/hud/FriendInviteToast';
+import { navigateToRoom } from '@/lib/assets';
 
 export interface RoomJoinRequest {
   requestId: string;
@@ -247,7 +248,7 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
         if (joinMultiplayerRoom) {
           joinMultiplayerRoom(roomId, perm);
         }
-        router.push(`/?room=${encodeURIComponent(roomId)}&perm=${perm}`);
+        navigateToRoom(roomId, perm);
       }, 1200);
       return () => clearTimeout(timer);
     }
@@ -456,7 +457,7 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
           if (joinMultiplayerRoom) {
             joinMultiplayerRoom(inv.roomId, 'edit');
           }
-          router.push(`/?room=${encodeURIComponent(inv.roomId)}&perm=edit`);
+          navigateToRoom(inv.roomId, 'edit');
         }}
         onDecline={declineInvite}
       />

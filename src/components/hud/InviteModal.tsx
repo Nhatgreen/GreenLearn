@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Copy, Check, Share2, Users, ShieldCheck } from 'lucide-react';
+import { getShareRoomUrl } from '@/lib/assets';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -21,9 +22,7 @@ export function InviteModal({ isOpen, onClose, spaceId, spaceName }: InviteModal
 
   if (!isOpen || !mounted) return null;
 
-  const inviteUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}${window.location.pathname}?room=${spaceId}`
-    : `https://vitudy.edu.vn/?room=${spaceId}`;
+  const inviteUrl = getShareRoomUrl(spaceId, 'view_only');
 
   const handleCopy = async () => {
     try {

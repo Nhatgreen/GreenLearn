@@ -1,8 +1,8 @@
 # 00_INDEX.md — Chỉ Mục & Giao Thức Bộ Nhớ Dự Án ViTudy
 
 > **Commit Hash:** `Current Working Tree`  
-> **Cập nhật lần cuối:** `2026-11-11`  
-> **Trạng thái Codebase:** Đã khắc phục triệt để lỗi học nhóm trực tuyến (kết nối realtime phòng học, hiển thị bạn học trong phòng, đồng bộ 2 chiều di chuyển/lật trang/vẽ nét, chiếu con trỏ chuột tọa độ thế giới), 18/18 test suites pass, docs:check pass.
+> **Cập nhật lần cuối:** `2026-11-12`  
+> **Trạng thái Codebase:** Hoàn thành toàn diện giao diện Responsive Mobile/Tablet theo 11 tiêu chuẩn, khắc phục triệt để lỗi 404 GitHub Pages, lỗi nuốt phím cách khi gõ ghi chú tiếng Việt, và đồng bộ bàn học ban đầu phòng học nhóm. 20/20 test suites pass (89/89 tests), 14/14 static pages build pass, docs:check pass.
 
 ---
 

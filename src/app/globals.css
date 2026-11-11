@@ -37,9 +37,34 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Safe area inset utilities for mobile devices with notches / dynamic islands */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px);
+}
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top, 0px), 0px);
+}
+.pl-safe {
+  padding-left: max(env(safe-area-inset-left, 0px), 0px);
+}
+.pr-safe {
+  padding-right: max(env(safe-area-inset-right, 0px), 0px);
+}
+.bottom-safe {
+  bottom: max(env(safe-area-inset-bottom, 0px), 0px);
+}
+
+/* Touch target minimum 44x44px ergonomic standard */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
 }
 
 /* Explicit class-based font enforcements */

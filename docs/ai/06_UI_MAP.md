@@ -108,4 +108,17 @@ RootLayout (src/app/layout.tsx)
   * Nút "Nộp bài & Chấm điểm" tự động tính điểm số thang 10, vẽ icon đúng/sai và hiển thị lời nhận xét sư phạm.
 
 ### 3. `StickyNoteItem.tsx` — Giấy Ghi Chú
-* **Kích thước:** `220 × 200px`, font viết tay `Patrick Hand`, cỡ chữ `16px font-semibold text-stone-900`. Tích hợp `useDeskItemInteraction`.
+* **Kích thước:** `220 × 200px`, font viết tay `Patrick Hand`, cỡ chữ `16px font-semibold text-stone-900`. Tích hợp `useDeskItemInteraction`, bảo toàn khoảng trắng Unicode NFC và cách ly bộ gõ tiếng Việt qua `isTypingRef` + debounce 280ms.
+
+---
+
+## 4. Hệ Thống Điều Hướng Đáp Ứng Đa Nền Tảng (Responsive Multi-Device Layout)
+
+* **Phân lớp thiết bị:**
+  * **Desktop (≥ 1024px):** Thanh bên đầy đủ `w-64`, bảng dữ liệu mở rộng 3 cột, lưới 4 thẻ mẫu.
+  * **Tablet (640px – 1023px):** Thanh bên thu gọn thành icon bar 72px (`w-18`), lưới thẻ 2 cột, bảng dữ liệu thu gọn.
+  * **Mobile (< 640px):** Ẩn thanh bên, kích hoạt bộ đôi điều hướng di động:
+    - **Mobile Drawer:** Ngăn kéo trượt từ trái (`w-72 max-w-[85vw] pb-safe`) mở bằng nút hamburger trên header, chứa đầy đủ các menu điều hướng, widget Pet Mascot và mục tiêu Pomodoro ngày.
+    - **Bottom Navigation Bar:** Thanh 5 tab cố định dưới đáy (`fixed bottom-0 inset-x-0 pb-safe z-40 bg-white/95`) gồm Trang chủ, Bàn học, Bạn bè, Nhật ký, Hỏi đáp với vùng chạm tối thiểu 44×44px.
+    - **Mobile Recent Desks:** Danh sách thẻ xếp dọc (`space-y-3`) thay thế bảng ngang, triệt tiêu 100% tràn thanh cuộn ngang trang.
+

@@ -18,6 +18,7 @@ import {
 import { useSocialPresence } from '@/hooks/useSocialPresence';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { SocialFriendService } from '@/services/SocialFriendService';
+import { getShareRoomUrl } from '@/lib/assets';
 
 interface FriendsRightDrawerProps {
   isFocusMode?: boolean;
@@ -92,8 +93,7 @@ export function FriendsRightDrawer({ isFocusMode = false }: FriendsRightDrawerPr
     if (!isMultiplayerConnected) {
       startHostingRoom(targetRoom, multiplayerPermission);
     }
-    const baseUrl = window.location.origin + window.location.pathname;
-    const shareUrl = `${baseUrl}?space=${encodeURIComponent(activeSpace?.id || '')}&room=${encodeURIComponent(targetRoom)}&perm=${multiplayerPermission}`;
+    const shareUrl = getShareRoomUrl(targetRoom, multiplayerPermission, activeSpace?.id);
     navigator.clipboard.writeText(shareUrl).then(() => {
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2500);

@@ -28,7 +28,8 @@ import {
   Star,
   CalendarDays,
   HelpCircle,
-  Info
+  Info,
+  Menu
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
@@ -52,6 +53,18 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
   const [isPetModalOpen, setIsPetModalOpen] = useState(false);
   const [claimFeedback, setClaimFeedback] = useState<string | null>(null);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+
+  // Esc listener for mobile drawer
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobileDrawerOpen) {
+        setIsMobileDrawerOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isMobileDrawerOpen]);
 
   const [searchFilter, setSearchFilter] = useState('');
   const [showAllSpaces, setShowAllSpaces] = useState(false);
@@ -163,11 +176,11 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
   return (
     <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-green-100 selection:text-[#166534]">
-      {/* ================= LEFT SIDEBAR ================= */}
-      <aside className="w-64 flex-shrink-0 border-r border-slate-200 bg-white p-5 flex flex-col justify-between min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar shadow-2xs">
+      {/* ================= LEFT SIDEBAR (Desktop: 256px, Tablet: 72px icon-only, Mobile: hidden) ================= */}
+      <aside className="hidden sm:flex sm:w-18 lg:w-64 flex-shrink-0 border-r border-slate-200 bg-white p-3 lg:p-5 flex-col justify-between min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar shadow-2xs">
         <div className="flex flex-col">
           {/* Logo Brand */}
-          <div className="flex items-center gap-2.5 mb-5 select-none">
+          <div className="flex items-center sm:justify-center lg:justify-start gap-2.5 mb-5 select-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={getAssetPath('/icons/greenlearn-icon.png')}
@@ -177,14 +190,14 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               className="w-8 h-8 rounded-xl object-contain shadow-xs flex-shrink-0"
               style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px' }}
             />
-            <span className="text-lg font-black tracking-tight select-none leading-none">
+            <span className="text-lg font-black tracking-tight select-none leading-none hidden lg:inline">
               <span className="text-[#16A34A]">Green</span>
               <span className="text-[#242D3D]">Learn</span>
             </span>
           </div>
 
-          {/* Search Input */}
-          <div className="relative mb-5">
+          {/* Search Input (Desktop only) */}
+          <div className="relative mb-5 hidden lg:block">
             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus-within:border-[#16A34A] focus-within:ring-2 focus-within:ring-green-100 focus-within:bg-white transition-all">
               <Search className="w-3.5 h-3.5 text-slate-400 flex-shrink-0 stroke-[2.2]" />
               <input
@@ -201,90 +214,100 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           <nav className="space-y-1.5 text-xs font-semibold">
             <button
               onClick={() => setActiveNav('home')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
+              title="Trang chủ"
+              className={`w-full text-left px-2.5 lg:px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center lg:justify-between group ${
                 activeNav === 'home'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <span className="flex items-center gap-2.5">
-                <Home className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'home' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
-                <span>Trang chủ</span>
+                <Home className={`w-4 h-4 stroke-[2.2] transition-colors shrink-0 ${activeNav === 'home' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
+                <span className="hidden lg:inline">Trang chủ</span>
               </span>
             </button>
 
             <button
               onClick={() => setActiveNav('my_desks')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
+              title={`Bàn học của tôi (${spaces.length})`}
+              className={`w-full text-left px-2.5 lg:px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center lg:justify-between group ${
                 activeNav === 'my_desks'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <span className="flex items-center gap-2.5">
-                <LayoutGrid className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'my_desks' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
-                <span>Bàn học của tôi</span>
+                <LayoutGrid className={`w-4 h-4 stroke-[2.2] transition-colors shrink-0 ${activeNav === 'my_desks' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
+                <span className="hidden lg:inline">Bàn học của tôi</span>
               </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px] font-bold">
+              <span className="hidden lg:inline px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px] font-bold">
                 {spaces.length}
               </span>
             </button>
 
             <button
               onClick={() => setActiveNav('starred')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
+              title="Đã gắn dấu sao"
+              className={`w-full text-left px-2.5 lg:px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center lg:justify-between group ${
                 activeNav === 'starred'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <span className="flex items-center gap-2.5">
-                <Star className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'starred' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
-                <span>Đã gắn dấu sao</span>
+                <Star className={`w-4 h-4 stroke-[2.2] transition-colors shrink-0 ${activeNav === 'starred' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
+                <span className="hidden lg:inline">Đã gắn dấu sao</span>
               </span>
             </button>
 
             <button
               onClick={() => setActiveNav('friends')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
+              title={`Bạn bè (${onlineCount} online)`}
+              className={`w-full text-left px-2.5 lg:px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center lg:justify-between group relative ${
                 activeNav === 'friends'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <span className="flex items-center gap-2.5">
-                <Users className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'friends' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
-                <span>Bạn bè</span>
+                <Users className={`w-4 h-4 stroke-[2.2] transition-colors shrink-0 ${activeNav === 'friends' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
+                <span className="hidden lg:inline">Bạn bè</span>
               </span>
               {onlineCount > 0 && (
-                <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 text-[#166534] text-[10px] font-bold">
-                  {onlineCount} online
-                </span>
+                <>
+                  <span className="hidden lg:inline px-1.5 py-0.5 rounded-full bg-emerald-100 text-[#166534] text-[10px] font-bold">
+                    {onlineCount} online
+                  </span>
+                  <span className="lg:hidden absolute top-2 right-2 w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                </>
               )}
             </button>
 
             <Link
               href="/dashboard"
-              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
+              title="Nhật ký học"
+              className="w-full flex items-center justify-center lg:justify-start gap-2.5 px-2.5 lg:px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
             >
-              <CalendarDays className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors" />
-              <span>Nhật ký học</span>
+              <CalendarDays className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors shrink-0" />
+              <span className="hidden lg:inline">Nhật ký học</span>
             </Link>
 
             <Link
               href="/faq"
-              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
+              title="Hỏi đáp"
+              className="w-full flex items-center justify-center lg:justify-start gap-2.5 px-2.5 lg:px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
             >
-              <HelpCircle className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors" />
-              <span>Hỏi đáp</span>
+              <HelpCircle className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors shrink-0" />
+              <span className="hidden lg:inline">Hỏi đáp</span>
             </Link>
 
             <Link
               href="/about"
-              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
+              title="Giới thiệu & Kỹ thuật"
+              className="w-full flex items-center justify-center lg:justify-start gap-2.5 px-2.5 lg:px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
             >
-              <Info className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors" />
-              <span>Giới thiệu & Kỹ thuật</span>
+              <Info className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors shrink-0" />
+              <span className="hidden lg:inline">Giới thiệu & Kỹ thuật</span>
             </Link>
           </nav>
         </div>
@@ -295,7 +318,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           <button
             type="button"
             onClick={() => setIsPetModalOpen(true)}
-            className="w-full p-3 rounded-2xl bg-gradient-to-br from-[#F0FDF4] to-white border border-[#BBF7D0] hover:border-[#16A34A] text-left transition-all cursor-pointer shadow-2xs group"
+            title={`Thú cưng: ${pet.name} (Cấp ${pet.stage})`}
+            className="w-full p-2 lg:p-3 rounded-2xl bg-gradient-to-br from-[#F0FDF4] to-white border border-[#BBF7D0] hover:border-[#16A34A] text-left transition-all cursor-pointer shadow-2xs group flex items-center justify-center lg:justify-start"
           >
             <div className="flex items-center gap-2.5">
               <div className="w-10 h-10 rounded-xl bg-green-100/80 border border-green-200 flex items-center justify-center p-1 flex-shrink-0 shadow-2xs">
@@ -305,7 +329,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform"
                 />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="hidden lg:block flex-1 min-w-0">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 truncate">{pet.name}</span>
                   <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 px-1.5 py-0.5 rounded-full">
@@ -319,8 +343,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </div>
           </button>
 
-          {/* Widget: Mục tiêu học hôm nay */}
-          <div className="p-3.5 rounded-2xl bg-[#F0FDF4]/60 border border-[#BBF7D0] shadow-2xs">
+          {/* Widget: Mục tiêu học hôm nay (Desktop only) */}
+          <div className="hidden lg:block p-3.5 rounded-2xl bg-[#F0FDF4]/60 border border-[#BBF7D0] shadow-2xs">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5 text-[#16A34A]" />
@@ -348,36 +372,238 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
         </div>
       </aside>
 
+      {/* ================= MOBILE SLIDE-IN DRAWER & BACKDROP (<640px) ================= */}
+      {isMobileDrawerOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 sm:hidden animate-fade-in"
+            onClick={() => setIsMobileDrawerOpen(false)}
+          />
+          <div className="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white z-50 p-5 overflow-y-auto shadow-2xl flex flex-col justify-between sm:hidden animate-slide-right pb-safe">
+            <div className="flex flex-col">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between mb-5 select-none">
+                <div className="flex items-center gap-2.5">
+                  <img
+                    src={getAssetPath('/icons/greenlearn-icon.png')}
+                    alt="GreenLearn"
+                    width={32}
+                    height={32}
+                    className="w-8 h-8 rounded-xl object-contain shadow-xs flex-shrink-0"
+                    style={{ width: '32px', height: '32px', maxWidth: '32px', maxHeight: '32px' }}
+                  />
+                  <span className="text-lg font-black tracking-tight leading-none">
+                    <span className="text-[#16A34A]">Green</span>
+                    <span className="text-[#242D3D]">Learn</span>
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="p-2 text-slate-400 hover:text-slate-700 rounded-xl transition-colors touch-target"
+                  aria-label="Đóng trình đơn"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Mobile Drawer Search */}
+              <div className="relative mb-5">
+                <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-base sm:text-xs text-slate-800 focus-within:border-[#16A34A] focus-within:ring-2 focus-within:ring-green-100 focus-within:bg-white transition-all">
+                  <Search className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <input
+                    type="text"
+                    value={searchFilter}
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                    placeholder="Tìm bàn học, tài liệu..."
+                    className="w-full bg-transparent placeholder:text-slate-400 text-slate-800 focus:outline-none text-base sm:text-xs"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile Drawer Navigation Links */}
+              <nav className="space-y-1 text-xs font-semibold">
+                <button
+                  onClick={() => { setActiveNav('home'); setIsMobileDrawerOpen(false); }}
+                  className={`w-full text-left px-3.5 py-3 rounded-xl transition-all flex items-center justify-between touch-target ${
+                    activeNav === 'home'
+                      ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <Home className="w-4.5 h-4.5 stroke-[2.2] text-[#16A34A]" />
+                    <span className="text-sm">Trang chủ</span>
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => { setActiveNav('my_desks'); setIsMobileDrawerOpen(false); }}
+                  className={`w-full text-left px-3.5 py-3 rounded-xl transition-all flex items-center justify-between touch-target ${
+                    activeNav === 'my_desks'
+                      ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <LayoutGrid className="w-4.5 h-4.5 stroke-[2.2] text-[#16A34A]" />
+                    <span className="text-sm">Bàn học của tôi</span>
+                  </span>
+                  <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-bold">
+                    {spaces.length}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => { setActiveNav('starred'); setIsMobileDrawerOpen(false); }}
+                  className={`w-full text-left px-3.5 py-3 rounded-xl transition-all flex items-center justify-between touch-target ${
+                    activeNav === 'starred'
+                      ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <Star className="w-4.5 h-4.5 stroke-[2.2] text-amber-500" />
+                    <span className="text-sm">Đã gắn dấu sao</span>
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => { setActiveNav('friends'); setIsMobileDrawerOpen(false); }}
+                  className={`w-full text-left px-3.5 py-3 rounded-xl transition-all flex items-center justify-between touch-target ${
+                    activeNav === 'friends'
+                      ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold'
+                      : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <Users className="w-4.5 h-4.5 stroke-[2.2] text-[#16A34A]" />
+                    <span className="text-sm">Bạn bè & Nhóm học</span>
+                  </span>
+                  {onlineCount > 0 && (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-[#166534] text-xs font-bold">
+                      {onlineCount} online
+                    </span>
+                  )}
+                </button>
+
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold touch-target text-sm"
+                >
+                  <CalendarDays className="w-4.5 h-4.5 stroke-[2.2] text-slate-400" />
+                  <span>Nhật ký học</span>
+                </Link>
+
+                <Link
+                  href="/faq"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold touch-target text-sm"
+                >
+                  <HelpCircle className="w-4.5 h-4.5 stroke-[2.2] text-slate-400" />
+                  <span>Hỏi đáp</span>
+                </Link>
+
+                <Link
+                  href="/about"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold touch-target text-sm"
+                >
+                  <Info className="w-4.5 h-4.5 stroke-[2.2] text-slate-400" />
+                  <span>Giới thiệu & Kỹ thuật</span>
+                </Link>
+              </nav>
+            </div>
+
+            {/* Mobile Drawer Bottom Section */}
+            <div className="pt-4 space-y-3 border-t border-slate-100 mt-4">
+              <button
+                type="button"
+                onClick={() => { setIsPetModalOpen(true); setIsMobileDrawerOpen(false); }}
+                className="w-full p-3 rounded-2xl bg-gradient-to-br from-[#F0FDF4] to-white border border-[#BBF7D0] text-left shadow-2xs flex items-center gap-3 touch-target"
+              >
+                <div className="w-10 h-10 rounded-xl bg-green-100/80 border border-green-200 flex items-center justify-center p-1 flex-shrink-0">
+                  <img src={currentImageUrl} alt={pet.name} className="w-full h-full object-contain" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-900 truncate">{pet.name}</span>
+                    <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 px-1.5 py-0.5 rounded-full">
+                      Cấp {pet.stage}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-600 truncate mt-0.5">
+                    {pet.streakDays > 0 ? `Chuỗi ${pet.streakDays} ngày` : 'Sẵn sàng chuỗi mới'} • {pet.isSleeping ? 'Đang ngủ' : 'Tỉnh táo'}
+                  </p>
+                </div>
+              </button>
+
+              <div className="p-3.5 rounded-2xl bg-[#F0FDF4]/60 border border-[#BBF7D0]">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <Target className="w-3.5 h-3.5 text-[#16A34A]" />
+                    <span>Mục tiêu hôm nay</span>
+                  </span>
+                  <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 px-1.5 py-0.5 rounded-md">
+                    1 / 4 phiên
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { onEnterDesk(); setIsMobileDrawerOpen(false); }}
+                  className="w-full py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5 min-h-[44px]"
+                >
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Bắt đầu phiên 25p</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* ================= MAIN CONTENT ================= */}
-      <main className="flex-1 p-6 md:p-10 flex flex-col max-w-6xl mx-auto overflow-y-auto">
+      <main className="flex-1 p-4 sm:p-6 lg:p-10 pb-24 sm:pb-10 flex flex-col max-w-6xl mx-auto overflow-y-auto w-full">
         {/* Sticky Top Bar (Cố định khi cuộn) */}
-        <header className="sticky top-0 z-20 -mx-6 md:-mx-10 px-6 md:px-10 py-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between mb-6 shadow-2xs">
-          {/* Breadcrumb bên trái */}
-          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+        <header className="sticky top-0 z-20 -mx-4 sm:-mx-6 lg:-mx-10 px-4 sm:px-6 lg:px-10 py-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between mb-5 sm:mb-6 shadow-2xs">
+          {/* Hamburger (Mobile) + Breadcrumb */}
+          <div className="flex items-center gap-2 min-w-0">
             <button
               type="button"
-              onClick={() => setActiveNav('home')}
-              className="hover:text-[#16A34A] transition-colors cursor-pointer"
+              onClick={() => setIsMobileDrawerOpen(true)}
+              className="sm:hidden p-2 -ml-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 touch-target cursor-pointer shrink-0"
+              aria-label="Mở danh mục điều hướng"
             >
-              Không gian học tập
+              <Menu className="w-5 h-5 stroke-[2.2]" />
             </button>
-            <span>/</span>
-            <span className="text-slate-900 font-bold">
-              {activeNav === 'home' && 'Trang chủ'}
-              {activeNav === 'my_desks' && 'Bàn học của tôi'}
-              {activeNav === 'starred' && 'Đã gắn dấu sao'}
-              {activeNav === 'friends' && 'Bạn bè & Nhóm học'}
-            </span>
+
+            <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-slate-500 font-medium min-w-0">
+              <button
+                type="button"
+                onClick={() => setActiveNav('home')}
+                className="hidden sm:inline hover:text-[#16A34A] transition-colors cursor-pointer shrink-0"
+              >
+                Không gian học tập
+              </button>
+              <span className="hidden sm:inline shrink-0">/</span>
+              <span className="text-slate-900 font-bold truncate max-w-[125px] sm:max-w-none">
+                {activeNav === 'home' && 'Trang chủ'}
+                {activeNav === 'my_desks' && 'Bàn học của tôi'}
+                {activeNav === 'starred' && 'Đã gắn dấu sao'}
+                {activeNav === 'friends' && 'Bạn bè & Nhóm học'}
+              </span>
+            </div>
           </div>
 
           {/* Nút hành động bên phải */}
-          <div className="flex items-center gap-3">
-            {/* Streak & Pet Badge */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Streak & Pet Badge (compact on mobile, full text on tablet & desktop) */}
             <button
               type="button"
               onClick={() => setIsPetModalOpen(true)}
               title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • ${pet.streakDays > 0 ? `Chuỗi ${pet.streakDays} ngày liên tiếp` : 'Chưa có chuỗi ngày'} (Bấm để xem và điểm danh)`}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-2 active:scale-98 ${
+              className={`px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 active:scale-98 touch-target ${
                 isClaimedToday 
                   ? 'bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534]'
                   : 'bg-white border border-slate-200 text-slate-800 hover:border-[#16A34A] hover:bg-green-50/50 hover:shadow-xs'
@@ -386,14 +612,17 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <img
                 src={currentImageUrl}
                 alt={pet.name}
-                className="w-5 h-5 object-contain"
+                className="w-5 h-5 object-contain shrink-0"
               />
-              <span>
+              <span className="hidden sm:inline">
                 {pet.streakDays > 0
                   ? `Chuỗi ${pet.streakDays} ngày · ${isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}`
                   : isClaimedToday
                   ? 'Đã điểm danh hôm nay'
                   : 'Bắt đầu chuỗi đầu tiên hôm nay'}
+              </span>
+              <span className="sm:hidden font-bold">
+                {pet.streakDays > 0 ? `${pet.streakDays}d` : (isClaimedToday ? 'Đã nhận' : 'Điểm danh')}
               </span>
             </button>
 
@@ -401,7 +630,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <Link
               href="/profile?from=home"
               title={`Hồ sơ cá nhân (${userName})`}
-              className="w-8 h-8 rounded-full shrink-0 border border-slate-200 hover:border-[#16A34A] bg-white shadow-2xs overflow-hidden flex items-center justify-center transition-all cursor-pointer active:scale-95"
+              className="w-8 h-8 rounded-full shrink-0 border border-slate-200 hover:border-[#16A34A] bg-white shadow-2xs overflow-hidden flex items-center justify-center transition-all cursor-pointer active:scale-95 touch-target"
               style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px' }}
             >
               {profile?.avatar_url ? (
@@ -437,8 +666,11 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             {/* Tiêu đề & Nút Thêm bạn */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
+                <h1 
+                  className="font-bold text-slate-900 tracking-tight flex items-center gap-2.5 leading-tight"
+                  style={{ fontSize: 'clamp(1.4rem, 4.2vw, 1.875rem)' }}
+                >
+                  <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A] shrink-0">
                     <Users className="w-5 h-5 stroke-[2.4]" />
                   </div>
                   <span>Bạn bè & Nhóm học</span>
@@ -451,7 +683,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <button
                 type="button"
                 onClick={() => setIsAddingFriendOpen(prev => !prev)}
-                className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center gap-2 self-start sm:self-auto"
+                className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center justify-center gap-2 w-full sm:w-auto min-h-[44px]"
               >
                 <Plus className="w-4 h-4 stroke-[2.4]" />
                 <span>Thêm bạn bè</span>
@@ -459,10 +691,10 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </div>
 
             {/* 3 Thẻ thống kê */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
               {/* Thẻ 1: Tổng bạn bè */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700">
+                <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 shrink-0">
                   <Users className="w-5 h-5 stroke-[2.2]" />
                 </div>
                 <div>
@@ -473,7 +705,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
               {/* Thẻ 2: Đang trực tuyến */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
+                <div className="w-11 h-11 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A] shrink-0">
                   <Sparkles className="w-5 h-5 stroke-[2.2]" />
                 </div>
                 <div>
@@ -487,7 +719,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
               {/* Thẻ 3: Đang trong phòng học */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600">
+                <div className="w-11 h-11 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600 shrink-0">
                   <BookOpen className="w-5 h-5 stroke-[2.2]" />
                 </div>
                 <div>
@@ -508,7 +740,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   <button
                     type="button"
                     onClick={() => setIsAddingFriendOpen(false)}
-                    className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                    className="text-slate-400 hover:text-slate-600 cursor-pointer p-1"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -527,7 +759,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                       setTimeout(() => setFriendFeedback(null), 3000);
                     }
                   }}
-                  className="flex items-center gap-2"
+                  className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
                 >
                   <input
                     type="text"
@@ -538,11 +770,11 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                       if (friendFeedback) setFriendFeedback(null);
                     }}
                     autoFocus
-                    className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
+                    className="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-base sm:text-xs outline-none focus:border-[#16A34A] focus:bg-white transition-colors"
                   />
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer active:scale-95 whitespace-nowrap"
+                    className="px-5 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer active:scale-95 whitespace-nowrap min-h-[44px] flex items-center justify-center"
                   >
                     Lưu bạn bè
                   </button>
@@ -560,54 +792,56 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               </div>
             )}
 
-            {/* Thanh Tìm Kiếm & Bộ Lọc */}
+            {/* Thanh Tìm Kiếm & Bộ Lọc (Tabs cuộn ngang mượt mà trên mobile) */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold text-slate-600">
-                <button
-                  type="button"
-                  onClick={() => setFriendsFilter('all')}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    friendsFilter === 'all'
-                      ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                      : 'hover:text-slate-900'
-                  }`}
-                >
-                  Tất cả ({buddies.length})
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFriendsFilter('online')}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                    friendsFilter === 'online'
-                      ? 'bg-white text-[#166534] shadow-2xs font-bold'
-                      : 'hover:text-slate-900'
-                  }`}
-                >
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Trực tuyến ({onlineCount})</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFriendsFilter('indesk')}
-                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
-                    friendsFilter === 'indesk'
-                      ? 'bg-white text-sky-700 shadow-2xs font-bold'
-                      : 'hover:text-slate-900'
-                  }`}
-                >
-                  <span className="w-2 h-2 rounded-full bg-sky-500" />
-                  <span>Đang ở bàn học ({inDeskCount})</span>
-                </button>
+              <div className="overflow-x-auto no-scrollbar py-0.5">
+                <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold text-slate-600 whitespace-nowrap min-w-max">
+                  <button
+                    type="button"
+                    onClick={() => setFriendsFilter('all')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                      friendsFilter === 'all'
+                        ? 'bg-white text-slate-900 shadow-2xs font-bold'
+                        : 'hover:text-slate-900'
+                    }`}
+                  >
+                    Tất cả ({buddies.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFriendsFilter('online')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                      friendsFilter === 'online'
+                        ? 'bg-white text-[#166534] shadow-2xs font-bold'
+                        : 'hover:text-slate-900'
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span>Trực tuyến ({onlineCount})</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFriendsFilter('indesk')}
+                    className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                      friendsFilter === 'indesk'
+                        ? 'bg-white text-sky-700 shadow-2xs font-bold'
+                        : 'hover:text-slate-900'
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full bg-sky-500" />
+                    <span>Đang ở bàn học ({inDeskCount})</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="relative min-w-[220px]">
+              <div className="relative w-full sm:w-auto sm:min-w-[240px]">
                 <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm theo tên hoặc email..."
                   value={friendsSearch}
                   onChange={(e) => setFriendsSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl outline-none focus:border-[#16A34A] transition-colors"
+                  className="w-full pl-8 pr-3 py-2 sm:py-1.5 text-base sm:text-xs bg-white border border-slate-200 rounded-xl outline-none focus:border-[#16A34A] transition-colors"
                 />
               </div>
             </div>
@@ -660,7 +894,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   {displayed.map((buddy) => (
                     <div
                       key={buddy.id}
-                      className="bg-white border border-slate-200 hover:border-green-300 rounded-2xl p-4 shadow-2xs hover:shadow-md transition-all flex items-center justify-between gap-3 group"
+                      className="bg-white border border-slate-200 hover:border-green-300 rounded-2xl p-4 shadow-2xs hover:shadow-md transition-all flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 group"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="relative shrink-0">
@@ -678,8 +912,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                           />
                         </div>
 
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm font-bold text-slate-900 truncate">
                               {buddy.name}
                             </span>
@@ -694,7 +928,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                               {buddy.email}
                             </div>
                           )}
-                          <div className="text-[11px] mt-0.5">
+                          <div className="text-[11px] mt-0.5 font-medium">
                             {buddy.online && buddy.currentRoom ? (
                               <span className="text-sky-600 font-semibold truncate block">
                                 {SocialFriendService.getFriendlyRoomName(buddy, spaces)}
@@ -708,14 +942,14 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
                         {buddy.online && buddy.currentRoom ? (
                           <button
                             type="button"
                             onClick={() => {
                               requestJoinRoom(buddy.currentRoom!, buddy);
                             }}
-                            className="px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
+                            className="px-3.5 py-2 sm:py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-2xs flex-1 sm:flex-initial min-h-[44px] sm:min-h-0"
                           >
                             <LogIn className="w-3.5 h-3.5" />
                             <span>Xin vào học cùng</span>
@@ -729,7 +963,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                                 sendDeskInvite(buddy);
                               }, 1000);
                             }}
-                            className="px-3 py-1.5 rounded-xl bg-[#F0FDF4] hover:bg-green-100 text-[#166534] border border-[#BBF7D0] text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
+                            className="px-3.5 py-2 sm:py-1.5 rounded-xl bg-[#F0FDF4] hover:bg-green-100 text-[#166534] border border-[#BBF7D0] text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-2xs flex-1 sm:flex-initial min-h-[44px] sm:min-h-0"
                           >
                             <Send className="w-3.5 h-3.5 text-[#16A34A]" />
                             <span>Mời học</span>
@@ -740,7 +974,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                           type="button"
                           onClick={() => removeFriend(buddy.id)}
                           title="Xóa bạn khỏi danh sách"
-                          className="p-1.5 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
+                          className="p-2 sm:p-1.5 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer touch-target opacity-70 sm:opacity-0 sm:group-hover:opacity-100"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -756,8 +990,11 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           <div className="flex-1 flex flex-col animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
+                <h1 
+                  className="font-bold text-slate-900 tracking-tight flex items-center gap-2.5 leading-tight"
+                  style={{ fontSize: 'clamp(1.4rem, 4.2vw, 1.875rem)' }}
+                >
+                  <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A] shrink-0">
                     <LayoutGrid className="w-5 h-5 stroke-[2.4]" />
                   </div>
                   <span>Bàn học của tôi</span>
@@ -770,15 +1007,15 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <button
                 type="button"
                 onClick={() => handleSelectTemplate('blank')}
-                className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center gap-1.5 self-start sm:self-auto"
+                className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px]"
               >
                 <Plus className="w-4 h-4 stroke-[2.4]" />
                 <span>Tạo bàn học mới</span>
               </button>
             </div>
 
-            {/* Bảng danh sách bàn học của tôi */}
-            <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+            {/* Desktop & Tablet Table (<div className="hidden sm:block">) */}
+            <div className="hidden sm:block w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
               <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
                 <div className="col-span-5">Tên bàn học</div>
                 <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
@@ -844,6 +1081,68 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   );
                 })}
               </div>
+            </div>
+
+            {/* Mobile Vertical Cards (<div className="sm:hidden space-y-3">) */}
+            <div className="sm:hidden space-y-3">
+              {spaces.map((space, idx) => {
+                const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
+                const isDemo = space.name.includes('(Demo)');
+
+                return (
+                  <div
+                    key={space.id}
+                    onClick={() => handleOpenSpace(space.id)}
+                    className="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs active:bg-[#F0FDF4]/50 transition-all flex flex-col gap-3"
+                  >
+                    <div className="flex items-start justify-between gap-2.5">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-8 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs flex-shrink-0 flex items-center justify-center">
+                          <BookOpen className="w-4 h-4 text-[#16A34A]" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-sm font-bold text-slate-900 truncate">
+                              {cleanSpaceName}
+                            </span>
+                            {isDemo && (
+                              <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 border border-green-200 px-1.5 py-0.2 rounded shrink-0">
+                                Mẫu
+                              </span>
+                            )}
+                          </div>
+                          {space.description && (
+                            <p className="text-xs text-slate-500 line-clamp-1 mt-0.5 font-medium">
+                              {space.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <span className="text-[11px] font-medium text-slate-500 shrink-0 flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-slate-400" />
+                        <span>{getRecentTimeString(idx)}</span>
+                      </span>
+                    </div>
+
+                    <div className="text-xs text-slate-600 font-semibold bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
+                      {getSpaceSummary(space, idx)}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenSpace(space.id);
+                      }}
+                      className="w-full py-2.5 rounded-xl bg-[#F0FDF4] hover:bg-[#16A34A] text-[#166534] hover:text-white border border-[#BBF7D0] hover:border-[#16A34A] text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 min-h-[44px] active:scale-98"
+                    >
+                      <span>Vào bàn học</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
         ) : activeNav === 'starred' ? (
@@ -921,9 +1220,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           /* ================= GIAO DIỆN TRANG CHỦ MẶC ĐỊNH ================= */
           <>
             {/* Lời chào: Căn trái cùng trục với các khối bên dưới */}
-            <div className="mb-7 mt-1 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="mb-6 sm:mb-7 mt-1 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+                <h1 
+                  className="font-bold text-slate-900 tracking-tight leading-tight"
+                  style={{ fontSize: 'clamp(1.4rem, 4.2vw, 1.875rem)' }}
+                >
                   Ôn bài thôi, <span className="text-[#16A34A]">{shortName}</span>
                 </h1>
                 <p className="text-xs md:text-sm text-slate-500 mt-1 font-medium">
@@ -933,8 +1235,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </div>
 
             {/* ================= SECTION 1: Bắt đầu bàn học mới ================= */}
-            <section className="mb-9">
-              <div className="flex items-center justify-between mb-3.5">
+            <section className="mb-8 sm:mb-9">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
                 <div>
                   <h2 className="text-base font-bold text-slate-900">Bắt đầu bàn học mới</h2>
                   <p className="text-xs text-slate-500 font-medium mt-0.5">
@@ -945,7 +1247,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   type="button"
                   onClick={() => handleSelectTemplate('blank')}
                   title="Mở ngay một bàn học trống không có sẵn tài liệu"
-                  className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center gap-1.5 shrink-0"
+                  className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px]"
                 >
                   <Plus className="w-4 h-4 stroke-[2.4]" />
                   <span>Tạo nhanh (Bàn trống)</span>
@@ -1104,8 +1406,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 )}
               </div>
 
-              {/* Table Container Cân Xứng Cột 5 - 4 - 3 */}
-              <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+              {/* Desktop/Tablet Table Format (hidden on mobile) */}
+              <div className="hidden sm:block w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
                 <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3.5 px-4 bg-slate-50/90 border-b border-slate-200">
                   <div className="col-span-5">Tên bàn học</div>
                   <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
@@ -1191,11 +1493,147 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                   )}
                 </div>
               </div>
+
+              {/* Mobile Vertical Card List (<640px) — Triệt tiêu cuộn ngang */}
+              <div className="sm:hidden space-y-3">
+                {displayedSpaces.length === 0 ? (
+                  <div className="py-8 text-center text-xs text-slate-400 italic bg-white border border-slate-200 rounded-2xl">
+                    Chưa có bàn học nào phù hợp với tìm kiếm
+                  </div>
+                ) : (
+                  displayedSpaces.map((space, idx) => {
+                    const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
+                    const isDemo = space.name.includes('(Demo)');
+
+                    return (
+                      <div
+                        key={space.id}
+                        onClick={() => handleOpenSpace(space.id)}
+                        className="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs active:bg-[#F0FDF4]/50 transition-all flex flex-col gap-3"
+                      >
+                        {/* Top: Thumbnail, Tên bàn học & Thời gian */}
+                        <div className="flex items-start justify-between gap-2.5">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-11 h-8 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs flex-shrink-0 flex items-center justify-center overflow-hidden">
+                              {idx % 2 === 0 ? (
+                                <div className="w-6 h-4 rounded-xs border border-green-700 bg-white flex items-center justify-center">
+                                  <div className="w-1.5 h-1.5 rounded-2xs bg-[#bbf7d0]" />
+                                </div>
+                              ) : (
+                                <div className="flex gap-0.5">
+                                  <div className="w-3 h-4 rounded-xs bg-white border border-slate-300" />
+                                  <div className="w-3 h-4 rounded-xs bg-white border border-slate-300" />
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-sm font-bold text-slate-900 truncate">
+                                  {cleanSpaceName}
+                                </span>
+                                {isDemo && (
+                                  <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 border border-green-200 px-1.5 py-0.2 rounded shrink-0">
+                                    Mẫu
+                                  </span>
+                                )}
+                              </div>
+                              {space.description && (
+                                <p className="text-xs text-slate-500 line-clamp-1 mt-0.5 font-medium">
+                                  {space.description}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <span className="text-[11px] font-medium text-slate-500 shrink-0 flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-slate-400" />
+                            <span>{getRecentTimeString(idx)}</span>
+                          </span>
+                        </div>
+
+                        {/* Middle: Tóm tắt tài liệu & ghi chú */}
+                        <div className="text-xs text-slate-600 font-semibold bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
+                          {getSpaceSummary(space, idx)}
+                        </div>
+
+                        {/* Bottom: Nút Vào bàn full-width min-h-[44px] */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenSpace(space.id);
+                          }}
+                          className="w-full py-2.5 rounded-xl bg-[#F0FDF4] hover:bg-[#16A34A] text-[#166534] hover:text-white border border-[#BBF7D0] hover:border-[#16A34A] text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 min-h-[44px] active:scale-98"
+                        >
+                          <span>Vào bàn học</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </section>
           </>
         )}
 
       </main>
+
+      {/* ================= FIXED BOTTOM NAVIGATION BAR (<640px) ================= */}
+      <nav className="fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe sm:hidden flex items-center justify-around h-16 shadow-lg">
+        <button
+          type="button"
+          onClick={() => setActiveNav('home')}
+          className={`flex flex-col items-center justify-center flex-1 h-full touch-target transition-colors ${
+            activeNav === 'home' ? 'text-[#16A34A] font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Home className={`w-5 h-5 ${activeNav === 'home' ? 'stroke-[2.5]' : 'stroke-[1.8]'}`} />
+          <span className="text-[10px] mt-0.5">Trang chủ</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveNav('my_desks')}
+          className={`flex flex-col items-center justify-center flex-1 h-full touch-target transition-colors ${
+            activeNav === 'my_desks' ? 'text-[#16A34A] font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <LayoutGrid className={`w-5 h-5 ${activeNav === 'my_desks' ? 'stroke-[2.5]' : 'stroke-[1.8]'}`} />
+          <span className="text-[10px] mt-0.5">Bàn học</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveNav('friends')}
+          className={`flex flex-col items-center justify-center flex-1 h-full touch-target transition-colors relative ${
+            activeNav === 'friends' ? 'text-[#16A34A] font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Users className={`w-5 h-5 ${activeNav === 'friends' ? 'stroke-[2.5]' : 'stroke-[1.8]'}`} />
+          <span className="text-[10px] mt-0.5">Bạn bè</span>
+          {onlineCount > 0 && (
+            <span className="absolute top-2 right-1/4 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white animate-pulse" />
+          )}
+        </button>
+
+        <Link
+          href="/dashboard"
+          className="flex flex-col items-center justify-center flex-1 h-full touch-target transition-colors text-slate-500 hover:text-[#16A34A]"
+        >
+          <CalendarDays className="w-5 h-5 stroke-[1.8]" />
+          <span className="text-[10px] mt-0.5">Nhật ký</span>
+        </Link>
+
+        <Link
+          href="/faq"
+          className="flex flex-col items-center justify-center flex-1 h-full touch-target transition-colors text-slate-500 hover:text-[#16A34A]"
+        >
+          <HelpCircle className="w-5 h-5 stroke-[1.8]" />
+          <span className="text-[10px] mt-0.5">Hỏi đáp</span>
+        </Link>
+      </nav>
 
       {/* MODAL: Thú Cưng Học Tập & Điểm Danh */}
       <PetMascotModal

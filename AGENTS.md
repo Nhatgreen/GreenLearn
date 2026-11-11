@@ -775,4 +775,62 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
     * Nhãn danh mục dùng `text-[11px] font-bold text-[#9A3412] bg-[#FFF7ED] border border-[#FFEDD5]`.
     * Chữ nội dung trả lời dùng `text-slate-700` đạt tỷ lệ tương phản >= 4.5:1.
 
+---
+
+## 9. Quy Chuẩn Responsive Đa Nền Tảng, Khắc Phục Lỗi Gõ Chữ & Đồng Bộ Phòng Học (Multi-Platform Responsive, IME Typing & Realtime Sync)
+
+* **Quy Chuẩn Thiết Kế Đáp Ứng Đa Nền Tảng (Mobile, Tablet, Desktop Responsive Architecture):**
+  * **Hệ thống Breakpoint Chuẩn Mực:**
+    - **Mobile:** `< 640px` (sm) — Giao diện tinh gọn 1 cột, ngăn kéo drawer trượt và thanh điều hướng đáy (Bottom Navigation).
+    - **Tablet:** `640px – 1023px` (sm đến lg) — Thanh bên thu gọn thành icon bar 72px (`w-18`), lưới 2 cột cho thẻ mẫu, 3 cột cho thống kê.
+    - **Desktop:** `≥ 1024px` (lg, bao gồm màn hình rộng 1920px) — Giữ nguyên vẹn 100% bố cục và công thái học buồng lái giáo dục hiện hữu.
+  * **Thẻ Meta & Vùng An Toàn Mép Màn Hình (Viewport & Safe Area Insets):**
+    - Sử dụng `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">`.
+    - Lớp tiện ích `.pb-safe`, `.pt-safe`, `.pl-safe`, `.pr-safe` hỗ trợ thiết bị có tai thỏ (iPhone notch / Dynamic Island) qua `env(safe-area-inset-*)`.
+    - Thiết lập `overflow-x: hidden` trên khung chứa chính, triệt tiêu 100% tình trạng xuất hiện thanh cuộn ngang trang.
+  * **Thanh Bên Thu Gọn & Ngăn Kéo Trượt Mobile (Sidebar Tablet Collapse & Mobile Drawer):**
+    - Trên tablet: Thanh bên chuyển thành dải icon 72px (`hidden sm:flex sm:w-18 lg:w-64`), hiện tooltip/nhãn khi hover.
+    - Trên mobile: Thanh bên cố định ẩn hoàn toàn (`hidden`). Thay thế bằng nút Hamburger ở góc trái header mở ngăn kéo trượt `Mobile Drawer` (`w-72 max-w-[85vw] pb-safe`) có nền mờ backdrop, tự động đóng khi nhấp ra ngoài hoặc nhấn phím `Escape`.
+  * **Thanh Điều Hướng Đáy Mobile (Sticky Bottom Navigation Bar):**
+    - Hiển thị cố định ở chân màn hình trên thiết bị di động (`fixed bottom-0 inset-x-0 sm:hidden z-40 bg-white/95 backdrop-blur border-t border-slate-200 pb-safe`).
+    - Gồm 5 mục chính: `Trang chủ`, `Bàn học`, `Bạn bè`, `Nhật ký`, `Hỏi đáp` với vùng chạm công thái học tối thiểu `min-h-[44px] min-w-[44px]`.
+    - Phần nội dung chính có đệm đáy `pb-24 sm:pb-10` đảm bảo không bao giờ bị thanh điều hướng đáy che khuất.
+  * **Header & Breadcrumb Tự Động Rút Gọn (Mobile Header Truncation):**
+    - Breadcrumb trên mobile tự động giới hạn độ rộng `max-w-[125px] sm:max-w-none truncate` để không tràn màn hình.
+    - Huy hiệu "Chuỗi ngày / Điểm danh" thu gọn thành icon ngọn lửa + số ngày (`streakDays + "d"`).
+    - Giữ nguyên nút Avatar người dùng ở góc phải header.
+  * **Tiêu Đề Động & Nút CTA Toàn Chiều Rộng (Fluid Typography & Mobile CTAs):**
+    - Tiêu đề H1 sử dụng `clamp(1.4rem, 4.2vw, 1.875rem)` để hiển thị vừa vặn, không bị xuống dòng vụng về.
+    - Toàn bộ nút CTA chính ("Tạo bàn học", "Thêm bạn bè") tự động chuyển thành toàn chiều rộng `w-full sm:w-auto` trên mobile với chiều cao tối thiểu 44px (`min-h-[44px]`).
+  * **Lưới Thẻ Mẫu & Thống Kê (Responsive Grid Systems):**
+    - 4 Thẻ mẫu bàn học: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4` kèm tỷ lệ khung hình `aspect-[16/10]`.
+    - Thẻ thống kê bạn bè: `grid-cols-1 sm:grid-cols-3`.
+    - Tab lọc (Tất cả / Trực tuyến / Đang ở bàn học): hỗ trợ cuộn ngang mượt mà `overflow-x-auto no-scrollbar`, ô tìm kiếm xuống dòng độc lập `w-full sm:w-64`.
+  * **Danh Sách Thẻ Bàn Học Mobile (Mobile Recent Desks Card List):**
+    - Trên desktop/tablet: giữ nguyên bảng dữ liệu 3 cột (`hidden sm:block`).
+    - Trên mobile: tự động chuyển thành danh sách thẻ xếp dọc (`sm:hidden space-y-3`) gồm ảnh thu nhỏ, tên bàn học, thẻ tóm tắt tài liệu, mốc thời gian và nút "Vào bàn học" toàn chiều rộng.
+  * **Khả Năng Chạm & Khả Năng Đọc (Touch Ergonomics & Accessibility WCAG AA):**
+    - Vùng chạm tối thiểu `44×44px` cho mọi nút, icon, tab trên thiết bị di động.
+    - Cỡ chữ ô nhập liệu tối thiểu `16px` (`text-base sm:text-xs`) ngăn ngừa hoàn toàn hiện tượng iOS Safari tự động zoom trang khi focus.
+    - Độ tương phản chữ phụ đạt chuẩn WCAG AA ($\ge 4.5:1$).
+
+* **Quy Chuẩn Bảo Vệ Đường Dẫn GitHub Pages (GitHub Pages Subpath Protection — `navigateToRoom` & `getShareRoomUrl`):**
+  * Khi xuất bản ứng dụng trên GitHub Pages với tiền tố subpath (ví dụ `/GreenLearn`), tuyệt đối **KHÔNG** sử dụng URL tương đối thô hoặc `router.push('/?room=...')` trực tiếp mà không qua kiểm tra tiền tố subpath.
+  * Toàn bộ điều hướng và liên kết chia sẻ phòng học **BẮT BUỘC** gọi qua các hàm chuẩn hóa trong `@/lib/assets`:
+    - `getShareRoomUrl(roomId, perm, spaceId)`: Tự động ghép đúng hostname và tiền tố subpath repo `/GreenLearn`, triệt tiêu 100% lỗi trang 404 "There isn't a GitHub Pages site here".
+    - `navigateToRoom(roomId, perm)`: Sử dụng `window.location.assign` hoặc Next.js Router có tiền tố an toàn, đảm bảo người dùng bấm vào lời mời học chung chuyển thẳng vào phòng học thành công.
+
+* **Quy Chuẩn Cách Ly Bộ Nhập Liệu Tiếng Việt Khi Soạn Thảo (IME Vietnamese Typing Isolation):**
+  * **Nguyên nhân gốc rễ lỗi dính chữ (mất dấu cách):** Khi người dùng gõ phím tiếng Việt (IBus-Bamboo, Unikey) trên Linux/Windows, việc component gọi cập nhật state cha (`setSpaces` / Context) trên mỗi ký tự `onChange` khiến toàn bộ cây React re-render. Quá trình reconciliation gán lại `textarea.value`, làm đứt gãy buffer bộ gõ và nuốt mất phím cách (biến `'lỗi ghi chú'` thành `'lỗigichú'`).
+  * **Giải pháp dứt điểm bắt buộc:**
+    - Sử dụng `isTypingRef = useRef(false)`, đặt `isTypingRef.current = true` khi `onFocus` và trả về `false` khi `onBlur`.
+    - Khi `isTypingRef.current === true`, `useEffect` đồng bộ từ props bên ngoài bị chặn hoàn toàn, không can thiệp vào giá trị nội bộ.
+    - Cập nhật state không gian cha và broadcast Realtime qua cơ chế debounce 280ms (`debounceTimerRef`), bảo đảm bộ gõ tiếng Việt hoạt động trơn tru 100%, gõ dấu cách và ký tự có dấu chuẩn xác tuyệt đối.
+
+* **Quy Chuẩn Đồng Bộ Bàn Học Ban Đầu Khi Bạn Học Vào Phòng (Multiplayer Initial Desk State Broadcast):**
+  * Trong kênh Realtime Supabase, sự kiện `presence.join` trả về payload `{ key, newPresences }`. `key` là chuỗi định danh ngẫu nhiên của kênh, trong khi `id` người dùng thực sự nằm trong `newPresences[0].id`.
+  * Phía Host: Khi phát hiện bạn học mới tham gia (`join`), Host trích xuất `peerId = newPresences?.[0]?.id || key`, lập tức phát broadcast `SYNC_SPACE_STATE` lần 1 kèm lịch phát lần 2 sau 700ms với `targetId: requesterId || 'all'`.
+  * Bộ lắng nghe `DESK_ACTION`: Chấp thuận xử lý action khi `targetId === 'all'` hoặc trùng khớp với `userId` của người học. Nhờ đó, ngay khi vừa bước vào phòng, bạn học được nạp đầy đủ 100% toàn bộ tài liệu, giấy ghi chú, sơ đồ tư duy và nét vẽ mà Host đã chuẩn bị sẵn trước đó.
+
+
 

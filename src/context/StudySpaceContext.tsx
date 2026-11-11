@@ -423,12 +423,12 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
-  const handleRequestSpaceState = useCallback((requesterId: string) => {
+  const handleRequestSpaceState = useCallback((requesterId?: string) => {
     const curSpace = spacesRef.current.find(s => s.id === activeSpaceIdRef.current) || spacesRef.current[0];
     broadcastDeskActionRef.current({
       type: 'SYNC_SPACE_STATE',
       payload: {
-        targetId: requesterId,
+        targetId: requesterId || 'all',
         spaceId: activeSpaceIdRef.current,
         spaceName: curSpace?.name || 'Bàn học',
         items: curSpace?.items || [],

@@ -4,6 +4,44 @@
 
 ---
 
+## 2026-11-12 01:45 — main (Triển Khai Giao Diện Responsive Toàn Diện Mobile & Tablet, Sửa Lỗi 404 GitHub Pages & Bộ Nhập Liệu Tiếng Việt)
+- **Task:** Triển khai toàn bộ 11 yêu cầu thiết kế Responsive cho Mobile (<640px) và Tablet (640px–1023px) theo phong cách mobile-first, bảo toàn 100% giao diện Desktop (≥1024px) và logic nghiệp vụ, đồng thời sửa lỗi 404 GitHub Pages khi mở link chia sẻ phòng học và lỗi bộ gõ tiếng Việt:
+  1. **Thẻ Meta & Safe Area Insets:**
+     - Bổ sung `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` trong `src/app/layout.tsx`.
+     - Thêm các utility class `.pb-safe`, `.pt-safe`, `.pl-safe`, `.pr-safe` và `overflow-x: hidden` trong `src/app/globals.css`.
+  2. **Thanh Bên (Sidebar) & Ngăn Kéo Mobile (Drawer):**
+     - Desktop (≥1024px): Giữ nguyên `w-64`.
+     - Tablet (640px–1023px): Thu gọn thành thanh icon 72px (`sm:w-18 lg:w-64`).
+     - Mobile (<640px): Ẩn thanh bên (`hidden sm:flex`), thêm nút Hamburger ở top header mở `Mobile Slide-in Drawer` (`w-72 max-w-[85vw] pb-safe`) với lớp phủ mờ backdrop, hỗ trợ đóng khi bấm ra ngoài hoặc nhấn `Escape`.
+  3. **Thanh Điều Hướng Đáy Mobile (Bottom Navigation Bar):**
+     - Hiển thị cố định dưới đáy màn hình trên mobile (`fixed bottom-0 inset-x-0 sm:hidden z-40 bg-white/95 backdrop-blur border-t border-slate-200 pb-safe`).
+     - 5 mục chính: Trang chủ, Bàn học, Bạn bè, Nhật ký, Hỏi đáp với vùng chạm tối thiểu 44×44px.
+     - Nội dung chính có đệm đáy `pb-24 sm:pb-10` chống che khuất.
+  4. **Header, Breadcrumb & Typography:**
+     - Breadcrumb mobile tự động rút gọn với `max-w-[125px] sm:max-w-none truncate`.
+     - Chuỗi ngày / Điểm danh thu gọn thành icon + số ngày trên mobile.
+     - Áp dụng `clamp(1.4rem, 4.2vw, 1.875rem)` cho tiêu đề H1.
+     - Các nút CTA chính ("Tạo bàn học", "Thêm bạn bè") tự động chiếm 100% chiều rộng trên mobile (`w-full sm:w-auto min-h-[44px]`).
+  5. **Lưới Thẻ Mẫu & Thống Kê:**
+     - 4 Thẻ mẫu bàn học: 1 cột trên mobile, 2 cột trên tablet, 4 cột trên desktop (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 aspect-[16/10]`).
+     - Thẻ thống kê bạn bè: 1 cột trên mobile, 3 cột trên tablet/desktop (`grid-cols-1 sm:grid-cols-3`).
+     - Tab lọc (Tất cả / Trực tuyến / Đang ở bàn học) cuộn ngang mượt mà (`overflow-x-auto no-scrollbar`), ô tìm kiếm xuống dòng riêng chiếm full-width trên mobile.
+  6. **Bảng "Mở Lại Gần Đây" & Danh Sách Thẻ Mobile:**
+     - Desktop/tablet: Giữ nguyên dạng bảng dữ liệu (`hidden sm:block`).
+     - Mobile: Tự động chuyển thành danh sách thẻ xếp dọc (`sm:hidden space-y-3`) gồm thumbnail, tên bàn học, tóm tắt tài liệu, mốc thời gian và nút "Vào bàn học" full-width, triệt tiêu 100% tràn thanh cuộn ngang.
+  7. **Khắc Phục Lỗi 404 GitHub Pages Khi Chia Sẻ Phòng Học:**
+     - Tạo hàm `getShareRoomUrl(roomId, perm, spaceId)` và `navigateToRoom(roomId, perm)` trong `src/lib/assets.ts`, tự động ghép đúng subpath `/GreenLearn` trên GitHub Pages (`process.env.NEXT_PUBLIC_BASE_PATH` hoặc `window.location.pathname`).
+     - Cập nhật toàn bộ link chia sẻ phòng học trong `MultiplayerBar.tsx`, `InviteModal.tsx`, `FriendsRightDrawer.tsx`, `BottomLeftKnowledge.tsx` và `SocialPresenceContext.tsx`.
+  8. **Khắc Phục Lỗi Dính Chữ / Nuốt Phím Cách Khi Nhập Liệu Tiếng Việt (IME Isolation):**
+     - Thêm `isTypingRef = useRef(false)`, `onFocus`/`onBlur` và cơ chế debounce 280ms trong `StickyNoteItem.tsx` và `MindMapNodeItem.tsx`.
+     - Ngăn chặn re-render từ context cha ghi đè lên `<textarea>` khi bộ gõ tiếng Việt (Unikey/Bamboo) đang xử lý buffer tổ hợp phím.
+  9. **Kiểm Thử & Đảm Bảo Chất Lượng:**
+     - `pnpm test`: 20/20 test suites passed, 89/89 tests passed.
+     - `pnpm run build:pages`: 14/14 static pages exported cleanly cho GitHub Pages.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 01:12 — main (Khắc Phục Lỗi Đồng Bộ Bàn Học Ban Đầu & Lỗi Không Nhận Được Lời Mời Học Chung)
 - **Task:** Xử lý 2 lỗi người dùng phản hồi: "Chưa đồng bộ bàn học khi mời vào thì sẽ không thấy được bàn học lúc chưa mời và lỗi khi mời thì người nhận lời mời không hiện thông báo":
   1. **Khắc Phục Lỗi Không Thấy Bàn Học Cũ Khi Được Mời Vào:**

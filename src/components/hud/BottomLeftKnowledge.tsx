@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useStudySpace } from '@/context/StudySpaceContext';
+import { getShareRoomUrl } from '@/lib/assets';
 import { 
   Upload, 
   Share2,
@@ -888,18 +889,14 @@ export function BottomLeftKnowledge() {
                   <input
                     type="text"
                     readOnly
-                    value={
-                      typeof window !== 'undefined'
-                        ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}`
-                        : 'https://nhatgreen.github.io/GreenLearn/'
-                    }
+                    value={getShareRoomUrl(multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id), multiplayerPermission)}
                     className="bg-transparent text-xs text-slate-800 flex-1 outline-none font-mono select-all"
                   />
                   <button
                     type="button"
                     onClick={() => {
                       if (typeof window !== 'undefined') {
-                        const url = `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}`;
+                        const url = getShareRoomUrl(multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id), multiplayerPermission);
                         navigator.clipboard.writeText(url);
                         setCopiedLink(true);
                         setTimeout(() => setCopiedLink(false), 2500);
@@ -920,7 +917,7 @@ export function BottomLeftKnowledge() {
                     <button
                       type="button"
                       onClick={() => {
-                        const url = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}` : '';
+                        const url = getShareRoomUrl(multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id), multiplayerPermission);
                         window.open(`https://zalo.me/share?url=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
                       }}
                       className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold transition-colors cursor-pointer"
@@ -930,7 +927,7 @@ export function BottomLeftKnowledge() {
                     <button
                       type="button"
                       onClick={() => {
-                        const url = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}` : '';
+                        const url = getShareRoomUrl(multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id), multiplayerPermission);
                         window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'noopener,noreferrer');
                       }}
                       className="px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 hover:bg-sky-100 font-bold transition-colors cursor-pointer"
@@ -968,7 +965,7 @@ export function BottomLeftKnowledge() {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(
-                        typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?room=${multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id)}&perm=${multiplayerPermission}` : ''
+                        getShareRoomUrl(multiplayerRoomId || (roomSalt ? `${activeSpace.id}-${roomSalt}` : activeSpace.id), multiplayerPermission)
                       )}`}
                       alt="Mã QR phòng học"
                       className="w-32 h-32 rounded-xl bg-white p-1 border border-slate-200 shadow-2xs"
