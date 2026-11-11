@@ -4,6 +4,38 @@
 
 ---
 
+## 2026-11-12 00:35 — main (Chuẩn Hóa Toàn Diện UX/UI Trang Chủ: Breadcrumb Động, Triệt Tiêu UUID, Thống Nhất Typography & Tối Ưu Thẻ Bàn Học)
+- **Task:** Giải quyết triệt để 9 điểm nhận xét và thứ tự ưu tiên nâng cấp UX/UI:
+  1. **Breadcrumb Động Theo Trang:**
+     - Loại bỏ breadcrumb cố định tĩnh ("Bàn học của Nhật").
+     - Breadcrumb hiển thị động chính xác theo ngữ cảnh điều hướng: `Trang chủ`, `Bàn học của tôi`, `Đã gắn dấu sao`, `Bạn bè & Nhóm học` theo `activeNav`.
+  2. **Triệt Tiêu Hoàn Toàn Mã UUID Ở Thẻ Bạn Bè:**
+     - Tạo hàm chuẩn hóa `SocialFriendService.getFriendlyRoomName(buddy, spaces)` phân giải mã UUID thành tên bàn học thân thiện (`Bàn học: [Tên Bàn]` hoặc `Bàn học của [Tên Bạn]`).
+     - Áp dụng đồng bộ trên `HomePage`, thanh ẩn phải bàn học `FriendsRightDrawer`, và thông báo mời học `FriendInviteToast`.
+  3. **Làm Rõ Vai Trò Nút CTA Tạo Bàn Học:**
+     - Đổi tên nút CTA thành **"Tạo nhanh (Bàn trống)"** kèm phụ đề hướng dẫn để người dùng phân biệt rành mạch với 4 thẻ mẫu.
+  4. **Thêm Icon Toàn Bộ Sidebar:**
+     - Bổ sung biểu tượng SVG Lucide cho toàn bộ 7 mục điều hướng (`Home`, `LayoutGrid`, `Star`, `Users`, `CalendarDays`, `HelpCircle`, `Info`).
+     - Tinh chỉnh widget "Mục tiêu hôm nay" (`bg-[#F0FDF4]/60 border-[#BBF7D0]`), chống ngắt dòng xấu và tăng độ tương phản.
+  5. **Gom Thông Tin Mầm Xanh & Chuyển Đổi Trạng Thái Chuỗi Học Tập Tích Cực:**
+     - Loại bỏ huy hiệu Mầm Xanh lặp lại trong khối lời chào, giữ lại ở nút bấm top header và widget sidebar.
+     - Khi `streakDays === 0`, chuyển thành lời kêu gọi hành động tích cực: **"Bắt đầu chuỗi đầu tiên hôm nay"** (top header) và **"Sẵn sàng chuỗi mới"** (sidebar).
+  6. **Cân Bằng Bảng "Mở Lại Gần Đây" & Tăng Tương Phản:**
+     - Tái cấu trúc tỷ lệ cột `5 - 4 - 3` loại bỏ khoảng cách thừa.
+     - Tăng độ tương phản giờ học với icon `Clock` và thêm nút hành động **"Vào bàn"** (`ArrowRight`) trực tiếp trên mỗi hàng.
+  7. **Thống Nhất Kiểu Chữ H1:**
+     - Đồng bộ font Sans-serif in đậm (`text-2xl md:text-3xl font-bold text-slate-900 tracking-tight`) giữa các trang, loại bỏ font Serif kích thước lệch tông.
+  8. **Đồng Bộ 4 Thẻ Mẫu Bàn Học:**
+     - Thay đổi khối nền đen của thẻ "Học nhóm" thành thẻ trắng tinh tế với header Xanh Lá GreenLearn `#16A34A`.
+     - Căn chỉnh chiều cao và vị trí nội dung chuẩn xác từng pixel.
+- **Verified by:**
+  - `pnpm test`: 19/19 test suites passed (84/84 tests passed).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+  - `pnpm run docs:index && pnpm run docs:check`: Ký hiệu và chỉ mục bộ nhớ AI đạt chuẩn 100%.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 00:30 — main (Cơ Chế Phê Duyệt Của Chủ Phòng & Khắc Phục Lỗi 404 GitHub Pages Khi Vào Học Cùng)
 - **Task:** Xử lý triệt để phản hồi người dùng: "Bấm vào học cùng trong phần bạn bè sẽ hiện như thế này là sao (404) và tôi muốn khi một người bấm vào học cùng thì cần chủ phòng đồng ý cho vào":
   1. **Khắc Phục Tuyệt Đối Lỗi 404 GitHub Pages Khi Bấm "Vào học cùng":**

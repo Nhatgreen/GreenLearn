@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useSocialPresence } from '@/hooks/useSocialPresence';
 import { useStudySpace } from '@/context/StudySpaceContext';
+import { SocialFriendService } from '@/services/SocialFriendService';
 
 interface FriendsRightDrawerProps {
   isFocusMode?: boolean;
@@ -32,6 +33,7 @@ export function FriendsRightDrawer({ isFocusMode = false }: FriendsRightDrawerPr
   const [copiedLink, setCopiedLink] = useState(false);
 
   const {
+    spaces,
     activeSpace,
     multiplayerRoomId,
     isMultiplayerConnected,
@@ -346,8 +348,8 @@ export function FriendsRightDrawer({ isFocusMode = false }: FriendsRightDrawerPr
                               <span>Cùng phòng</span>
                             </span>
                           ) : isInOtherRoom ? (
-                            <span className="text-sky-600 font-semibold truncate block max-w-[110px]">
-                              Phòng: {buddy.currentRoom}
+                            <span className="text-sky-600 font-semibold truncate block max-w-[120px]">
+                              {SocialFriendService.getFriendlyRoomName(buddy, spaces)}
                             </span>
                           ) : buddy.online ? (
                             <span className="text-emerald-600 font-semibold">Trực tuyến</span>

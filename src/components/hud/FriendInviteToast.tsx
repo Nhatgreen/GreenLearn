@@ -92,9 +92,9 @@ export function FriendInviteToast({
             <p className="text-xs text-slate-600 line-clamp-2 mt-0.5">
               Đang mời bạn vào cùng học: <b className="text-slate-800">{invite.spaceName}</b>
             </p>
-            <div className="flex items-center gap-1.5 mt-1 text-[11px] text-slate-500 font-mono">
-              <Users className="w-3 h-3 text-slate-400" />
-              <span>Phòng: {invite.roomId}</span>
+            <div className="flex items-center gap-1.5 mt-1 text-[11px] text-slate-500 font-medium">
+              <Users className="w-3.5 h-3.5 text-slate-400" />
+              <span>Bàn học: {invite.spaceName || 'Học nhóm trực tuyến'}</span>
             </div>
           </div>
         </div>

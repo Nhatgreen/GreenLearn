@@ -109,10 +109,11 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
         name?: string;
         avatarColor?: string;
         currentRoom?: string;
+        currentSpaceName?: string;
         status?: string;
       }>();
 
-      const onlinePeers: Array<{ id: string; name?: string; currentRoom?: string }> = [];
+      const onlinePeers: Array<{ id: string; name?: string; currentRoom?: string; currentSpaceName?: string }> = [];
       Object.keys(state).forEach(key => {
         if (key !== currentUser.id) {
           const uState = state[key]?.[0];
@@ -120,7 +121,8 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
             onlinePeers.push({
               id: key,
               name: uState.name,
-              currentRoom: uState.currentRoom
+              currentRoom: uState.currentRoom,
+              currentSpaceName: uState.currentSpaceName
             });
           }
         }
@@ -214,6 +216,7 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
           name: currentUser.name,
           avatarColor: currentUser.avatarColor,
           currentRoom: activeRoomId,
+          currentSpaceName: currentSpaceName,
           status: activeRoomId ? 'in_desk' : 'online',
           joinedAt: Date.now()
         });

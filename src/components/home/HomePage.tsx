@@ -22,12 +22,19 @@ import {
   Trash2,
   UserPlus,
   X,
-  Check
+  Check,
+  Home,
+  LayoutGrid,
+  Star,
+  CalendarDays,
+  HelpCircle,
+  Info
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { usePetMascot } from '@/hooks/usePetMascot';
 import { useSocialPresence } from '@/hooks/useSocialPresence';
+import { SocialFriendService } from '@/services/SocialFriendService';
 import { PetMascotModal } from '@/components/pet/PetMascotModal';
 import { getAssetPath } from '@/lib/assets';
 import { StudySpace } from '@/types/studyspace';
@@ -191,53 +198,62 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           </div>
 
           {/* Navigation Links */}
-          <nav className="space-y-1 text-xs font-semibold">
+          <nav className="space-y-1.5 text-xs font-semibold">
             <button
               onClick={() => setActiveNav('home')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
+              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
                 activeNav === 'home'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
-              <span>Trang chủ</span>
+              <span className="flex items-center gap-2.5">
+                <Home className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'home' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
+                <span>Trang chủ</span>
+              </span>
             </button>
 
             <button
-              onClick={() => {
-                setActiveNav('my_desks');
-                onEnterDesk();
-              }}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
+              onClick={() => setActiveNav('my_desks')}
+              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
                 activeNav === 'my_desks'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
-              <span>Bàn học của tôi</span>
+              <span className="flex items-center gap-2.5">
+                <LayoutGrid className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'my_desks' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
+                <span>Bàn học của tôi</span>
+              </span>
+              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px] font-bold">
+                {spaces.length}
+              </span>
             </button>
 
             <button
               onClick={() => setActiveNav('starred')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
+              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
                 activeNav === 'starred'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
-              <span>Đã gắn dấu sao</span>
+              <span className="flex items-center gap-2.5">
+                <Star className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'starred' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
+                <span>Đã gắn dấu sao</span>
+              </span>
             </button>
 
             <button
               onClick={() => setActiveNav('friends')}
-              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between ${
+              className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-between group ${
                 activeNav === 'friends'
                   ? 'bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-bold shadow-2xs'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
-              <span className="flex items-center gap-2">
-                <Users className="w-4 h-4 stroke-[2.2]" />
+              <span className="flex items-center gap-2.5">
+                <Users className={`w-4 h-4 stroke-[2.2] transition-colors ${activeNav === 'friends' ? 'text-[#166534]' : 'text-slate-400 group-hover:text-slate-700'}`} />
                 <span>Bạn bè</span>
               </span>
               {onlineCount > 0 && (
@@ -249,23 +265,26 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
             <Link
               href="/dashboard"
-              className="w-full block px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold"
+              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
             >
-              Nhật ký học
+              <CalendarDays className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors" />
+              <span>Nhật ký học</span>
             </Link>
 
             <Link
               href="/faq"
-              className="w-full block px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold"
+              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
             >
-              Hỏi đáp
+              <HelpCircle className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors" />
+              <span>Hỏi đáp</span>
             </Link>
 
             <Link
               href="/about"
-              className="w-full block px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold"
+              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-[#166534] hover:bg-green-50/60 transition-colors font-semibold group"
             >
-              Giới thiệu & Kỹ thuật
+              <Info className="w-4 h-4 stroke-[2.2] text-slate-400 group-hover:text-[#166534] transition-colors" />
+              <span>Giới thiệu & Kỹ thuật</span>
             </Link>
           </nav>
         </div>
@@ -293,34 +312,37 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                     Cấp {pet.stage}
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-500 truncate">
-                  Chuỗi {pet.streakDays} ngày • {pet.isSleeping ? 'Đang ngủ' : 'Tỉnh táo'}
+                <p className="text-[10px] text-slate-600 truncate mt-0.5">
+                  {pet.streakDays > 0 ? `Chuỗi ${pet.streakDays} ngày` : 'Sẵn sàng chuỗi mới'} • {pet.isSleeping ? 'Đang ngủ' : 'Tỉnh táo'}
                 </p>
               </div>
             </div>
           </button>
 
           {/* Widget: Mục tiêu học hôm nay */}
-          <div className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[11px] font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+          <div className="p-3.5 rounded-2xl bg-[#F0FDF4]/60 border border-[#BBF7D0] shadow-2xs">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5 text-[#16A34A]" />
-                Mục tiêu hôm nay
+                <span>Mục tiêu hôm nay</span>
               </span>
-              <span className="text-[11px] font-bold text-[#16A34A]">1 / 4 phiên</span>
+              <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 px-1.5 py-0.5 rounded-md">
+                1 / 4 phiên
+              </span>
             </div>
-            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-1.5">
+            <div className="w-full h-1.5 bg-slate-200/70 rounded-full overflow-hidden mb-2">
               <div className="h-full bg-[#16A34A] rounded-full transition-all" style={{ width: '25%' }} />
             </div>
-            <p className="text-[10px] text-slate-500 leading-tight mb-2.5">
-              Hoàn thành phiên 25 phút Pomodoro để duy trì chuỗi học.
+            <p className="text-[11px] text-slate-600 leading-snug mb-2.5">
+              Hoàn thành 1 phiên 25 phút Pomodoro để duy trì chuỗi học.
             </p>
             <button
               type="button"
               onClick={() => onEnterDesk()}
-              className="w-full py-1.5 bg-green-50/80 hover:bg-green-100 border border-green-200 text-[#166534] text-[11px] font-bold rounded-xl transition-colors text-center cursor-pointer active:scale-98"
+              className="w-full py-2 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold rounded-xl shadow-xs transition-colors text-center cursor-pointer active:scale-98 flex items-center justify-center gap-1.5"
             >
-              Bắt đầu phiên 25p
+              <Clock className="w-3.5 h-3.5" />
+              <span>Bắt đầu phiên 25p</span>
             </button>
           </div>
         </div>
@@ -332,9 +354,20 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
         <header className="sticky top-0 z-20 -mx-6 md:-mx-10 px-6 md:px-10 py-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between mb-6 shadow-2xs">
           {/* Breadcrumb bên trái */}
           <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-            <span>Không gian học tập</span>
+            <button
+              type="button"
+              onClick={() => setActiveNav('home')}
+              className="hover:text-[#16A34A] transition-colors cursor-pointer"
+            >
+              Không gian học tập
+            </button>
             <span>/</span>
-            <span className="text-slate-900 font-bold">Bàn học của {shortName}</span>
+            <span className="text-slate-900 font-bold">
+              {activeNav === 'home' && 'Trang chủ'}
+              {activeNav === 'my_desks' && 'Bàn học của tôi'}
+              {activeNav === 'starred' && 'Đã gắn dấu sao'}
+              {activeNav === 'friends' && 'Bạn bè & Nhóm học'}
+            </span>
           </div>
 
           {/* Nút hành động bên phải */}
@@ -343,8 +376,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <button
               type="button"
               onClick={() => setIsPetModalOpen(true)}
-              title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • Chuỗi ${pet.streakDays} ngày liên tiếp (Bấm để xem và điểm danh)`}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-2 active:scale-98 ${
+              title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • ${pet.streakDays > 0 ? `Chuỗi ${pet.streakDays} ngày liên tiếp` : 'Chưa có chuỗi ngày'} (Bấm để xem và điểm danh)`}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-2 active:scale-98 ${
                 isClaimedToday 
                   ? 'bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534]'
                   : 'bg-white border border-slate-200 text-slate-800 hover:border-[#16A34A] hover:bg-green-50/50 hover:shadow-xs'
@@ -355,7 +388,13 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 alt={pet.name}
                 className="w-5 h-5 object-contain"
               />
-              <span>Chuỗi {pet.streakDays} ngày · {isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}</span>
+              <span>
+                {pet.streakDays > 0
+                  ? `Chuỗi ${pet.streakDays} ngày · ${isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}`
+                  : isClaimedToday
+                  ? 'Đã điểm danh hôm nay'
+                  : 'Bắt đầu chuỗi đầu tiên hôm nay'}
+              </span>
             </button>
 
             {/* Avatar tròn bên phải */}
@@ -658,7 +697,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                           <div className="text-[11px] mt-0.5">
                             {buddy.online && buddy.currentRoom ? (
                               <span className="text-sky-600 font-semibold truncate block">
-                                Phòng: {buddy.currentRoom}
+                                {SocialFriendService.getFriendlyRoomName(buddy, spaces)}
                               </span>
                             ) : buddy.online ? (
                               <span className="text-emerald-600 font-semibold">Đang trực tuyến</span>
@@ -712,196 +751,42 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               );
             })()}
           </div>
-        ) : (
-          <>
-            {/* Lời chào: Căn trái cùng trục với các khối bên dưới */}
-            <div className="mb-8 mt-1 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        ) : activeNav === 'my_desks' ? (
+          /* ================= GIAO DIỆN BÀN HỌC CỦA TÔI ================= */
+          <div className="flex-1 flex flex-col animate-fade-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-3xl md:text-4xl font-serif text-slate-900 tracking-tight">
-                  Ôn bài thôi, <span className="text-[#16A34A] font-serif font-bold">{shortName}</span>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center text-[#16A34A]">
+                    <LayoutGrid className="w-5 h-5 stroke-[2.4]" />
+                  </div>
+                  <span>Bàn học của tôi</span>
                 </h1>
-                <p className="text-xs text-slate-500 mt-1 font-medium">
-                  Không gian học thức tích hợp AI 2.5D — Nền tảng học tập mở & miễn phí trọn đời
+                <p className="text-xs md:text-sm text-slate-500 font-medium mt-1">
+                  Quản lý toàn bộ {spaces.length} không gian bàn học và tài liệu đã tạo của bạn.
                 </p>
               </div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534] text-xs font-bold self-start sm:self-auto shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#16A34A]" />
-                <span>Mầm Xanh: Cấp {pet.stage} • {info.title}</span>
-              </div>
-            </div>
 
-        {/* ================= SECTION 1: Bắt đầu bàn học mới ================= */}
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-3.5">
-            <div>
-              <h2 className="text-sm md:text-base font-bold text-slate-900">Bắt đầu bàn học mới</h2>
-              <p className="text-xs md:text-sm text-slate-500 font-medium mt-0.5">
-                Chọn một mẫu, hoặc mở bàn trống rồi thả tài liệu vào.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleSelectTemplate('blank')}
-              className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center gap-1.5"
-            >
-              <Plus className="w-3.5 h-3.5 stroke-[2.4]" />
-              <span>Tạo bàn học</span>
-            </button>
-          </div>
-
-          {/* 4 Template Cards với hình xem trước lớn và mô tả rõ ràng */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Card 1: Bàn học trống */}
-            <div
-              onClick={() => handleSelectTemplate('blank')}
-              className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
-            >
-              <div className="aspect-[16/10] w-full rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center bg-slate-50/70 group-hover:border-[#16A34A] group-hover:bg-[#F0FDF4]/50 transition-colors gap-1.5">
-                <Plus className="w-7 h-7 text-slate-400 group-hover:text-[#16A34A] stroke-[1.8] transition-colors" />
-                <span className="text-[11px] font-medium text-slate-600 group-hover:text-[#166534]">Thả tài liệu vào đây</span>
-              </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors">
-                Bàn học trống
-              </span>
-              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                Bàn học tự do, kéo thả tài liệu tùy ý
-              </p>
-            </div>
-
-            {/* Card 2: Ôn thi giữa kỳ */}
-            <div
-              onClick={() => handleSelectTemplate('midterm')}
-              className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
-            >
-              <div className="aspect-[16/10] w-full rounded-xl bg-slate-100 p-3 flex items-center justify-center gap-3 relative overflow-hidden group-hover:bg-[#F0FDF4]/60 transition-colors">
-                {/* Cuốn sách nâu lớn rõ chi tiết */}
-                <div className="w-24 h-16 rounded-xs border-2 border-[#5c3920] bg-white shadow-xs flex overflow-hidden">
-                  <div className="w-1/2 border-r border-slate-200 p-1.5 flex flex-col gap-1">
-                    <div className="w-8 h-0.5 bg-slate-400 rounded-full" />
-                    <div className="w-6 h-0.5 bg-slate-300 rounded-full" />
-                    <div className="w-7 h-0.5 bg-slate-300 rounded-full" />
-                  </div>
-                  <div className="w-1/2 p-1.5 flex flex-col gap-1">
-                    <div className="w-7 h-0.5 bg-[#16A34A] rounded-full" />
-                    <div className="w-8 h-0.5 bg-slate-300 rounded-full" />
-                    <div className="w-5 h-0.5 bg-slate-300 rounded-full" />
-                  </div>
-                </div>
-                {/* Tờ ghi chú vàng cạnh sách */}
-                <div className="w-10 h-13 rounded-2xs bg-[#fef08a] border border-amber-200/80 shadow-xs p-1 flex flex-col gap-1">
-                  <div className="w-full h-1 bg-amber-300/80 rounded-2xs" />
-                  <div className="w-6 h-0.5 bg-amber-600/60 rounded-full mt-1" />
-                  <div className="w-7 h-0.5 bg-amber-600/40 rounded-full" />
-                </div>
-              </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors">
-                Ôn thi giữa kỳ
-              </span>
-              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                Giáo trình lý thuyết + vở ghi chú vàng
-              </p>
-            </div>
-
-            {/* Card 3: Giáo trình + đề thi */}
-            <div
-              onClick={() => handleSelectTemplate('curriculum_exam')}
-              className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
-            >
-              <div className="aspect-[16/10] w-full rounded-xl bg-slate-100 p-3 flex items-center justify-center gap-3 relative overflow-hidden group-hover:bg-[#F0FDF4]/60 transition-colors">
-                {/* 2 Tờ tài liệu A4 song song */}
-                <div className="w-14 h-18 rounded-xs bg-white border border-slate-300 shadow-xs p-1.5 flex flex-col gap-1">
-                  <div className="w-8 h-1 bg-[#16A34A] rounded-full" />
-                  <div className="w-10 h-0.5 bg-slate-300 rounded-full mt-1" />
-                  <div className="w-8 h-0.5 bg-slate-300 rounded-full" />
-                  <div className="w-9 h-0.5 bg-slate-200 rounded-full" />
-                </div>
-                <div className="w-14 h-18 rounded-xs bg-white border border-slate-300 shadow-xs p-1.5 flex flex-col gap-1 relative">
-                  <div className="w-8 h-1 bg-sky-600 rounded-full" />
-                  <div className="w-10 h-0.5 bg-slate-300 rounded-full mt-1" />
-                  <div className="w-9 h-0.5 bg-slate-300 rounded-full" />
-                  {/* Sticky note nhỏ đè góc */}
-                  <div className="absolute -bottom-1 -right-1 w-6 h-7 rounded-2xs bg-[#fef08a] border border-amber-200 shadow-xs" />
-                </div>
-              </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors">
-                Giáo trình + đề thi
-              </span>
-              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                Giáo trình và đề thi mở song song
-              </p>
-            </div>
-
-            {/* Card 4: Học nhóm */}
-            <div
-              onClick={() => handleSelectTemplate('group_study')}
-              className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
-            >
-              <div className="aspect-[16/10] w-full rounded-xl bg-slate-100 p-3 flex items-center justify-center relative overflow-hidden group-hover:bg-[#F0FDF4]/60 transition-colors">
-                {/* Bìa sổ chung ở trung tâm */}
-                <div className="w-22 h-15 rounded-xs bg-[#242D3D] shadow-xs flex items-center justify-center">
-                  <div className="w-16 h-10 border border-green-300/40 rounded-2xs flex flex-col items-center justify-center">
-                    <span className="text-[8px] font-bold text-green-300 tracking-wider">ROOM</span>
-                  </div>
-                </div>
-
-                {/* Con trỏ chuột 1 */}
-                <div className="absolute top-2.5 left-4 flex items-start gap-0.5">
-                  <MousePointer2 className="w-4 h-4 text-[#16A34A] fill-[#16A34A] -rotate-12 drop-shadow-xs" />
-                  <span className="px-1.5 py-0.5 bg-[#16A34A] text-white text-[9px] font-bold rounded-md shadow-xs leading-none">
-                    {shortName}
-                  </span>
-                </div>
-
-                {/* Con trỏ chuột 2 */}
-                <div className="absolute bottom-2.5 right-4 flex items-start gap-0.5">
-                  <MousePointer2 className="w-4 h-4 text-emerald-600 fill-emerald-600 -rotate-12 drop-shadow-xs" />
-                  <span className="px-1.5 py-0.5 bg-emerald-600 text-white text-[9px] font-bold rounded-md shadow-xs leading-none">
-                    Bạn học
-                  </span>
-                </div>
-              </div>
-              <span className="mt-3 text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors">
-                Học nhóm
-              </span>
-              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                Cùng bạn bè ôn bài thời gian thực
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ================= SECTION 2: Mở lại gần đây ================= */}
-        <section className="mb-10">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm md:text-base font-bold text-slate-900">Mở lại gần đây</h2>
-            {spaces.length > 3 && (
               <button
                 type="button"
-                onClick={() => setShowAllSpaces(!showAllSpaces)}
-                className="text-xs font-bold text-[#16A34A] hover:text-[#15803D] hover:underline cursor-pointer"
+                onClick={() => handleSelectTemplate('blank')}
+                className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center gap-1.5 self-start sm:self-auto"
               >
-                {showAllSpaces ? 'Thu gọn' : 'Xem tất cả'}
+                <Plus className="w-4 h-4 stroke-[2.4]" />
+                <span>Tạo bàn học mới</span>
               </button>
-            )}
-          </div>
-
-          {/* Table Container */}
-          <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-            {/* Table Header: Chữ xám đậm đạt tương phản */}
-            <div className="grid grid-cols-12 text-xs font-bold text-slate-500 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
-              <div className="col-span-6">Tên bàn học</div>
-              <div className="col-span-3 text-left">Tài liệu & ghi chú</div>
-              <div className="col-span-3 text-right pr-2">Mở lần cuối</div>
             </div>
 
-            {/* Table Rows */}
-            <div className="divide-y divide-slate-100">
-              {displayedSpaces.length === 0 ? (
-                <div className="py-8 text-center text-xs text-slate-400 italic">
-                  Chưa có bàn học nào phù hợp với tìm kiếm
-                </div>
-              ) : (
-                displayedSpaces.map((space, idx) => {
+            {/* Bảng danh sách bàn học của tôi */}
+            <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+              <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
+                <div className="col-span-5">Tên bàn học</div>
+                <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
+                <div className="col-span-3 text-right pr-2">Mở lần cuối & Thao tác</div>
+              </div>
+
+              <div className="divide-y divide-slate-100">
+                {spaces.map((space, idx) => {
                   const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
                   const isDemo = space.name.includes('(Demo)');
 
@@ -909,25 +794,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                     <div
                       key={space.id}
                       onClick={() => handleOpenSpace(space.id)}
-                      className="grid grid-cols-12 items-center py-3.5 px-4 hover:bg-[#F0FDF4]/50 transition-colors cursor-pointer group"
+                      className="grid grid-cols-12 items-center py-3.5 px-4 hover:bg-[#F0FDF4]/70 transition-all cursor-pointer group"
                     >
-                      {/* Name & Subtitle kèm Thumbnail nhỏ 56x40px */}
-                      <div className="col-span-6 pr-3 flex items-center gap-3">
-                        {/* Ảnh thu nhỏ bàn học 56x40px */}
-                        <div className="w-14 h-10 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs flex-shrink-0 flex items-center justify-center relative overflow-hidden group-hover:border-[#16A34A]/60 transition-colors">
-                          {idx % 2 === 0 ? (
-                            <div className="w-7 h-5 rounded-xs border border-green-700 bg-white flex items-center justify-center">
-                              <div className="w-2 h-2 rounded-2xs bg-[#bbf7d0]" />
-                            </div>
-                          ) : (
-                            <div className="flex gap-0.5">
-                              <div className="w-4 h-6 rounded-xs bg-white border border-slate-300" />
-                              <div className="w-4 h-6 rounded-xs bg-white border border-slate-300" />
-                            </div>
-                          )}
+                      <div className="col-span-5 pr-3 flex items-center gap-3">
+                        <div className="w-12 h-9 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs flex-shrink-0 flex items-center justify-center relative overflow-hidden group-hover:border-[#16A34A]/60 transition-colors">
+                          <BookOpen className="w-4 h-4 text-[#16A34A]" />
                         </div>
-
-                        {/* Text info */}
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors truncate">
@@ -947,23 +819,380 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                         </div>
                       </div>
 
-                      {/* Summary of Items */}
-                      <div className="col-span-3 text-xs text-slate-600 font-medium">
+                      <div className="col-span-4 text-xs text-slate-600 font-medium">
                         {getSpaceSummary(space, idx)}
                       </div>
 
-                      {/* Specific Last Opened Time */}
-                      <div className="col-span-3 text-xs text-slate-400 text-right pr-2">
-                        {getRecentTimeString(idx)}
+                      <div className="col-span-3 flex items-center justify-end gap-2.5 pr-1">
+                        <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{getRecentTimeString(idx)}</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenSpace(space.id);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-green-50 group-hover:bg-[#16A34A] text-[#166534] group-hover:text-white border border-green-200 group-hover:border-[#16A34A] text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1"
+                        >
+                          <span>Vào bàn</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
                       </div>
                     </div>
                   );
-                })
-              )}
+                })}
+              </div>
             </div>
           </div>
-        </section>
-        </>
+        ) : activeNav === 'starred' ? (
+          /* ================= GIAO DIỆN ĐÃ GẮN DẤU SAO ================= */
+          <div className="flex-1 flex flex-col animate-fade-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                    <Star className="w-5 h-5 fill-amber-500 stroke-amber-500" />
+                  </div>
+                  <span>Bàn học đã gắn dấu sao</span>
+                </h1>
+                <p className="text-xs md:text-sm text-slate-500 font-medium mt-1">
+                  Các bàn học trọng tâm được đánh dấu sao để ôn tập nhanh chóng.
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+              <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
+                <div className="col-span-5">Tên bàn học</div>
+                <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
+                <div className="col-span-3 text-right pr-2">Mở lần cuối & Thao tác</div>
+              </div>
+
+              <div className="divide-y divide-slate-100">
+                {spaces.slice(0, 2).map((space, idx) => (
+                  <div
+                    key={space.id}
+                    onClick={() => handleOpenSpace(space.id)}
+                    className="grid grid-cols-12 items-center py-3.5 px-4 hover:bg-[#F0FDF4]/70 transition-all cursor-pointer group"
+                  >
+                    <div className="col-span-5 pr-3 flex items-center gap-3">
+                      <Star className="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" />
+                      <div className="min-w-0">
+                        <span className="text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors truncate block">
+                          {space.name.replace(/\(Demo\)/i, '').trim()}
+                        </span>
+                        {space.description && (
+                          <div className="text-xs text-slate-500 truncate mt-0.5">
+                            {space.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-span-4 text-xs text-slate-600 font-medium">
+                      {getSpaceSummary(space, idx)}
+                    </div>
+
+                    <div className="col-span-3 flex items-center justify-end gap-2.5 pr-1">
+                      <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-slate-400" />
+                        <span>{getRecentTimeString(idx)}</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenSpace(space.id);
+                        }}
+                        className="px-2.5 py-1 rounded-lg bg-green-50 group-hover:bg-[#16A34A] text-[#166534] group-hover:text-white border border-green-200 group-hover:border-[#16A34A] text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1"
+                      >
+                        <span>Vào bàn</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* ================= GIAO DIỆN TRANG CHỦ MẶC ĐỊNH ================= */
+          <>
+            {/* Lời chào: Căn trái cùng trục với các khối bên dưới */}
+            <div className="mb-7 mt-1 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+                  Ôn bài thôi, <span className="text-[#16A34A]">{shortName}</span>
+                </h1>
+                <p className="text-xs md:text-sm text-slate-500 mt-1 font-medium">
+                  Không gian học thức tích hợp AI 2.5D — Nền tảng học tập mở & miễn phí trọn đời
+                </p>
+              </div>
+            </div>
+
+            {/* ================= SECTION 1: Bắt đầu bàn học mới ================= */}
+            <section className="mb-9">
+              <div className="flex items-center justify-between mb-3.5">
+                <div>
+                  <h2 className="text-base font-bold text-slate-900">Bắt đầu bàn học mới</h2>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">
+                    Chọn một mẫu bàn học bên dưới, hoặc bấm Tạo nhanh để mở bàn học trống ngay.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleSelectTemplate('blank')}
+                  title="Mở ngay một bàn học trống không có sẵn tài liệu"
+                  className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center gap-1.5 shrink-0"
+                >
+                  <Plus className="w-4 h-4 stroke-[2.4]" />
+                  <span>Tạo nhanh (Bàn trống)</span>
+                </button>
+              </div>
+
+              {/* 4 Template Cards đồng đều, hài hòa màu sắc */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Card 1: Bàn học trống */}
+                <div
+                  onClick={() => handleSelectTemplate('blank')}
+                  className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col justify-between hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
+                >
+                  <div className="aspect-[16/10] w-full rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center bg-[#F8FAFC] group-hover:border-[#16A34A] group-hover:bg-[#F0FDF4]/50 transition-colors gap-1.5">
+                    <Plus className="w-7 h-7 text-slate-400 group-hover:text-[#16A34A] stroke-[1.8] transition-colors" />
+                    <span className="text-[11px] font-medium text-slate-600 group-hover:text-[#166534]">Thả tài liệu vào đây</span>
+                  </div>
+                  <div className="mt-3">
+                    <span className="text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors block">
+                      Bàn học trống
+                    </span>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug font-medium">
+                      Bàn học tự do, kéo thả tài liệu tùy ý
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 2: Ôn thi giữa kỳ */}
+                <div
+                  onClick={() => handleSelectTemplate('midterm')}
+                  className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col justify-between hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
+                >
+                  <div className="aspect-[16/10] w-full rounded-xl bg-[#F8FAFC] border border-slate-200/80 p-3 flex items-center justify-center gap-3 relative overflow-hidden group-hover:bg-[#F0FDF4]/60 group-hover:border-green-300 transition-colors">
+                    {/* Cuốn sách nâu rõ chi tiết */}
+                    <div className="w-22 h-15 rounded-xs border-2 border-[#5c3920] bg-white shadow-xs flex overflow-hidden">
+                      <div className="w-1/2 border-r border-slate-200 p-1.5 flex flex-col gap-1">
+                        <div className="w-8 h-0.5 bg-slate-400 rounded-full" />
+                        <div className="w-6 h-0.5 bg-slate-300 rounded-full" />
+                        <div className="w-7 h-0.5 bg-slate-300 rounded-full" />
+                      </div>
+                      <div className="w-1/2 p-1.5 flex flex-col gap-1">
+                        <div className="w-7 h-0.5 bg-[#16A34A] rounded-full" />
+                        <div className="w-8 h-0.5 bg-slate-300 rounded-full" />
+                        <div className="w-5 h-0.5 bg-slate-300 rounded-full" />
+                      </div>
+                    </div>
+                    {/* Tờ ghi chú vàng cạnh sách */}
+                    <div className="w-9 h-12 rounded-2xs bg-[#fef08a] border border-amber-200/80 shadow-xs p-1 flex flex-col gap-1">
+                      <div className="w-full h-1 bg-amber-300/80 rounded-2xs" />
+                      <div className="w-5 h-0.5 bg-amber-600/60 rounded-full mt-1" />
+                      <div className="w-6 h-0.5 bg-amber-600/40 rounded-full" />
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <span className="text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors block">
+                      Ôn thi giữa kỳ
+                    </span>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug font-medium">
+                      Giáo trình lý thuyết + vở ghi chú vàng
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 3: Giáo trình + đề thi */}
+                <div
+                  onClick={() => handleSelectTemplate('curriculum_exam')}
+                  className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col justify-between hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
+                >
+                  <div className="aspect-[16/10] w-full rounded-xl bg-[#F8FAFC] border border-slate-200/80 p-3 flex items-center justify-center gap-3 relative overflow-hidden group-hover:bg-[#F0FDF4]/60 group-hover:border-green-300 transition-colors">
+                    {/* 2 Tờ tài liệu A4 song song */}
+                    <div className="w-13 h-16 rounded-xs bg-white border border-slate-300 shadow-xs p-1.5 flex flex-col gap-1">
+                      <div className="w-7 h-1 bg-[#16A34A] rounded-full" />
+                      <div className="w-9 h-0.5 bg-slate-300 rounded-full mt-1" />
+                      <div className="w-7 h-0.5 bg-slate-300 rounded-full" />
+                      <div className="w-8 h-0.5 bg-slate-200 rounded-full" />
+                    </div>
+                    <div className="w-13 h-16 rounded-xs bg-white border border-slate-300 shadow-xs p-1.5 flex flex-col gap-1 relative">
+                      <div className="w-7 h-1 bg-sky-600 rounded-full" />
+                      <div className="w-9 h-0.5 bg-slate-300 rounded-full mt-1" />
+                      <div className="w-8 h-0.5 bg-slate-300 rounded-full" />
+                      <div className="absolute -bottom-1 -right-1 w-5 h-6 rounded-2xs bg-[#fef08a] border border-amber-200 shadow-xs" />
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <span className="text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors block">
+                      Giáo trình + đề thi
+                    </span>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug font-medium">
+                      Giáo trình và đề thi mở song song
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 4: Học nhóm trực tuyến */}
+                <div
+                  onClick={() => handleSelectTemplate('group_study')}
+                  className="bg-white border border-slate-200 rounded-2xl p-3.5 flex flex-col justify-between hover:border-[#16A34A] hover:shadow-lg hover:shadow-green-600/10 hover:-translate-y-0.5 transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#16A34A]"
+                >
+                  <div className="aspect-[16/10] w-full rounded-xl bg-[#F8FAFC] border border-slate-200/80 p-3 flex items-center justify-center relative overflow-hidden group-hover:bg-[#F0FDF4]/60 group-hover:border-green-300 transition-colors">
+                    {/* Bảng nhóm xanh lá nhẹ nhàng */}
+                    <div className="w-22 h-15 rounded-xs bg-white border-2 border-green-500 shadow-xs flex items-center justify-center relative overflow-hidden">
+                      <div className="w-full h-3.5 bg-[#16A34A] absolute top-0 flex items-center justify-center">
+                        <span className="text-[7.5px] font-bold text-white tracking-widest">PHÒNG NHÓM</span>
+                      </div>
+                      <div className="mt-2.5 flex flex-col items-center gap-1">
+                        <div className="w-10 h-0.5 bg-slate-300 rounded-full" />
+                        <div className="w-8 h-0.5 bg-slate-200 rounded-full" />
+                      </div>
+                    </div>
+
+                    {/* Con trỏ chuột 1 */}
+                    <div className="absolute top-2 left-3 flex items-start gap-0.5">
+                      <MousePointer2 className="w-3.5 h-3.5 text-[#16A34A] fill-[#16A34A] -rotate-12 drop-shadow-xs" />
+                      <span className="px-1.5 py-0.2 bg-[#16A34A] text-white text-[8.5px] font-bold rounded shadow-xs leading-none">
+                        {shortName}
+                      </span>
+                    </div>
+
+                    {/* Con trỏ chuột 2 */}
+                    <div className="absolute bottom-2 right-3 flex items-start gap-0.5">
+                      <MousePointer2 className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600 -rotate-12 drop-shadow-xs" />
+                      <span className="px-1.5 py-0.2 bg-emerald-600 text-white text-[8.5px] font-bold rounded shadow-xs leading-none">
+                        Bạn học
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <span className="text-xs md:text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors block">
+                      Học nhóm trực tuyến
+                    </span>
+                    <p className="text-xs text-slate-600 mt-1 leading-snug font-medium">
+                      Cùng bạn bè ôn bài thời gian thực
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* ================= SECTION 2: Mở lại gần đây ================= */}
+            <section className="mb-10">
+              <div className="flex items-center justify-between mb-3.5">
+                <div>
+                  <h2 className="text-base font-bold text-slate-900">Mở lại gần đây</h2>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">
+                    Các bàn học bạn vừa truy cập gần đây nhất.
+                  </p>
+                </div>
+                {spaces.length > 3 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllSpaces(!showAllSpaces)}
+                    className="text-xs font-bold text-[#16A34A] hover:text-[#15803D] hover:underline cursor-pointer"
+                  >
+                    {showAllSpaces ? 'Thu gọn' : 'Xem tất cả'}
+                  </button>
+                )}
+              </div>
+
+              {/* Table Container Cân Xứng Cột 5 - 4 - 3 */}
+              <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+                <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3.5 px-4 bg-slate-50/90 border-b border-slate-200">
+                  <div className="col-span-5">Tên bàn học</div>
+                  <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
+                  <div className="col-span-3 text-right pr-2">Mở lần cuối & Thao tác</div>
+                </div>
+
+                <div className="divide-y divide-slate-100">
+                  {displayedSpaces.length === 0 ? (
+                    <div className="py-10 text-center text-xs text-slate-400 italic">
+                      Chưa có bàn học nào phù hợp với tìm kiếm
+                    </div>
+                  ) : (
+                    displayedSpaces.map((space, idx) => {
+                      const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
+                      const isDemo = space.name.includes('(Demo)');
+
+                      return (
+                        <div
+                          key={space.id}
+                          onClick={() => handleOpenSpace(space.id)}
+                          className="grid grid-cols-12 items-center py-3.5 px-4 hover:bg-[#F0FDF4]/70 transition-all cursor-pointer group"
+                        >
+                          {/* Cột 1: Tên & Thumbnail (col-span-5) */}
+                          <div className="col-span-5 pr-3 flex items-center gap-3">
+                            <div className="w-13 h-9 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs flex-shrink-0 flex items-center justify-center relative overflow-hidden group-hover:border-[#16A34A]/60 transition-colors">
+                              {idx % 2 === 0 ? (
+                                <div className="w-7 h-5 rounded-xs border border-green-700 bg-white flex items-center justify-center">
+                                  <div className="w-2 h-2 rounded-2xs bg-[#bbf7d0]" />
+                                </div>
+                              ) : (
+                                <div className="flex gap-0.5">
+                                  <div className="w-3.5 h-5 rounded-xs bg-white border border-slate-300" />
+                                  <div className="w-3.5 h-5 rounded-xs bg-white border border-slate-300" />
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-sm font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors truncate">
+                                  {cleanSpaceName}
+                                </span>
+                                {isDemo && (
+                                  <span className="text-[10px] font-bold text-[#166534] bg-green-100/90 border border-green-200 px-1.5 py-0.2 rounded shrink-0">
+                                    Mẫu
+                                  </span>
+                                )}
+                              </div>
+                              {space.description && (
+                                <div className="text-xs text-slate-500 truncate mt-0.5">
+                                  {space.description}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Cột 2: Tài liệu & Ghi chú (col-span-4) */}
+                          <div className="col-span-4 text-xs text-slate-600 font-medium">
+                            {getSpaceSummary(space, idx)}
+                          </div>
+
+                          {/* Cột 3: Thời gian & Nút Vào bàn (col-span-3) */}
+                          <div className="col-span-3 flex items-center justify-end gap-2.5 pr-1">
+                            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5 text-slate-400" />
+                              <span>{getRecentTimeString(idx)}</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenSpace(space.id);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-green-50 group-hover:bg-[#16A34A] text-[#166534] group-hover:text-white border border-green-200 group-hover:border-[#16A34A] text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1"
+                            >
+                              <span>Vào bàn</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </section>
+          </>
         )}
 
       </main>

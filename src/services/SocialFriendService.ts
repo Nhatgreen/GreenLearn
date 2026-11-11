@@ -11,6 +11,7 @@ export interface RecentBuddy {
   avatarColor: string;
   online?: boolean;
   currentRoom?: string;
+  currentSpaceName?: string;
   lastInvited?: number;
 }
 
@@ -198,7 +199,7 @@ export class SocialFriendService {
 
   /** Cập nhật trạng thái trực tuyến theo Realtime presence */
   static syncPresenceState(
-    onlinePeerUids: Array<{ id: string; name?: string; currentRoom?: string }>
+    onlinePeerUids: Array<{ id: string; name?: string; currentRoom?: string; currentSpaceName?: string }>
   ): RecentBuddy[] {
     const buddies = this.getRecentBuddies();
     let hasChange = false;
@@ -207,13 +208,15 @@ export class SocialFriendService {
       const match = onlinePeerUids.find(p => p.id === b.id || (p.name && p.name.toLowerCase() === b.name.toLowerCase()));
       const isOnline = !!match;
       const room = match?.currentRoom;
+      const spaceName = match?.currentSpaceName;
 
-      if (b.online !== isOnline || b.currentRoom !== room) {
+      if (b.online !== isOnline || b.currentRoom !== room || b.currentSpaceName !== spaceName) {
         hasChange = true;
         return {
           ...b,
           online: isOnline,
-          currentRoom: room
+          currentRoom: room,
+          currentSpaceName: spaceName
         };
       }
       return b;
@@ -223,6 +226,30 @@ export class SocialFriendService {
       this.saveRecentBuddies(updated);
     }
     return updated;
+  }
+
+  /** Lấy tên phòng thân thiện, triệt tiêu hoàn toàn hiển thị mã UUID thô */
+  static getFriendlyRoomName(buddy: RecentBuddy, spaces?: Array<{ id: string; name: string }>): string {
+    const isUUID = (str: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+
+    if (buddy.currentSpaceName && buddy.currentSpaceName.trim() && !isUUID(buddy.currentSpaceName)) {
+      return buddy.currentSpaceName.trim();
+    }
+    if (buddy.currentRoom) {
+      if (spaces) {
+        const found = spaces.find(s => s.id === buddy.currentRoom);
+        if (found && found.name) return found.name;
+      }
+      if (buddy.currentRoom === 'demo') return 'Bàn học khởi đầu (Demo)';
+      if (buddy.currentRoom === 'midterm') return 'Bàn ôn thi giữa kỳ';
+      if (buddy.currentRoom === 'curriculum_exam') return 'Bàn giáo trình & đề thi';
+      if (buddy.currentRoom === 'group_study') return 'Bàn học nhóm trực tuyến';
+      if (!isUUID(buddy.currentRoom) && !buddy.currentRoom.startsWith('user-') && !buddy.currentRoom.startsWith('space-')) {
+        return `Bàn học ${buddy.currentRoom}`;
+      }
+      return `Bàn học của ${buddy.name}`;
+    }
+    return 'Bàn học trực tuyến';
   }
 
   // Tương thích ngược
