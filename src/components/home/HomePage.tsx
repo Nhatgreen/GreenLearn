@@ -58,7 +58,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
     inDeskCount,
     addFriend,
     removeFriend,
-    sendDeskInvite
+    sendDeskInvite,
+    requestJoinRoom
   } = useSocialPresence();
 
   const [friendsSearch, setFriendsSearch] = useState('');
@@ -673,14 +674,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                           <button
                             type="button"
                             onClick={() => {
-                              if (typeof window !== 'undefined') {
-                                window.location.href = `/?room=${encodeURIComponent(buddy.currentRoom!)}&perm=edit`;
-                              }
+                              requestJoinRoom(buddy.currentRoom!, buddy);
                             }}
                             className="px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 shadow-2xs"
                           >
                             <LogIn className="w-3.5 h-3.5" />
-                            <span>Vào học cùng</span>
+                            <span>Xin vào học cùng</span>
                           </button>
                         ) : (
                           <button

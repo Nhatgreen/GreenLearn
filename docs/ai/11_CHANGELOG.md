@@ -4,6 +4,34 @@
 
 ---
 
+## 2026-11-12 00:30 — main (Cơ Chế Phê Duyệt Của Chủ Phòng & Khắc Phục Lỗi 404 GitHub Pages Khi Vào Học Cùng)
+- **Task:** Xử lý triệt để phản hồi người dùng: "Bấm vào học cùng trong phần bạn bè sẽ hiện như thế này là sao (404) và tôi muốn khi một người bấm vào học cùng thì cần chủ phòng đồng ý cho vào":
+  1. **Khắc Phục Tuyệt Đối Lỗi 404 GitHub Pages Khi Bấm "Vào học cùng":**
+     - Nguyên nhân: Trước đó `window.location.href = '/?room=...'` đã điều hướng về tên miền gốc `nhatgreen.github.io/?room=...`, làm mất hoàn toàn tiền tố thư mục repository `/GreenLearn` của GitHub Pages -> gây lỗi "404 There isn't a GitHub Pages site here".
+     - Giải pháp: Chuyển toàn bộ luồng điều hướng sang Next.js App Router `router.push('/?room=...')`, Next.js tự động bảo toàn 100% `basePath: '/GreenLearn'`, giữ URL chuẩn `nhatgreen.github.io/GreenLearn/?room=...`.
+  2. **Cơ Chế Phê Duyệt Của Chủ Phòng (Host Approval for Room Admission):**
+     - Khi một bạn học bấm **"Xin vào học cùng"** (ở `HomePage` hoặc `FriendsRightDrawer`):
+       - Hệ thống không tự ý cho vào bàn học ngay lập tức.
+       - Gửi sự kiện Realtime broadcast `ROOM_JOIN_REQUEST` trên kênh `vitudy-social` đến đúng Chủ phòng (Host).
+     - Phía Người xin vào:
+       - Hiển thị hộp thoại nổi `PendingApprovalModal`: "Đang chờ chủ phòng [Tên Host] duyệt...", có nút "Hủy yêu cầu" và cơ chế timeout 45s.
+     - Phía Chủ phòng (Host):
+       - Hiển thị hộp thoại nổi `HostApprovalModal`: "[Tên Bạn Học] muốn tham gia bàn học của bạn."
+       - Chủ phòng được chọn quyền: "Cùng chỉnh sửa" (`edit`) hoặc "Chỉ xem" (`view_only`).
+       - Nút **"Đồng ý cho vào"** (Xanh Lá GreenLearn `#16A34A`) hoặc **"Từ chối"**.
+     - Khi Chủ phòng duyệt:
+       - Hệ thống gửi broadcast `ROOM_JOIN_RESPONSE` approved.
+       - Phía bạn học lập tức nhận được phản hồi, hiển thị thông báo "Chủ phòng đã đồng ý! Đang vào bàn học..." và tự động điều hướng vào phòng an toàn.
+  3. **Tương Thích Toàn Bộ Nền Tảng:**
+     - Các modal được bọc trong `createPortal(..., document.body)` với `z-[9999]`, hoạt động trơn tru ở mọi góc nhìn (Trang chủ, Bàn học, Thanh ẩn phải).
+- **Verified by:**
+  - `pnpm test`: 19/19 test suites passed (84/84 tests passed).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+  - `pnpm run docs:index && pnpm run docs:check`: Ký hiệu và chỉ mục bộ nhớ AI đạt chuẩn 100%.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 00:15 — main (Thanh Ẩn Phải Bạn Bè Bàn Học, Dấu Cộng Lưu Bạn Nhanh & Mục Bạn Bè Màn Hình Chính)
 - **Task:** Triển khai toàn diện theo yêu cầu: "tạo thêm dấu cộng để lưu kết bạn lại, đưa giải pháp để hiện bạn bè như tạo thêm mục bạn bè ở màn hình chính, khi bấm thanh ẩn phải thì sẽ hiện bạn và tình trạng online":
   1. **Nút Dấu Cộng `+` Thêm & Lưu Bạn Học Tức Thì (`SocialFriendService.addFriend`):**

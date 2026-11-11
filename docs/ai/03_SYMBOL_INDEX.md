@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `2d32bb6`  
+> **Commit Hash:** `ed85546`  
 > **Cập nhật lần cuối:** `2026-11-11`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -48,7 +48,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `BottomRightToolkit` | `component` | [src/components/hud/BottomRightToolkit.tsx:L17-L202](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/BottomRightToolkit.tsx) | HUD góc dưới-phải: công cụ bút dạ quang, tạo note, khoá góc nhìn, zoom 100% |
 | `FriendInviteToast` | `component` | [src/components/hud/FriendInviteToast.tsx:L14-L124](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/FriendInviteToast.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `FriendInviteToastProps` | `type` | [src/components/hud/FriendInviteToast.tsx:L8-L12](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/FriendInviteToast.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
-| `FriendsRightDrawer` | `component` | [src/components/hud/FriendsRightDrawer.tsx:L25-L435](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/FriendsRightDrawer.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
+| `FriendsRightDrawer` | `component` | [src/components/hud/FriendsRightDrawer.tsx:L25-L434](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/FriendsRightDrawer.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `InviteModal` | `component` | [src/components/hud/InviteModal.tsx:L14-L132](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/InviteModal.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `LeftCreationBar` | `component` | [src/components/hud/LeftCreationBar.tsx:L32-L583](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/LeftCreationBar.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `MultiplayerBar` | `component` | [src/components/hud/MultiplayerBar.tsx:L19-L399](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/MultiplayerBar.tsx) | HUD cộng tác học nhóm thời gian thực: danh sách avatar, thả cảm xúc emoji |
@@ -84,12 +84,15 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `AuthResult` | `type` | [src/context/AuthContext.tsx:L18-L21](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `AuthStatus` | `type` | [src/context/AuthContext.tsx:L9-L9](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `CreationPlacementTemplate` | `type` | [src/context/StudySpaceContext.tsx:L12-L34](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L10-L23](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L27-L228](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
+| `MyPendingJoinRequest` | `type` | [src/context/SocialPresenceContext.tsx:L37-L44](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
+| `RoomJoinRequest` | `type` | [src/context/SocialPresenceContext.tsx:L13-L23](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
+| `RoomJoinResponse` | `type` | [src/context/SocialPresenceContext.tsx:L25-L35](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
+| `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L46-L65](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
+| `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L69-L435](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L162-L2205](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
 | `useAuth` | `hook` | [src/context/AuthContext.tsx:L302-L308](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `UserProfile` | `type` | [src/context/AuthContext.tsx:L11-L16](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L230-L233](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
+| `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L437-L440](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2207-L2213](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
 
 ### Non-AI Engine & Utils
@@ -216,7 +219,8 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `getDocAccessLog` | `fn` | [src/hooks/useStorageManager.ts:L46-L54](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `GuestBanner` | `component` | [src/components/auth/GuestBanner.tsx:L12-L54](file:////home/nhat/Documents/DUT/ViTudy/src/components/auth/GuestBanner.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HeroSection` | `component` | [src/components/landing/HeroSection.tsx:L52-L238](file:////home/nhat/Documents/DUT/ViTudy/src/components/landing/HeroSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `HomePage` | `component` | [src/components/home/HomePage.tsx:L40-L979](file:////home/nhat/Documents/DUT/ViTudy/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `HomePage` | `component` | [src/components/home/HomePage.tsx:L40-L978](file:////home/nhat/Documents/DUT/ViTudy/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `HostApprovalModal` | `component` | [src/components/social/HostApprovalModal.tsx:L14-L177](file:////home/nhat/Documents/DUT/ViTudy/src/components/social/HostApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_SPACES` | `component` | [src/data/mockSpaces.ts:L3-L332](file:////home/nhat/Documents/DUT/ViTudy/src/data/mockSpaces.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `IntelineThread` | `type` | [src/types/studyspace.ts:L75-L85](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ItemType` | `type` | [src/types/studyspace.ts:L1-L1](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -234,6 +238,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `ParsedPage` | `type` | [src/services/PdfParserService.ts:L5-L11](file:////home/nhat/Documents/DUT/ViTudy/src/services/PdfParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `parsePdfFile` | `fn` | [src/services/PdfParserService.ts:L17-L94](file:////home/nhat/Documents/DUT/ViTudy/src/services/PdfParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PeerUser` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L8-L18](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `PendingApprovalModal` | `component` | [src/components/social/PendingApprovalModal.tsx:L13-L139](file:////home/nhat/Documents/DUT/ViTudy/src/components/social/PendingApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PET_STAGES` | `component` | [src/types/pet.ts:L14-L65](file:////home/nhat/Documents/DUT/ViTudy/src/types/pet.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PetMascotModal` | `component` | [src/components/pet/PetMascotModal.tsx:L29-L490](file:////home/nhat/Documents/DUT/ViTudy/src/components/pet/PetMascotModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PetStage` | `type` | [src/types/pet.ts:L1-L1](file:////home/nhat/Documents/DUT/ViTudy/src/types/pet.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -276,6 +281,6 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `UsePomodoroResult` | `type` | [src/hooks/usePomodoro.ts:L13-L21](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/usePomodoro.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useRealtimeMultiplayer` | `hook` | [src/hooks/useRealtimeMultiplayer.ts:L58-L489](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `UseRealtimeMultiplayerOptions` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L49-L56](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `useSocialPresence` | `hook` | [src/hooks/useSocialPresence.ts:L10-L206](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useSocialPresence.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `useSocialPresence` | `hook` | [src/hooks/useSocialPresence.ts:L10-L212](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useSocialPresence.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useStorageManager` | `hook` | [src/hooks/useStorageManager.ts:L65-L216](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 

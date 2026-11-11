@@ -46,7 +46,8 @@ export function FriendsRightDrawer({ isFocusMode = false }: FriendsRightDrawerPr
     onlineCount,
     sendDeskInvite,
     addFriend,
-    removeFriend
+    removeFriend,
+    requestJoinRoom
   } = useSocialPresence(multiplayerRoomId || activeSpace?.id, activeSpace?.name);
 
   const activeRoomId = multiplayerRoomId || activeSpace?.id;
@@ -76,12 +77,10 @@ export function FriendsRightDrawer({ isFocusMode = false }: FriendsRightDrawerPr
     setTimeout(() => setFeedback(null), 3500);
   };
 
-  // Vào phòng học cùng bạn
-  const handleJoinFriendRoom = (roomId: string) => {
-    if (!roomId) return;
-    joinMultiplayerRoom(roomId, 'edit');
-    setFeedback({ text: `Đang kết nối vào phòng "${roomId}"...`, isError: false });
-    setTimeout(() => setFeedback(null), 3000);
+  // Xin phép chủ phòng vào học cùng (Host Approval)
+  const handleJoinFriendRoom = (buddy: any) => {
+    if (!buddy?.currentRoom) return;
+    requestJoinRoom(buddy.currentRoom, buddy);
   };
 
   // Sao chép liên kết phòng bàn học
@@ -361,16 +360,16 @@ export function FriendsRightDrawer({ isFocusMode = false }: FriendsRightDrawerPr
 
                     {/* Bộ nút hành động nhanh */}
                     <div className="flex items-center gap-1 shrink-0">
-                      {/* Nếu bạn đang ở phòng khác: nút "Vào cùng" */}
+                      {/* Nếu bạn đang ở phòng khác: nút "Xin vào cùng" */}
                       {isInOtherRoom && (
                         <button
                           type="button"
-                          onClick={() => handleJoinFriendRoom(buddy.currentRoom!)}
-                          title={`Vào phòng học cùng ${buddy.name}`}
+                          onClick={() => handleJoinFriendRoom(buddy)}
+                          title={`Xin phép vào phòng học cùng ${buddy.name}`}
                           className="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] font-bold border border-sky-200 transition-colors cursor-pointer flex items-center gap-1 active:scale-95"
                         >
                           <LogIn className="w-3 h-3" />
-                          <span>Vào cùng</span>
+                          <span>Xin vào</span>
                         </button>
                       )}
 
