@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import { DeskItem, StudySpace, CanvasTransform, PageContent, IntelineThread } from '@/types/studyspace';
+import { DeskItem, StudySpace, CanvasTransform, PageContent, IntelineThread, DrawingStroke } from '@/types/studyspace';
 import { INITIAL_SPACES } from '@/data/mockSpaces';
 import { recognizeSmartShape } from '@/utils/smartShape';
 import { useAuth } from '@/hooks/useAuth';
@@ -161,8 +161,40 @@ const StudySpaceContext = createContext<StudySpaceContextType | null>(null);
 
 export function StudySpaceProvider({ children }: { children: React.ReactNode }) {
   const { user, status, profile } = useAuth();
-  const [spaces, setSpaces] = useState<StudySpace[]>(INITIAL_SPACES);
-  const [activeSpaceId, setActiveSpaceId] = useState<string>(INITIAL_SPACES[0].id);
+  const [activeSpaceId, setActiveSpaceId] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const room = params.get('room');
+      if (room) return room;
+      const space = params.get('space');
+      if (space) return space;
+      const savedActive = localStorage.getItem('greenlearn_active_space_id') || localStorage.getItem('vitudy_active_space_id');
+      if (savedActive) return savedActive;
+    }
+    return INITIAL_SPACES[0].id;
+  });
+
+  const [spaces, setSpaces] = useState<StudySpace[]>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const room = params.get('room');
+      if (room) {
+        const roomSpace: StudySpace = {
+          id: room,
+          name: `Bàn học nhóm (${room.slice(-6).toUpperCase()})`,
+          subject: 'Học nhóm trực tuyến',
+          description: `Bàn học đồng bộ cùng bạn qua phòng ${room}`,
+          items: [],
+          threads: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        return [roomSpace, ...INITIAL_SPACES];
+      }
+    }
+    return INITIAL_SPACES;
+  });
+  const syncedRemoteSpaceRef = useRef<{ items: DeskItem[]; strokes: DrawingStroke[]; spaceName?: string } | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [transform, setTransform] = useState<CanvasTransform>(DEFAULT_TRANSFORM);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
@@ -345,18 +377,24 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
           break;
         }
         case 'SYNC_SPACE_STATE': {
-          const { items, strokes: remoteStrokes, spaceName } = action.payload as any;
+          const { items, strokes: remoteStrokes, spaceName, spaceId: remoteSpaceId } = action.payload as any;
+          const targetId = activeSpaceIdRef.current;
+          
           if (Array.isArray(items)) {
+            syncedRemoteSpaceRef.current = {
+              items,
+              strokes: Array.isArray(remoteStrokes) ? remoteStrokes : [],
+              spaceName
+            };
             setSpaces(prev => {
-              const targetId = activeSpaceIdRef.current;
               const exists = prev.some(s => s.id === targetId);
               if (exists) {
                 return prev.map(s => {
                   if (s.id !== targetId) return s;
                   return {
                     ...s,
-                    name: spaceName && s.name.startsWith('Bàn học nhóm') ? `Bàn học cùng bạn: ${spaceName}` : s.name,
-                    items
+                    name: spaceName ? (s.name.startsWith('Bàn học nhóm') ? `Bàn học cùng bạn: ${spaceName}` : spaceName) : s.name,
+                    items: [...items]
                   };
                 });
               } else {
@@ -365,7 +403,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
                   name: spaceName ? `Bàn học cùng bạn: ${spaceName}` : `Bàn học nhóm (${targetId.slice(-6).toUpperCase()})`,
                   subject: 'Học nhóm trực tuyến',
                   description: 'Bàn học được chia sẻ trực tuyến cùng bạn học',
-                  items,
+                  items: [...items],
                   threads: [],
                   createdAt: new Date().toISOString(),
                   updatedAt: new Date().toISOString()
@@ -375,7 +413,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
             });
           }
           if (Array.isArray(remoteStrokes)) {
-            setStrokes(remoteStrokes);
+            setStrokes([...remoteStrokes]);
           }
           break;
         }
@@ -387,17 +425,16 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   const handleRequestSpaceState = useCallback((requesterId: string) => {
     const curSpace = spacesRef.current.find(s => s.id === activeSpaceIdRef.current) || spacesRef.current[0];
-    if (curSpace && curSpace.items && curSpace.items.length > 0) {
-      broadcastDeskActionRef.current({
-        type: 'SYNC_SPACE_STATE',
-        payload: {
-          targetId: requesterId,
-          spaceName: curSpace.name,
-          items: curSpace.items,
-          strokes: strokesRef.current
-        }
-      });
-    }
+    broadcastDeskActionRef.current({
+      type: 'SYNC_SPACE_STATE',
+      payload: {
+        targetId: requesterId,
+        spaceId: activeSpaceIdRef.current,
+        spaceName: curSpace?.name || 'Bàn học',
+        items: curSpace?.items || [],
+        strokes: strokesRef.current || []
+      }
+    });
   }, []);
 
   const realtimeMultiplayer = useRealtimeMultiplayer({
@@ -636,15 +673,26 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       if (urlSpaceId && spaceList.some(s => s.id === urlSpaceId)) return urlSpaceId;
       if (urlRoomId) {
         const found = spaceList.find(s => s.id === urlRoomId || s.id === `shared-${urlRoomId}`);
-        if (found) return found.id;
+        const cached = syncedRemoteSpaceRef.current;
+        const currentRoomSpace = spacesRef.current.find(s => s.id === urlRoomId);
 
-        // Nếu chưa có, tự động tạo mới một không gian bàn học nhóm riêng biệt lưu vào danh sách của bạn học
+        if (found) {
+          if (cached?.items && cached.items.length > 0) {
+            found.items = cached.items;
+          }
+          if (cached?.spaceName) {
+            found.name = `Bàn học cùng bạn: ${cached.spaceName}`;
+          }
+          return found.id;
+        }
+
+        // Nếu chưa có, giữ lại không gian bàn học nhóm đã được sync từ Host
         const newSharedSpace: StudySpace = {
           id: urlRoomId,
-          name: `Bàn học nhóm (${urlRoomId.slice(-6).toUpperCase()})`,
+          name: cached?.spaceName ? `Bàn học cùng bạn: ${cached.spaceName}` : (currentRoomSpace?.name || `Bàn học nhóm (${urlRoomId.slice(-6).toUpperCase()})`),
           subject: 'Học nhóm trực tuyến',
           description: `Bàn học đồng bộ cùng bạn qua phòng ${urlRoomId}`,
-          items: [],
+          items: cached?.items || currentRoomSpace?.items || [],
           threads: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
@@ -675,6 +723,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
             StudySpaceService.saveSpace(demoSpace, user.id).catch(() => {});
           });
         }
+        if (syncedRemoteSpaceRef.current?.strokes && syncedRemoteSpaceRef.current.strokes.length > 0) {
+          setStrokes(syncedRemoteSpaceRef.current.strokes);
+        }
         setIsLoaded(true);
       });
       return;
@@ -686,6 +737,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       setActiveSpaceId(resolveTargetSpaceId(localSpaces));
     } else {
       setActiveSpaceId(resolveTargetSpaceId(INITIAL_SPACES));
+    }
+    if (syncedRemoteSpaceRef.current?.strokes && syncedRemoteSpaceRef.current.strokes.length > 0) {
+      setStrokes(syncedRemoteSpaceRef.current.strokes);
     }
     setIsLoaded(true);
   }, [status, user?.id]);

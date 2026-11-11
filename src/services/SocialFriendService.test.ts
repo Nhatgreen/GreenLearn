@@ -41,4 +41,11 @@ describe('SocialFriendService', () => {
     const buddy3 = updated.find(b => b.id === 'buddy-demo-3');
     expect(buddy3?.online).toBe(false);
   });
+
+  it('matches names flexibly with accents, case insensitivity and partial names', () => {
+    expect(SocialFriendService.matchesNameOrEmail('Nhat', 'Nhật Nguyễn')).toBe(true);
+    expect(SocialFriendService.matchesNameOrEmail('Nhật', 'Nhật Nguyễn')).toBe(true);
+    expect(SocialFriendService.matchesNameOrEmail('hoangnam', undefined, 'hoangnam@greenlearn.vn')).toBe(true);
+    expect(SocialFriendService.matchesNameOrEmail('khacnhau', 'Nguyen Van A')).toBe(false);
+  });
 });

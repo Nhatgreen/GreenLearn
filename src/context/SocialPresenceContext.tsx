@@ -9,6 +9,7 @@ import { useAuth } from './AuthContext';
 import { useStudySpace } from './StudySpaceContext';
 import { HostApprovalModal } from '@/components/social/HostApprovalModal';
 import { PendingApprovalModal } from '@/components/social/PendingApprovalModal';
+import { FriendInviteToast } from '@/components/hud/FriendInviteToast';
 
 export interface RoomJoinRequest {
   requestId: string;
@@ -78,6 +79,7 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
   const [myPendingJoinRequest, setMyPendingJoinRequest] = useState<MyPendingJoinRequest | null>(null);
   const [isSocialConnected, setIsSocialConnected] = useState(false);
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const onlinePeersRef = useRef<Array<{ id: string; name?: string; currentRoom?: string; currentSpaceName?: string }>>([]);
 
   const activeRoomId = multiplayerRoomId || activeSpace?.id || null;
   const currentSpaceName = activeSpace?.name || 'Bàn học';
@@ -128,6 +130,7 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
         }
       });
 
+      onlinePeersRef.current = onlinePeers;
       const updated = SocialFriendService.syncPresenceState(onlinePeers);
       setBuddies(updated);
     });
@@ -150,9 +153,8 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
 
       const isForMe = 
         (data.toId && data.toId === currentUser.id) || 
-        (data.toName && currentUser.name && data.toName.toLowerCase() === currentUser.name.toLowerCase()) ||
-        (data.toName && user?.email && data.toName.toLowerCase() === user.email.toLowerCase()) ||
-        (data.toEmail && user?.email && data.toEmail.toLowerCase() === user.email.toLowerCase());
+        (data.toName && SocialFriendService.matchesNameOrEmail(data.toName, currentUser.name, user?.email)) ||
+        (data.toEmail && SocialFriendService.matchesNameOrEmail(data.toEmail, currentUser.name, user?.email));
 
       if (isForMe && data.fromId !== currentUser.id) {
         setIncomingInvite({
@@ -255,6 +257,17 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
   const sendDeskInvite = useCallback((target: string | RecentBuddy, targetRoomId?: string) => {
     const targetName = typeof target === 'string' ? target.trim() : target.name;
     const targetEmail = typeof target === 'string' ? (target.includes('@') ? target.trim() : undefined) : target.email;
+    let targetPeerId = typeof target === 'object' ? (target.peerId || target.id) : undefined;
+
+    // Nếu chưa có targetPeerId hoặc là dummy id (như 'buddy-demo-1'), tra cứu trong danh sách peer trực tuyến
+    if (!targetPeerId || targetPeerId.startsWith('buddy-demo')) {
+      const matchPeer = onlinePeersRef.current.find(p => 
+        SocialFriendService.matchesNameOrEmail(targetName, p.name, targetEmail)
+      );
+      if (matchPeer) {
+        targetPeerId = matchPeer.id;
+      }
+    }
 
     if (!targetName) {
       return { ok: false, msg: 'Vui lòng nhập tên hoặc email bạn học.' };
@@ -270,6 +283,7 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
         type: 'broadcast',
         event: 'desk_invite',
         payload: {
+          toId: targetPeerId,
           toName: targetName,
           toEmail: targetEmail,
           fromId: currentUser.id,
@@ -432,6 +446,19 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
       <PendingApprovalModal
         pendingRequest={myPendingJoinRequest}
         onCancel={cancelJoinRequest}
+      />
+
+      {/* TOAST: Lời mời học chung nổi trực tiếp trên toàn bộ các trang */}
+      <FriendInviteToast
+        invite={incomingInvite}
+        onAccept={(inv) => {
+          setIncomingInvite(null);
+          if (joinMultiplayerRoom) {
+            joinMultiplayerRoom(inv.roomId, 'edit');
+          }
+          router.push(`/?room=${encodeURIComponent(inv.roomId)}&perm=edit`);
+        }}
+        onDecline={declineInvite}
       />
     </SocialPresenceContext.Provider>
   );

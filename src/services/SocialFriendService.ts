@@ -12,6 +12,7 @@ export interface RecentBuddy {
   online?: boolean;
   currentRoom?: string;
   currentSpaceName?: string;
+  peerId?: string;
   lastInvited?: number;
 }
 
@@ -197,6 +198,27 @@ export class SocialFriendService {
     this.removeBuddy(friendId);
   }
 
+  /** So khớp tên hoặc email linh hoạt, không phân biệt hoa thường và dấu tiếng Việt */
+  static matchesNameOrEmail(targetName: string, candidateName?: string, candidateEmail?: string): boolean {
+    if (!targetName) return false;
+    const t = targetName.trim().toLowerCase();
+    const tNorm = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    if (candidateName) {
+      const c = candidateName.trim().toLowerCase();
+      const cNorm = c.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (t === c || tNorm === cNorm) return true;
+      if (tNorm.length >= 2 && (cNorm.includes(tNorm) || tNorm.includes(cNorm))) return true;
+    }
+
+    if (candidateEmail) {
+      const e = candidateEmail.trim().toLowerCase();
+      if (e === t || e.includes(t) || t.includes(e.split('@')[0])) return true;
+    }
+
+    return false;
+  }
+
   /** Cập nhật trạng thái trực tuyến theo Realtime presence */
   static syncPresenceState(
     onlinePeerUids: Array<{ id: string; name?: string; currentRoom?: string; currentSpaceName?: string }>
@@ -205,18 +227,24 @@ export class SocialFriendService {
     let hasChange = false;
 
     const updated = buddies.map(b => {
-      const match = onlinePeerUids.find(p => p.id === b.id || (p.name && p.name.toLowerCase() === b.name.toLowerCase()));
+      const match = onlinePeerUids.find(p => 
+        p.id === b.id || 
+        p.id === b.peerId || 
+        SocialFriendService.matchesNameOrEmail(b.name, p.name, b.email)
+      );
       const isOnline = !!match;
       const room = match?.currentRoom;
       const spaceName = match?.currentSpaceName;
+      const peerId = match?.id || b.peerId;
 
-      if (b.online !== isOnline || b.currentRoom !== room || b.currentSpaceName !== spaceName) {
+      if (b.online !== isOnline || b.currentRoom !== room || b.currentSpaceName !== spaceName || b.peerId !== peerId) {
         hasChange = true;
         return {
           ...b,
           online: isOnline,
           currentRoom: room,
-          currentSpaceName: spaceName
+          currentSpaceName: spaceName,
+          peerId: peerId
         };
       }
       return b;

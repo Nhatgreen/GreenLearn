@@ -4,6 +4,36 @@
 
 ---
 
+## 2026-11-12 01:12 — main (Khắc Phục Lỗi Đồng Bộ Bàn Học Ban Đầu & Lỗi Không Nhận Được Lời Mời Học Chung)
+- **Task:** Xử lý 2 lỗi người dùng phản hồi: "Chưa đồng bộ bàn học khi mời vào thì sẽ không thấy được bàn học lúc chưa mời và lỗi khi mời thì người nhận lời mời không hiện thông báo":
+  1. **Khắc Phục Lỗi Không Thấy Bàn Học Cũ Khi Được Mời Vào:**
+     - **Nguyên nhân:**
+       - Khi Host tạo phòng trên bàn học trống hoặc chỉ có nét vẽ, điều kiện `if (curSpace && curSpace.items && curSpace.items.length > 0)` trong `handleRequestSpaceState` ngăn Host gửi `SYNC_SPACE_STATE`.
+       - Phía Guest: Khởi tạo bất đồng bộ `loadSpaces` ghi đè danh sách `spaces`, xóa mất bàn học nhận được từ Host khi tải trang.
+     - **Giải pháp:**
+       - Khởi tạo `activeSpaceId` và `spaces` ngay lập tức từ `useState` dựa trên tham số `?room=` trên URL.
+       - Host luôn gửi toàn bộ `items` và toàn bộ nét vẽ `strokes` hiện có (kể cả khi items rỗng nhưng có nét vẽ) khi nhận được `REQUEST_SPACE_STATE` hoặc sự kiện `presence join`.
+       - Guest duy trì bộ nhớ đệm `syncedRemoteSpaceRef` bảo vệ dữ liệu đã nhận từ Host, ngăn chặn hoàn toàn việc `loadSpaces` bất đồng bộ sau đó ghi đè làm mất vật thể và nét vẽ.
+       - Tăng cường cơ chế multi-retry cho Guest khi yêu cầu trạng thái bàn học ban đầu (0ms, 600ms, 1500ms, 3000ms).
+  2. **Khắc Phục Lỗi Người Nhận Lời Mời Không Hiện Thông Báo:**
+     - **Nguyên nhân:**
+       - Component `<FriendInviteToast />` chỉ được render cục bộ bên trong `BottomLeftKnowledge.tsx` trên bàn học. Khi người nhận đang ở Trang chủ (`HomePage`), component này không tồn tại nên không thể hiển thị thông báo.
+       - Điều kiện kiểm tra người nhận `isForMe` dùng so sánh tuyệt đối chuỗi phân biệt hoa/thường và không xử lý tên viết tắt / tiếng Việt không dấu (ví dụ: mời "Nhật" nhưng tên người nhận là "Nhật Nguyễn" -> không khớp).
+       - Không gắn mã `toId` chính xác của peer đang online trên Supabase Realtime.
+     - **Giải pháp:**
+       - Đưa `<FriendInviteToast />` lên tầng root `SocialPresenceProvider` và hiển thị qua React Portal (`z-[9999]`), xuất hiện tức thì trên mọi màn hình của ứng dụng.
+       - Bổ sung hàm so khớp linh hoạt `SocialFriendService.matchesNameOrEmail`: Không phân biệt hoa/thường, không phân biệt dấu tiếng Việt (Telex/VNI), hỗ trợ so khớp một phần tên và tiền tố email.
+       - Tự động gắn `toId` từ `onlinePeers` thời gian thực khi gửi lời mời cho bạn bè đang trực tuyến.
+       - Bổ sung trường `peerId` trong `RecentBuddy` và lưu vết trong `syncPresenceState`.
+  3. **Kiểm Thử & Đảm Bảo Chất Lượng:**
+     - Thêm unit test cho `matchesNameOrEmail` và `peerId` trong `SocialFriendService.test.ts`.
+     - `pnpm test`: 20/20 test suites passed (89/89 tests passed).
+     - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+     - `pnpm run docs:index && pnpm run docs:check`: 242 symbols hợp lệ 100%.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 00:58 — main (Khắc Phục Triệt Để Lỗi Không Gõ Được Phím Cách Trên Giấy Ghi Chú & Bảo Toàn Khoảng Trắng)
 - **Task:** Xử lý lỗi người dùng phản hồi: "lỗi ghi chú không cho cách ra nè" (kèm ảnh chụp chữ bị dính liền thành 'lỗigichú'):
   1. **Nguyên Nhân Gốc:**

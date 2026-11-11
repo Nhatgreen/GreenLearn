@@ -36,7 +36,6 @@ import {
 import { getSupabaseConfig, saveSupabaseConfig, clearSupabaseConfig, getSupabase } from '@/lib/supabase';
 import { parsePdfFile } from '@/services/PdfParserService';
 import { useSocialPresence } from '@/hooks/useSocialPresence';
-import { FriendInviteToast } from './FriendInviteToast';
 import { DeskInviteNotification, SocialFriend } from '@/services/SocialFriendService';
 
 interface PendingDocument {
@@ -1193,17 +1192,6 @@ export function BottomLeftKnowledge() {
         </div>,
         document.body
       )}
-
-      {/* Floating Interactive Live Toast for Received Study Invitations */}
-      <FriendInviteToast
-        invite={incomingInvite}
-        onAccept={(inv) => {
-          joinMultiplayerRoom(inv.roomId);
-          declineInvite();
-          setIsShareModalOpen(false);
-        }}
-        onDecline={declineInvite}
-      />
     </div>
   );
 }

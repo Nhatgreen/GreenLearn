@@ -28,7 +28,7 @@ export type DeskAction =
   | { type: 'CLEAR_STROKES' }
   | { type: 'REMOVE_STROKE'; payload: { id: string } }
   | { type: 'REQUEST_SPACE_STATE'; payload: { requesterId: string } }
-  | { type: 'SYNC_SPACE_STATE'; payload: { targetId?: string; spaceName?: string; items: DeskItem[]; strokes: DrawingStroke[] } };
+  | { type: 'SYNC_SPACE_STATE'; payload: { targetId?: string; spaceId?: string; spaceName?: string; items: DeskItem[]; strokes: DrawingStroke[] } };
 
 const DEFAULT_MOCK_PEERS: PeerUser[] = [
   { id: 'mock-1', name: 'Lê Hoàng (Khoa CNTT)', avatarColor: '#334155', status: 'Đang thuyết trình', role: 'editor', isPresenter: true },
@@ -222,7 +222,7 @@ export function useRealtimeMultiplayer(
 
     // 1b. Presence Join: When a new peer enters
     channel.on('presence', { event: 'join' }, ({ key }) => {
-      if (key !== userId) {
+      if (key !== userId && isHost) {
         // Automatically sync host's canvas to newly joined peer
         onRequestSpaceStateRef.current?.(key);
       }
@@ -292,7 +292,9 @@ export function useRealtimeMultiplayer(
           };
 
           sendReq();
-          setTimeout(sendReq, 1000);
+          setTimeout(sendReq, 600);
+          setTimeout(sendReq, 1500);
+          setTimeout(sendReq, 3000);
         }
       } else {
         setIsConnected(false);
