@@ -286,14 +286,18 @@ export function TopLeftNav() {
             <Link
               href="/profile?from=desk"
               title={`Hồ sơ cá nhân (${profile?.display_name || user.email})`}
-              className="w-7 h-7 rounded-lg overflow-hidden border border-slate-300 hover:border-[#16A34A] transition-colors flex items-center justify-center bg-[#F0FDF4] text-[#16A34A] font-bold text-xs shadow-xs"
+              className="w-7 h-7 rounded-lg overflow-hidden border border-slate-300 hover:border-[#16A34A] transition-colors flex items-center justify-center bg-[#F0FDF4] text-[#16A34A] font-bold text-xs shadow-xs shrink-0"
+              style={{ width: '28px', height: '28px', minWidth: '28px', minHeight: '28px', maxWidth: '28px', maxHeight: '28px' }}
             >
               {profile?.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={profile.avatar_url}
                   alt={profile?.display_name || 'Avatar'}
+                  width={28}
+                  height={28}
                   className="w-full h-full object-cover"
+                  style={{ width: '100%', height: '100%', maxWidth: '28px', maxHeight: '28px', objectFit: 'cover' }}
                 />
               ) : (
                 <span>{(profile?.display_name || user.email || 'U').charAt(0).toUpperCase()}</span>

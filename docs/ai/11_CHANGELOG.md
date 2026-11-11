@@ -4,6 +4,23 @@
 
 ---
 
+## 2026-11-11 07:48 — main (Thu Nhỏ & Khống Chế Chuẩn Kích Thước Avatar Profile Trên Header)
+- **Task:** Thu nhỏ và khống chế kích thước ảnh đại diện cá nhân (`Avatar Profile`) trên thanh tiêu đề `HomePage` và thanh điều hướng `TopLeftNav`:
+  1. **Khắc Phục Lỗi Kích Thước Lớn Bất Thường:**
+     - Lớp class `w-8.5 h-8.5` không tồn tại trong bộ quy cách chuẩn của Tailwind CSS dẫn đến việc container `<Link>` không có chiều rộng/cao cụ thể. Khi người dùng đăng nhập bằng Google OAuth, ảnh avatar tải về ở độ phân giải gốc khiến vòng tròn avatar bung to bất thường (~96px) lấn át thanh tiêu đề.
+  2. **Khống Chế Kích Thước Chuẩn Công Thái Học:**
+     - Thiết lập chuẩn kích thước `w-8 h-8` (32×32px, `rounded-full shrink-0`) trên `HomePage.tsx`, cân xứng hoàn hảo với huy hiệu chuỗi ngày học / thú cưng (`py-1.5`).
+     - Bổ sung thuộc tính HTML `width={32} height={32}` và inline style phòng vệ `style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px' }}` cho cả container và thẻ `<img>` con.
+     - Cập nhật tương tự cho `TopLeftNav.tsx` (`w-7 h-7` / 28px) và `ProfileHeader.tsx` (`w-20 h-20` / 80px).
+  3. **Cập Nhật AGENTS.md:**
+     - Ghi nhận quy chuẩn Strict Image, SVG & Avatar Size Containment cho avatar profile.
+- **Verified by:**
+  - `pnpm test`: 16/16 test suites passed (64/64 tests passed).
+  - `pnpm run build:pages`: Static export 14/14 static pages thành công, 0 lỗi lint / type.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-10 21:02 — main (Triển Khai Thành Công GreenLearn Lên GitHub Pages Trực Tuyến)
 - **Task:** Đẩy toàn bộ mã nguồn lên repository `Nhatgreen/GreenLearn`, tinh chỉnh GitHub Actions workflow và kích hoạt triển khai thành công 100% trang web tĩnh lên GitHub Pages:
   1. **Tạo & Đồng Bộ Repo GitHub:**

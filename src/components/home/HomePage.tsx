@@ -310,14 +310,18 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <Link
               href="/profile?from=home"
               title={`Hồ sơ cá nhân (${userName})`}
-              className="w-8.5 h-8.5 rounded-full border border-slate-200 hover:border-[#16A34A] bg-white shadow-2xs overflow-hidden flex items-center justify-center transition-all cursor-pointer active:scale-95"
+              className="w-8 h-8 rounded-full shrink-0 border border-slate-200 hover:border-[#16A34A] bg-white shadow-2xs overflow-hidden flex items-center justify-center transition-all cursor-pointer active:scale-95"
+              style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px' }}
             >
               {profile?.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={profile.avatar_url}
                   alt={userName}
-                  className="w-full h-full object-cover"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover rounded-full"
+                  style={{ width: '100%', height: '100%', maxWidth: '32px', maxHeight: '32px', objectFit: 'cover' }}
                 />
               ) : (
                 <div className="w-full h-full bg-[#F0FDF4] text-[#16A34A] font-bold text-xs flex items-center justify-center select-none">

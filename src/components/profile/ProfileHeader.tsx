@@ -82,14 +82,20 @@ export function ProfileHeader({ profile, email }: ProfileHeaderProps) {
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-center sm:items-start gap-5">
       {/* Avatar Container */}
-      <div className="relative group">
-        <div className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-[#F0FDF4] to-green-100 border-2 border-green-200 flex items-center justify-center text-2xl font-black text-[#16A34A] shadow-sm">
+      <div className="relative group shrink-0">
+        <div 
+          className="w-20 h-20 rounded-2xl overflow-hidden bg-gradient-to-tr from-[#F0FDF4] to-green-100 border-2 border-green-200 flex items-center justify-center text-2xl font-black text-[#16A34A] shadow-sm shrink-0"
+          style={{ width: '80px', height: '80px', minWidth: '80px', minHeight: '80px', maxWidth: '80px', maxHeight: '80px' }}
+        >
           {profile?.avatar_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img 
               src={profile.avatar_url} 
               alt={displayName} 
+              width={80}
+              height={80}
               className="w-full h-full object-cover" 
+              style={{ width: '100%', height: '100%', maxWidth: '80px', maxHeight: '80px', objectFit: 'cover' }}
             />
           ) : (
             <span>{initial}</span>
