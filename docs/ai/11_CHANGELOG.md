@@ -4,6 +4,28 @@
 
 ---
 
+## 2026-11-12 00:58 — main (Khắc Phục Triệt Để Lỗi Không Gõ Được Phím Cách Trên Giấy Ghi Chú & Bảo Toàn Khoảng Trắng)
+- **Task:** Xử lý lỗi người dùng phản hồi: "lỗi ghi chú không cho cách ra nè" (kèm ảnh chụp chữ bị dính liền thành 'lỗigichú'):
+  1. **Nguyên Nhân Gốc:**
+     - Trong `StickyNoteItem.tsx`, hàm `handleTextChange` gọi `normalizeNFC(e.target.value)`.
+     - Trong `src/utils/textNormalization.ts` và `StudySpaceContext.tsx`, `normalizeNFC` có chứa `.trim()`.
+     - Mỗi khi người dùng gõ phím cách (Space), sự kiện `onChange` kích hoạt và `.trim()` lập tức nuốt chửng ký tự khoảng trắng ở cuối chuỗi, khiến giá trị `textarea` bị reset về chữ không có dấu cách, dẫn đến việc các từ bị dính liền vào nhau (ví dụ: gõ "lỗi ", space bị xóa -> gõ "ghi" thành "lỗighi").
+  2. **Giải Pháp:**
+     - Cập nhật `normalizeNFC` và `normalizeNFCPreserveWhitespace` trong `src/utils/textNormalization.ts`: Chỉ thực hiện chuẩn hóa ký tự Unicode tổ hợp sang dạng dựng sẵn (`NFC`), tuyệt đối không tự ý gọi `.trim()`. Bổ sung hàm riêng `normalizeNFCAndTrim` cho các trường hợp đặc biệt cần cắt khoảng trắng thừa.
+     - Cập nhật `removeEmojis` và `normalizeNFC` trong `src/context/StudySpaceContext.tsx` để không xóa khoảng trắng, dấu cách, tab hoặc ngắt dòng.
+     - Chuyển `StickyNoteItem.tsx` sang dùng `normalizeNFCPreserveWhitespace(e.target.value)` khi nhập liệu.
+     - Tối ưu `useEffect` trong `StickyNoteItem.tsx` và `MindMapNodeItem.tsx`: Chỉ cập nhật lại `text` khi `item.stickyText !== text`, tránh nhảy con trỏ chuột khi người dùng đang soạn thảo.
+     - Bổ sung `onKeyDown={(e) => e.stopPropagation()}` trên `<textarea>` của giấy ghi chú, ngăn ngừa triệt để các phím tắt toàn cục can thiệp vào quá trình gõ chữ tiếng Việt (Unikey/Telex).
+     - Bổ sung phát sóng Realtime `UPDATE_ITEM_TEXT` trong `updateStickyNoteText` giúp các bạn học trong phòng nhóm thấy ngay nội dung ghi chú cập nhật theo thời gian thực.
+  3. **Kiểm Thử & Đảm Bảo Chất Lượng:**
+     - Tạo bộ test mới `src/utils/textNormalization.test.ts` kiểm thử toàn diện việc bảo toàn khoảng trắng, dấu cách cuối chuỗi, tab, ký tự NFC và null/undefined an toàn.
+     - `pnpm test`: 20/20 test suites passed (88/88 tests passed).
+     - `pnpm run build:pages`: Static export 14/14 static pages thành công.
+     - `pnpm run docs:index && pnpm run docs:check`: 242/242 symbols hợp lệ 100%.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 00:35 — main (Chuẩn Hóa Toàn Diện UX/UI Trang Chủ: Breadcrumb Động, Triệt Tiêu UUID, Thống Nhất Typography & Tối Ưu Thẻ Bàn Học)
 - **Task:** Giải quyết triệt để 9 điểm nhận xét và thứ tự ưu tiên nâng cấp UX/UI:
   1. **Breadcrumb Động Theo Trang:**

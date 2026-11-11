@@ -588,8 +588,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     );
   };
 
-  // Deep NFC normalization & Zero-Emoji sanitizer for persistent storage safety
-  const removeEmojis = (str: string) => str.replace(/([\uD83C-\uDBFF\uDC00-\uDFFF]+|[\u2600-\u27BF])/g, '').trim();
+  // Deep NFC normalization & Zero-Emoji sanitizer for persistent storage safety (preserving all spaces, tabs & newlines)
+  const removeEmojis = (str: string) => str.replace(/([\uD83C-\uDBFF\uDC00-\uDFFF]+|[\u2600-\u27BF])/g, '');
   const normalizeNFC = (text: string) => (text ? removeEmojis(text.normalize('NFC')) : '');
 
   // Load spaces on startup from Supabase Cloud (when authenticated) or localStorage (guest)
@@ -1135,17 +1135,24 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateStickyNoteText = (id: string, text: string) => {
+    const normalized = text.normalize('NFC');
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
         return {
           ...s,
           items: s.items.map(item =>
-            item.id === id ? { ...item, stickyText: text.normalize('NFC') } : item
+            item.id === id ? { ...item, stickyText: normalized } : item
           )
         };
       })
     );
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({
+        type: 'UPDATE_ITEM_TEXT',
+        payload: { id, text: normalized }
+      });
+    }
   };
 
   const updateStickyNoteColor = (id: string, color: string) => {
@@ -1721,6 +1728,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateMindMapNode = (id: string, text: string, color?: string, shape?: 'pill' | 'rectangle' | 'cloud') => {
+    const normalized = text.normalize('NFC');
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1730,7 +1738,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
             item.id === id
               ? {
                   ...item,
-                  stickyText: normalizeNFC(text),
+                  stickyText: normalized,
                   mindMapColor: color ?? item.mindMapColor,
                   mindMapShape: shape ?? item.mindMapShape
                 }

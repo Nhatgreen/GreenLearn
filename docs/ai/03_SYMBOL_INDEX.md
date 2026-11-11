@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `37999e6`  
+> **Commit Hash:** `608f546`  
 > **Cập nhật lần cuối:** `2026-11-11`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -37,8 +37,8 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `PaperSheet` | `component` | [src/components/objects/PaperSheet.tsx:L807-L807](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/PaperSheet.tsx) | Mô phỏng tờ giấy A4/ghi chép đơn lẻ 2.5D với độ xoay tự do và texture giấy |
 | `PaperSheetComponent` | `component` | [src/components/objects/PaperSheet.tsx:L41-L805](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/PaperSheet.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `StickerItem` | `component` | [src/components/objects/StickerItem.tsx:L15-L192](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickerItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1104-L1104](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
-| `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L38-L1102](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1107-L1107](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
+| `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L38-L1105](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 
 ### HUD & Overlays
 
@@ -89,11 +89,11 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `RoomJoinResponse` | `type` | [src/context/SocialPresenceContext.tsx:L25-L35](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L46-L65](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L69-L438](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L162-L2205](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
+| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L162-L2213](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
 | `useAuth` | `hook` | [src/context/AuthContext.tsx:L302-L308](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `UserProfile` | `type` | [src/context/AuthContext.tsx:L11-L16](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L440-L443](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2207-L2213](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
+| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2215-L2221](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
 
 ### Non-AI Engine & Utils
 
@@ -152,6 +152,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `migrateLegacyStorage` | `fn` | [src/lib/storageMigration.ts:L8-L57](file:////home/nhat/Documents/DUT/ViTudy/src/lib/storageMigration.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `NextStageProgress` | `type` | [src/lib/petHelpers.ts:L37-L43](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `normalizeNFC` | `fn` | [src/utils/textNormalization.ts:L5-L8](file:////home/nhat/Documents/DUT/ViTudy/src/utils/textNormalization.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `normalizeNFCAndTrim` | `fn` | [src/utils/textNormalization.ts:L15-L18](file:////home/nhat/Documents/DUT/ViTudy/src/utils/textNormalization.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `normalizeNFCPreserveWhitespace` | `fn` | [src/utils/textNormalization.ts:L10-L13](file:////home/nhat/Documents/DUT/ViTudy/src/utils/textNormalization.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_AUTHORIZE_URL` | `component` | [src/lib/openaiOAuth.ts:L5-L5](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_MODELS` | `component` | [src/lib/aiClient.ts:L41-L46](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |

@@ -5,7 +5,7 @@ import { DeskItem } from '@/types/studyspace';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { askAi } from '@/lib/aiClient';
 import { useDeskItemInteraction } from '@/hooks/useDeskItemInteraction';
-import { normalizeNFC } from '@/utils/textNormalization';
+import { normalizeNFC, normalizeNFCPreserveWhitespace } from '@/utils/textNormalization';
 import { 
   Trash2, 
   Lightbulb, 
@@ -117,7 +117,9 @@ export function StickyNoteItemComponent({ item, isSelected }: StickyNoteItemProp
   ];
 
   useEffect(() => {
-    setText(item.stickyText || '');
+    if (item.stickyText !== undefined && item.stickyText !== text) {
+      setText(item.stickyText);
+    }
   }, [item.stickyText]);
 
   // Hook for unified drag-and-move and continuous 360 rotation
@@ -131,7 +133,7 @@ export function StickyNoteItemComponent({ item, isSelected }: StickyNoteItemProp
   });
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = normalizeNFC(e.target.value);
+    const val = normalizeNFCPreserveWhitespace(e.target.value);
     setText(val);
     if (updateStickyNoteText) {
       updateStickyNoteText(item.id, val);
@@ -726,6 +728,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
           <textarea
             value={text}
             onChange={handleTextChange}
+            onKeyDown={(e) => e.stopPropagation()}
             onMouseUp={handleTextMouseUp}
             placeholder="Ghi chú..."
             spellCheck={false}

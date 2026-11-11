@@ -46,7 +46,7 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
   });
 
   useEffect(() => {
-    if (item.stickyText !== undefined) {
+    if (item.stickyText !== undefined && item.stickyText !== text) {
       setText(item.stickyText);
     }
   }, [item.stickyText]);
