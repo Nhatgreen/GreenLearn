@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-11-12 07:55 — main (Khắc Phục Lỗi Vẽ Nối Đường Thẳng Khi Đặt 2 Ngón Tay Cầm Bút & Quản Lý Pointer Events)
+- **Task:** Khắc phục lỗi: "khi đang dùng công cụ vẽ, đặt 2 ngón tay lên canvas thì tạo ra đường thẳng nối 2 điểm chạm thay vì zoom/pan":
+  1. **Quản Lý Pointer Events theo Map:**
+     - Sử dụng `activePointersRef` (`Map<number, PointerData>`) theo dõi chính xác các con trỏ theo `pointerId`.
+  2. **Hủy Nét Vẽ Dở Khi Phát Hiện 2 Ngón Tay Trở Lên:**
+     - Khi `activePointers.size >= 2`: Hủy ngay lập tức nét vẽ đang dở qua `cancelStroke()` (không lưu vào undo/history stack) và chuyển tức thì sang pinch-zoom và pan 2 ngón mượt mà.
+  3. **Bộ Đệm Khởi Tạo Nét Vẽ ~40ms Cho Ngón Tay:**
+     - Chỉ bắt đầu nét vẽ khi đúng 1 con trỏ và `e.isPrimary`, có độ trễ ~40ms để kiểm tra xem có ngón thứ hai đang cùng chạm xuống không.
+  4. **Hỗ Trợ Bút Cảm Ứng (Stylus) & Tùy Chọn Vẽ Bằng Ngón Tay:**
+     - `pointerType === 'pen'` bắt đầu nét vẽ ngay lập tức (zero latency).
+     - Thêm cài đặt `isFingerDrawingEnabled` ("Vẽ bằng ngón tay" / Palm Rejection) trong `StudySpaceContext` và nút bật/tắt trong thanh công cụ bút `LeftCreationBar.tsx`. Khi tắt, ngón tay chỉ dùng để pan/zoom, chỉ stylus mới được vẽ.
+  5. **Xử Lý `pointercancel` & `pointerup` Sạch Sẽ:**
+     - Giải phóng `setPointerCapture`, dọn sạch con trỏ trong Map và lắng nghe sự kiện window `pointerup`, `pointercancel`, `blur` tránh hoàn toàn tình trạng kẹt trạng thái.
+  6. **Cố Định `touch-action: none` Trên Canvas:**
+     - Bổ sung `touch-action: none` và `overscroll-behavior: none` trên lớp tương tác vẽ `DeskDrawingInteractionLayer`.
+  7. **Kiểm Thử:**
+     - Thêm bộ test [`DrawingGestureMultiTouch.test.tsx`](file:///home/nhat/Documents/DUT/ViTudy/src/components/canvas/DrawingGestureMultiTouch.test.tsx) (7 tests).
+     - `pnpm test`: 22/22 test suites passed, 105/105 tests passed.
+     - `pnpm run build:pages`: 14/14 static pages build pass.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 07:30 — main (Cử Chỉ Pinch-Zoom 2 Ngón Tay Canvas Bàn Học 2.5D & Tự Động Căn Vừa Màn Hình Trên Mobile)
 - **Task:** Xử lý yêu cầu cử chỉ thu phóng cảm ứng trên mobile/tablet: "Trên mobile/tablet, pinch-zoom đang làm zoom cả trang thay vì chỉ canvas bàn học":
   1. **Truy cập Bàn học 2.5D trực tiếp trên Mobile (`src/app/page.tsx`):**

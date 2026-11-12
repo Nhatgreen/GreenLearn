@@ -108,6 +108,9 @@ interface StudySpaceContextType {
   startStroke: (point: { x: number; y: number }, color: string, width: number, isHighlighter: boolean) => void;
   appendPoint: (point: { x: number; y: number }) => void;
   finishStroke: () => void;
+  cancelStroke: () => void;
+  isFingerDrawingEnabled: boolean;
+  setIsFingerDrawingEnabled: (enabled: boolean) => void;
   addStroke: (stroke: import('@/types/studyspace').DrawingStroke) => void;
   undoStroke: () => void;
   redoStroke: () => void;
@@ -540,6 +543,25 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       }
       return null;
     });
+  };
+
+  const cancelStroke = () => {
+    setCurrentStroke(null);
+  };
+
+  const [isFingerDrawingEnabled, setIsFingerDrawingEnabledState] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('greenlearn_finger_drawing_enabled');
+      if (saved !== null) return saved === 'true';
+    }
+    return true;
+  });
+
+  const setIsFingerDrawingEnabled = (enabled: boolean) => {
+    setIsFingerDrawingEnabledState(enabled);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('greenlearn_finger_drawing_enabled', String(enabled));
+    }
   };
 
   const [redoStack, setRedoStack] = useState<import('@/types/studyspace').DrawingStroke[]>([]);
@@ -2246,6 +2268,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         startStroke,
         appendPoint,
         finishStroke,
+        cancelStroke,
+        isFingerDrawingEnabled,
+        setIsFingerDrawingEnabled,
         addStroke,
         undoStroke,
         redoStroke,

@@ -6,6 +6,7 @@ import { useStudySpace } from '@/context/StudySpaceContext';
 export function DeskDrawingInteractionLayer() {
   const { 
     transform, 
+    setTransform,
     panBy, 
     activeTool, 
     setActiveTool,
@@ -23,6 +24,8 @@ export function DeskDrawingInteractionLayer() {
     startStroke, 
     appendPoint, 
     finishStroke,
+    cancelStroke,
+    isFingerDrawingEnabled,
     removeStrokesInBox
   } = useStudySpace();
 
@@ -32,6 +35,24 @@ export function DeskDrawingInteractionLayer() {
   const [dragBox, setDragBox] = useState<{ startX: number; startY: number; currentX: number; currentY: number } | null>(null);
   const [showTooltip, setShowTooltip] = useState(true);
   const panStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  // Active pointers map: pointerId -> { x, y, pointerType, isPrimary }
+  const activePointersRef = useRef<Map<number, { x: number; y: number; pointerType: string; isPrimary: boolean }>>(new Map());
+
+  // Multi-touch pinch-zoom baseline
+  const pinchStartRef = useRef<{ dist: number; mid: { x: number; y: number } } | null>(null);
+  const isMultiTouchRef = useRef<boolean>(false);
+
+  // Stroke lifecycle references
+  const strokeStartTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isStrokeActiveRef = useRef<boolean>(false);
+  const pendingStrokeDataRef = useRef<{
+    pointerId: number;
+    points: { x: number; y: number }[];
+    color: string;
+    width: number;
+    isHighlighter: boolean;
+  } | null>(null);
 
   const isHighlighter = activeTool === 'highlighter';
   const isPen = activeTool === 'pen' || activeTool === 'smart_shape';
@@ -83,7 +104,46 @@ export function DeskDrawingInteractionLayer() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [setActiveTool, setStickyCreationColor]);
+  }, [setActiveTool, setStickyCreationColor, setStickyCreationTemplate]);
+
+  // Global window listeners to reset pointers and prevent stuck states
+  useEffect(() => {
+    const handleGlobalPointerUp = (e: PointerEvent) => {
+      activePointersRef.current.delete(e.pointerId);
+      if (activePointersRef.current.size === 0) {
+        isMultiTouchRef.current = false;
+        pinchStartRef.current = null;
+        panStartRef.current = null;
+      }
+    };
+
+    const handleGlobalBlur = () => {
+      activePointersRef.current.clear();
+      isMultiTouchRef.current = false;
+      pinchStartRef.current = null;
+      panStartRef.current = null;
+      if (strokeStartTimerRef.current) {
+        clearTimeout(strokeStartTimerRef.current);
+        strokeStartTimerRef.current = null;
+      }
+      if (isStrokeActiveRef.current) {
+        isStrokeActiveRef.current = false;
+        cancelStroke();
+      }
+    };
+
+    window.addEventListener('pointerup', handleGlobalPointerUp);
+    window.addEventListener('pointercancel', handleGlobalPointerUp);
+    window.addEventListener('blur', handleGlobalBlur);
+    return () => {
+      window.removeEventListener('pointerup', handleGlobalPointerUp);
+      window.removeEventListener('pointercancel', handleGlobalPointerUp);
+      window.removeEventListener('blur', handleGlobalBlur);
+      if (strokeStartTimerRef.current) {
+        clearTimeout(strokeStartTimerRef.current);
+      }
+    };
+  }, [cancelStroke]);
 
   // Auto-hide tooltip after 5 seconds of tool selection
   useEffect(() => {
@@ -95,11 +155,70 @@ export function DeskDrawingInteractionLayer() {
   }, [activeTool]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (e.button !== 0) return;
+    // Only accept left mouse click (button 0), or touch/pen touches
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     e.preventDefault();
     e.stopPropagation();
 
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    // Register active pointer
+    activePointersRef.current.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY,
+      pointerType: e.pointerType,
+      isPrimary: e.isPrimary,
+    });
+
+    try {
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    // MULTI-POINTER DETECTED (2 or more touches):
+    // Immediately cancel any in-progress stroke and switch to 2-finger pinch-zoom/pan
+    if (activePointersRef.current.size >= 2) {
+      // 1. Cancel pending stroke delay timer
+      if (strokeStartTimerRef.current) {
+        clearTimeout(strokeStartTimerRef.current);
+        strokeStartTimerRef.current = null;
+        pendingStrokeDataRef.current = null;
+      }
+
+      // 2. Cancel in-progress stroke immediately without saving to history/undo
+      if (isStrokeActiveRef.current) {
+        isStrokeActiveRef.current = false;
+        cancelStroke();
+      }
+
+      // 3. Mark multi-touch mode active
+      isMultiTouchRef.current = true;
+      setIsInteracting(false);
+      setIsPanning(false);
+      setDragBox(null);
+
+      // 4. Initialize pinch baseline
+      const pts = Array.from(activePointersRef.current.values());
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      const mid = {
+        x: (pts[0].x + pts[1].x) / 2,
+        y: (pts[0].y + pts[1].y) / 2,
+      };
+      pinchStartRef.current = { dist: Math.max(dist, 1), mid };
+
+      // Release capture so touches track smoothly together
+      try {
+        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
+    // SINGLE POINTER (activePointersRef.current.size === 1)
+    // If still in multi-touch sequence (waiting for all fingers to lift), do not draw!
+    if (isMultiTouchRef.current) {
+      return;
+    }
 
     // If holding Alt, enter PAN MODE
     if (e.altKey || isAltPressed) {
@@ -108,9 +227,16 @@ export function DeskDrawingInteractionLayer() {
       return;
     }
 
-    setIsInteracting(true);
+    // If pointerType is touch AND finger drawing is disabled (Stylus Only mode): Touch only pans canvas
+    if (e.pointerType === 'touch' && !isFingerDrawingEnabled) {
+      setIsPanning(true);
+      panStartRef.current = { x: e.clientX, y: e.clientY };
+      return;
+    }
 
+    // Create note / area eraser drag box
     if (isCreateNote || isAreaEraser) {
+      setIsInteracting(true);
       setDragBox({
         startX: e.clientX,
         startY: e.clientY,
@@ -122,8 +248,9 @@ export function DeskDrawingInteractionLayer() {
 
     const { x: worldX, y: worldY } = screenToWorld(e.clientX, e.clientY);
 
+    // Eraser tap
     if (isEraser) {
-      // Delete strokes under touch point
+      setIsInteracting(true);
       removeStrokesInBox({
         x1: worldX - 14,
         y1: worldY - 14,
@@ -134,18 +261,125 @@ export function DeskDrawingInteractionLayer() {
     }
 
     // Pen / Highlighter / Smart Shape
-    startStroke(
-      { x: worldX, y: worldY },
-      isHighlighter ? (penColor || '#facc15') : penColor,
-      currentStrokeWidth,
-      isHighlighter
-    );
+    if (isPen || isHighlighter) {
+      const color = isHighlighter ? (penColor || '#facc15') : penColor;
+      const width = currentStrokeWidth;
+
+      // Touch pointer: delay ~40ms to detect if a second finger is landing (pinch gesture)
+      if (e.pointerType === 'touch') {
+        const pId = e.pointerId;
+        pendingStrokeDataRef.current = {
+          pointerId: pId,
+          points: [{ x: e.clientX, y: e.clientY }],
+          color,
+          width,
+          isHighlighter,
+        };
+
+        if (strokeStartTimerRef.current) {
+          clearTimeout(strokeStartTimerRef.current);
+        }
+
+        strokeStartTimerRef.current = setTimeout(() => {
+          strokeStartTimerRef.current = null;
+          if (
+            activePointersRef.current.size === 1 &&
+            !isMultiTouchRef.current &&
+            pendingStrokeDataRef.current
+          ) {
+            const data = pendingStrokeDataRef.current;
+            isStrokeActiveRef.current = true;
+            setIsInteracting(true);
+            const startPt = screenToWorld(data.points[0].x, data.points[0].y);
+            startStroke(startPt, data.color, data.width, data.isHighlighter);
+
+            // Append any points that moved during the 40ms buffer
+            for (let i = 1; i < data.points.length; i++) {
+              const pt = screenToWorld(data.points[i].x, data.points[i].y);
+              appendPoint(pt);
+            }
+          }
+        }, 40);
+        return;
+      }
+
+      // Pen (Stylus) or Mouse: start drawing immediately
+      isStrokeActiveRef.current = true;
+      setIsInteracting(true);
+      startStroke({ x: worldX, y: worldY }, color, width, isHighlighter);
+    }
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
+    if (!activePointersRef.current.has(e.pointerId)) return;
+    activePointersRef.current.set(e.pointerId, {
+      x: e.clientX,
+      y: e.clientY,
+      pointerType: e.pointerType,
+      isPrimary: e.isPrimary,
+    });
+
+    // 1. MULTI-TOUCH PINCH-ZOOM & PAN (2 or more pointers)
+    if (activePointersRef.current.size >= 2 || isMultiTouchRef.current) {
+      // Ensure stroke is canceled
+      if (strokeStartTimerRef.current) {
+        clearTimeout(strokeStartTimerRef.current);
+        strokeStartTimerRef.current = null;
+        pendingStrokeDataRef.current = null;
+      }
+      if (isStrokeActiveRef.current) {
+        isStrokeActiveRef.current = false;
+        cancelStroke();
+      }
+
+      if (activePointersRef.current.size >= 2 && pinchStartRef.current) {
+        const pts = Array.from(activePointersRef.current.values());
+        const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        const mid = {
+          x: (pts[0].x + pts[1].x) / 2,
+          y: (pts[0].y + pts[1].y) / 2,
+        };
+
+        const prevDist = pinchStartRef.current.dist;
+        const prevMid = pinchStartRef.current.mid;
+
+        const factor = dist / prevDist;
+        const dx = mid.x - prevMid.x;
+        const dy = mid.y - prevMid.y;
+
+        pinchStartRef.current = { dist: Math.max(dist, 1), mid };
+
+        setTransform(prev => {
+          const MIN_SCALE = 0.4;
+          const MAX_SCALE = 2.5;
+          const targetScale = prev.scale * factor;
+          const newScale = Math.min(Math.max(Number(targetScale.toFixed(3)), MIN_SCALE), MAX_SCALE);
+          const scaleChange = newScale / prev.scale;
+
+          const newX = Math.round(mid.x - (mid.x - prev.x) * scaleChange + dx);
+          const newY = Math.round(mid.y - (mid.y - prev.y) * scaleChange + dy);
+
+          return {
+            ...prev,
+            x: newX,
+            y: newY,
+            scale: newScale,
+          };
+        });
+      }
+      return;
+    }
+
+    // 2. BUFFERING TOUCH MOVE DURING ~40MS INITIAL DELAY
+    if (strokeStartTimerRef.current && pendingStrokeDataRef.current) {
+      pendingStrokeDataRef.current.points.push({ x: e.clientX, y: e.clientY });
+      return;
+    }
+
+    // 3. PANNING (Alt held or Touch with finger drawing disabled)
     if (isPanning && panStartRef.current) {
       const dx = e.clientX - panStartRef.current.x;
       const dy = e.clientY - panStartRef.current.y;
@@ -154,8 +388,23 @@ export function DeskDrawingInteractionLayer() {
       return;
     }
 
+    // 4. DRAWING STROKE (Pen / Highlighter / Smart Shape)
+    if (isStrokeActiveRef.current && (isPen || isHighlighter)) {
+      const native = e.nativeEvent as PointerEvent;
+      const coalesced = typeof native?.getCoalescedEvents === 'function' ? native.getCoalescedEvents() : null;
+      const events = coalesced && coalesced.length > 0 ? coalesced : [e];
+      for (const ev of events) {
+        const cx = typeof ev.clientX === 'number' ? ev.clientX : e.clientX;
+        const cy = typeof ev.clientY === 'number' ? ev.clientY : e.clientY;
+        const { x: wx, y: wy } = screenToWorld(cx, cy);
+        appendPoint({ x: wx, y: wy });
+      }
+      return;
+    }
+
     if (!isInteracting) return;
 
+    // 5. CREATE NOTE / AREA ERASER DRAG BOX
     if (isCreateNote || isAreaEraser) {
       setDragBox(prev => prev ? { ...prev, currentX: e.clientX, currentY: e.clientY } : null);
       return;
@@ -163,6 +412,7 @@ export function DeskDrawingInteractionLayer() {
 
     const { x: worldX, y: worldY } = screenToWorld(e.clientX, e.clientY);
 
+    // 6. ERASER DRAG
     if (isEraser) {
       removeStrokesInBox({
         x1: worldX - 14,
@@ -171,16 +421,6 @@ export function DeskDrawingInteractionLayer() {
         y2: worldY + 14
       });
       return;
-    }
-
-    // Coalesced smooth points for Drawing
-    const native = e.nativeEvent as PointerEvent;
-    const events = typeof native?.getCoalescedEvents === 'function' 
-      ? native.getCoalescedEvents() 
-      : [e];
-    for (const ev of events) {
-      const { x: wx, y: wy } = screenToWorld(ev.clientX, ev.clientY);
-      appendPoint({ x: wx, y: wy });
     }
   };
 
@@ -194,16 +434,35 @@ export function DeskDrawingInteractionLayer() {
       // ignore
     }
 
-    if (isPanning) {
-      setIsPanning(false);
-      panStartRef.current = null;
+    activePointersRef.current.delete(e.pointerId);
+
+    // If there was a pending stroke timer (e.g. fast single-finger tap < 40ms):
+    if (strokeStartTimerRef.current && pendingStrokeDataRef.current) {
+      clearTimeout(strokeStartTimerRef.current);
+      strokeStartTimerRef.current = null;
+      if (!isMultiTouchRef.current) {
+        const data = pendingStrokeDataRef.current;
+        const pt = screenToWorld(data.points[0].x, data.points[0].y);
+        startStroke(pt, data.color, data.width, data.isHighlighter);
+        appendPoint({ x: pt.x + 0.1, y: pt.y + 0.1 });
+        finishStroke();
+      }
+      pendingStrokeDataRef.current = null;
     }
 
-    if (isInteracting) {
-      setIsInteracting(false);
+    // If stroke was actively drawing:
+    if (isStrokeActiveRef.current) {
+      isStrokeActiveRef.current = false;
+      if (!isMultiTouchRef.current) {
+        finishStroke();
+      } else {
+        cancelStroke();
+      }
+    }
 
+    // If dragging note or area eraser:
+    if (isInteracting) {
       if (isCreateNote && dragBox) {
-        // Convert screen client box to world coords
         const p1 = screenToWorld(dragBox.startX, dragBox.startY);
         const p2 = screenToWorld(dragBox.currentX, dragBox.currentY);
         const wX1 = p1.x;
@@ -223,7 +482,6 @@ export function DeskDrawingInteractionLayer() {
         let finalX = Math.min(wX1, wX2);
         let finalY = Math.min(wY1, wY2);
 
-        // If user merely clicked without dragging, spawn centered at click position!
         if (rawW < 20 && rawH < 20) {
           finalX = Math.round(wX1 - defW / 2);
           finalY = Math.round(wY1 - defH / 2);
@@ -250,10 +508,7 @@ export function DeskDrawingInteractionLayer() {
         setActiveTool('cursor');
         setStickyCreationColor(null);
         setStickyCreationTemplate?.(null);
-        return;
-      }
-
-      if (isAreaEraser && dragBox) {
+      } else if (isAreaEraser && dragBox) {
         const p1 = screenToWorld(dragBox.startX, dragBox.startY);
         const p2 = screenToWorld(dragBox.currentX, dragBox.currentY);
         const wX1 = Math.min(p1.x, p2.x);
@@ -263,12 +518,65 @@ export function DeskDrawingInteractionLayer() {
 
         removeStrokesInBox({ x1: wX1, y1: wY1, x2: wX2, y2: wY2 });
         setDragBox(null);
-        return;
       }
+      setIsInteracting(false);
+    }
 
-      if (isPen || isHighlighter) {
-        finishStroke();
+    if (activePointersRef.current.size < 2) {
+      pinchStartRef.current = null;
+    }
+
+    // When ALL pointers have been lifted, fully reset multi-touch and pan states
+    if (activePointersRef.current.size === 0) {
+      isMultiTouchRef.current = false;
+      setIsPanning(false);
+      panStartRef.current = null;
+      setIsInteracting(false);
+      isStrokeActiveRef.current = false;
+      pendingStrokeDataRef.current = null;
+      if (strokeStartTimerRef.current) {
+        clearTimeout(strokeStartTimerRef.current);
+        strokeStartTimerRef.current = null;
       }
+    }
+  };
+
+  const handlePointerCancel = (e: React.PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    activePointersRef.current.delete(e.pointerId);
+
+    if (strokeStartTimerRef.current) {
+      clearTimeout(strokeStartTimerRef.current);
+      strokeStartTimerRef.current = null;
+      pendingStrokeDataRef.current = null;
+    }
+
+    if (isStrokeActiveRef.current) {
+      isStrokeActiveRef.current = false;
+      cancelStroke();
+    }
+
+    setDragBox(null);
+
+    if (activePointersRef.current.size < 2) {
+      pinchStartRef.current = null;
+    }
+
+    if (activePointersRef.current.size === 0) {
+      isMultiTouchRef.current = false;
+      setIsPanning(false);
+      panStartRef.current = null;
+      setIsInteracting(false);
+      isStrokeActiveRef.current = false;
+      pendingStrokeDataRef.current = null;
     }
   };
 
@@ -318,14 +626,19 @@ export function DeskDrawingInteractionLayer() {
 
   return (
     <>
-      {/* Full-Screen Interaction Capture Plane */}
+      {/* Full-Screen Interaction Capture Plane with touch-action: none */}
       <div
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
         onContextMenu={(e) => e.preventDefault()}
-        style={{ cursor: isCreateNote ? `url('${getCreateNoteCursorSvg()}') 4 4, crosshair` : undefined }}
-        className={`fixed inset-0 z-35 select-none touch-none ${getCursorStyle()}`}
+        style={{ 
+          cursor: isCreateNote ? `url('${getCreateNoteCursorSvg()}') 4 4, crosshair` : undefined,
+          touchAction: 'none',
+          overscrollBehavior: 'none'
+        }}
+        className={`fixed inset-0 z-35 select-none touch-none overscroll-none ${getCursorStyle()}`}
       >
         {/* Live Dragging Bounding Box Preview */}
         {dragBox && previewBoxStyle && (
@@ -349,7 +662,7 @@ export function DeskDrawingInteractionLayer() {
         )}
       </div>
 
-      {/* Floating Mode Tooltip Guide (Miro-style clean white) */}
+      {/* Floating Mode Tooltip Guide */}
       {showTooltip && (
         <div className="fixed bottom-14 left-1/2 -translate-x-1/2 z-40 pointer-events-none flex items-center gap-2 bg-white/95 text-slate-800 text-xs px-4 py-2 rounded-full shadow-xl border border-slate-200/90 backdrop-blur-md animate-fade-in font-medium transition-opacity duration-300">
           <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
@@ -358,7 +671,7 @@ export function DeskDrawingInteractionLayer() {
               ? `Nhấp chuột vào bất kỳ vị trí nào trên bàn học để đặt: ${stickyCreationTemplate.typeLabel}`
               : 'Kéo thả chuột trên mặt bàn để tạo tờ note theo kích thước tùy ý (hoặc nhấp chuột để đặt note chuẩn)')}
             {activeTool === 'smart_shape' && 'Vẽ thông minh: Hãy phác thảo hình tròn, vuông, elip hoặc tam giác để AI tự động uốn nắn'}
-            {activeTool === 'pen' && 'Bút vẽ: Kéo chuột để vẽ • Giữ Alt để di chuyển bàn học'}
+            {activeTool === 'pen' && (isFingerDrawingEnabled ? 'Bút vẽ: Dùng 1 ngón hoặc bút để vẽ • Dùng 2 ngón để zoom/pan' : 'Bút vẽ (Stylus Only): Chỉ vẽ bằng bút cảm ứng • Dùng ngón tay để zoom/pan')}
             {activeTool === 'highlighter' && 'Bút dạ quang: Đánh dấu làm nổi bật tài liệu'}
             {activeTool === 'eraser' && 'Tẩy chạm: Nhấp chuột vào nét vẽ để xóa'}
             {activeTool === 'area_eraser' && 'Tẩy vùng: Kéo khung chữ nhật để xóa toàn bộ nét vẽ bên trong'}

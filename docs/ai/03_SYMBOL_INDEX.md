@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `d1ae98c`  
+> **Commit Hash:** `70ec0f3`  
 > **Cập nhật lần cuối:** `2026-11-12`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -13,7 +13,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | Ký hiệu (Symbol) | Loại (Kind) | Vị trí (File:Lines) | Vai trò chức năng |
 |---|---|---|---|
 | `DeskDrawingCanvas` | `component` | [src/components/canvas/DeskDrawingCanvas.tsx:L6-L112](file:////home/nhat/Documents/DUT/ViTudy/src/components/canvas/DeskDrawingCanvas.tsx) | Canvas vẽ nét bút dạ quang và bút vẽ tự do với chế độ multiply blend |
-| `DeskDrawingInteractionLayer` | `component` | [src/components/canvas/DeskDrawingInteractionLayer.tsx:L6-L370](file:////home/nhat/Documents/DUT/ViTudy/src/components/canvas/DeskDrawingInteractionLayer.tsx) | Lớp đón bắt sự kiện kéo vẽ mượt mà, phân định vẽ nét vs di chuyển bàn |
+| `DeskDrawingInteractionLayer` | `component` | [src/components/canvas/DeskDrawingInteractionLayer.tsx:L6-L683](file:////home/nhat/Documents/DUT/ViTudy/src/components/canvas/DeskDrawingInteractionLayer.tsx) | Lớp đón bắt sự kiện kéo vẽ mượt mà, phân định vẽ nét vs di chuyển bàn |
 | `DeskGrid` | `component` | [src/components/canvas/DeskGrid.tsx:L5-L50](file:////home/nhat/Documents/DUT/ViTudy/src/components/canvas/DeskGrid.tsx) | Lưới caro toạ độ bàn học trắng tinh khiết chống mỏi mắt |
 | `InfiniteDesk` | `component` | [src/components/canvas/InfiniteDesk.tsx:L20-L643](file:////home/nhat/Documents/DUT/ViTudy/src/components/canvas/InfiniteDesk.tsx) | Mặt bàn vô cực 2.5D: quản lý pan, zoom, phím tắt Alt+Drag, bắt sự kiện click |
 | `ItemDrawingOverlay` | `component` | [src/components/canvas/ItemDrawingOverlay.tsx:L6-L90](file:////home/nhat/Documents/DUT/ViTudy/src/components/canvas/ItemDrawingOverlay.tsx) | Thành phần nghiệp vụ của phân hệ Canvas & 2.5D Desk |
@@ -50,7 +50,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `FriendInviteToastProps` | `type` | [src/components/hud/FriendInviteToast.tsx:L8-L12](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/FriendInviteToast.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `FriendsRightDrawer` | `component` | [src/components/hud/FriendsRightDrawer.tsx:L27-L436](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/FriendsRightDrawer.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `InviteModal` | `component` | [src/components/hud/InviteModal.tsx:L15-L131](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/InviteModal.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
-| `LeftCreationBar` | `component` | [src/components/hud/LeftCreationBar.tsx:L32-L583](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/LeftCreationBar.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
+| `LeftCreationBar` | `component` | [src/components/hud/LeftCreationBar.tsx:L33-L610](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/LeftCreationBar.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `MultiplayerBar` | `component` | [src/components/hud/MultiplayerBar.tsx:L20-L397](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/MultiplayerBar.tsx) | HUD cộng tác học nhóm thời gian thực: danh sách avatar, thả cảm xúc emoji |
 | `StickerEmojiPickerFlyout` | `component` | [src/components/hud/StickerEmojiPickerFlyout.tsx:L35-L718](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/StickerEmojiPickerFlyout.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `TopLeftNav` | `component` | [src/components/hud/TopLeftNav.tsx:L28-L397](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/TopLeftNav.tsx) | HUD góc trên-trái: chuyển đổi bàn học, tìm kiếm tài liệu, đồng bộ góc nhìn |
@@ -89,11 +89,11 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `RoomJoinResponse` | `type` | [src/context/SocialPresenceContext.tsx:L27-L37](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L48-L67](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L71-L466](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L162-L2279](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
+| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L165-L2304](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
 | `useAuth` | `hook` | [src/context/AuthContext.tsx:L302-L308](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `UserProfile` | `type` | [src/context/AuthContext.tsx:L11-L16](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L468-L471](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2281-L2287](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
+| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2306-L2312](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
 
 ### Non-AI Engine & Utils
 

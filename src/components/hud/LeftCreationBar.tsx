@@ -24,7 +24,8 @@ import {
   Network,
   Video,
   X,
-  BookOpen
+  BookOpen,
+  Hand
 } from 'lucide-react';
 import { StickerEmojiPickerFlyout, StickerPickerItem } from '@/components/hud/StickerEmojiPickerFlyout';
 import { BookCoverModal, BookInitialPage } from '@/components/modals/BookCoverModal';
@@ -46,6 +47,8 @@ export function LeftCreationBar() {
     redoStroke,
     redoStack,
     clearStrokes,
+    isFingerDrawingEnabled,
+    setIsFingerDrawingEnabled,
     addStickyNote,
     addBook
   } = useStudySpace();
@@ -479,6 +482,30 @@ export function LeftCreationBar() {
                 </div>
               )}
             </div>
+
+            <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
+
+            {/* Toggle Finger Drawing (Vẽ bằng ngón tay / Palm Rejection) */}
+            <button
+              title={
+                isFingerDrawingEnabled
+                  ? 'Vẽ bằng ngón tay: Đang BẬT (Chạm 1 ngón để vẽ, 2 ngón để zoom/pan. Bấm để chuyển sang chỉ vẽ bằng bút Stylus)'
+                  : 'Vẽ bằng ngón tay: Đang TẮT (Chế độ Stylus Only: Ngón tay chỉ dùng để pan/zoom, chỉ vẽ bằng bút cảm ứng)'
+              }
+              onClick={() => setIsFingerDrawingEnabled(!isFingerDrawingEnabled)}
+              className={`w-7 h-7 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
+                isFingerDrawingEnabled
+                  ? 'bg-green-50 text-[#16A34A] border border-green-300 font-bold'
+                  : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600 border border-slate-200'
+              }`}
+            >
+              <Hand className="w-4 h-4 stroke-[2.2]" />
+              <span
+                className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border border-white ${
+                  isFingerDrawingEnabled ? 'bg-[#16A34A]' : 'bg-slate-300'
+                }`}
+              />
+            </button>
           </div>
         )}
 

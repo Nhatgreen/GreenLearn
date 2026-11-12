@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-12`  
-> **Trạng thái Codebase:** Hoàn thành toàn diện cử chỉ Pinch-Zoom 2 ngón tay trên canvas bàn học 2.5D cho mobile/tablet, tự động căn vừa màn hình `fitAllToScreen()`, chặn zoom toàn trang web. 21/21 test suites pass (98/98 tests), 14/14 static pages build pass, docs:check pass.
+> **Trạng thái Codebase:** Khắc phục triệt để lỗi đường thẳng 2 ngón khi đang vẽ bằng Pointer Events Map, hủy nét vẽ dở khi $\ge 2$ con trỏ, hoãn ~40ms phát hiện cử chỉ pinch-zoom, hỗ trợ Stylus và Palm Rejection. 22/22 test suites pass (105/105 tests), 14/14 static pages build pass, docs:check pass.
 
 ---
 
