@@ -4,6 +4,38 @@
 
 ---
 
+## 2026-11-12 09:20 — main (Khắc Phục Lỗi Hiển Thị Tablet Layout Trên Điện Thoại Màn Dọc & Lớp Phủ Debug Responsive)
+- **Task:** Xử lý triệt để phản hồi của Sếp: "Lâu lâu trên điện thoại (màn dọc), trang hiển thị layout tablet (sidebar icon, bảng 3 cột) thay vì layout mobile":
+  1. **Thẻ Meta Viewport Chuẩn & Bất Biến (`src/app/layout.tsx`):**
+     - Cấu hình qua Next.js `Viewport` metadata: `width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover`.
+     - Đặt thêm thẻ `<meta name="viewport" ...>` cố định trong `<head>` để trình duyệt áp dụng ngay lập tức trước khi JavaScript nạp.
+     - Thêm HTTP Cache-Control headers chống cache cũ.
+  2. **Tiêu Chuẩn Breakpoint Mobile Đa Điều Kiện (`useResponsiveLayout.ts` & `globals.css`):**
+     - Tạo hook [`useResponsiveLayout.ts`](file:///home/nhat/Documents/DUT/ViTudy/src/hooks/useResponsiveLayout.ts) kết hợp điều kiện kép: `max-width` CÙNG `(pointer: coarse)` VÀ `(orientation: portrait)` (kèm `screen.width <= 500px` / `max-device-width: 600px`).
+     - Ngăn ngừa tình trạng các smartphone màn hình lớn / zoom hiển thị nhỏ có `innerWidth >= 640px` bị kích hoạt nhầm breakpoint `sm:` của Tailwind thành giao diện tablet.
+     - Tự động tính toán lại khi có sự kiện `resize`, `orientationchange`, `window.visualViewport.resize` và `matchMedia` change listeners.
+     - Bổ sung các CSS utility classes `.mobile-hide-forced`, `.mobile-show-forced`, `.mobile-flex-forced` trong `globals.css`.
+  3. **Ngăn Ngừa Tự Động Phóng To Chữ (`text-size-adjust: 100%`):**
+     - Bổ sung `-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; text-size-adjust: 100%;` trong thẻ `html` tại `src/app/globals.css`.
+  4. **Thêm Version Query Cho CSS/JS Static Build (`scripts/build-pages.mjs`):**
+     - Tự động đóng dấu `?v=${Date.now().toString(36)}` vào toàn bộ script chunks và link CSS trong tất cả các file HTML xuất ra trong thư mục `out/` để triệt tiêu cache cũ trên GitHub Pages.
+  5. **Chuyển Đổi Layout Thống Nhất Trên Mobile (`HomePage.tsx`):**
+     - Ẩn hoàn toàn sidebar `<aside>` (`isMobile ? 'hidden mobile-hide-forced' : ...`).
+     - Hiển thị nút Hamburger Drawer trên mobile.
+     - Chuyển đổi bảng "Mở lại gần đây" và "Bàn học của tôi" thành danh sách thẻ dọc (Vertical Cards), triệt tiêu hoàn toàn bảng 3 cột bị co dúm hay cuộn ngang.
+     - Hiển thị Bottom Navigation Bar cố định dưới đáy (`fixed bottom-0 pb-safe`).
+  6. **Lớp Phủ Debug Responsive Kích Hoạt Bằng `?debug=1` (`DebugOverlay.tsx`):**
+     - Tạo component [`DebugOverlay.tsx`](file:///home/nhat/Documents/DUT/ViTudy/src/components/common/DebugOverlay.tsx) render qua React Portal (`z-[9999]`), kích hoạt bằng query `?debug=1` hoặc `localStorage('greenlearn_debug') === '1'`.
+     - Hiển thị thời gian thực: `breakpoint` (`mobile`/`tablet`/`desktop`), `isMobile`, `innerWidth`, `screen.width`, `devicePixelRatio`, `orientation`, `pointerType`.
+  7. **Kiểm Thử:**
+     - Tạo unit test [`useResponsiveLayout.test.ts`](file:///home/nhat/Documents/DUT/ViTudy/src/hooks/useResponsiveLayout.test.ts) (5 tests).
+     - Tạo unit test [`DebugOverlay.test.tsx`](file:///home/nhat/Documents/DUT/ViTudy/src/components/common/DebugOverlay.test.tsx) (4 tests).
+     - `pnpm test`: 24/24 test suites passed, 119/119 unit tests passed.
+     - `pnpm run build:pages`: 14/14 static pages build pass, đóng dấu version query vào 10 file HTML.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 09:05 — main (Khắc Phục Lỗi Đồng Bộ Bàn Học Nhóm Ban Đầu & Lỗi Không Hiện Thông Báo Lời Mời)
 - **Task:** Khắc phục 2 lỗi quan trọng theo phản hồi và ảnh chụp thực tế của Sếp:
   1. **Lỗi 1: Chưa đồng bộ bàn học khi mời vào thì không thấy bàn học lúc chưa mời (ghi chú, tài liệu và nét vẽ cũ bị mất):**

@@ -39,6 +39,7 @@ import { SocialFriendService } from '@/services/SocialFriendService';
 import { PetMascotModal } from '@/components/pet/PetMascotModal';
 import { getAssetPath } from '@/lib/assets';
 import { StudySpace } from '@/types/studyspace';
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 interface HomePageProps {
   onEnterDesk: (spaceId?: string) => void;
@@ -50,6 +51,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   const { spaces, switchSpace, createSpaceFromTemplate } = useStudySpace();
   const { pet, info, currentImageUrl, isClaimedToday, claimToday } = usePetMascot();
   const router = useRouter();
+  const { isMobile, isTablet, isDesktop } = useResponsiveLayout();
 
   const [isPetModalOpen, setIsPetModalOpen] = useState(false);
   const [claimFeedback, setClaimFeedback] = useState<string | null>(null);
@@ -177,7 +179,11 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   return (
     <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-green-100 selection:text-[#166534]">
       {/* ================= LEFT SIDEBAR (Desktop: 256px, Tablet: 72px icon-only, Mobile: hidden) ================= */}
-      <aside className="hidden sm:flex sm:w-18 lg:w-64 flex-shrink-0 border-r border-slate-200 bg-white p-3 lg:p-5 flex-col justify-between min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar shadow-2xs">
+      <aside
+        className={`${
+          isMobile ? 'hidden mobile-hide-forced' : 'hidden sm:flex sm:w-18 lg:w-64'
+        } flex-shrink-0 border-r border-slate-200 bg-white p-3 lg:p-5 flex-col justify-between min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar shadow-2xs`}
+      >
         <div className="flex flex-col">
           {/* Logo Brand */}
           <div className="flex items-center sm:justify-center lg:justify-start gap-2.5 mb-5 select-none">
@@ -376,10 +382,10 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
       {isMobileDrawerOpen && (
         <>
           <div 
-            className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 sm:hidden animate-fade-in"
+            className={`fixed inset-0 bg-black/50 backdrop-blur-xs z-50 ${isMobile ? 'block' : 'sm:hidden'} animate-fade-in`}
             onClick={() => setIsMobileDrawerOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white z-50 p-5 overflow-y-auto shadow-2xl flex flex-col justify-between sm:hidden animate-slide-right pb-safe">
+          <div className={`fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white z-50 p-5 overflow-y-auto shadow-2xl flex flex-col justify-between ${isMobile ? 'flex' : 'sm:hidden'} animate-slide-right pb-safe`}>
             <div className="flex flex-col">
               {/* Drawer Header */}
               <div className="flex items-center justify-between mb-5 select-none">
@@ -564,7 +570,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
       )}
 
       {/* ================= MAIN CONTENT ================= */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-10 pb-24 sm:pb-10 flex flex-col max-w-6xl mx-auto overflow-y-auto w-full">
+      <main className={`flex-1 p-4 sm:p-6 lg:p-10 ${isMobile ? 'pb-24' : 'pb-10'} flex flex-col max-w-6xl mx-auto overflow-y-auto w-full`}>
         {/* Sticky Top Bar (Cố định khi cuộn) */}
         <header className="sticky top-0 z-20 -mx-4 sm:-mx-6 lg:-mx-10 px-4 sm:px-6 lg:px-10 py-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between mb-5 sm:mb-6 shadow-2xs">
           {/* Hamburger (Mobile) + Breadcrumb */}
@@ -572,7 +578,9 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             <button
               type="button"
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="sm:hidden p-2 -ml-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 touch-target cursor-pointer shrink-0"
+              className={`${
+                isMobile ? 'flex mobile-flex-forced' : 'hidden sm:hidden mobile-hide-forced'
+              } p-2 -ml-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 touch-target cursor-pointer shrink-0`}
               aria-label="Mở danh mục điều hướng"
             >
               <Menu className="w-5 h-5 stroke-[2.2]" />
@@ -582,11 +590,11 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <button
                 type="button"
                 onClick={() => setActiveNav('home')}
-                className="hidden sm:inline hover:text-[#16A34A] transition-colors cursor-pointer shrink-0"
+                className={`${isMobile ? 'hidden' : 'hidden sm:inline'} hover:text-[#16A34A] transition-colors cursor-pointer shrink-0`}
               >
                 Không gian học tập
               </button>
-              <span className="hidden sm:inline shrink-0">/</span>
+              <span className={`${isMobile ? 'hidden' : 'hidden sm:inline'} shrink-0`}>/</span>
               <span className="text-slate-900 font-bold truncate max-w-[125px] sm:max-w-none">
                 {activeNav === 'home' && 'Trang chủ'}
                 {activeNav === 'my_desks' && 'Bàn học của tôi'}
@@ -614,14 +622,14 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 alt={pet.name}
                 className="w-5 h-5 object-contain shrink-0"
               />
-              <span className="hidden sm:inline">
+              <span className={isMobile ? 'hidden' : 'hidden sm:inline'}>
                 {pet.streakDays > 0
                   ? `Chuỗi ${pet.streakDays} ngày · ${isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}`
                   : isClaimedToday
                   ? 'Đã điểm danh hôm nay'
                   : 'Bắt đầu chuỗi đầu tiên hôm nay'}
               </span>
-              <span className="sm:hidden font-bold">
+              <span className={isMobile ? 'inline font-bold' : 'sm:hidden font-bold'}>
                 {pet.streakDays > 0 ? `${pet.streakDays}d` : (isClaimedToday ? 'Đã nhận' : 'Điểm danh')}
               </span>
             </button>
@@ -1014,8 +1022,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               </button>
             </div>
 
-            {/* Desktop & Tablet Table (<div className="hidden sm:block">) */}
-            <div className="hidden sm:block w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+            {/* Desktop & Tablet Table */}
+            <div className={`${isMobile ? 'hidden mobile-hide-forced' : 'hidden sm:block'} w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden`}>
               <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
                 <div className="col-span-5">Tên bàn học</div>
                 <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
@@ -1083,8 +1091,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               </div>
             </div>
 
-            {/* Mobile Vertical Cards (<div className="sm:hidden space-y-3">) */}
-            <div className="sm:hidden space-y-3">
+            {/* Mobile Vertical Cards */}
+            <div className={`${isMobile ? 'block mobile-show-forced' : 'hidden sm:hidden'} space-y-3`}>
               {spaces.map((space, idx) => {
                 const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
                 const isDemo = space.name.includes('(Demo)');
@@ -1406,8 +1414,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 )}
               </div>
 
-              {/* Desktop/Tablet Table Format (hidden on mobile) */}
-              <div className="hidden sm:block w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+              {/* Desktop/Tablet Table Format */}
+              <div className={`${isMobile ? 'hidden mobile-hide-forced' : 'hidden sm:block'} w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden`}>
                 <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3.5 px-4 bg-slate-50/90 border-b border-slate-200">
                   <div className="col-span-5">Tên bàn học</div>
                   <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
@@ -1494,8 +1502,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 </div>
               </div>
 
-              {/* Mobile Vertical Card List (<640px) — Triệt tiêu cuộn ngang */}
-              <div className="sm:hidden space-y-3">
+              {/* Mobile Vertical Card List — Triệt tiêu cuộn ngang */}
+              <div className={`${isMobile ? 'block mobile-show-forced' : 'hidden sm:hidden'} space-y-3`}>
                 {displayedSpaces.length === 0 ? (
                   <div className="py-8 text-center text-xs text-slate-400 italic bg-white border border-slate-200 rounded-2xl">
                     Chưa có bàn học nào phù hợp với tìm kiếm
@@ -1580,8 +1588,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
       </main>
 
-      {/* ================= FIXED BOTTOM NAVIGATION BAR (<640px) ================= */}
-      <nav className="fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe sm:hidden flex items-center justify-around h-16 shadow-lg">
+      {/* ================= FIXED BOTTOM NAVIGATION BAR (<640px & Touch Mobile) ================= */}
+      <nav
+        className={`fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe ${
+          isMobile ? 'flex mobile-flex-forced' : 'hidden sm:hidden mobile-hide-forced'
+        } items-center justify-around h-16 shadow-lg`}
+      >
         <button
           type="button"
           onClick={() => setActiveNav('home')}

@@ -209,6 +209,20 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
   * **Quy Chuẩn Nạp & Kéo Thả Tệp Thực Tế Lên Bàn Học (Zero-Simulated Text Policy):**
     * Khi người dùng kéo thả hoặc tải tệp `.pdf`, hình ảnh hoặc văn bản lên mặt bàn học, hệ thống **tuyệt đối không sinh văn bản giả lập định sẵn** (như `"Nội dung trích xuất từ tệp 'TenFile.pdf'..."`).
     * Bắt buộc sử dụng `parsePdfFile` trích xuất đầy đủ văn bản thực tế của từng trang tài liệu và đồng thời render canvas hình ảnh độ phân giải cao của trang gốc vào từng trang sách/tài liệu (`leaf.image`), đảm bảo trải nghiệm đọc tài liệu trung thực 100%.
+  * **Quy Chuẩn Nhận Diện & Thích Ứng Thiết Bị Di Động Màn Dọc (Portrait Mobile Layout & Responsive Ergonomics Standard):**
+    * **Thẻ Meta Viewport Chuẩn & Bất Biến:** Khai báo cấu hình qua Next.js `Viewport` metadata với `width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover`. Tuyệt đối không có bất kỳ script client nào can thiệp sửa đổi nội dung thẻ viewport.
+    * **Tiêu Chuẩn Breakpoint Di Động Toàn Diện (Hybrid Media Query Breakpoint):**
+      * Tuyệt đối không chỉ phụ thuộc vào một điều kiện `max-width: 639px` (vì nhiều smartphone hiện đại như iPhone Pro Max, Samsung Galaxy Ultra hoặc khi người dùng cài đặt display zoom/scaling nhỏ có logical width lên tới 640px-700px, khiến giao diện rơi nhầm vào breakpoint `sm:` dạng tablet icon `w-18` và bảng 3 cột).
+      * Bắt buộc kết hợp điều kiện kép: `max-width` CÙNG `(pointer: coarse)` VÀ `(orientation: portrait)` (kèm `screen.width <= 500px` / `max-device-width: 600px`).
+      * Cung cấp hook `useResponsiveLayout` tự động tính toán lại khi có sự kiện `resize`, `orientationchange`, `window.visualViewport.resize` và `matchMedia` change listeners.
+    * **Ngăn Ngừa Tự Động Phóng To Chữ (`text-size-adjust: 100%`):** Thiết lập `-webkit-text-size-adjust: 100%; -moz-text-size-adjust: 100%; text-size-adjust: 100%;` trong CSS toàn cục (`globals.css`).
+    * **Triệt Tiêu Cache Cũ Bằng Version Query (`scripts/build-pages.mjs`):** Khi build export tĩnh cho GitHub Pages, tự động đính kèm `?v=${BUILD_ID}` vào toàn bộ các link CSS và script chunks trong file HTML xuất ra.
+    * **Chuyển Đổi Layout Bắt Buộc Trên Mobile:**
+      * Ẩn hoàn toàn sidebar (`hidden mobile-hide-forced`).
+      * Hiển thị Bottom Navigation Bar cố định dưới đáy (`fixed bottom-0 pb-safe flex mobile-flex-forced`).
+      * Toàn bộ bảng dữ liệu ("Mở lại gần đây", "Bàn học của tôi") tự động chuyển đổi thành danh sách thẻ dọc (Vertical Cards), triệt tiêu hoàn toàn cuộn ngang hoặc bảng 3 cột bị co dúm.
+    * **Lớp Phủ Debug Responsive Kích Hoạt Bằng `?debug=1` (`DebugOverlay`):**
+      * Hỗ trợ tham số URL `?debug=1` (hoặc `localStorage.getItem('greenlearn_debug') === '1'`) để mở bảng thông số kỹ thuật thời gian thực hiển thị `innerWidth`, `screen.width`, `devicePixelRatio`, `orientation`, `pointerType` và `breakpoint` chuẩn xác trực tiếp trên thiết bị của người dùng.
 
 ---
 
@@ -249,6 +263,13 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
   * **Khi cầm bút (`pen` hoặc `highlighter`):**
     * Kéo chuột ở bất kỳ đâu trên mặt bàn sẽ **tự động vẽ tự do nét mực**. Tuyệt đối không được kéo dịch bàn học làm nét bút bị co cụm thành một chấm.
     * Khi muốn di chuyển bàn học trong lúc đang chọn bút: Người dùng **giữ phím `Alt` và kéo chuột (`Alt + Drag`)** để pan canvas.
+    * **Quy Chuẩn Cử Chỉ Đa Điểm & Pointer Events Khi Vẽ (Drawing Multi-Touch & Pointer Events Standard):**
+      * Mặt phẳng bắt sự kiện vẽ bắt buộc thiết lập `touch-action: none` để ngăn trình duyệt tự ý pan/scroll trang.
+      * Sử dụng Pointer Events (`onPointerDown`, `onPointerMove`, `onPointerUp`, `onPointerCancel`) và quản lý danh sách con trỏ đang hoạt động qua `Map<number, PointerEvent> activePointersRef`.
+      * Khi có từ 2 con trỏ trở lên (`activePointersRef.size >= 2`): Hủy ngay lập tức nét vẽ dở đang thực hiện (không đưa vào undo/redo history), giải phóng pointer capture và chuyển tức thì sang cử chỉ thu phóng (pinch-zoom) và lia bàn học (two-finger pan), triệt tiêu hoàn toàn lỗi tạo ra đường thẳng nối 2 ngón tay chạm.
+      * Chỉ bắt đầu nét vẽ khi đúng 1 con trỏ chạm và `e.isPrimary`, có độ trễ ngắn ~40ms (`touchStartTimerRef`) để phát hiện ngón thứ hai trước khi chốt nét vẽ.
+      * Phân biệt rõ loại con trỏ (`pointerType`): Bút stylus (`pen`) luôn dùng để vẽ; ngón tay (`touch`) hỗ trợ pan/zoom (kèm tùy chọn vẽ bằng ngón tay).
+      * Bắt buộc xử lý triệt để cả `pointerup` và `pointercancel` để reset trạng thái con trỏ trong Map, tránh kẹt trạng thái vẽ.
 * **Hitbox của Tài liệu & Vật thể:**
   * Vùng click / hitbox của sách và tài liệu phải bám sát chính xác kích thước hiển thị của UI.
   * Tuyệt đối không để margin, padding vô hình hoặc vùng bắt sự kiện tràn ra ngoài che khuất mặt bàn trắng, gây kẹt thao tác kéo chuột của người dùng.

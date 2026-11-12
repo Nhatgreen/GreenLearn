@@ -4,10 +4,12 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { StudySpaceProvider } from '@/context/StudySpaceContext';
 import { SocialPresenceProvider } from '@/context/SocialPresenceContext';
+import { DebugOverlay } from '@/components/common/DebugOverlay';
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 5,
   viewportFit: 'cover',
   themeColor: '#16A34A',
 };
@@ -54,7 +56,10 @@ export default function RootLayout({
   return (
     <html lang="vi" className={`${openSans.variable} ${patrickHand.variable} ${lora.variable}`} suppressHydrationWarning spellCheck={false}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
         <link rel="manifest" href={`${basePath}/manifest.json`} />
         <link rel="icon" href={`${basePath}/icons/greenlearn-icon.png`} type="image/png" />
         <link rel="shortcut icon" href={`${basePath}/favicon.ico`} />
@@ -70,6 +75,7 @@ export default function RootLayout({
           <StudySpaceProvider>
             <SocialPresenceProvider>
               {children}
+              <DebugOverlay />
             </SocialPresenceProvider>
           </StudySpaceProvider>
         </AuthProvider>

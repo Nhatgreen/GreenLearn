@@ -30,6 +30,12 @@
   --warn-border: #FDE68A;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html, body {
   color: #0f172a;
   background-color: #f8fafc;
@@ -67,6 +73,19 @@ html, body {
 .touch-target {
   min-height: 44px;
   min-width: 44px;
+}
+
+/* Responsive Breakpoint Helpers: kết hợp max-width và (pointer: coarse) */
+@media (max-width: 639.98px), ((max-width: 820px) and (pointer: coarse) and (orientation: portrait)) {
+  .mobile-hide-forced {
+    display: none !important;
+  }
+  .mobile-show-forced {
+    display: block !important;
+  }
+  .mobile-flex-forced {
+    display: flex !important;
+  }
 }
 
 /* Explicit class-based font enforcements */
