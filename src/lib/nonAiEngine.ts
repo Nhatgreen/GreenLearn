@@ -50,26 +50,39 @@ export interface DocumentOutlineNode {
   estimatedMinutes: number;
 }
 
+const LATEX_COMMAND_BLACKLIST = new Set([
+  'nabla', 'partial', 'frac', 'theta', 'sigma', 'sigma_i', 'alpha', 'beta', 'gamma',
+  'delta', 'lambda', 'mu', 'pi', 'rho', 'tau', 'omega', 'phi', 'psi', 'sum', 'prod',
+  'int', 'sqrt', 'left', 'right', 'mathbf', 'mathit', 'mathbb', 'mathcal', 'text',
+  'infty', 'approx', 'times', 'cdot', 'leq', 'geq', 'neq', 'forall', 'exists', 'in',
+  'subset', 'cap', 'cup', 'begin', 'end', 'matrix', 'bmatrix', 'pmatrix', 'array'
+]);
+
 /**
  * 1. Tách văn bản thành các câu hoàn chỉnh
  */
 export function splitSentences(text: string): string[] {
   return text
     .replace(/\r\n/g, '\n')
-    .split(/(?<=[.!?。])\s+|\n\n+/)
-    .map(s => s.trim())
-    .filter(s => s.length > 15); // Bỏ câu quá ngắn
+    // Tách theo dấu chấm, chấm than, hỏi chấm, xuống dòng, hoặc đầu dòng bullet • / -
+    .split(/(?<=[.!?。])\s+|\n\n+|(?=\n\s*[•\-*]\s+)/)
+    .map(s => s.replace(/^[•\-*]\s+/, '').replace(/^#{1,4}\s+/, '').trim())
+    .filter(s => s.length > 20 && !s.startsWith('#')); // Bỏ câu quá ngắn hoặc tiêu đề thuần
 }
 
 /**
  * 2. Tokenize và tính tần suất từ (TF-IDF nhẹ)
  */
 function tokenize(sentence: string): string[] {
-  return sentence
+  // Thay thế các công thức toán LaTeX trước khi tokenize để không tách từ khóa toán
+  const clean = sentence
+    .replace(/(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\$[^\$\n]+?\$|\\\([\s\S]+?\\\))/g, ' ')
     .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s_]/gu, ' ')
+    .replace(/[^\p{L}\p{N}\s_]/gu, ' ');
+
+  return clean
     .split(/\s+/)
-    .filter(w => w.length > 1 && !STOP_WORDS.has(w));
+    .filter(w => w.length > 2 && !STOP_WORDS.has(w) && !LATEX_COMMAND_BLACKLIST.has(w));
 }
 
 /**
@@ -171,11 +184,23 @@ export function generateClozeQuestions(text: string, count = 5): QuizQuestion[] 
 
     if (!targetWord) continue;
 
-    // Tạo câu hỏi đục lỗ
-    const regex = new RegExp(`\\b${targetWord}\\b`, 'i');
-    if (!regex.test(s)) continue;
+    // Che các khối công thức toán bằng token giữ chỗ trước khi đục lỗ để không làm rách công thức
+    const mathTokens: string[] = [];
+    const protectedSentence = s.replace(/(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\$[^\$\n]+?\$|\\\([\s\S]+?\\\))/g, (m) => {
+      mathTokens.push(m);
+      return `__MATH_PLACEHOLDER_${mathTokens.length - 1}__`;
+    });
 
-    const maskedQuestion = s.replace(regex, '[ __________ ]');
+    // Tạo câu hỏi đục lỗ trên phần văn bản an toàn
+    const regex = new RegExp(`\\b${targetWord}\\b`, 'i');
+    if (!regex.test(protectedSentence)) continue;
+
+    let maskedQuestion = protectedSentence.replace(regex, '[ __________ ]');
+
+    // Khôi phục lại các khối công thức toán vào câu hỏi
+    mathTokens.forEach((mStr, mIdx) => {
+      maskedQuestion = maskedQuestion.replace(`__MATH_PLACEHOLDER_${mIdx}__`, mStr);
+    });
 
     // Tạo 3 đáp án nhiễu (Distractors) từ keywordPool
     const otherWords = keywordPool.filter(w => w.toLowerCase() !== targetWord.toLowerCase());

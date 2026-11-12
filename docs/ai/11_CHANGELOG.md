@@ -4,6 +4,39 @@
 
 ---
 
+## 2026-11-12 16:15 — main (Đồng Bộ Các Bản Vá Từ Upstream ViTudy, Khắc Phục Lỗi Kết Nối AI & Trình Đọc Sách Cuộn Dọc)
+- **Task:** Cào và tích hợp toàn bộ các bản vá mới nhất từ upstream (`namtacozz/ViTudy`), đặc biệt khắc phục triệt để lỗi "AI kết nối thành công, test thành công nhưng khi dùng thì bị lỗi" theo yêu cầu của Sếp:
+  1. **Khắc Phục Triệt Để Lỗi Kết Nối AI & Cắt Cụt Token (`src/lib/aiClient.ts` & `QuizTab.tsx`):**
+     - *Nguyên nhân cốt lõi:* `testAiConnection` cho ChatGPT OAuth trước đây chỉ kiểm tra session token tồn tại mà không thực sự gửi truy vấn ping tới mô hình, dẫn đến "thành công ảo". Trong khi đó, các cuộc gọi thực tế bị chặn bởi CORS/401 hoặc bị cắt ngắn JSON do trần `maxTokens: 800` quá thấp khiến `JSON.parse` bị crash.
+     - *Giải pháp:*
+       - Trong `testAiConnection`: Gửi truy vấn thực tế tới mô hình. Nếu token không thể gọi API, lập tức thông báo lỗi rõ ràng và gợi ý chuyển sang Google Gemini (miễn phí 100% từ Google AI Studio) hoặc OpenAI API Key để gọi trực tiếp từ trình duyệt.
+       - Nâng trần `maxTokens` từ 800 lên 2500 - 4000 tokens cho các yêu cầu tạo đề trắc nghiệm và tóm tắt.
+       - Viết hàm `parseQuizJsonSafely(rawText)` khôi phục các câu hỏi hoàn chỉnh từ partial JSON bị cắt ngắn.
+       - Trong `QuizTab.tsx`: Thêm thông báo lỗi AI `aiErrorNotice`, nút bấm dự phòng **"Dùng bản Offline"** (Non-AI Cloze Engine), và gắn huy hiệu nguồn đề (`Tạo bằng AI chuyên sâu` vs `Tạo bằng động cơ Offline`).
+  2. **Trình Đọc Cuộn Dọc Liên Tục & Trải Nghiệm Sách 2.5D (`FullScreenDocModal.tsx` & `BookSpread.tsx`):**
+     - Chuyển `FullScreenDocModal` sang chuỗi cuộn dọc liên tục (Continuous Vertical Reading Stream) cho cả chế độ một trang và hai trang, tự động scrollIntoView và đồng bộ vị trí trang đọc trên thanh công cụ và thumbnail.
+     - Tự động xoay sách về 0° khi bật chế độ Tập trung (`isFocusReading`) kèm transition mượt mà.
+     - Giữ tab Tóm tắt (`isStudyOpen`) mở rộng cứng khi đang mở, ấn lại lần 2 để đóng modal.
+     - Thu gọn modal `StudyToolsModal` nằm gọn trong ruột 2 trang sách `absolute top-3 bottom-3 left-[42px] right-[42px]`, không che viền da và bookmark tabs.
+     - Thêm nút `BookPlus` đóng tờ giấy rời thành sách bìa da (`convertPaperToBook`).
+  3. **Tự Động Lưu Tức Thì & Bền Vững Bàn Học (`StudySpaceContext.tsx`):**
+     - Xây dựng `saveCurrentSpaceImmediately` và `saveStatus` ('idle' | 'saving' | 'saved' | 'error').
+     - Tự động lưu ngay lập tức khi đóng trang (`beforeunload`), đổi tab (`visibilitychange`), chuyển bàn học (`switchSpace`) và định kỳ 10 phút.
+     - Bổ sung `addMarketItemToSpace` mở tài liệu vào bàn học đã chọn.
+  4. **Tích Hợp Các Module Mới Từ Upstream:**
+     - `src/lib/dateVN.ts`: Lưới 28 ngày chuẩn giờ Việt Nam `Asia/Ho_Chi_Minh`.
+     - `src/services/OfficeParserService.ts`: Trích xuất tài liệu Word (.docx), Excel (.xlsx) kéo thả lên bàn học (cài đặt `jszip` và `mammoth`).
+     - `src/components/common/EmptyState.tsx`: Component trạng thái rỗng dùng chung.
+     - `src/components/common/ModalErrorBoundary.tsx`: Bọc an toàn chống crash modal.
+     - `src/services/MarketPurchaseStorage.ts` & `SelectSpaceForDocModal.tsx`: Tủ tài liệu cá nhân và modal chọn bàn học (đã đồng bộ màu nhận diện GreenLearn `#16A34A`).
+  5. **Kiểm Thử:**
+     - `npx tsc --noEmit`: 0 errors.
+     - `pnpm test`: 26/26 test suites passed, 133/133 unit tests passed (gồm 3 test mới cho `parseQuizJsonSafely`).
+     - `pnpm run build:pages`: 15/15 static pages build pass, đóng dấu version query vào 11 file HTML.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 10:15 — main (Cập Nhật Toàn Bộ Danh Mục Mô Hình AI: GPT-5.6, GPT-5, o3-mini & Thẻ Xem Trước Chi Tiết)
 - **Task:** Triển khai danh mục mô hình AI đầy đủ theo yêu cầu và ảnh chụp màn hình của Sếp:
   1. **Cập nhật danh mục 11 mô hình ChatGPT & OpenAI (`src/lib/aiClient.ts`):**

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { askAi, testAiConnection, CHATGPT_MODEL_GROUPS, PROVIDER_MODELS, OPENAI_MODELS } from './aiClient';
+import { askAi, testAiConnection, parseQuizJsonSafely, CHATGPT_MODEL_GROUPS, PROVIDER_MODELS, OPENAI_MODELS } from './aiClient';
 import { ByokStore } from './byokStore';
 
 describe('aiClient', () => {
@@ -241,6 +241,39 @@ describe('aiClient', () => {
         })
       );
       expect(res.reply).toBe('Giải pháp từ GPT-5.6 Terra');
+    });
+  });
+
+  describe('parseQuizJsonSafely', () => {
+    it('returns empty array on empty or invalid input', () => {
+      expect(parseQuizJsonSafely('')).toEqual([]);
+      expect(parseQuizJsonSafely('Không có dữ liệu json nào ở đây')).toEqual([]);
+    });
+
+    it('parses complete JSON array correctly', () => {
+      const raw = `Đây là câu hỏi:
+      [
+        {"question": "1 + 1 bằng bao nhiêu?", "options": ["1", "2", "3", "4"], "correctIndex": 1, "explanation": "1+1=2"},
+        {"question": "Thủ đô của Việt Nam là gì?", "options": ["Hà Nội", "Đà Nẵng", "TP.HCM", "Huế"], "correctIndex": 0, "explanation": "Hà Nội"}
+      ]
+      Chúc bạn học tốt!`;
+
+      const result = parseQuizJsonSafely(raw);
+      expect(result).toHaveLength(2);
+      expect(result[0].question).toBe('1 + 1 bằng bao nhiêu?');
+      expect(result[1].question).toBe('Thủ đô của Việt Nam là gì?');
+    });
+
+    it('safely recovers complete questions even when output is truncated mid-JSON', () => {
+      const truncated = `[
+        {"question": "Câu hỏi 1?", "options": ["A", "B", "C", "D"], "correctIndex": 0},
+        {"question": "Câu hỏi 2?", "options": ["1", "2", "3", "4"], "correctIndex": 2},
+        {"question": "Câu hỏi 3 đang viết dở thì bị cắt token...`;
+
+      const result = parseQuizJsonSafely(truncated);
+      expect(result).toHaveLength(2);
+      expect(result[0].question).toBe('Câu hỏi 1?');
+      expect(result[1].question).toBe('Câu hỏi 2?');
     });
   });
 });

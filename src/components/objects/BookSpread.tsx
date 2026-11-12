@@ -343,10 +343,11 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
         ref={bookRef}
         data-desk-item="true"
         style={{
-          transform: `translate(${Math.round(item.x)}px, ${Math.round(item.y)}px) rotate(${item.rotation}deg)`,
+          transform: `translate(${Math.round(item.x)}px, ${Math.round(item.y)}px) rotate(${isFocusReading ? 0 : item.rotation}deg)`,
           width: 980,
           height: 640,
-          zIndex: item.zIndex || 1
+          zIndex: item.zIndex || 1,
+          transition: isFocusReading ? 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)' : undefined
         }}
         className={`absolute select-none group cursor-default ${
           isSelected ? 'ring-2 ring-stone-900/40 ring-offset-4 ring-offset-white' : ''
@@ -386,14 +387,25 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             {/* Tab 1: Green (Xanh lá) - Tóm tắt (STudy) */}
             <div className="relative group/tab flex items-center">
               <button
-                onClick={() => setIsStudyOpen(true)}
-                title="STudy: Tóm tắt thông minh & Ôn tập trắc nghiệm"
-                className="h-8 w-[48px] group-hover/tab:w-[106px] bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden"
+                type="button"
+                onClick={() => setIsStudyOpen(prev => !prev)}
+                title={isStudyOpen ? "Đóng tóm tắt & ôn tập" : "STudy: Tóm tắt thông minh & Ôn tập trắc nghiệm"}
+                className={clsx(
+                  "h-8 flex items-center justify-between pl-[16px] pr-4 gap-0 transition-[width] duration-200 ease-out shadow-md cursor-pointer overflow-hidden",
+                  isStudyOpen
+                    ? "w-[106px] bg-emerald-700 text-white ring-2 ring-emerald-400/60"
+                    : "w-[48px] group-hover/tab:w-[106px] bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white group-hover/tab:gap-2"
+                )}
                 style={{
                   clipPath: 'polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%)'
                 }}
               >
-                <span className="text-xs font-bold text-white tracking-wide whitespace-nowrap max-w-0 opacity-0 group-hover/tab:max-w-[60px] group-hover/tab:opacity-100 transition-all duration-200 overflow-hidden">
+                <span className={clsx(
+                  "text-xs font-bold text-white tracking-wide whitespace-nowrap transition-all duration-200 overflow-hidden",
+                  isStudyOpen
+                    ? "max-w-[60px] opacity-100 mr-2"
+                    : "max-w-0 opacity-0 group-hover/tab:max-w-[60px] group-hover/tab:opacity-100"
+                )}>
                   Tóm tắt
                 </span>
                 <Sparkles className="w-4 h-4 text-emerald-100 flex-shrink-0" />

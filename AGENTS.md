@@ -241,6 +241,19 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
       * Toàn bộ bảng dữ liệu ("Mở lại gần đây", "Bàn học của tôi") tự động chuyển đổi thành danh sách thẻ dọc (Vertical Cards), triệt tiêu hoàn toàn cuộn ngang hoặc bảng 3 cột bị co dúm.
     * **Lớp Phủ Debug Responsive Kích Hoạt Bằng `?debug=1` (`DebugOverlay`):**
       * Hỗ trợ tham số URL `?debug=1` (hoặc `localStorage.getItem('greenlearn_debug') === '1'`) để mở bảng thông số kỹ thuật thời gian thực hiển thị `innerWidth`, `screen.width`, `devicePixelRatio`, `orientation`, `pointerType` và `breakpoint` chuẩn xác trực tiếp trên thiết bị của người dùng.
+  * **Quy Chuẩn Bền Vững Trạng Thái AI & Tránh Thành Công Ảo (Zero Fake AI Success & Safe JSON Parsing Standard):**
+    * **Triệt tiêu thành công ảo khi kiểm tra kết nối AI (`testAiConnection`):** Khi kiểm tra kết nối AI (đặc biệt là ChatGPT OAuth hoặc BYOK API Key), hệ thống bắt buộc gửi truy vấn thực tế (`ping test`) tới mô hình để kiểm tra khả năng phản hồi thực và đo độ trễ mạng thực. Tuyệt đối không chỉ kiểm tra chuỗi token rồi báo thành công trong khi mô hình không thể gọi được.
+    * **Trích xuất an toàn mảng câu hỏi trắc nghiệm (`parseQuizJsonSafely`):** Khi AI phản hồi văn bản dài hoặc bị giới hạn token cắt cụt giữa chừng (truncated partial JSON), hàm `parseQuizJsonSafely` tự động duyệt cây ngoặc nhọn `{...}` để khôi phục toàn bộ các câu hỏi hoàn chỉnh đã sinh, ngăn ngừa 100% lỗi crash `SyntaxError: Unexpected end of JSON input`.
+    * **Nâng trần Token & Dự phòng Offline tức thì (Fallback Non-AI Cloze Engine):**
+      * Nâng trần `maxTokens` từ 800 lên 2500 - 4000 tokens cho các yêu cầu tạo đề trắc nghiệm và tóm tắt.
+      * Khi gọi AI thất bại (hết hạn ngạch, lỗi mạng, lỗi proxy), `QuizTab` tự động chuyển sang chế độ động cơ Non-AI Offline, hiển thị thông báo lỗi màu đỏ kèm nút bấm nhanh **"Dùng bản Offline"**, và gắn huy hiệu nguồn đề (`Tạo bằng AI chuyên sâu` vs `Tạo bằng động cơ Offline`) rõ ràng minh bạch.
+  * **Quy Chuẩn Trải Nghiệm Sách 2.5D, Tự Động Lưu & Trình Đọc Cuộn Dọc Liên Tục (Continuous Vertical Reader & Auto-Save Standard):**
+    * **Tự động xoay view sách về 0° khi bật chế độ Tập trung (`BookSpread`):** Khi `isFocusReading === true`, sách tự động xoay về `rotate(0deg)` kèm chuyển động mượt mà `transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)`, triệt tiêu độ nghiêng bàn học để người dùng đọc sách thoải mái nhất.
+    * **Thanh nhắc Bookmark Tabs mở rộng cứng khi chọn Tóm tắt (`BookSpread`):** Khi tab Tóm tắt (`isStudyOpen`) được bật, tab giữ trạng thái kéo dài (`w-[106px]`) kèm viền sáng emerald, ấn lại lần nữa thì đóng modal và thu tab về 48px tương tự tab Tập trung.
+    * **Buồng lái in-situ STudy thu gọn trong ruột 2 trang sách (`StudyToolsModal`):** Khi đối tượng là Sách, modal nằm gọn trong lòng 2 trang giấy `absolute top-3 bottom-3 left-[42px] right-[42px] z-30 rounded-xl`, không phủ kín viền da và không che khuất các bookmark tabs.
+    * **Chế độ phóng to cuộn đọc liên tục (`FullScreenDocModal`):** Chuyển từ lật trang đơn lẻ sang chuỗi cuộn dọc liên tục (Continuous Vertical Reading Stream) cho cả chế độ một trang và hai trang, tự động scrollIntoView và đồng bộ vị trí trang đọc trên thanh công cụ và thumbnail.
+    * **Đóng giấy rời thành sách bìa da (`PaperSheet` & `convertPaperToBook`):** Cung cấp nút `BookPlus` trên thanh công cụ nổi của tờ giấy đơn để đóng nhanh thành sách với bìa da bảo vệ.
+    * **Tự động lưu tức thì (`saveCurrentSpaceImmediately`):** Lưu ngay lập tức vào localStorage & Supabase khi đóng trang (`beforeunload`), chuyển tab (`visibilitychange`), chuyển bàn học (`switchSpace`) và định kỳ 10 phút.
 
 ---
 

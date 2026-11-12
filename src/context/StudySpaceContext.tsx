@@ -67,6 +67,7 @@ interface StudySpaceContextType {
   setBookPage: (id: string, pageIndex: number) => void;
   combineIntoBinder: (targetId: string, draggedId: string) => boolean;
   detachPageFromBinder: (bookId: string, pageIndex: number) => void;
+  convertPaperToBook?: (paperId: string, coverColor?: string) => void;
   addPageToBook: (bookId: string, pageData?: { title?: string; text?: string; image?: string }) => string;
   tidyUpDesk?: () => void;
   fitAllToScreen?: () => void;
@@ -78,6 +79,7 @@ interface StudySpaceContextType {
   addStickyNote: (text?: string, x?: number, y?: number, color?: string, width?: number, height?: number) => string;
   addBook: (title?: string, x?: number, y?: number, coverColor?: string, initialPages?: { title?: string; text: string; image?: string }[]) => string;
   addUploadedDocument: (title: string, pages: { title?: string; text: string; image?: string }[]) => void;
+  addMarketItemToSpace: (spaceId: string, marketItem: any) => void;
   removeDeskItem: (id: string) => void;
   setSearchQuery: (query: string) => void;
   togglePanLock: () => void;
@@ -138,6 +140,8 @@ interface StudySpaceContextType {
   updateExamAnswer: (itemId: string, questionId: string, answerIdx: number) => void;
   gradeExam: (itemId: string) => void;
   resetExam: (itemId: string) => void;
+  saveStatus?: 'idle' | 'saving' | 'saved' | 'error';
+  saveCurrentSpaceImmediately: () => Promise<boolean>;
   // Multiplayer Realtime Synchronized State
   multiplayerPeers: PeerUser[];
   isMultiplayerConnected: boolean;
@@ -929,35 +933,54 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     }
   }, [isLoaded, activeSpaceId]);
 
-  // Save spaces to localStorage & Supabase Cloud (chỉ lưu sau khi isLoaded === true để tránh ghi đè)
-  useEffect(() => {
-    if (!isLoaded) return;
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  const saveCurrentSpaceImmediately = useCallback(async (): Promise<boolean> => {
+    if (!isLoaded) return false;
+    const curSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
+    if (!curSpace) return false;
 
     try {
       localStorage.setItem('greenlearn_spaces', JSON.stringify(spaces));
       localStorage.setItem('greenlearn_active_space_id', activeSpaceId);
-    } catch {
-      // ignore
-    }
+      localStorage.setItem(`greenlearn_strokes_${activeSpaceId}`, JSON.stringify(strokes));
+    } catch {}
 
     if (status === 'authenticated' && user?.id) {
-      const curSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
-      if (!curSpace) return;
-
-      const timer = setTimeout(() => {
-        StudySpaceService.saveSpace(curSpace, user.id);
-        StudySpaceService.upsertItems(curSpace.id, curSpace.items);
-        if (curSpace.threads && curSpace.threads.length > 0) {
-          StudySpaceService.saveThreads(curSpace.id, curSpace.threads);
-        }
-        if (strokes.length > 0) {
-          StudySpaceService.saveStrokes(curSpace.id, strokes, user.id);
-        }
-      }, 500);
-
-      return () => clearTimeout(timer);
+      setSaveStatus('saving');
+      try {
+        await Promise.all([
+          StudySpaceService.saveSpace(curSpace, user.id),
+          StudySpaceService.upsertItems(curSpace.id, curSpace.items),
+          curSpace.threads && curSpace.threads.length > 0 
+            ? StudySpaceService.saveThreads(curSpace.id, curSpace.threads) 
+            : Promise.resolve(),
+          StudySpaceService.saveStrokes(curSpace.id, strokes, user.id)
+        ]);
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2500);
+        return true;
+      } catch (err) {
+        console.warn('Lỗi lưu cloud:', err);
+        setSaveStatus('error');
+        setTimeout(() => setSaveStatus('idle'), 3500);
+        return false;
+      }
+    } else {
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+      return true;
     }
-  }, [spaces, strokes, status, user?.id, activeSpaceId, isLoaded]);
+  }, [isLoaded, spaces, activeSpaceId, strokes, status, user?.id]);
+
+  // Save spaces to localStorage & Supabase Cloud (chỉ lưu sau khi isLoaded === true để tránh ghi đè)
+  useEffect(() => {
+    if (!isLoaded) return;
+    const timer = setTimeout(() => {
+      saveCurrentSpaceImmediately();
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [spaces, strokes, saveCurrentSpaceImmediately, isLoaded]);
 
   const activeSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
 
@@ -1416,6 +1439,111 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         };
       })
     );
+  };
+
+  // Convert a loose paper sheet into a bound book with a leather cover
+  const convertPaperToBook = (paperId: string, coverColor = 'brown') => {
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return {
+          ...s,
+          items: s.items.map(item => {
+            if (item.id !== paperId) return item;
+            return {
+              ...item,
+              type: 'book' as const,
+              coverColor,
+              colorTheme: coverColor
+            };
+          })
+        };
+      })
+    );
+  };
+
+  const addMarketItemToSpace = (spaceId: string, marketItem: any) => {
+    let newItem: DeskItem;
+    if (marketItem.type === 'exam' && marketItem.examQuestions && marketItem.examQuestions.length > 0) {
+      newItem = {
+        id: `exam-${Date.now()}`,
+        type: 'paper',
+        title: normalizeNFC(marketItem.title),
+        x: 380 + Math.random() * 40,
+        y: 160 + Math.random() * 40,
+        rotation: 0,
+        scale: 1,
+        zIndex: maxZIndex + 2,
+        pageCount: 1,
+        currentPageIndex: 0,
+        isExamSheet: true,
+        stickyColor: '#bae6fd',
+        width: 380,
+        height: 490,
+        examData: {
+          timeLimitMinutes: 20,
+          remainingSeconds: 20 * 60,
+          questions: marketItem.examQuestions,
+          userAnswers: {},
+          isGraded: false,
+          totalQuestions: marketItem.examQuestions.length
+        },
+        pages: [
+          {
+            id: `p-exam-market-${Date.now()}`,
+            pageNumber: 1,
+            title: normalizeNFC(marketItem.title),
+            text: normalizeNFC(`${marketItem.summary || ''}\n\n${marketItem.previewText || ''}`)
+          }
+        ]
+      };
+    } else {
+      const isBook = marketItem.type === 'book';
+      const rawPages = marketItem.pages && marketItem.pages.length > 0
+        ? marketItem.pages
+        : [
+            {
+              title: marketItem.title,
+              text: `${marketItem.summary || ''}\n\n${marketItem.previewText || ''}\n\n[Tài liệu đã mở từ tác giả ${marketItem.author || 'GreenLearn'}]`
+            }
+          ];
+      
+      const pages: PageContent[] = rawPages.map((p: any, idx: number) => ({
+        id: `p-${Date.now()}-${idx}`,
+        pageNumber: idx + 1,
+        title: normalizeNFC(p.title || `Trang ${idx + 1}`),
+        text: normalizeNFC(p.text || ''),
+        image: p.image
+      }));
+
+      newItem = {
+        id: `doc-${Date.now()}`,
+        type: isBook ? 'book' : 'paper',
+        title: normalizeNFC(marketItem.title),
+        x: 320 + Math.random() * 60,
+        y: 180 + Math.random() * 40,
+        rotation: 0,
+        scale: 1,
+        zIndex: maxZIndex + 1,
+        pageCount: pages.length,
+        currentPageIndex: 0,
+        pages,
+        colorTheme: isBook ? '#15803D' : '#16A34A'
+      };
+    }
+
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== spaceId) return s;
+        return {
+          ...s,
+          lastOpenedAt: new Date().toISOString(),
+          items: [...s.items, newItem]
+        };
+      })
+    );
+
+    setActiveSpaceId(spaceId);
   };
 
   const tidyUpDesk = () => {
@@ -2377,6 +2505,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         updateCodeBlock,
         updateMindMapNode,
         addUploadedDocument,
+        addMarketItemToSpace,
+        convertPaperToBook,
         addExamSheet,
         updateExamAnswer,
         gradeExam,
@@ -2426,7 +2556,9 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         leaveMultiplayerRoom,
         broadcastDeskAction,
         isFollowPresenter,
-        setIsFollowPresenter
+        setIsFollowPresenter,
+        saveStatus,
+        saveCurrentSpaceImmediately
       }}
     >
       {children}

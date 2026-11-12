@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `50b8a80`  
+> **Commit Hash:** `0ecb934`  
 > **Cập nhật lần cuối:** `2026-11-12`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -28,17 +28,17 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | Ký hiệu (Symbol) | Loại (Kind) | Vị trí (File:Lines) | Vai trò chức năng |
 |---|---|---|---|
 | `BOOK_COVER_PRESETS` | `component` | [src/components/objects/BookSpread.tsx:L39-L80](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/BookSpread.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `BookSpread` | `component` | [src/components/objects/BookSpread.tsx:L1188-L1188](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/BookSpread.tsx) | Mô phỏng cuốn sách mở 2.5D, phân trang động DOM, bìa cứng, gờ gáy và popover Inteline |
-| `BookSpreadComponent` | `component` | [src/components/objects/BookSpread.tsx:L82-L1186](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/BookSpread.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `BookSpread` | `component` | [src/components/objects/BookSpread.tsx:L1200-L1200](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/BookSpread.tsx) | Mô phỏng cuốn sách mở 2.5D, phân trang động DOM, bìa cứng, gờ gáy và popover Inteline |
+| `BookSpreadComponent` | `component` | [src/components/objects/BookSpread.tsx:L82-L1198](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/BookSpread.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `CodeBlockItem` | `component` | [src/components/objects/CodeBlockItem.tsx:L15-L197](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/CodeBlockItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `ExamQuizCard` | `component` | [src/components/objects/ExamQuizCard.tsx:L750-L750](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/ExamQuizCard.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `ExamQuizCardComponent` | `component` | [src/components/objects/ExamQuizCard.tsx:L46-L748](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/ExamQuizCard.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `MindMapNodeItem` | `component` | [src/components/objects/MindMapNodeItem.tsx:L24-L320](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/MindMapNodeItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `PaperSheet` | `component` | [src/components/objects/PaperSheet.tsx:L807-L807](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/PaperSheet.tsx) | Mô phỏng tờ giấy A4/ghi chép đơn lẻ 2.5D với độ xoay tự do và texture giấy |
-| `PaperSheetComponent` | `component` | [src/components/objects/PaperSheet.tsx:L41-L805](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/PaperSheet.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `PaperSheet` | `component` | [src/components/objects/PaperSheet.tsx:L818-L818](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/PaperSheet.tsx) | Mô phỏng tờ giấy A4/ghi chép đơn lẻ 2.5D với độ xoay tự do và texture giấy |
+| `PaperSheetComponent` | `component` | [src/components/objects/PaperSheet.tsx:L42-L816](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/PaperSheet.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `StickerItem` | `component` | [src/components/objects/StickerItem.tsx:L15-L192](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickerItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1143-L1143](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
-| `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L38-L1141](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1159-L1159](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
+| `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L39-L1157](file:////home/nhat/Documents/DUT/ViTudy/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 
 ### HUD & Overlays
 
@@ -65,14 +65,15 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `BookInitialPage` | `type` | [src/components/modals/BookCoverModal.tsx:L18-L22](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/BookCoverModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 | `FlashcardModal` | `component` | [src/components/modals/FlashcardModal.tsx:L15-L65](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/FlashcardModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 | `FlashcardTab` | `component` | [src/components/modals/study-tools/FlashcardTab.tsx:L26-L310](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/study-tools/FlashcardTab.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
-| `FullScreenDocModal` | `component` | [src/components/modals/FullScreenDocModal.tsx:L32-L587](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/FullScreenDocModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
+| `FullScreenDocModal` | `component` | [src/components/modals/FullScreenDocModal.tsx:L32-L691](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/FullScreenDocModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 | `IntelineModal` | `component` | [src/components/modals/IntelineModal.tsx:L26-L251](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/IntelineModal.tsx) | Hộp thoại AI hỏi đáp ngữ cảnh sâu Inteline theo từng dòng/trang tài liệu |
 | `MobileCompanionView` | `component` | [src/components/mobile/MobileCompanionView.tsx:L12-L116](file:////home/nhat/Documents/DUT/ViTudy/src/components/mobile/MobileCompanionView.tsx) | Giao diện di động rút gọn đồng bộ tài liệu từ máy tính |
 | `OcrTab` | `component` | [src/components/modals/study-tools/OcrTab.tsx:L12-L153](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/study-tools/OcrTab.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
-| `QuizTab` | `component` | [src/components/modals/study-tools/QuizTab.tsx:L30-L685](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/study-tools/QuizTab.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
+| `QuizTab` | `component` | [src/components/modals/study-tools/QuizTab.tsx:L30-L729](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/study-tools/QuizTab.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 | `RoadmapTab` | `component` | [src/components/modals/study-tools/RoadmapTab.tsx:L23-L188](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/study-tools/RoadmapTab.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
+| `SelectSpaceForDocModal` | `component` | [src/components/modals/SelectSpaceForDocModal.tsx:L29-L346](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/SelectSpaceForDocModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 | `StorageManagerModal` | `component` | [src/components/modals/StorageManagerModal.tsx:L26-L264](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/StorageManagerModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
-| `StudyToolsModal` | `component` | [src/components/modals/StudyToolsModal.tsx:L28-L170](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/StudyToolsModal.tsx) | Bộ công cụ ôn tập toàn diện STudy: TextRank, Cloze Quiz, Flashcard, Roadmap |
+| `StudyToolsModal` | `component` | [src/components/modals/StudyToolsModal.tsx:L29-L174](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/StudyToolsModal.tsx) | Bộ công cụ ôn tập toàn diện STudy: TextRank, Cloze Quiz, Flashcard, Roadmap |
 | `SummaryTab` | `component` | [src/components/modals/study-tools/SummaryTab.tsx:L17-L221](file:////home/nhat/Documents/DUT/ViTudy/src/components/modals/study-tools/SummaryTab.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 
 ### Context & State
@@ -89,11 +90,11 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `RoomJoinResponse` | `type` | [src/context/SocialPresenceContext.tsx:L27-L37](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L48-L67](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L71-L470](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L165-L2435](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
+| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L169-L2567](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
 | `useAuth` | `hook` | [src/context/AuthContext.tsx:L302-L308](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `UserProfile` | `type` | [src/context/AuthContext.tsx:L11-L16](file:////home/nhat/Documents/DUT/ViTudy/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L472-L475](file:////home/nhat/Documents/DUT/ViTudy/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2437-L2443](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
+| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2569-L2575](file:////home/nhat/Documents/DUT/ViTudy/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
 
 ### Non-AI Engine & Utils
 
@@ -101,9 +102,9 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 |---|---|---|---|
 | `AiProvider` | `type` | [src/lib/aiClient.ts:L15-L15](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `applyDiscordUrlMappings` | `fn` | [src/lib/discord/urlMappings.ts:L5-L39](file:////home/nhat/Documents/DUT/ViTudy/src/lib/discord/urlMappings.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `askAi` | `fn` | [src/lib/aiClient.ts:L387-L433](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `AskAiRequest` | `type` | [src/lib/aiClient.ts:L17-L25](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `AskAiResult` | `type` | [src/lib/aiClient.ts:L27-L31](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `askAi` | `fn` | [src/lib/aiClient.ts:L388-L483](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `AskAiRequest` | `type` | [src/lib/aiClient.ts:L17-L26](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `AskAiResult` | `type` | [src/lib/aiClient.ts:L28-L32](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `base64UrlDecode` | `fn` | [src/lib/openaiOAuth.ts:L45-L59](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `base64UrlEncode` | `fn` | [src/lib/openaiOAuth.ts:L33-L43](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `buildOpenAiAuthorizeUrl` | `fn` | [src/lib/openaiOAuth.ts:L91-L104](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -111,30 +112,32 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `calculateNextReview` | `fn` | [src/lib/sm2.ts:L16-L58](file:////home/nhat/Documents/DUT/ViTudy/src/lib/sm2.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `calculateNextStageProgress` | `fn` | [src/lib/petHelpers.ts:L45-L71](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `calculatePetStage` | `fn` | [src/lib/petHelpers.ts:L10-L16](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `callDirectGemini` | `fn` | [src/lib/aiClient.ts:L233-L303](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `callDirectOpenAi` | `fn` | [src/lib/aiClient.ts:L308-L382](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `CHATGPT_MODEL_GROUPS` | `component` | [src/lib/aiClient.ts:L56-L83](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `callDirectGemini` | `fn` | [src/lib/aiClient.ts:L234-L304](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `callDirectOpenAi` | `fn` | [src/lib/aiClient.ts:L309-L383](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `CHATGPT_MODEL_GROUPS` | `component` | [src/lib/aiClient.ts:L57-L84](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `clearOpenAiOAuthSession` | `fn` | [src/lib/openaiOAuth.ts:L328-L331](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `clearPendingPkce` | `fn` | [src/lib/openaiOAuth.ts:L131-L137](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `clearSupabaseConfig` | `fn` | [src/lib/supabase.ts:L86-L94](file:////home/nhat/Documents/DUT/ViTudy/src/lib/supabase.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `DEFAULT_PET_NAME` | `component` | [src/lib/petHelpers.ts:L8-L8](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `DiscordAuthResult` | `type` | [src/lib/discord/sdk.ts:L3-L14](file:////home/nhat/Documents/DUT/ViTudy/src/lib/discord/sdk.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `DocumentOutlineNode` | `type` | [src/lib/nonAiEngine.ts:L45-L51](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `ensureValidOpenAiSession` | `fn` | [src/lib/aiClient.ts:L214-L228](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `exchangeOpenAiCode` | `fn` | [src/lib/aiClient.ts:L137-L212](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `ensureValidOpenAiSession` | `fn` | [src/lib/aiClient.ts:L215-L229](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `exchangeOpenAiCode` | `fn` | [src/lib/aiClient.ts:L138-L213](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `extractOpenAiJwtClaims` | `fn` | [src/lib/openaiOAuth.ts:L150-L192](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `extractOutlineAndRoadmap` | `fn` | [src/lib/nonAiEngine.ts:L272-L298](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán trích xuất tiêu đề dựng lộ trình học tương tác theo thời gian |
+| `extractOutlineAndRoadmap` | `fn` | [src/lib/nonAiEngine.ts:L297-L323](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán trích xuất tiêu đề dựng lộ trình học tương tác theo thời gian |
 | `Flashcard` | `type` | [src/lib/nonAiEngine.ts:L28-L33](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `formatDateStr` | `fn` | [src/lib/petHelpers.ts:L18-L23](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `GEMINI_MODELS` | `component` | [src/lib/aiClient.ts:L33-L39](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `generateClozeQuestions` | `fn` | [src/lib/nonAiEngine.ts:L125-L207](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán Cloze Deletion tự động đục lỗ từ khoá tạo bài tập trắc nghiệm |
-| `generateFlashcardsFromRules` | `fn` | [src/lib/nonAiEngine.ts:L212-L267](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Quy tắc bóc tách câu định nghĩa thành bộ thẻ nhớ Flashcard ôn tập |
+| `formatRelativeTimeVN` | `fn` | [src/lib/dateVN.ts:L65-L91](file:////home/nhat/Documents/DUT/ViTudy/src/lib/dateVN.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `GEMINI_MODELS` | `component` | [src/lib/aiClient.ts:L34-L40](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `generateClozeQuestions` | `fn` | [src/lib/nonAiEngine.ts:L138-L232](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán Cloze Deletion tự động đục lỗ từ khoá tạo bài tập trắc nghiệm |
+| `generateFlashcardsFromRules` | `fn` | [src/lib/nonAiEngine.ts:L237-L292](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Quy tắc bóc tách câu định nghĩa thành bộ thẻ nhớ Flashcard ôn tập |
 | `generatePkcePair` | `fn` | [src/lib/openaiOAuth.ts:L73-L89](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getAppBasePath` | `fn` | [src/lib/assets.ts:L4-L11](file:////home/nhat/Documents/DUT/ViTudy/src/lib/assets.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getAppBaseUrl` | `fn` | [src/lib/assets.ts:L13-L20](file:////home/nhat/Documents/DUT/ViTudy/src/lib/assets.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getAssetPath` | `fn` | [src/lib/assets.ts:L37-L42](file:////home/nhat/Documents/DUT/ViTudy/src/lib/assets.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getDiscordSdk` | `fn` | [src/lib/discord/sdk.ts:L18-L28](file:////home/nhat/Documents/DUT/ViTudy/src/lib/discord/sdk.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getIDB` | `fn` | [src/lib/indexeddb.ts:L8-L25](file:////home/nhat/Documents/DUT/ViTudy/src/lib/indexeddb.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `getLast28DaysGrid` | `fn` | [src/lib/dateVN.ts:L28-L60](file:////home/nhat/Documents/DUT/ViTudy/src/lib/dateVN.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getOpenAiOAuthSession` | `fn` | [src/lib/openaiOAuth.ts:L292-L326](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getPendingPkce` | `fn` | [src/lib/openaiOAuth.ts:L118-L129](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `getPetAssetUrl` | `fn` | [src/lib/petHelpers.ts:L130-L133](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -159,7 +162,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `normalizeNFCAndTrim` | `fn` | [src/utils/textNormalization.ts:L15-L18](file:////home/nhat/Documents/DUT/ViTudy/src/utils/textNormalization.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `normalizeNFCPreserveWhitespace` | `fn` | [src/utils/textNormalization.ts:L10-L13](file:////home/nhat/Documents/DUT/ViTudy/src/utils/textNormalization.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_AUTHORIZE_URL` | `component` | [src/lib/openaiOAuth.ts:L5-L5](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `OPENAI_MODELS` | `component` | [src/lib/aiClient.ts:L41-L54](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `OPENAI_MODELS` | `component` | [src/lib/aiClient.ts:L42-L55](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_OAUTH_CLIENT_ID` | `component` | [src/lib/openaiOAuth.ts:L3-L3](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_OAUTH_REDIRECT_URI` | `component` | [src/lib/openaiOAuth.ts:L4-L4](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_TOKEN_URL` | `component` | [src/lib/openaiOAuth.ts:L6-L6](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -168,13 +171,14 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `paginateDocument` | `fn` | [src/utils/pagination.ts:L167-L288](file:////home/nhat/Documents/DUT/ViTudy/src/utils/pagination.ts) | Động cơ phân trang chính xác theo chiều cao trang, chống cắt cụt công thức |
 | `ParsedOpenAiInput` | `type` | [src/lib/openaiOAuth.ts:L27-L31](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `parseOpenAiCallbackInput` | `fn` | [src/lib/openaiOAuth.ts:L194-L275](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `parseQuizJsonSafely` | `fn` | [src/lib/aiClient.ts:L674-L730](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `PendingPkceState` | `type` | [src/lib/openaiOAuth.ts:L21-L25](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `PET_STORAGE_KEY` | `component` | [src/lib/petHelpers.ts:L4-L4](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `Point` | `type` | [src/utils/smartShape.ts:L12-L15](file:////home/nhat/Documents/DUT/ViTudy/src/utils/smartShape.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `PROVIDER_MODELS` | `component` | [src/lib/aiClient.ts:L85-L99](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `PROVIDER_MODELS` | `component` | [src/lib/aiClient.ts:L86-L100](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `QuizQuestion` | `type` | [src/lib/nonAiEngine.ts:L19-L26](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `recognizeSmartShape` | `fn` | [src/utils/smartShape.ts:L17-L175](file:////home/nhat/Documents/DUT/ViTudy/src/utils/smartShape.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `refreshOpenAiSession` | `fn` | [src/lib/aiClient.ts:L101-L135](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `refreshOpenAiSession` | `fn` | [src/lib/aiClient.ts:L102-L136](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `resolvePetState` | `fn` | [src/lib/petHelpers.ts:L73-L128](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `ReviewQuality` | `type` | [src/lib/sm2.ts:L8-L8](file:////home/nhat/Documents/DUT/ViTudy/src/lib/sm2.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `RoadmapStep` | `type` | [src/lib/nonAiEngine.ts:L35-L43](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -183,10 +187,13 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `saveSupabaseConfig` | `fn` | [src/lib/supabase.ts:L78-L84](file:////home/nhat/Documents/DUT/ViTudy/src/lib/supabase.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `setDiscordPresence` | `fn` | [src/lib/discord/sdk.ts:L75-L97](file:////home/nhat/Documents/DUT/ViTudy/src/lib/discord/sdk.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `SM2Card` | `type` | [src/lib/sm2.ts:L1-L6](file:////home/nhat/Documents/DUT/ViTudy/src/lib/sm2.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `splitSentences` | `fn` | [src/lib/nonAiEngine.ts:L56-L62](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `splitSentences` | `fn` | [src/lib/nonAiEngine.ts:L64-L71](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `startOpenAiPkceLogin` | `fn` | [src/lib/openaiOAuth.ts:L139-L148](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `summarizeWithTextRank` | `fn` | [src/lib/nonAiEngine.ts:L79-L120](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán TextRank & TF-IDF trích xuất tóm tắt nội dung không cần AI |
-| `testAiConnection` | `fn` | [src/lib/aiClient.ts:L438-L603](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `summarizeWithTextRank` | `fn` | [src/lib/nonAiEngine.ts:L92-L133](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán TextRank & TF-IDF trích xuất tóm tắt nội dung không cần AI |
+| `testAiConnection` | `fn` | [src/lib/aiClient.ts:L488-L668](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `toDateKeyVN` | `fn` | [src/lib/dateVN.ts:L19-L22](file:////home/nhat/Documents/DUT/ViTudy/src/lib/dateVN.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `todayKey` | `fn` | [src/lib/dateVN.ts:L6-L14](file:////home/nhat/Documents/DUT/ViTudy/src/lib/dateVN.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `VIETNAM_TIMEZONE` | `component` | [src/lib/dateVN.ts:L1-L1](file:////home/nhat/Documents/DUT/ViTudy/src/lib/dateVN.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `ViewportTransform` | `type` | [src/lib/viewportCulling.ts:L9-L15](file:////home/nhat/Documents/DUT/ViTudy/src/lib/viewportCulling.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `VITUDY_STREAK_KEY` | `component` | [src/lib/petHelpers.ts:L6-L6](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 
@@ -196,11 +203,11 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 |---|---|---|---|
 | `AboutPage` | `component` | [src/app/about/page.tsx:L9-L181](file:////home/nhat/Documents/DUT/ViTudy/src/app/about/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AccountSettings` | `component` | [src/components/profile/AccountSettings.tsx:L30-L493](file:////home/nhat/Documents/DUT/ViTudy/src/components/profile/AccountSettings.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `ActiveToolType` | `type` | [src/types/studyspace.ts:L98-L105](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ActiveToolType` | `type` | [src/types/studyspace.ts:L100-L107](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthCallbackPage` | `component` | [src/app/auth/callback/page.tsx:L8-L98](file:////home/nhat/Documents/DUT/ViTudy/src/app/auth/callback/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthForm` | `component` | [src/components/auth/AuthForm.tsx:L15-L139](file:////home/nhat/Documents/DUT/ViTudy/src/components/auth/AuthForm.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthPage` | `component` | [src/app/auth/page.tsx:L12-L143](file:////home/nhat/Documents/DUT/ViTudy/src/app/auth/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `CanvasTransform` | `type` | [src/types/studyspace.ts:L116-L121](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `CanvasTransform` | `type` | [src/types/studyspace.ts:L118-L123](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `createDemoStudySpace` | `fn` | [src/data/demoSpace.ts:L3-L97](file:////home/nhat/Documents/DUT/ViTudy/src/data/demoSpace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DashboardPage` | `component` | [src/app/dashboard/page.tsx:L13-L229](file:////home/nhat/Documents/DUT/ViTudy/src/app/dashboard/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `Database` | `type` | [src/types/database.types.ts:L9-L321](file:////home/nhat/Documents/DUT/ViTudy/src/types/database.types.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -211,9 +218,10 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `DeskInviteNotification` | `type` | [src/services/SocialFriendService.ts:L21-L29](file:////home/nhat/Documents/DUT/ViTudy/src/services/SocialFriendService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DeskItem` | `type` | [src/types/studyspace.ts:L37-L73](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `deskItemToRow` | `fn` | [src/services/StudySpaceService.ts:L8-L44](file:////home/nhat/Documents/DUT/ViTudy/src/services/StudySpaceService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `DrawingStroke` | `type` | [src/types/studyspace.ts:L107-L114](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `DrawingStroke` | `type` | [src/types/studyspace.ts:L109-L116](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `EMOJI_CATEGORIES` | `component` | [src/data/stickersAndEmojis.ts:L65-L412](file:////home/nhat/Documents/DUT/ViTudy/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `EmojiCategory` | `type` | [src/data/stickersAndEmojis.ts:L13-L18](file:////home/nhat/Documents/DUT/ViTudy/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `EmptyState` | `component` | [src/components/common/EmptyState.tsx:L17-L48](file:////home/nhat/Documents/DUT/ViTudy/src/components/common/EmptyState.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ExamAttemptPayload` | `type` | [src/services/ActivityService.ts:L3-L8](file:////home/nhat/Documents/DUT/ViTudy/src/services/ActivityService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ExamQuestion` | `type` | [src/types/studyspace.ts:L17-L24](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ExamSheetData` | `type` | [src/types/studyspace.ts:L26-L35](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -223,16 +231,20 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `FlashcardReview` | `type` | [src/services/FlashcardService.ts:L4-L16](file:////home/nhat/Documents/DUT/ViTudy/src/services/FlashcardService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `generateCardHash` | `fn` | [src/services/FlashcardService.ts:L18-L27](file:////home/nhat/Documents/DUT/ViTudy/src/services/FlashcardService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `getDocAccessLog` | `fn` | [src/hooks/useStorageManager.ts:L46-L54](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `getPurchasedItemIds` | `fn` | [src/services/MarketPurchaseStorage.ts:L8-L21](file:////home/nhat/Documents/DUT/ViTudy/src/services/MarketPurchaseStorage.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `GuestBanner` | `component` | [src/components/auth/GuestBanner.tsx:L12-L54](file:////home/nhat/Documents/DUT/ViTudy/src/components/auth/GuestBanner.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HeroSection` | `component` | [src/components/landing/HeroSection.tsx:L52-L238](file:////home/nhat/Documents/DUT/ViTudy/src/components/landing/HeroSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HomePage` | `component` | [src/components/home/HomePage.tsx:L49-L1657](file:////home/nhat/Documents/DUT/ViTudy/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HostApprovalModal` | `component` | [src/components/social/HostApprovalModal.tsx:L14-L177](file:////home/nhat/Documents/DUT/ViTudy/src/components/social/HostApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `INITIAL_MARKET_ITEMS` | `component` | [src/data/marketMockData.ts:L24-L1124](file:////home/nhat/Documents/DUT/ViTudy/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_SPACES` | `component` | [src/data/mockSpaces.ts:L3-L332](file:////home/nhat/Documents/DUT/ViTudy/src/data/mockSpaces.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `IntelineThread` | `type` | [src/types/studyspace.ts:L75-L85](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `isBinaryOrCorrupted` | `fn` | [src/services/OfficeParserService.ts:L9-L32](file:////home/nhat/Documents/DUT/ViTudy/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ItemType` | `type` | [src/types/studyspace.ts:L1-L1](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `Json` | `type` | [src/types/database.types.ts:L1-L7](file:////home/nhat/Documents/DUT/ViTudy/src/types/database.types.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `LandingPage` | `component` | [src/components/landing/LandingPage.tsx:L16-L81](file:////home/nhat/Documents/DUT/ViTudy/src/components/landing/LandingPage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `loadStoredPetState` | `fn` | [src/hooks/usePetMascot.ts:L30-L56](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/usePetMascot.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `MarketItem` | `type` | [src/data/marketMockData.ts:L3-L22](file:////home/nhat/Documents/DUT/ViTudy/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `MathRenderer` | `component` | [src/components/common/MathRenderer.tsx:L105-L235](file:////home/nhat/Documents/DUT/ViTudy/src/components/common/MathRenderer.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `metadata` | `const` | [src/app/layout.tsx:L38-L49](file:////home/nhat/Documents/DUT/ViTudy/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `MigrationDialog` | `component` | [src/components/auth/MigrationDialog.tsx:L10-L110](file:////home/nhat/Documents/DUT/ViTudy/src/components/auth/MigrationDialog.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -241,8 +253,10 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `OfflineOp` | `type` | [src/services/OfflineQueue.ts:L4-L10](file:////home/nhat/Documents/DUT/ViTudy/src/services/OfflineQueue.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `OnboardingTour` | `component` | [src/components/onboarding/OnboardingTour.tsx:L56-L151](file:////home/nhat/Documents/DUT/ViTudy/src/components/onboarding/OnboardingTour.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PageContent` | `type` | [src/types/studyspace.ts:L3-L15](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parseDocxFile` | `fn` | [src/services/OfficeParserService.ts:L95-L119](file:////home/nhat/Documents/DUT/ViTudy/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ParsedPage` | `type` | [src/services/PdfParserService.ts:L5-L11](file:////home/nhat/Documents/DUT/ViTudy/src/services/PdfParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `parsePdfFile` | `fn` | [src/services/PdfParserService.ts:L17-L94](file:////home/nhat/Documents/DUT/ViTudy/src/services/PdfParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parsePptxFile` | `fn` | [src/services/OfficeParserService.ts:L124-L168](file:////home/nhat/Documents/DUT/ViTudy/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PeerUser` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L8-L18](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PendingApprovalModal` | `component` | [src/components/social/PendingApprovalModal.tsx:L13-L139](file:////home/nhat/Documents/DUT/ViTudy/src/components/social/PendingApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PET_STAGES` | `component` | [src/types/pet.ts:L14-L65](file:////home/nhat/Documents/DUT/ViTudy/src/types/pet.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -257,6 +271,8 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `ProfilePage` | `component` | [src/app/profile/page.tsx:L161-L167](file:////home/nhat/Documents/DUT/ViTudy/src/app/profile/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `RecentBuddy` | `type` | [src/services/SocialFriendService.ts:L7-L17](file:////home/nhat/Documents/DUT/ViTudy/src/services/SocialFriendService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `recordDocAccess` | `fn` | [src/hooks/useStorageManager.ts:L56-L63](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `recordPurchasedItemId` | `fn` | [src/services/MarketPurchaseStorage.ts:L26-L39](file:////home/nhat/Documents/DUT/ViTudy/src/services/MarketPurchaseStorage.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ResetPasswordPage` | `component` | [src/app/auth/reset/page.tsx:L10-L176](file:////home/nhat/Documents/DUT/ViTudy/src/app/auth/reset/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ResponsiveLayoutState` | `type` | [src/hooks/useResponsiveLayout.ts:L5-L18](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `RootLayout` | `component` | [src/app/layout.tsx:L51-L85](file:////home/nhat/Documents/DUT/ViTudy/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `RotateTwoWay` | `component` | [src/components/icons/RotateTwoWay.tsx:L11-L29](file:////home/nhat/Documents/DUT/ViTudy/src/components/icons/RotateTwoWay.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -271,7 +287,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `StorageItemInfo` | `type` | [src/hooks/useStorageManager.ts:L7-L18](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StorageUsage` | `type` | [src/hooks/useStorageManager.ts:L20-L26](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StreakCalendar` | `component` | [src/components/dashboard/StreakCalendar.tsx:L18-L108](file:////home/nhat/Documents/DUT/ViTudy/src/components/dashboard/StreakCalendar.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `StudySpace` | `type` | [src/types/studyspace.ts:L87-L96](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `StudySpace` | `type` | [src/types/studyspace.ts:L87-L98](file:////home/nhat/Documents/DUT/ViTudy/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StudySpacePage` | `component` | [src/app/page.tsx:L89-L95](file:////home/nhat/Documents/DUT/ViTudy/src/app/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StudyStats` | `component` | [src/components/dashboard/StudyStats.tsx:L14-L189](file:////home/nhat/Documents/DUT/ViTudy/src/components/dashboard/StudyStats.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `TermsPage` | `component` | [src/app/terms/page.tsx:L8-L83](file:////home/nhat/Documents/DUT/ViTudy/src/app/terms/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |

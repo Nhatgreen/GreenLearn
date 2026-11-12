@@ -21,7 +21,8 @@ import {
   FileText,
   HelpCircle,
   BookOpen,
-  BookmarkPlus
+  BookmarkPlus,
+  BookPlus
 } from 'lucide-react';
 import { RotateTwoWay } from '@/components/icons/RotateTwoWay';
 import { MathRenderer } from '../common/MathRenderer';
@@ -55,7 +56,8 @@ export function PaperSheetComponent({ item, isSelected }: PaperSheetProps) {
     addStickyNote,
     focusedItemId,
     enterFocusMode,
-    exitFocusMode
+    exitFocusMode,
+    convertPaperToBook
   } = useStudySpace();
 
   const [isStudyOpen, setIsStudyOpen] = useState(false);
@@ -648,6 +650,15 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
         >
           <BookOpen className="w-4 h-4 stroke-[2.4]" />
         </button>
+        {!isExam && convertPaperToBook && (
+          <button
+            title="Đóng thành sách: Thêm bìa da bảo vệ tài liệu"
+            onClick={() => convertPaperToBook(item.id, 'brown')}
+            className="p-1.5 hover:bg-green-50 rounded-lg text-slate-700 hover:text-[#16A34A] transition-colors cursor-pointer"
+          >
+            <BookPlus className="w-4 h-4 stroke-[2.4]" />
+          </button>
+        )}
         <button
           title="Đọc toàn màn hình (Xem như file PDF)"
           onClick={() => setIsFullScreen(true)}

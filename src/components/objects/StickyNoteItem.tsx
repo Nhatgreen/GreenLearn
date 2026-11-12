@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { RotateTwoWay } from '@/components/icons/RotateTwoWay';
 import { ItemDrawingOverlay } from '../canvas/ItemDrawingOverlay';
+import { MathRenderer } from '../common/MathRenderer';
 
 interface StickyNoteItemProps {
   item: DeskItem;
@@ -117,6 +118,7 @@ export function StickyNoteItemComponent({ item, isSelected }: StickyNoteItemProp
   ];
 
   const isTypingRef = useRef(false);
+  const isComposingRef = useRef(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -281,7 +283,8 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
   const isMindMap = trimmedText.includes('[SƠ ĐỒ TƯ DUY]') || trimmedText.includes('├──') || trimmedText.includes('└──');
   const isSticker = trimmedText.includes('[STICKER');
   const isIllustration = trimmedText.includes('[MINH HỌA');
-  const hasRichView = isCodeBlock || isTable || isMindMap || isSticker || isIllustration;
+  const hasMathOrMarkdown = /(\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\$[^\$\n]+?\$|\\\([\s\S]+?\\\)|^#{1,3}\s)/m.test(trimmedText);
+  const hasRichView = isCodeBlock || isTable || isMindMap || isSticker || isIllustration || hasMathOrMarkdown;
 
   const handleCopyCode = async (codeStr: string) => {
     try {
@@ -757,13 +760,26 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
           isTable ? renderTable() :
           isMindMap ? renderMindMap() :
           isSticker ? renderSticker() :
-          renderIllustration()
+          isIllustration ? renderIllustration() : (
+            <div 
+              onDoubleClick={() => setIsEditingContent(true)}
+              className="w-full flex-1 overflow-y-auto no-scrollbar text-stone-900 select-text p-1 text-xs leading-relaxed relative z-10"
+              title="Nhấn đúp để chỉnh sửa nội dung"
+            >
+              <MathRenderer content={text} />
+            </div>
+          )
         ) : (
           <textarea
             value={text}
             onChange={handleTextChange}
             onFocus={handleTextFocus}
             onBlur={handleTextBlur}
+            onCompositionStart={() => { isComposingRef.current = true; }}
+            onCompositionEnd={(e) => {
+              isComposingRef.current = false;
+              handleTextChange(e as any);
+            }}
             onKeyDown={(e) => e.stopPropagation()}
             onMouseUp={handleTextMouseUp}
             placeholder="Ghi chú..."

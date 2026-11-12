@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { generateClozeQuestions, QuizQuestion } from '@/lib/nonAiEngine';
 import { useStudySpace } from '@/context/StudySpaceContext';
-import { askAi } from '@/lib/aiClient';
+import { askAi, parseQuizJsonSafely } from '@/lib/aiClient';
 import { 
   HelpCircle, 
   CheckCircle2, 
@@ -47,6 +47,8 @@ export function QuizTab({
   const [isGraded, setIsGraded] = useState(false);
   const [timeLimit, setTimeLimit] = useState<number>(15);
   const [savedNotice, setSavedNotice] = useState<string | null>(null);
+  const [aiErrorNotice, setAiErrorNotice] = useState<string | null>(null);
+  const [creationSource, setCreationSource] = useState<'ai' | 'offline' | null>(null);
   const [expandedExplanations, setExpandedExplanations] = useState<Record<string, boolean>>({});
 
   const textToUse = (scope === 'Trang hiện tại' && activePageText && activePageText.trim().length > 20) 
@@ -56,10 +58,12 @@ export function QuizTab({
   const handleGenerateQuestions = async () => {
     if (!textToUse) return;
     setSavedNotice(null);
+    setAiErrorNotice(null);
 
     if (!useAi) {
       const generated = generateClozeQuestions(textToUse, questionCount);
       setQuestions(generated);
+      setCreationSource('offline');
       setUserAnswers({});
       setIsGraded(false);
       setExpandedExplanations({});
@@ -79,33 +83,42 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
   }
 ]`;
 
+      const estimatedTokens = Math.min(3800, questionCount * 320 + 400);
+
       const data = await askAi({
         prompt,
         context: textToUse.slice(0, 4500),
+        maxTokens: estimatedTokens,
       });
 
       const rawText = data.reply || '';
-      const match = rawText.match(/\[[\s\S]*\]/);
-      if (match) {
-        const parsed = JSON.parse(match[0]);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setQuestions(parsed.map((q: any, idx: number) => ({
-            id: `ai-q-${idx}-${Date.now()}`,
-            question: q.question,
-            options: q.options || [],
-            correctIndex: typeof q.correctIndex === 'number' ? q.correctIndex : 0,
-            explanation: q.explanation || ''
-          })));
-          setUserAnswers({});
-          setIsGraded(false);
-          setExpandedExplanations({});
-          return;
-        }
+      const parsedList = parseQuizJsonSafely(rawText);
+
+      if (parsedList.length > 0) {
+        setQuestions(parsedList.slice(0, questionCount).map((q: any, idx: number) => ({
+          id: `ai-q-${idx}-${Date.now()}`,
+          question: q.question,
+          options: Array.isArray(q.options) ? q.options : ['A', 'B', 'C', 'D'],
+          correctIndex: typeof q.correctIndex === 'number' ? q.correctIndex : 0,
+          explanation: q.explanation || ''
+        })));
+        setCreationSource('ai');
+        setUserAnswers({});
+        setIsGraded(false);
+        setExpandedExplanations({});
+        return;
       }
-      setQuestions(generateClozeQuestions(textToUse, questionCount));
-    } catch (err) {
-      console.warn('Lỗi AI Quiz, fallback Non-AI:', err);
-      setQuestions(generateClozeQuestions(textToUse, questionCount));
+
+      setAiErrorNotice('AI phản hồi chưa hoàn chỉnh. Bạn có thể bấm "Dùng bản Offline" bên dưới để tiếp tục.');
+      const generated = generateClozeQuestions(textToUse, questionCount);
+      setQuestions(generated);
+      setCreationSource('offline');
+    } catch (err: any) {
+      console.warn('Lỗi AI Quiz:', err);
+      setAiErrorNotice(err?.message || 'Không thể kết nối đến AI. Đã tự động chuyển sang bản Offline.');
+      const generated = generateClozeQuestions(textToUse, questionCount);
+      setQuestions(generated);
+      setCreationSource('offline');
     } finally {
       setLoading(false);
       setUserAnswers({});
@@ -443,6 +456,37 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
         </div>
       </div>
 
+      {/* Thông báo lỗi AI nếu có */}
+      {aiErrorNotice && (
+        <div className="mt-3 p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center justify-between gap-2 animate-fade-in">
+          <span className="flex-1">{aiErrorNotice}</span>
+          <button
+            type="button"
+            onClick={() => {
+              setAiErrorNotice(null);
+              setUseAi(false);
+              const generated = generateClozeQuestions(textToUse, questionCount);
+              setQuestions(generated);
+              setCreationSource('offline');
+            }}
+            className="px-2.5 py-1 bg-white border border-rose-300 hover:bg-rose-100 text-rose-900 rounded-lg text-xs font-bold cursor-pointer shrink-0"
+          >
+            Dùng bản Offline
+          </button>
+        </div>
+      )}
+
+      {/* Huy hiệu nguồn câu hỏi */}
+      {questions.length > 0 && creationSource && (
+        <div className="mt-3 flex items-center justify-between text-[11px] font-medium text-slate-500">
+          <span className="flex items-center gap-1.5">
+            <span className={`w-2 h-2 rounded-full ${creationSource === 'ai' ? 'bg-[#16A34A]' : 'bg-slate-400'}`} />
+            <span>Nguồn đề: <strong className="text-slate-800">{creationSource === 'ai' ? 'Tạo bằng AI chuyên sâu' : 'Tạo bằng động cơ Offline'}</strong></span>
+          </span>
+          <span>Tổng số câu: <strong className="text-slate-800">{questions.length}</strong></span>
+        </div>
+      )}
+
       {/* Thông báo đã lưu thẻ ghi nhớ */}
       {savedNotice && (
         <div className="mt-3 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-semibold text-center animate-fade-in">
@@ -500,7 +544,7 @@ Trả về dạng JSON array hợp lệ, KHÔNG thêm bất kỳ văn bản nào
                               : isOptionWrong
                               ? 'bg-rose-50 border-rose-400 text-rose-900'
                               : isChosen
-                              ? 'bg-slate-900 text-white font-medium border-slate-900 shadow-2xs'
+                              ? 'bg-slate-900 text-white font-medium border-slate-900 shadow-2xs [&_.katex]:text-inherit'
                               : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-800'
                           }`}
                         >

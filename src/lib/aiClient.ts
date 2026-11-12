@@ -21,6 +21,7 @@ export interface AskAiRequest {
   context?: string;
   apiKey?: string;
   accessToken?: string;
+  maxTokens?: number;
   signal?: AbortSignal;
 }
 
@@ -262,7 +263,7 @@ export async function callDirectGemini(req: AskAiRequest): Promise<AskAiResult> 
           parts: [{ text: 'Bạn là trợ lý học tập GreenLearn thông minh, giải thích chuẩn xác, sư phạm và dễ hiểu.' }],
         },
         generationConfig: {
-          maxOutputTokens: 2000,
+          maxOutputTokens: req.maxTokens ? Math.min(req.maxTokens, 4000) : 2500,
           temperature: 0.7,
         },
       }),
@@ -339,7 +340,7 @@ export async function callDirectOpenAi(req: AskAiRequest): Promise<AskAiResult> 
       body: JSON.stringify({
         model,
         messages,
-        max_tokens: 1500,
+        max_tokens: req.maxTokens ? Math.min(req.maxTokens, 4000) : 2500,
         temperature: 0.7,
       }),
       signal,
@@ -412,11 +413,60 @@ export async function askAi(req: AskAiRequest): Promise<AskAiResult> {
   if (provider === 'oauth_chatgpt') {
     const session = await ensureValidOpenAiSession();
     if (session && session.accessToken) {
-      return callDirectOpenAi({
-        ...req,
-        apiKey: session.accessToken,
-        model: req.model || 'gpt-4o-mini',
-      });
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      if (supabaseUrl && anonKey) {
+        try {
+          const res = await fetch(`${supabaseUrl}/functions/v1/ai-chat`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${anonKey}`,
+            },
+            body: JSON.stringify({
+              provider: 'oauth_chatgpt',
+              model: req.model || 'gpt-4o-mini',
+              prompt: req.prompt,
+              context: req.context,
+              accessToken: session.accessToken,
+              accountId: session.accountId,
+              maxTokens: req.maxTokens || 2500,
+            }),
+            signal: req.signal,
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.reply) {
+              return {
+                reply: data.reply,
+                provider: 'oauth_chatgpt',
+              };
+            }
+          }
+        } catch {}
+      }
+
+      // Thử gọi direct (nếu token là API key hoặc platform token)
+      try {
+        return await callDirectOpenAi({
+          ...req,
+          apiKey: session.accessToken,
+          model: req.model || 'gpt-4o-mini',
+        });
+      } catch (err: any) {
+        // Tự động fallback sang Google Gemini hoặc OpenAI BYOK nếu người dùng đã có key
+        const geminiKey = ByokStore.get('gemini');
+        if (geminiKey) {
+          return await callDirectGemini({ ...req, apiKey: geminiKey });
+        }
+        const openAiKey = ByokStore.get('openai');
+        if (openAiKey) {
+          return await callDirectOpenAi({ ...req, apiKey: openAiKey });
+        }
+        throw new Error(
+          `Không thể gọi mô hình ChatGPT trực tiếp (${err.message}). Vui lòng cấu hình Google Gemini API Key (miễn phí 100% từ Google AI Studio) hoặc OpenAI API Key trong Cài đặt AI!`
+        );
+      }
     }
   }
 
@@ -571,6 +621,21 @@ export async function testAiConnection(params: {
         };
       }
 
+      // Gửi truy vấn thực tế để đo độ trễ thực và kiểm tra mô hình ChatGPT
+      try {
+        await askAi({
+          provider: 'oauth_chatgpt',
+          model: params.model,
+          prompt: 'Kiểm tra kết nối mô hình. Trả lời đúng 1 từ: OK',
+        });
+      } catch (err: any) {
+        return {
+          success: false,
+          latencyMs: Date.now() - startTime,
+          message: `Xác thực token thành công nhưng không thể gọi mô hình (${err.message || 'Lỗi gọi API'}). Khuyên dùng Google Gemini API Key miễn phí từ Google AI Studio để gọi trực tiếp từ trình duyệt!`,
+        };
+      }
+
       const latencyMs = Date.now() - startTime;
       const accountLabel = session.email
         ? session.email
@@ -600,4 +665,66 @@ export async function testAiConnection(params: {
       message: err.message || 'Kiểm tra kết nối thất bại.',
     };
   }
+}
+
+/**
+ * Trích xuất an toàn mảng câu hỏi JSON từ chuỗi kết quả AI,
+ * hỗ trợ khôi phục các câu hỏi hoàn chỉnh kể cả khi đầu ra bị cắt ngắn (partial JSON)
+ */
+export function parseQuizJsonSafely(rawText: string): any[] {
+  if (!rawText) return [];
+
+  // 1. Thử parse toàn bộ khối [ ... ]
+  const match = rawText.match(/\[[\s\S]*\]/);
+  if (match) {
+    try {
+      const parsed = JSON.parse(match[0]);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch {}
+  }
+
+  // 2. Nếu chuỗi bị cắt cụt (partial JSON), trích xuất từng object {...} hoàn chỉnh
+  const questionObjects: any[] = [];
+  let depth = 0;
+  let startIndex = -1;
+  let inString = false;
+  let escapeNext = false;
+
+  for (let i = 0; i < rawText.length; i++) {
+    const ch = rawText[i];
+    if (escapeNext) {
+      escapeNext = false;
+      continue;
+    }
+    if (ch === '\\') {
+      escapeNext = true;
+      continue;
+    }
+    if (ch === '"') {
+      inString = !inString;
+      continue;
+    }
+    if (inString) continue;
+
+    if (ch === '{') {
+      if (depth === 0) startIndex = i;
+      depth++;
+    } else if (ch === '}') {
+      depth--;
+      if (depth === 0 && startIndex !== -1) {
+        const jsonBlock = rawText.slice(startIndex, i + 1);
+        try {
+          const candidate = JSON.parse(jsonBlock);
+          if (candidate.question && Array.isArray(candidate.options)) {
+            questionObjects.push(candidate);
+          }
+        } catch {}
+        startIndex = -1;
+      }
+    }
+  }
+
+  return questionObjects;
 }
