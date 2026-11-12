@@ -65,6 +65,11 @@ export default function RootLayout({
         <link rel="shortcut icon" href={`${basePath}/favicon.ico`} />
         <link rel="apple-touch-icon" href={`${basePath}/apple-touch-icon.png`} />
         <meta name="theme-color" content="#16A34A" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var m=false;var s=localStorage.getItem('greenlearn_is_mobile')||sessionStorage.getItem('greenlearn_is_mobile');if(s==='1'){m=true;}else{var ua=navigator.userAgent||'';var isUAMobile=/Android.*Mobile|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|webOS|Windows Phone/i.test(ua);var w=window.innerWidth||0;var h=window.innerHeight||0;var minDim=Math.min(w||9999,h||9999);var isCoarse=window.matchMedia&&window.matchMedia('(pointer: coarse)').matches;if(isUAMobile||(minDim<600&&(isCoarse||'ontouchstart' in window))||(w>0&&w<640)){m=true;}}if(m){document.documentElement.setAttribute('data-device','mobile');localStorage.setItem('greenlearn_is_mobile','1');sessionStorage.setItem('greenlearn_is_mobile','1');}}catch(e){}})();`,
+          }}
+        />
       </head>
       <body 
         suppressHydrationWarning

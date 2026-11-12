@@ -9,12 +9,18 @@ describe('useResponsiveLayout', () => {
 
   beforeEach(() => {
     vi.restoreAllMocks();
+    localStorage.clear();
+    sessionStorage.clear();
+    document.documentElement.removeAttribute('data-device');
   });
 
   afterEach(() => {
     window.innerWidth = originalInnerWidth;
     window.innerHeight = originalInnerHeight;
     window.matchMedia = originalMatchMedia;
+    localStorage.clear();
+    sessionStorage.clear();
+    document.documentElement.removeAttribute('data-device');
   });
 
   it('detects desktop layout when width is large with fine pointer', () => {
@@ -145,5 +151,40 @@ describe('useResponsiveLayout', () => {
 
     expect(result.current.isMobile).toBe(true);
     expect(result.current.breakpoint).toBe('mobile');
+  });
+
+  it('detects mobile layout on iPhone/Android User-Agent even if width temporarily reports 980px on reload', () => {
+    // Mobile browser reload artifact: innerWidth reports 980px before viewport meta stabilizes
+    window.innerWidth = 980;
+    window.innerHeight = 1400;
+
+    const originalUserAgent = navigator.userAgent;
+    Object.defineProperty(navigator, 'userAgent', {
+      value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+      configurable: true,
+    });
+
+    const { result } = renderHook(() => useResponsiveLayout());
+
+    expect(result.current.isMobile).toBe(true);
+    expect(result.current.isMobileUA).toBe(true);
+    expect(result.current.breakpoint).toBe('mobile');
+
+    Object.defineProperty(navigator, 'userAgent', {
+      value: originalUserAgent,
+      configurable: true,
+    });
+  });
+
+  it('hard-locks mobile layout when greenlearn_is_mobile was stored in previous session', () => {
+    localStorage.setItem('greenlearn_is_mobile', '1');
+    window.innerWidth = 412;
+    window.innerHeight = 915;
+
+    const { result } = renderHook(() => useResponsiveLayout());
+
+    expect(result.current.isMobile).toBe(true);
+    expect(result.current.isLockedMobile).toBe(true);
+    expect(document.documentElement.getAttribute('data-device')).toBe('mobile');
   });
 });

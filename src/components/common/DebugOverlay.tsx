@@ -92,6 +92,20 @@ export function DebugOverlay() {
             </div>
 
             <div className="flex items-center justify-between">
+              <span className="text-slate-400">Mobile UA:</span>
+              <span className={layout.isMobileUA ? 'text-emerald-400 font-semibold' : 'text-slate-400'}>
+                {String(layout.isMobileUA)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-slate-400">Locked Device:</span>
+              <span className={layout.isLockedMobile ? 'text-amber-300 font-semibold' : 'text-slate-400'}>
+                {layout.isLockedMobile ? 'mobile' : 'none'}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
               <span className="text-slate-400">innerWidth:</span>
               <span className="text-white font-semibold">{layout.windowWidth}px</span>
             </div>

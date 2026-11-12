@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `0ecb934`  
+> **Commit Hash:** `bdbd936`  
 > **Cập nhật lần cuối:** `2026-11-12`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -212,7 +212,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `DashboardPage` | `component` | [src/app/dashboard/page.tsx:L13-L229](file:////home/nhat/Documents/DUT/ViTudy/src/app/dashboard/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `Database` | `type` | [src/types/database.types.ts:L9-L321](file:////home/nhat/Documents/DUT/ViTudy/src/types/database.types.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DayStudyTime` | `type` | [src/services/StatsService.ts:L3-L7](file:////home/nhat/Documents/DUT/ViTudy/src/services/StatsService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `DebugOverlay` | `component` | [src/components/common/DebugOverlay.tsx:L7-L125](file:////home/nhat/Documents/DUT/ViTudy/src/components/common/DebugOverlay.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `DebugOverlay` | `component` | [src/components/common/DebugOverlay.tsx:L7-L139](file:////home/nhat/Documents/DUT/ViTudy/src/components/common/DebugOverlay.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DeleteAccount` | `component` | [src/components/profile/DeleteAccount.tsx:L23-L262](file:////home/nhat/Documents/DUT/ViTudy/src/components/profile/DeleteAccount.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DeskAction` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L20-L33](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DeskInviteNotification` | `type` | [src/services/SocialFriendService.ts:L21-L29](file:////home/nhat/Documents/DUT/ViTudy/src/services/SocialFriendService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -234,7 +234,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `getPurchasedItemIds` | `fn` | [src/services/MarketPurchaseStorage.ts:L8-L21](file:////home/nhat/Documents/DUT/ViTudy/src/services/MarketPurchaseStorage.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `GuestBanner` | `component` | [src/components/auth/GuestBanner.tsx:L12-L54](file:////home/nhat/Documents/DUT/ViTudy/src/components/auth/GuestBanner.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HeroSection` | `component` | [src/components/landing/HeroSection.tsx:L52-L238](file:////home/nhat/Documents/DUT/ViTudy/src/components/landing/HeroSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `HomePage` | `component` | [src/components/home/HomePage.tsx:L49-L1657](file:////home/nhat/Documents/DUT/ViTudy/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `HomePage` | `component` | [src/components/home/HomePage.tsx:L49-L1658](file:////home/nhat/Documents/DUT/ViTudy/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HostApprovalModal` | `component` | [src/components/social/HostApprovalModal.tsx:L14-L177](file:////home/nhat/Documents/DUT/ViTudy/src/components/social/HostApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_MARKET_ITEMS` | `component` | [src/data/marketMockData.ts:L24-L1124](file:////home/nhat/Documents/DUT/ViTudy/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_SPACES` | `component` | [src/data/mockSpaces.ts:L3-L332](file:////home/nhat/Documents/DUT/ViTudy/src/data/mockSpaces.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -273,8 +273,8 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `recordDocAccess` | `fn` | [src/hooks/useStorageManager.ts:L56-L63](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `recordPurchasedItemId` | `fn` | [src/services/MarketPurchaseStorage.ts:L26-L39](file:////home/nhat/Documents/DUT/ViTudy/src/services/MarketPurchaseStorage.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ResetPasswordPage` | `component` | [src/app/auth/reset/page.tsx:L10-L176](file:////home/nhat/Documents/DUT/ViTudy/src/app/auth/reset/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `ResponsiveLayoutState` | `type` | [src/hooks/useResponsiveLayout.ts:L5-L18](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `RootLayout` | `component` | [src/app/layout.tsx:L51-L85](file:////home/nhat/Documents/DUT/ViTudy/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ResponsiveLayoutState` | `type` | [src/hooks/useResponsiveLayout.ts:L5-L20](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `RootLayout` | `component` | [src/app/layout.tsx:L51-L90](file:////home/nhat/Documents/DUT/ViTudy/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `RotateTwoWay` | `component` | [src/components/icons/RotateTwoWay.tsx:L11-L29](file:////home/nhat/Documents/DUT/ViTudy/src/components/icons/RotateTwoWay.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `rowToDeskItem` | `fn` | [src/services/StudySpaceService.ts:L46-L77](file:////home/nhat/Documents/DUT/ViTudy/src/services/StudySpaceService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `savePetState` | `fn` | [src/hooks/usePetMascot.ts:L58-L73](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/usePetMascot.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -304,7 +304,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `UsePomodoroResult` | `type` | [src/hooks/usePomodoro.ts:L13-L21](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/usePomodoro.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useRealtimeMultiplayer` | `hook` | [src/hooks/useRealtimeMultiplayer.ts:L60-L502](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `UseRealtimeMultiplayerOptions` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L51-L58](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `useResponsiveLayout` | `hook` | [src/hooks/useResponsiveLayout.ts:L90-L145](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `useResponsiveLayout` | `hook` | [src/hooks/useResponsiveLayout.ts:L147-L215](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useSocialPresence` | `hook` | [src/hooks/useSocialPresence.ts:L10-L212](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useSocialPresence.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useStorageManager` | `hook` | [src/hooks/useStorageManager.ts:L65-L216](file:////home/nhat/Documents/DUT/ViTudy/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `viewport` | `const` | [src/app/layout.tsx:L9-L15](file:////home/nhat/Documents/DUT/ViTudy/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |

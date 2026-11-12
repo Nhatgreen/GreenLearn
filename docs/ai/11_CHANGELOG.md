@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-11-12 16:32 — main (Khóa Cứng Giao Diện Mobile Khi Reload Trên Điện Thoại - Rock-Solid Mobile Hard-Lock Engine)
+- **Task:** Khắc phục triệt để lỗi khi người dùng mở điện thoại rồi bấm tải lại trang (reload) thì giao diện bị lỗi/văng sang layout tablet thay vì giữ cứng giao diện điện thoại:
+  1. **Nguyên Nhân Gốc Rễ:**
+     - Trình duyệt di động (iOS Safari / Android Chrome) trong vài miligiây đầu khi bấm reload thường báo kích thước giả định chưa scale (980px) hoặc trả về độ phân giải vật lý `screen.width` (1080px/1440px trên Android) thay vì CSS pixels. Khi đó điều kiện `screenW < 600` bị fail và rơi vào breakpoint tablet (`sm:w-18`).
+     - Hook `useResponsiveLayout` trước đây chỉ tính toán 1 lần lúc mount và không bắt kịp lúc viewport ổn định vì trình duyệt không bắn sự kiện `resize` khi reload.
+     - Lỗi lớp CSS đảo ngược: khi `isMobile` là false trong quá trình static HTML build, các phần tử bị gán class `.mobile-hide-forced` khiến CSS media query ẩn luôn thanh Bottom Navigation bằng `!important`.
+  2. **Giải Pháp Kiến Trúc Khóa Cứng (Hard-Lock Engine):**
+     - **Tự động nhận diện thiết bị vật lý:** Kiểm tra User-Agent smartphone (`/Android.*Mobile|iPhone|iPod|Mobile/i`), `navigator.userAgentData?.mobile`, và đặc tính vật lý bất biến của smartphone `Math.min(w, h) < 600` (mọi smartphone có cạnh ngắn < 600px, trong khi tablet luôn >= 740px).
+     - **Khóa cứng qua Storage & Thẻ Root:** Lưu trạng thái `greenlearn_is_mobile = '1'` trong `localStorage`/`sessionStorage` và tự động gắn thuộc tính `data-device="mobile"` lên thẻ `<html>`.
+     - **Inline Script thực thi trước First Paint:** Nhúng đoạn script siêu nhẹ trong `<head>` của `RootLayout` (`src/app/layout.tsx`) để gắn ngay `html[data-device="mobile"]` trước khi DOM bắt đầu render, triệt tiêu 100% hiện tượng chớp nháy layout (FOUC).
+     - **Multi-Tick Settle Timers:** Bổ sung các nhịp settle (50ms, 150ms, 300ms, 600ms, 1000ms) sau khi component mount và lắng nghe sự kiện `pageshow`.
+     - **Hệ thống lớp CSS Responsive độc lập:** Đưa vào `.responsive-sidebar`, `.responsive-bottom-nav`, `.responsive-desk-table`, `.responsive-desk-cards`, `.responsive-mobile-menu-btn`, `.responsive-desktop-breadcrumb`, `.responsive-mobile-pb` hoạt động song song qua Media Query và selector `html[data-device="mobile"]`.
+     - **Cập nhật Debug Overlay (`?debug=1`):** Bổ sung hiển thị `Mobile UA` và `Locked Device` để kiểm tra độ tin cậy trực tiếp.
+  3. **Kiểm Thử & Đóng Gói:**
+     - `pnpm test`: 26/26 test suites passed, 135/135 tests passed (bổ sung 2 test mới cho reload artifact và storage hard-lock).
+     - `npx tsc --noEmit`: 0 lỗi.
+     - `pnpm run build:pages`: 15/15 static pages build pass, đóng dấu version query `?v=mwdcl4vn` vào 11 file HTML.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 16:15 — main (Đồng Bộ Các Bản Vá Từ Upstream ViTudy, Khắc Phục Lỗi Kết Nối AI & Trình Đọc Sách Cuộn Dọc)
 - **Task:** Cào và tích hợp toàn bộ các bản vá mới nhất từ upstream (`namtacozz/ViTudy`), đặc biệt khắc phục triệt để lỗi "AI kết nối thành công, test thành công nhưng khi dùng thì bị lỗi" theo yêu cầu của Sếp:
   1. **Khắc Phục Triệt Để Lỗi Kết Nối AI & Cắt Cụt Token (`src/lib/aiClient.ts` & `QuizTab.tsx`):**

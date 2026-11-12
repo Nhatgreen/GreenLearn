@@ -180,8 +180,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
     <div className="w-full min-h-screen bg-slate-50 text-slate-900 flex font-sans selection:bg-green-100 selection:text-[#166534]">
       {/* ================= LEFT SIDEBAR (Desktop: 256px, Tablet: 72px icon-only, Mobile: hidden) ================= */}
       <aside
-        className={`${
-          isMobile ? 'hidden mobile-hide-forced' : 'hidden sm:flex sm:w-18 lg:w-64'
+        className={`responsive-sidebar ${
+          isMobile ? 'hidden' : 'hidden sm:flex sm:w-18 lg:w-64'
         } flex-shrink-0 border-r border-slate-200 bg-white p-3 lg:p-5 flex-col justify-between min-h-screen sticky top-0 h-screen overflow-y-auto no-scrollbar shadow-2xs`}
       >
         <div className="flex flex-col">
@@ -570,7 +570,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
       )}
 
       {/* ================= MAIN CONTENT ================= */}
-      <main className={`flex-1 p-4 sm:p-6 lg:p-10 ${isMobile ? 'pb-24' : 'pb-10'} flex flex-col max-w-6xl mx-auto overflow-y-auto w-full`}>
+      <main className={`flex-1 p-4 sm:p-6 lg:p-10 ${isMobile ? 'pb-24' : 'pb-10'} responsive-mobile-pb flex flex-col max-w-6xl mx-auto overflow-y-auto w-full`}>
         {/* Sticky Top Bar (Cố định khi cuộn) */}
         <header className="sticky top-0 z-20 -mx-4 sm:-mx-6 lg:-mx-10 px-4 sm:px-6 lg:px-10 py-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between mb-5 sm:mb-6 shadow-2xs">
           {/* Hamburger (Mobile) + Breadcrumb */}
@@ -579,8 +579,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               type="button"
               onClick={() => setIsMobileDrawerOpen(true)}
               className={`${
-                isMobile ? 'flex mobile-flex-forced' : 'hidden sm:hidden mobile-hide-forced'
-              } p-2 -ml-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 touch-target cursor-pointer shrink-0`}
+                isMobile ? 'flex' : 'hidden sm:hidden'
+              } responsive-mobile-menu-btn p-2 -ml-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 touch-target cursor-pointer shrink-0`}
               aria-label="Mở danh mục điều hướng"
             >
               <Menu className="w-5 h-5 stroke-[2.2]" />
@@ -590,11 +590,11 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               <button
                 type="button"
                 onClick={() => setActiveNav('home')}
-                className={`${isMobile ? 'hidden' : 'hidden sm:inline'} hover:text-[#16A34A] transition-colors cursor-pointer shrink-0`}
+                className={`responsive-desktop-breadcrumb ${isMobile ? 'hidden' : 'hidden sm:inline'} hover:text-[#16A34A] transition-colors cursor-pointer shrink-0`}
               >
                 Không gian học tập
               </button>
-              <span className={`${isMobile ? 'hidden' : 'hidden sm:inline'} shrink-0`}>/</span>
+              <span className={`responsive-desktop-breadcrumb ${isMobile ? 'hidden' : 'hidden sm:inline'} shrink-0`}>/</span>
               <span className="text-slate-900 font-bold truncate max-w-[125px] sm:max-w-none">
                 {activeNav === 'home' && 'Trang chủ'}
                 {activeNav === 'my_desks' && 'Bàn học của tôi'}
@@ -622,14 +622,14 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 alt={pet.name}
                 className="w-5 h-5 object-contain shrink-0"
               />
-              <span className={isMobile ? 'hidden' : 'hidden sm:inline'}>
+              <span className={`responsive-desktop-breadcrumb ${isMobile ? 'hidden' : 'hidden sm:inline'}`}>
                 {pet.streakDays > 0
                   ? `Chuỗi ${pet.streakDays} ngày · ${isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}`
                   : isClaimedToday
                   ? 'Đã điểm danh hôm nay'
                   : 'Bắt đầu chuỗi đầu tiên hôm nay'}
               </span>
-              <span className={isMobile ? 'inline font-bold' : 'sm:hidden font-bold'}>
+              <span className={`responsive-mobile-menu-btn ${isMobile ? 'inline font-bold' : 'sm:hidden font-bold'}`}>
                 {pet.streakDays > 0 ? `${pet.streakDays}d` : (isClaimedToday ? 'Đã nhận' : 'Điểm danh')}
               </span>
             </button>
@@ -1023,7 +1023,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </div>
 
             {/* Desktop & Tablet Table */}
-            <div className={`${isMobile ? 'hidden mobile-hide-forced' : 'hidden sm:block'} w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden`}>
+            <div className={`responsive-desk-table ${isMobile ? 'hidden' : 'hidden sm:block'} w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden`}>
               <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
                 <div className="col-span-5">Tên bàn học</div>
                 <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
@@ -1092,7 +1092,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </div>
 
             {/* Mobile Vertical Cards */}
-            <div className={`${isMobile ? 'block mobile-show-forced' : 'hidden sm:hidden'} space-y-3`}>
+            <div className={`responsive-desk-cards ${isMobile ? 'block' : 'hidden sm:hidden'} space-y-3`}>
               {spaces.map((space, idx) => {
                 const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
                 const isDemo = space.name.includes('(Demo)');
@@ -1415,7 +1415,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               </div>
 
               {/* Desktop/Tablet Table Format */}
-              <div className={`${isMobile ? 'hidden mobile-hide-forced' : 'hidden sm:block'} w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden`}>
+              <div className={`responsive-desk-table ${isMobile ? 'hidden' : 'hidden sm:block'} w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden`}>
                 <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3.5 px-4 bg-slate-50/90 border-b border-slate-200">
                   <div className="col-span-5">Tên bàn học</div>
                   <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
@@ -1503,7 +1503,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               </div>
 
               {/* Mobile Vertical Card List — Triệt tiêu cuộn ngang */}
-              <div className={`${isMobile ? 'block mobile-show-forced' : 'hidden sm:hidden'} space-y-3`}>
+              <div className={`responsive-desk-cards ${isMobile ? 'block' : 'hidden sm:hidden'} space-y-3`}>
                 {displayedSpaces.length === 0 ? (
                   <div className="py-8 text-center text-xs text-slate-400 italic bg-white border border-slate-200 rounded-2xl">
                     Chưa có bàn học nào phù hợp với tìm kiếm
@@ -1590,8 +1590,9 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
       {/* ================= FIXED BOTTOM NAVIGATION BAR (<640px & Touch Mobile) ================= */}
       <nav
-        className={`fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe ${
-          isMobile ? 'flex mobile-flex-forced' : 'hidden sm:hidden mobile-hide-forced'
+        aria-label="Mobile Navigation"
+        className={`responsive-bottom-nav fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe ${
+          isMobile ? 'flex' : 'hidden sm:hidden'
         } items-center justify-around h-16 shadow-lg`}
       >
         <button

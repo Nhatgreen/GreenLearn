@@ -15,6 +15,8 @@ export interface ResponsiveLayoutState {
   orientation: 'portrait' | 'landscape';
   pointerType: 'coarse' | 'fine' | 'none';
   hasTouch: boolean;
+  isMobileUA: boolean;
+  isLockedMobile: boolean;
 }
 
 const DEFAULT_STATE: ResponsiveLayoutState = {
@@ -30,18 +32,48 @@ const DEFAULT_STATE: ResponsiveLayoutState = {
   orientation: 'landscape',
   pointerType: 'fine',
   hasTouch: false,
+  isMobileUA: false,
+  isLockedMobile: false,
 };
+
+function checkIsMobileUA(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent || '';
+  const isUA = /Android.*Mobile|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|webOS|Windows Phone/i.test(ua);
+  const isUAData = Boolean((navigator as any).userAgentData?.mobile);
+  return isUA || isUAData;
+}
+
+function checkStoredMobileLock(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return (
+      localStorage.getItem('greenlearn_is_mobile') === '1' ||
+      sessionStorage.getItem('greenlearn_is_mobile') === '1' ||
+      document.documentElement.getAttribute('data-device') === 'mobile'
+    );
+  } catch {
+    return false;
+  }
+}
 
 function computeLayout(): ResponsiveLayoutState {
   if (typeof window === 'undefined') {
     return DEFAULT_STATE;
   }
 
+  const isMobileUA = checkIsMobileUA();
+  const isLockedMobile = checkStoredMobileLock();
+
   const w = window.innerWidth;
   const h = window.innerHeight;
-  const screenW = window.screen?.width || w;
+  const rawScreenW = window.screen?.width || w;
   const screenH = window.screen?.height || h;
   const dpr = window.devicePixelRatio || 1;
+
+  // Converts physical hardware pixels (e.g. 1080/1440 on Android) to CSS pixels
+  const effectiveScreenW = Math.min(rawScreenW, dpr > 1 ? rawScreenW / dpr : rawScreenW);
+  const shortestSide = Math.min(w, h);
 
   // Media queries
   const isCoarse = window.matchMedia ? window.matchMedia('(pointer: coarse)').matches : false;
@@ -50,18 +82,26 @@ function computeLayout(): ResponsiveLayoutState {
   const isPortrait = isPortraitQuery || h >= w;
   const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-  // 1. MOBILE:
-  // - Viewport < 640px luôn là mobile
-  // - Hoặc màn hình cảm ứng (pointer: coarse) ở chiều dọc (portrait) với width < 768px hoặc screen.width < 600px
-  //   (Chống nhầm lẫn tablet layout trên các smartphone màn hình độ phân giải cao hoặc zoom hiển thị)
-  // - Hoặc thiết bị có touch ở chiều dọc và screen.width <= 500px
+  // Valid locked mobile: keeps phone locked across reloads without misclassifying tablets or desktops
+  const validLockedMobile = isLockedMobile && (isMobileUA || shortestSide < 600 || (isCoarse && w < 768));
+
+  // 1. MOBILE HARD-LOCK:
+  // - Smartphone User-Agent (iPhone, Android Mobile)
+  // - Valid mobile lock in sessionStorage/localStorage
+  // - Physically a phone: shortest side < 600px with touch/coarse pointer
+  // - Viewport < 640px
+  // - Coarse pointer + portrait with w < 768px or effective screen < 600px
+  // - Touch + portrait with effective screen <= 520px
   const isMobile = 
+    isMobileUA ||
+    validLockedMobile ||
+    ((hasTouch || isCoarse) && shortestSide < 600) ||
     w < 640 || 
-    (isCoarse && isPortrait && (w < 768 || screenW < 600)) ||
-    (hasTouch && isPortrait && screenW <= 500);
+    (isCoarse && isPortrait && (w < 768 || effectiveScreenW < 600 || rawScreenW < 600)) ||
+    (hasTouch && isPortrait && (effectiveScreenW <= 520 || rawScreenW <= 520));
 
   // 2. TABLET:
-  // - Không phải mobile, và viewport < 1024px (hoặc iPad/Tablet cảm ứng có width <= 1180px)
+  // Not mobile, and (viewport < 1024px or iPad/Tablet with coarse pointer and width <= 1180px)
   const isTablet = !isMobile && (w < 1024 || (isCoarse && w <= 1180));
 
   // 3. DESKTOP:
@@ -71,6 +111,21 @@ function computeLayout(): ResponsiveLayoutState {
     ? 'mobile' 
     : (isTablet ? 'tablet' : 'desktop');
 
+  // Persist lock or clean up on explicit desktop PC
+  try {
+    if (isMobile) {
+      localStorage.setItem('greenlearn_is_mobile', '1');
+      sessionStorage.setItem('greenlearn_is_mobile', '1');
+      document.documentElement.setAttribute('data-device', 'mobile');
+    } else if (isDesktop && !isMobileUA && !hasTouch && !isCoarse && w >= 1024) {
+      localStorage.removeItem('greenlearn_is_mobile');
+      sessionStorage.removeItem('greenlearn_is_mobile');
+      document.documentElement.removeAttribute('data-device');
+    }
+  } catch {
+    // Ignore storage errors in sandboxed environments
+  }
+
   return {
     isMobile,
     isTablet,
@@ -78,12 +133,14 @@ function computeLayout(): ResponsiveLayoutState {
     breakpoint,
     windowWidth: w,
     windowHeight: h,
-    screenWidth: screenW,
+    screenWidth: rawScreenW,
     screenHeight: screenH,
     devicePixelRatio: Number(dpr.toFixed(2)),
     orientation: isPortrait ? 'portrait' : 'landscape',
     pointerType: isCoarse ? 'coarse' : (isFine ? 'fine' : 'none'),
     hasTouch,
+    isMobileUA,
+    isLockedMobile,
   };
 }
 
@@ -98,6 +155,16 @@ export function useResponsiveLayout(): ResponsiveLayoutState {
     // Initial sync
     update();
 
+    // Multi-tick settle checks for mobile browsers when reloading
+    // Mobile browsers (Safari/Chrome) often report 980px or unsettled dimensions during early document load
+    const settleTimers = [
+      setTimeout(update, 50),
+      setTimeout(update, 150),
+      setTimeout(update, 300),
+      setTimeout(update, 600),
+      setTimeout(update, 1000),
+    ];
+
     let rafId: number | null = null;
     const debouncedUpdate = () => {
       if (rafId) cancelAnimationFrame(rafId);
@@ -108,6 +175,7 @@ export function useResponsiveLayout(): ResponsiveLayoutState {
 
     window.addEventListener('resize', debouncedUpdate, { passive: true });
     window.addEventListener('orientationchange', debouncedUpdate, { passive: true });
+    window.addEventListener('pageshow', debouncedUpdate, { passive: true });
 
     // Visual viewport listener for mobile virtual keyboard and pinch-zoom
     if (window.visualViewport) {
@@ -126,9 +194,11 @@ export function useResponsiveLayout(): ResponsiveLayoutState {
     }
 
     return () => {
+      settleTimers.forEach(clearTimeout);
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', debouncedUpdate);
       window.removeEventListener('orientationchange', debouncedUpdate);
+      window.removeEventListener('pageshow', debouncedUpdate);
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', debouncedUpdate);
       }

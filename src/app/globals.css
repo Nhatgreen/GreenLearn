@@ -75,8 +75,36 @@ html, body {
   min-width: 44px;
 }
 
-/* Responsive Breakpoint Helpers: kết hợp max-width và (pointer: coarse) */
-@media (max-width: 639.98px), ((max-width: 820px) and (pointer: coarse) and (orientation: portrait)) {
+/* ==========================================================================
+   ROCK-SOLID HARD-LOCKED MOBILE RESPONSIVE ENGINE (Fix Cứng Giao Diện Mobile)
+   Applied via Media Queries AND html[data-device="mobile"]
+   ========================================================================== */
+
+@media (max-width: 639.98px), 
+       ((max-width: 850px) and (pointer: coarse) and (orientation: portrait)),
+       ((max-height: 500px) and (pointer: coarse)) {
+  .responsive-sidebar {
+    display: none !important;
+  }
+  .responsive-bottom-nav {
+    display: flex !important;
+  }
+  .responsive-desk-table {
+    display: none !important;
+  }
+  .responsive-desk-cards {
+    display: block !important;
+  }
+  .responsive-mobile-menu-btn {
+    display: flex !important;
+  }
+  .responsive-desktop-breadcrumb {
+    display: none !important;
+  }
+  .responsive-mobile-pb {
+    padding-bottom: 6rem !important;
+  }
+
   .mobile-hide-forced {
     display: none !important;
   }
@@ -86,6 +114,39 @@ html, body {
   .mobile-flex-forced {
     display: flex !important;
   }
+}
+
+/* Hard-lock selector: unconditionally forces phone layout when data-device="mobile" is set */
+html[data-device="mobile"] .responsive-sidebar {
+  display: none !important;
+}
+html[data-device="mobile"] .responsive-bottom-nav {
+  display: flex !important;
+}
+html[data-device="mobile"] .responsive-desk-table {
+  display: none !important;
+}
+html[data-device="mobile"] .responsive-desk-cards {
+  display: block !important;
+}
+html[data-device="mobile"] .responsive-mobile-menu-btn {
+  display: flex !important;
+}
+html[data-device="mobile"] .responsive-desktop-breadcrumb {
+  display: none !important;
+}
+html[data-device="mobile"] .responsive-mobile-pb {
+  padding-bottom: 6rem !important;
+}
+
+html[data-device="mobile"] .mobile-hide-forced {
+  display: none !important;
+}
+html[data-device="mobile"] .mobile-show-forced {
+  display: block !important;
+}
+html[data-device="mobile"] .mobile-flex-forced {
+  display: flex !important;
 }
 
 /* Explicit class-based font enforcements */
