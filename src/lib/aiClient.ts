@@ -41,7 +41,15 @@ export const GEMINI_MODELS = [
 export const OPENAI_MODELS = [
   { id: 'gpt-4o-mini', name: 'GPT-4o Mini', tag: 'Khuyên dùng - Phản hồi nhanh & tiết kiệm chi phí' },
   { id: 'gpt-4o', name: 'GPT-4o', tag: 'Flagship - Trả lời xuất sắc và chi tiết nhất' },
-  { id: 'o3-mini', name: 'o3-mini', tag: 'Mô hình lý luận toán học & lập trình sâu' },
+  { id: 'gpt-5.6-terra', name: 'GPT-5.6 Terra', tag: 'Mạnh nhất, phù hợp bài toán nhiều bước' },
+  { id: 'gpt-5.6-luna', name: 'GPT-5.6 Luna', tag: 'Phản hồi sâu, xử lý tài liệu dài' },
+  { id: 'gpt-5.6-sol', name: 'GPT-5.6 Sol', tag: 'Phân tích cấu trúc và tổng hợp' },
+  { id: 'gpt-5.5', name: 'GPT-5.5', tag: 'Cân bằng tốc độ và độ chính xác' },
+  { id: 'gpt-5', name: 'GPT-5', tag: 'Đa dụng cho các môn học' },
+  { id: 'o3-mini', name: 'o3-mini', tag: 'Tối ưu cho Toán và lập trình' },
+  { id: 'o1', name: 'o1', tag: 'Suy luận từng bước chi tiết' },
+  { id: 'o1-mini', name: 'o1-mini', tag: 'Suy luận nhanh cho bài tập ngắn' },
+  { id: 'chatgpt-4o-latest', name: 'ChatGPT-4o Latest', tag: 'Bản cập nhật thường xuyên' },
   { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', tag: 'Đa nhiệm nâng cao' },
 ];
 
@@ -49,22 +57,27 @@ export const CHATGPT_MODEL_GROUPS = [
   {
     group: 'Siêu suy luận & Chuyên sâu',
     models: [
-      { id: 'o3-mini', name: 'o3-mini', desc: 'Lý luận toán học, khoa học & logic cao cấp' },
-      { id: 'o1', name: 'o1', desc: 'Suy luận nhiều bước chuyên sâu' },
-      { id: 'o1-mini', name: 'o1-mini', desc: 'Lý luận nhanh, tập trung toán & code' },
+      { id: 'gpt-5.6-terra', name: 'GPT-5.6 Terra', desc: 'Mạnh nhất, phù hợp bài toán nhiều bước' },
+      { id: 'gpt-5.6-luna', name: 'GPT-5.6 Luna', desc: 'Phản hồi sâu, xử lý tài liệu dài' },
+      { id: 'gpt-5.6-sol', name: 'GPT-5.6 Sol', desc: 'Phân tích cấu trúc và tổng hợp' },
+      { id: 'o3-mini', name: 'o3-mini', desc: 'Tối ưu cho Toán và lập trình' },
+      { id: 'o1', name: 'o1', desc: 'Suy luận từng bước chi tiết' },
     ],
   },
   {
     group: 'Cân bằng & Đa dụng',
     models: [
-      { id: 'gpt-4o', name: 'GPT-4o', desc: 'Toàn diện, xuất sắc giải thích khái niệm' },
-      { id: 'chatgpt-4o-latest', name: 'ChatGPT 4o Latest', desc: 'Bản cập nhật hội thoại mới nhất' },
+      { id: 'gpt-5.5', name: 'GPT-5.5', desc: 'Cân bằng tốc độ và độ chính xác' },
+      { id: 'gpt-5', name: 'GPT-5', desc: 'Đa dụng cho các môn học' },
+      { id: 'gpt-4o', name: 'GPT-4o', desc: 'Hiểu hình ảnh và văn bản' },
+      { id: 'chatgpt-4o-latest', name: 'ChatGPT-4o Latest', desc: 'Bản cập nhật thường xuyên' },
     ],
   },
   {
     group: 'Phản hồi nhanh & Tiết kiệm',
     models: [
-      { id: 'gpt-4o-mini', name: 'GPT-4o Mini', desc: 'Tốc độ cực nhanh, phù hợp hỏi nhanh đáp gọn' },
+      { id: 'gpt-4o-mini', name: 'GPT-4o Mini', desc: 'Phản hồi nhanh và tiết kiệm' },
+      { id: 'o1-mini', name: 'o1-mini', desc: 'Suy luận nhanh cho bài tập ngắn' },
     ],
   },
 ];
@@ -72,12 +85,13 @@ export const CHATGPT_MODEL_GROUPS = [
 export const PROVIDER_MODELS: Record<AiProvider, { id: string; name: string; tag: string }[]> = {
   byok_gemini: GEMINI_MODELS,
   byok_openai: OPENAI_MODELS,
-  oauth_chatgpt: [
-    { id: 'gpt-4o-mini', name: 'ChatGPT GPT-4o Mini', tag: 'Phản hồi nhanh, tối ưu hội thoại' },
-    { id: 'gpt-4o', name: 'ChatGPT GPT-4o', tag: 'Mô hình flagship tài khoản ChatGPT' },
-    { id: 'o3-mini', name: 'ChatGPT o3-mini', tag: 'Lý luận toán học & khoa học chuyên sâu' },
-    { id: 'chatgpt-4o-latest', name: 'ChatGPT 4o Latest', tag: 'Bản nâng cấp hội thoại mới nhất' },
-  ],
+  oauth_chatgpt: CHATGPT_MODEL_GROUPS.flatMap((group) =>
+    group.models.map((m) => ({
+      id: m.id,
+      name: m.name,
+      tag: m.desc,
+    }))
+  ),
   system: [
     { id: 'gpt-4o-mini', name: 'GreenLearn AI (Nhanh)', tag: 'Hỗ trợ giải đáp cốt lõi & tóm tắt' },
     { id: 'gemini-2.5-flash', name: 'GreenLearn AI (Đa năng)', tag: 'Phân tích tài liệu & công thức' },

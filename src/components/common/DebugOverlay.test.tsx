@@ -6,7 +6,7 @@ describe('DebugOverlay', () => {
   beforeEach(() => {
     localStorage.clear();
     delete (window as unknown as { location?: unknown }).location;
-    window.location = new URL('http://localhost:3000') as unknown as Location;
+    (window as unknown as { location: unknown }).location = new URL('http://localhost:3000');
     window.history.replaceState = vi.fn();
   });
 
@@ -20,7 +20,7 @@ describe('DebugOverlay', () => {
   });
 
   it('renders overlay when ?debug=1 is in URL query parameters', async () => {
-    window.location = new URL('http://localhost:3000/?debug=1') as unknown as Location;
+    (window as unknown as { location: unknown }).location = new URL('http://localhost:3000/?debug=1');
 
     render(<DebugOverlay />);
 

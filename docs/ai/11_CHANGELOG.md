@@ -4,6 +4,37 @@
 
 ---
 
+## 2026-11-12 10:15 — main (Cập Nhật Toàn Bộ Danh Mục Mô Hình AI: GPT-5.6, GPT-5, o3-mini & Thẻ Xem Trước Chi Tiết)
+- **Task:** Triển khai danh mục mô hình AI đầy đủ theo yêu cầu và ảnh chụp màn hình của Sếp:
+  1. **Cập nhật danh mục 11 mô hình ChatGPT & OpenAI (`src/lib/aiClient.ts`):**
+     - **Nhóm 1 - Siêu suy luận & Chuyên sâu (5 mô hình):**
+       - `GPT-5.6 Terra` (`gpt-5.6-terra`): Mạnh nhất, phù hợp bài toán nhiều bước.
+       - `GPT-5.6 Luna` (`gpt-5.6-luna`): Phản hồi sâu, xử lý tài liệu dài.
+       - `GPT-5.6 Sol` (`gpt-5.6-sol`): Phân tích cấu trúc và tổng hợp.
+       - `o3-mini` (`o3-mini`): Tối ưu cho Toán và lập trình.
+       - `o1` (`o1`): Suy luận từng bước chi tiết.
+     - **Nhóm 2 - Cân bằng & Đa dụng (4 mô hình):**
+       - `GPT-5.5` (`gpt-5.5`): Cân bằng tốc độ và độ chính xác.
+       - `GPT-5` (`gpt-5`): Đa dụng cho các môn học.
+       - `GPT-4o` (`gpt-4o`): Hiểu hình ảnh và văn bản.
+       - `ChatGPT-4o Latest` (`chatgpt-4o-latest`): Bản cập nhật thường xuyên.
+     - **Nhóm 3 - Phản hồi nhanh & Tiết kiệm (2 mô hình):**
+       - `GPT-4o Mini` (`gpt-4o-mini`): Phản hồi nhanh và tiết kiệm.
+       - `o1-mini` (`o1-mini`): Suy luận nhanh cho bài tập ngắn.
+     - Đồng bộ danh mục phẳng `PROVIDER_MODELS.oauth_chatgpt` và cập nhật `OPENAI_MODELS` cho tùy chọn BYOK cá nhân.
+  2. **Giao diện Modal Cài Đặt AI & Thẻ Xem Trước Chi Tiết (`src/components/hud/TopRightWallet.tsx`):**
+     - Đổi tên nút thành "Kiểm tra kết nối" kèm icon tia sét amber-500.
+     - Bổ sung thẻ xem trước mô hình (`activeModelInfo` preview card) nằm ngay dưới hàng chọn mô hình: hiển thị Tên mô hình (in đậm), ID mô hình (font monospace slate-400), và mô tả công năng chi tiết.
+     - Tự động gán mặc định `gpt-5.6-terra` khi chọn Đăng nhập ChatGPT nếu chưa có cấu hình trước đó.
+  3. **Kiểm thử & Tài liệu:**
+     - Bổ sung 4 unit tests trong `src/lib/aiClient.test.ts` kiểm thử toàn bộ 3 nhóm danh mục, 11 mô hình, cấu trúc mapping và khả năng gọi API với `gpt-5.6-terra`.
+     - Chạy `pnpm test`: 24/24 test files passed, 123/123 tests passed.
+     - `pnpm run build:pages`: Static export pass 14/14 trang thành công.
+     - Cập nhật quy chuẩn trong `AGENTS.md`.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 09:20 — main (Khắc Phục Lỗi Hiển Thị Tablet Layout Trên Điện Thoại Màn Dọc & Lớp Phủ Debug Responsive)
 - **Task:** Xử lý triệt để phản hồi của Sếp: "Lâu lâu trên điện thoại (màn dọc), trang hiển thị layout tablet (sidebar icon, bảng 3 cột) thay vì layout mobile":
   1. **Thẻ Meta Viewport Chuẩn & Bất Biến (`src/app/layout.tsx`):**

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { ByokStore } from '@/lib/byokStore';
 import { 
@@ -99,7 +99,13 @@ export function TopRightWallet() {
     if (savedModel) {
       setSelectedModel(savedModel);
     } else {
-      setSelectedModel(storedProvider === 'byok_gemini' ? 'gemini-2.5-flash' : 'gpt-4o-mini');
+      setSelectedModel(
+        storedProvider === 'byok_gemini'
+          ? 'gemini-2.5-flash'
+          : storedProvider === 'oauth_chatgpt'
+          ? 'gpt-5.6-terra'
+          : 'gpt-4o-mini'
+      );
     }
   }, []);
 
@@ -110,15 +116,31 @@ export function TopRightWallet() {
     setTestResultMessage(null);
 
     const availableModels = PROVIDER_MODELS[provider] || [];
-    const isCurrentModelValid = availableModels.some(m => m.id === selectedModel);
+    const isCurrentModelValid = availableModels.some((m) => m.id === selectedModel);
     if (!isCurrentModelValid) {
       if (provider === 'byok_gemini') {
         setSelectedModel('gemini-2.5-flash');
+      } else if (provider === 'oauth_chatgpt') {
+        setSelectedModel('gpt-5.6-terra');
       } else {
         setSelectedModel('gpt-4o-mini');
       }
     }
   };
+
+  // Chi tiết mô hình đang chọn để hiển thị thẻ xem trước
+  const activeModelInfo = useMemo(() => {
+    if (selectedProvider === 'oauth_chatgpt') {
+      for (const group of CHATGPT_MODEL_GROUPS) {
+        const found = group.models.find((m) => m.id === selectedModel);
+        if (found) return { id: found.id, name: found.name, desc: found.desc };
+      }
+    }
+    const list = PROVIDER_MODELS[selectedProvider] || [];
+    const found = list.find((m) => m.id === selectedModel);
+    if (found) return { id: found.id, name: found.name, desc: found.tag };
+    return { id: selectedModel, name: selectedModel, desc: '' };
+  }, [selectedProvider, selectedModel]);
 
   // Keyboard shortcut Esc
   useEffect(() => {
@@ -677,10 +699,29 @@ export function TopRightWallet() {
                     disabled={testConnectionStatus === 'testing'}
                     className="py-2 px-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 disabled:opacity-50 text-xs font-bold transition-all border border-slate-300 flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 shrink-0"
                   >
-                    <Zap className="w-3.5 h-3.5 text-[#16A34A]" />
-                    <span>{testConnectionStatus === 'testing' ? 'Đang đo...' : 'Kiểm tra key'}</span>
+                    <Zap className="w-3.5 h-3.5 text-amber-500" />
+                    <span>{testConnectionStatus === 'testing' ? 'Đang đo...' : 'Kiểm tra kết nối'}</span>
                   </button>
                 </div>
+
+                {/* Thẻ xem trước chi tiết mô hình đã chọn */}
+                {activeModelInfo && (
+                  <div className="p-3 bg-white rounded-xl border border-slate-200/90 shadow-2xs transition-all">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-bold text-slate-900 text-xs truncate">
+                        {activeModelInfo.name}
+                      </span>
+                      <span className="text-[11px] text-slate-400 font-mono shrink-0">
+                        {activeModelInfo.id}
+                      </span>
+                    </div>
+                    {activeModelInfo.desc && (
+                      <p className="text-[11px] text-slate-500 mt-1 leading-snug">
+                        {activeModelInfo.desc}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 {/* Kết quả kiểm tra */}
                 {testConnectionStatus === 'success' && testResultMessage && (

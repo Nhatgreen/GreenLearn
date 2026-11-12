@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `1d761cd`  
+> **Commit Hash:** `50b8a80`  
 > **Cập nhật lần cuối:** `2026-11-12`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -54,7 +54,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `MultiplayerBar` | `component` | [src/components/hud/MultiplayerBar.tsx:L20-L397](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/MultiplayerBar.tsx) | HUD cộng tác học nhóm thời gian thực: danh sách avatar, thả cảm xúc emoji |
 | `StickerEmojiPickerFlyout` | `component` | [src/components/hud/StickerEmojiPickerFlyout.tsx:L35-L718](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/StickerEmojiPickerFlyout.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `TopLeftNav` | `component` | [src/components/hud/TopLeftNav.tsx:L28-L397](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/TopLeftNav.tsx) | HUD góc trên-trái: chuyển đổi bàn học, tìm kiếm tài liệu, đồng bộ góc nhìn |
-| `TopRightWallet` | `component` | [src/components/hud/TopRightWallet.tsx:L56-L730](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/TopRightWallet.tsx) | HUD góc trên-phải: hiển thị số dư ViToken, chuỗi điểm danh streak, chọn model AI |
+| `TopRightWallet` | `component` | [src/components/hud/TopRightWallet.tsx:L56-L771](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/TopRightWallet.tsx) | HUD góc trên-phải: hiển thị số dư ViToken, chuỗi điểm danh streak, chọn model AI |
 | `VrFrameOverlay` | `component` | [src/components/hud/VrFrameOverlay.tsx:L5-L15](file:////home/nhat/Documents/DUT/ViTudy/src/components/hud/VrFrameOverlay.tsx) | Khung viền 4 góc và nhãn chế độ "Không gian học 2.5D" phong cách VR HUD |
 
 ### Modals & Workflows
@@ -101,7 +101,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 |---|---|---|---|
 | `AiProvider` | `type` | [src/lib/aiClient.ts:L15-L15](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `applyDiscordUrlMappings` | `fn` | [src/lib/discord/urlMappings.ts:L5-L39](file:////home/nhat/Documents/DUT/ViTudy/src/lib/discord/urlMappings.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `askAi` | `fn` | [src/lib/aiClient.ts:L373-L419](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `askAi` | `fn` | [src/lib/aiClient.ts:L387-L433](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `AskAiRequest` | `type` | [src/lib/aiClient.ts:L17-L25](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `AskAiResult` | `type` | [src/lib/aiClient.ts:L27-L31](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `base64UrlDecode` | `fn` | [src/lib/openaiOAuth.ts:L45-L59](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -111,17 +111,17 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `calculateNextReview` | `fn` | [src/lib/sm2.ts:L16-L58](file:////home/nhat/Documents/DUT/ViTudy/src/lib/sm2.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `calculateNextStageProgress` | `fn` | [src/lib/petHelpers.ts:L45-L71](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `calculatePetStage` | `fn` | [src/lib/petHelpers.ts:L10-L16](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `callDirectGemini` | `fn` | [src/lib/aiClient.ts:L219-L289](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `callDirectOpenAi` | `fn` | [src/lib/aiClient.ts:L294-L368](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `CHATGPT_MODEL_GROUPS` | `component` | [src/lib/aiClient.ts:L48-L70](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `callDirectGemini` | `fn` | [src/lib/aiClient.ts:L233-L303](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `callDirectOpenAi` | `fn` | [src/lib/aiClient.ts:L308-L382](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `CHATGPT_MODEL_GROUPS` | `component` | [src/lib/aiClient.ts:L56-L83](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `clearOpenAiOAuthSession` | `fn` | [src/lib/openaiOAuth.ts:L328-L331](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `clearPendingPkce` | `fn` | [src/lib/openaiOAuth.ts:L131-L137](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `clearSupabaseConfig` | `fn` | [src/lib/supabase.ts:L86-L94](file:////home/nhat/Documents/DUT/ViTudy/src/lib/supabase.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `DEFAULT_PET_NAME` | `component` | [src/lib/petHelpers.ts:L8-L8](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `DiscordAuthResult` | `type` | [src/lib/discord/sdk.ts:L3-L14](file:////home/nhat/Documents/DUT/ViTudy/src/lib/discord/sdk.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `DocumentOutlineNode` | `type` | [src/lib/nonAiEngine.ts:L45-L51](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `ensureValidOpenAiSession` | `fn` | [src/lib/aiClient.ts:L200-L214](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `exchangeOpenAiCode` | `fn` | [src/lib/aiClient.ts:L123-L198](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `ensureValidOpenAiSession` | `fn` | [src/lib/aiClient.ts:L214-L228](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `exchangeOpenAiCode` | `fn` | [src/lib/aiClient.ts:L137-L212](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `extractOpenAiJwtClaims` | `fn` | [src/lib/openaiOAuth.ts:L150-L192](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `extractOutlineAndRoadmap` | `fn` | [src/lib/nonAiEngine.ts:L272-L298](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán trích xuất tiêu đề dựng lộ trình học tương tác theo thời gian |
 | `Flashcard` | `type` | [src/lib/nonAiEngine.ts:L28-L33](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -159,7 +159,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `normalizeNFCAndTrim` | `fn` | [src/utils/textNormalization.ts:L15-L18](file:////home/nhat/Documents/DUT/ViTudy/src/utils/textNormalization.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `normalizeNFCPreserveWhitespace` | `fn` | [src/utils/textNormalization.ts:L10-L13](file:////home/nhat/Documents/DUT/ViTudy/src/utils/textNormalization.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_AUTHORIZE_URL` | `component` | [src/lib/openaiOAuth.ts:L5-L5](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `OPENAI_MODELS` | `component` | [src/lib/aiClient.ts:L41-L46](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `OPENAI_MODELS` | `component` | [src/lib/aiClient.ts:L41-L54](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_OAUTH_CLIENT_ID` | `component` | [src/lib/openaiOAuth.ts:L3-L3](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_OAUTH_REDIRECT_URI` | `component` | [src/lib/openaiOAuth.ts:L4-L4](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `OPENAI_TOKEN_URL` | `component` | [src/lib/openaiOAuth.ts:L6-L6](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -171,10 +171,10 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `PendingPkceState` | `type` | [src/lib/openaiOAuth.ts:L21-L25](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `PET_STORAGE_KEY` | `component` | [src/lib/petHelpers.ts:L4-L4](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `Point` | `type` | [src/utils/smartShape.ts:L12-L15](file:////home/nhat/Documents/DUT/ViTudy/src/utils/smartShape.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `PROVIDER_MODELS` | `component` | [src/lib/aiClient.ts:L72-L85](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `PROVIDER_MODELS` | `component` | [src/lib/aiClient.ts:L85-L99](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `QuizQuestion` | `type` | [src/lib/nonAiEngine.ts:L19-L26](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `recognizeSmartShape` | `fn` | [src/utils/smartShape.ts:L17-L175](file:////home/nhat/Documents/DUT/ViTudy/src/utils/smartShape.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
-| `refreshOpenAiSession` | `fn` | [src/lib/aiClient.ts:L87-L121](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `refreshOpenAiSession` | `fn` | [src/lib/aiClient.ts:L101-L135](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `resolvePetState` | `fn` | [src/lib/petHelpers.ts:L73-L128](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `ReviewQuality` | `type` | [src/lib/sm2.ts:L8-L8](file:////home/nhat/Documents/DUT/ViTudy/src/lib/sm2.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `RoadmapStep` | `type` | [src/lib/nonAiEngine.ts:L35-L43](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
@@ -186,7 +186,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `splitSentences` | `fn` | [src/lib/nonAiEngine.ts:L56-L62](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `startOpenAiPkceLogin` | `fn` | [src/lib/openaiOAuth.ts:L139-L148](file:////home/nhat/Documents/DUT/ViTudy/src/lib/openaiOAuth.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `summarizeWithTextRank` | `fn` | [src/lib/nonAiEngine.ts:L79-L120](file:////home/nhat/Documents/DUT/ViTudy/src/lib/nonAiEngine.ts) | Thuật toán TextRank & TF-IDF trích xuất tóm tắt nội dung không cần AI |
-| `testAiConnection` | `fn` | [src/lib/aiClient.ts:L424-L589](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
+| `testAiConnection` | `fn` | [src/lib/aiClient.ts:L438-L603](file:////home/nhat/Documents/DUT/ViTudy/src/lib/aiClient.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `ViewportTransform` | `type` | [src/lib/viewportCulling.ts:L9-L15](file:////home/nhat/Documents/DUT/ViTudy/src/lib/viewportCulling.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `VITUDY_STREAK_KEY` | `component` | [src/lib/petHelpers.ts:L6-L6](file:////home/nhat/Documents/DUT/ViTudy/src/lib/petHelpers.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 

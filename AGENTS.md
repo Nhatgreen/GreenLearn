@@ -111,7 +111,25 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
       1. Chọn nhà cung cấp: Google Gemini (Miễn phí từ Google AI Studio), OpenAI API (BYOK với khóa riêng `sk-...`), Đăng nhập ChatGPT (OAuth 2.0 PKCE không cần API key).
       2. Nhập thông tin xác thực tương ứng: API Key kèm link lấy key trực tiếp cho Gemini/OpenAI; luồng đăng nhập 2 bước kèm nút sao chép / dán URL callback cho ChatGPT OAuth.
       3. Chọn mô hình AI: Dropdown đồng bộ theo nhà cung cấp, phân nhóm trực quan theo công năng và độ ưu tiên.
-      4. Nút kiểm tra hoạt động (Kiểm tra key): Gửi truy vấn thực tế kiểm tra API và đo độ trễ mạng ms thời gian thực.
+      4. Nút kiểm tra hoạt động ("Kiểm tra kết nối"): Gửi truy vấn thực tế kiểm tra API/phiên OAuth và đo độ trễ mạng ms thời gian thực.
+    * **Danh mục mô hình ChatGPT & OpenAI đồng bộ (Full 11-Model Catalog):**
+      * **Nhóm 1 - Siêu suy luận & Chuyên sâu:**
+        - `GPT-5.6 Terra` (`gpt-5.6-terra`): Mạnh nhất, phù hợp bài toán nhiều bước.
+        - `GPT-5.6 Luna` (`gpt-5.6-luna`): Phản hồi sâu, xử lý tài liệu dài.
+        - `GPT-5.6 Sol` (`gpt-5.6-sol`): Phân tích cấu trúc và tổng hợp.
+        - `o3-mini` (`o3-mini`): Tối ưu cho Toán và lập trình.
+        - `o1` (`o1`): Suy luận từng bước chi tiết.
+      * **Nhóm 2 - Cân bằng & Đa dụng:**
+        - `GPT-5.5` (`gpt-5.5`): Cân bằng tốc độ và độ chính xác.
+        - `GPT-5` (`gpt-5`): Đa dụng cho các môn học.
+        - `GPT-4o` (`gpt-4o`): Hiểu hình ảnh và văn bản.
+        - `ChatGPT-4o Latest` (`chatgpt-4o-latest`): Bản cập nhật thường xuyên.
+      * **Nhóm 3 - Phản hồi nhanh & Tiết kiệm:**
+        - `GPT-4o Mini` (`gpt-4o-mini`): Phản hồi nhanh và tiết kiệm.
+        - `o1-mini` (`o1-mini`): Suy luận nhanh cho bài tập ngắn.
+    * **Thẻ xem trước chi tiết mô hình đã chọn (Active Model Preview Card):**
+      * Nằm ngay dưới hàng chọn mô hình và nút kiểm tra kết nối.
+      * Hiển thị trực quan: Tên mô hình (bên trái, font đậm), ID mô hình (bên phải, font monospace slate-400), và mô tả công năng chi tiết ở dòng dưới.
     * Toàn bộ khóa API và phiên ủy quyền được lưu trữ an toàn 100% trên trình duyệt cá nhân (localStorage qua `ByokStore`), bảo vệ quyền riêng tư tuyệt đối.
   * **Quy Chuẩn Thanh Toán VietQR & MBBank (SePay VietQR Standards):**
     * Sử dụng mã NAPAS BIN chính thức của MBBank: `970422` (hoặc `MB`) kèm template `compact2` để 100% ứng dụng ngân hàng và ví điện tử quét mã truy vấn thông tin thành công.
