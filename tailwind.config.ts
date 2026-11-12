@@ -6,6 +6,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        'landscape-phone': { raw: '(max-height: 500px) and (orientation: landscape)' },
+        'touch-device': { raw: '(pointer: coarse)' },
+      },
       fontFamily: {
         sans: ['var(--font-ui)', 'Open Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         serif: ['var(--font-serif)', 'Lora', 'Georgia', 'serif'],

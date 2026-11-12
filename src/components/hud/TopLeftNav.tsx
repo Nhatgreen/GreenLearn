@@ -144,7 +144,7 @@ export function TopLeftNav() {
               style={{ width: '24px', height: '24px', maxWidth: '24px', maxHeight: '24px' }}
             />
             <span 
-              className="text-sm sm:text-lg font-black tracking-tight select-none leading-none"
+              className="text-sm sm:text-lg font-black tracking-tight select-none leading-none hidden md:inline landscape-phone:hidden"
             >
               <span className="text-[#16A34A]">Green</span>
               <span className="text-[#242D3D]">Learn</span>
@@ -159,7 +159,7 @@ export function TopLeftNav() {
             className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-bold text-slate-900 hover:text-black transition-colors px-1 py-0.5 rounded-lg cursor-pointer"
           >
             <BookMarked className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-800 stroke-[2.4]" />
-            <span className="max-w-[85px] sm:max-w-[220px] truncate">{activeSpace.name}</span>
+            <span className="max-w-[70px] sm:max-w-[220px] truncate">{activeSpace.name}</span>
             <ChevronDown className="w-3.5 h-3.5 text-slate-500 stroke-[2.4]" />
           </button>
 
@@ -290,7 +290,7 @@ export function TopLeftNav() {
             className="flex items-center gap-1 px-2 py-1 rounded-lg bg-green-50 hover:bg-green-100 text-[#16A34A] border border-green-200 text-xs font-bold transition-all cursor-pointer active:scale-95 shadow-2xs"
           >
             <Share2 className="w-3.5 h-3.5 stroke-[2.4]" />
-            <span className="hidden sm:inline">Mời bạn</span>
+            <span className="hidden md:inline landscape-phone:hidden">Mời bạn</span>
             {isMultiplayerConnected && (
               <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-ping" />
             )}

@@ -91,7 +91,7 @@ export function BottomLeftKnowledge() {
   const [roomCodeInput, setRoomCodeInput] = useState('');
   const [roomCodeError, setRoomCodeError] = useState('');
 
-  // Lắng nghe sự kiện mở modal mời từ TopLeftNav hoặc các vị trí khác
+  // Lắng nghe sự kiện mở modal mời và upload từ menu "⋯" hoặc các vị trí khác
   useEffect(() => {
     const handleOpenInvite = () => {
       if (!isMultiplayerConnected) {
@@ -99,8 +99,18 @@ export function BottomLeftKnowledge() {
       }
       setIsShareModalOpen(true);
     };
+    const handleTriggerUpload = () => {
+      fileInputRef.current?.click();
+    };
+
     window.addEventListener('greenlearn:open-invite-modal', handleOpenInvite);
-    return () => window.removeEventListener('greenlearn:open-invite-modal', handleOpenInvite);
+    window.addEventListener('greenlearn:open-share-modal', handleOpenInvite);
+    window.addEventListener('greenlearn:trigger-upload', handleTriggerUpload);
+    return () => {
+      window.removeEventListener('greenlearn:open-invite-modal', handleOpenInvite);
+      window.removeEventListener('greenlearn:open-share-modal', handleOpenInvite);
+      window.removeEventListener('greenlearn:trigger-upload', handleTriggerUpload);
+    };
   }, [isMultiplayerConnected, activeSpace.id, multiplayerPermission, startHostingRoom]);
 
   // Esc listener for ShareModal
@@ -441,13 +451,13 @@ export function BottomLeftKnowledge() {
         onChange={handleFileSelect}
       />
 
-      {/* 1. Button: Tải lên tài liệu (Hài hòa với thanh dock) */}
+      {/* 1. Button: Tải lên tài liệu (Hài hòa với thanh dock, ẩn trên mobile/landscape phone vì đã đưa vào menu ...) */}
       <button
         data-tour="upload-btn"
         disabled={isParsingDoc}
         onClick={() => fileInputRef.current?.click()}
         title={isParsingDoc ? "Đang trích xuất tài liệu..." : "Tải lên tài liệu (PDF, Word, Text, Ảnh...)"}
-        className="w-8.5 h-8.5 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white hover:bg-green-50/80 text-[#16A34A] shadow-sm border border-slate-300 hover:border-green-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group disabled:opacity-75 disabled:cursor-wait"
+        className="hidden md:flex landscape-phone:hidden w-8.5 h-8.5 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white hover:bg-green-50/80 text-[#16A34A] shadow-sm border border-slate-300 hover:border-green-300 items-center justify-center transition-all active:scale-95 cursor-pointer group disabled:opacity-75 disabled:cursor-wait"
       >
         {isParsingDoc ? (
           <Loader2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#16A34A] animate-spin" />
@@ -482,7 +492,7 @@ export function BottomLeftKnowledge() {
         </div>
       )}
 
-      {/* 3. Button: Mời bạn bè & Supabase (Có đèn tín hiệu trạng thái) */}
+      {/* 3. Button: Mời bạn bè & Supabase (ẩn trên mobile/landscape phone vì đã đưa vào menu ...) */}
       <button
         onClick={() => {
           if (!isMultiplayerConnected) {
@@ -491,7 +501,7 @@ export function BottomLeftKnowledge() {
           setIsShareModalOpen(true);
         }}
         title="Mời bạn cùng học (Multiplayer Realtime)"
-        className="w-8.5 h-8.5 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white hover:bg-slate-100 text-slate-800 shadow-sm border border-slate-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group relative"
+        className="hidden md:flex landscape-phone:hidden w-8.5 h-8.5 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white hover:bg-slate-100 text-slate-800 shadow-sm border border-slate-300 items-center justify-center transition-all active:scale-95 cursor-pointer group relative"
       >
         <Share2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-slate-800 stroke-[2.4] group-hover:scale-110 transition-transform" />
         {isMultiplayerConnected ? (

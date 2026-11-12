@@ -27,10 +27,11 @@ export function BottomRightToolkit() {
   } = useStudySpace();
 
   const isFocusMode = !!focusedItemId;
-  // Minimize minimap by default on screens < 640px, visible on desktop
+  // Minimize minimap by default on mobile / landscape-phone (height <= 500px), visible on desktop & tablet
   const [isMinimapVisible, setIsMinimapVisible] = useState(() => {
     if (typeof window !== 'undefined') {
-      return window.innerWidth >= 640;
+      const isSmallScreen = window.innerWidth < 768 || window.innerHeight <= 500;
+      return !isSmallScreen;
     }
     return true;
   });
@@ -77,7 +78,7 @@ export function BottomRightToolkit() {
       {/* Navigation & Zoom Controls Bar (+30% size on desktop, compact on mobile) */}
       <div 
         data-tour="wasd-hint"
-        className="flex items-center gap-1 sm:gap-2 bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl px-2 py-1.5 sm:px-3 sm:py-2 shadow-sm backdrop-blur-md text-slate-900"
+        className="flex items-center gap-1 sm:gap-2 bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl px-1.5 py-1 sm:px-3 sm:py-2 shadow-sm backdrop-blur-md text-slate-900"
       >
         {/* Nút bật chế độ Xoay bàn học (nằm bên trái thanh zoom) */}
         <button
@@ -90,15 +91,6 @@ export function BottomRightToolkit() {
           }`}
         >
           <RotateTwoWay className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />
-        </button>
-
-        {/* Nút Căn chỉnh thông minh / Snap bàn học ngay ngắn */}
-        <button
-          title="Căn chỉnh bố cục bàn học ngay ngắn (Snap Grid)"
-          onClick={() => tidyUpDesk?.()}
-          className="p-1.5 sm:p-2 text-slate-800 hover:text-black hover:bg-slate-100 rounded-lg sm:rounded-xl transition-colors cursor-pointer"
-        >
-          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />
         </button>
 
         <div className="w-[1px] h-4 sm:h-5 bg-slate-200" />

@@ -153,3 +153,43 @@ nextjs-portal,
 .anim-verdict-pop {
   animation: verdictPopIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+/* Landscape Phone Layout Optimizations (@media (max-height: 500px) and (orientation: landscape)) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .landscape-fixed-toolbar {
+    position: fixed !important;
+    left: max(env(safe-area-inset-left, 0px) + 4px, 4px) !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    max-height: calc(100dvh - 16px) !important;
+    overflow-y: auto !important;
+    overflow-x: visible !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .landscape-fixed-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .landscape-subpanel {
+    max-height: calc(100dvh - 20px) !important;
+    overflow-y: auto !important;
+    top: 8px !important;
+    transform: none !important;
+  }
+
+  .landscape-header-offset {
+    left: max(env(safe-area-inset-left, 0px) + 56px, 56px) !important;
+  }
+
+  .landscape-hide-text {
+    display: none !important;
+  }
+
+  .landscape-compact-btn {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+  }
+}

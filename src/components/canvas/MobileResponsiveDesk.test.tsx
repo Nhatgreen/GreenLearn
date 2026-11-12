@@ -73,14 +73,15 @@ describe('Mobile & Tablet Canvas Responsiveness', () => {
       expect(reopenBtn.getAttribute('title')).not.toContain('Phím M');
     });
 
-    it('hides "Phím M" hotkey label inside Minimap on screens < 640px', () => {
+    it('hides "Phím M" hotkey label inside Minimap on screens < 640px and touch devices', () => {
       render(<Minimap isVisible={true} />);
       const mapTitle = screen.getByText(/BẢN ĐỒ/i);
       expect(mapTitle).toBeInTheDocument();
-      // The (Phím M) text should have class hidden sm:inline
+      // The (Phím M) text should have class hidden lg:inline landscape-phone:hidden
       const hotkeySpan = mapTitle.querySelector('span');
       expect(hotkeySpan).toHaveClass('hidden');
-      expect(hotkeySpan).toHaveClass('sm:inline');
+      expect(hotkeySpan).toHaveClass('lg:inline');
+      expect(hotkeySpan).toHaveClass('landscape-phone:hidden');
     });
 
     it('renders compact minimap dimensions on 390px mobile', () => {
@@ -90,10 +91,40 @@ describe('Mobile & Tablet Canvas Responsiveness', () => {
       expect(minimapBox.style.height).toBe('90px');
     });
 
-    it('handles 390px landscape orientation (844x390)', () => {
+    it('handles 390x844 portrait orientation', () => {
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 390 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 844 });
+      render(<BottomRightToolkit />);
+      // Minimap hidden by default on mobile portrait
+      expect(screen.getByTitle('Mở bản đồ bàn học')).toBeInTheDocument();
+      expect(screen.getByTitle('Thu nhỏ')).toBeInTheDocument();
+      expect(screen.getByTitle('Phóng to')).toBeInTheDocument();
+    });
+
+    it('handles 667x375 landscape orientation', () => {
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 667 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 375 });
+      render(<BottomRightToolkit />);
+      // Minimap hidden by default on landscape phone (height <= 500)
+      expect(screen.getByTitle('Mở bản đồ bàn học')).toBeInTheDocument();
+      expect(screen.getByTitle('Thu nhỏ')).toBeInTheDocument();
+      expect(screen.getByTitle('Phóng to')).toBeInTheDocument();
+    });
+
+    it('handles 844x390 landscape orientation', () => {
       Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 844 });
       Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 390 });
       render(<BottomRightToolkit />);
+      expect(screen.getByTitle('Mở bản đồ bàn học')).toBeInTheDocument();
+      expect(screen.getByTitle('Thu nhỏ')).toBeInTheDocument();
+      expect(screen.getByTitle('Phóng to')).toBeInTheDocument();
+    });
+
+    it('handles 915x412 landscape orientation', () => {
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 915 });
+      Object.defineProperty(window, 'innerHeight', { writable: true, configurable: true, value: 412 });
+      render(<BottomRightToolkit />);
+      expect(screen.getByTitle('Mở bản đồ bàn học')).toBeInTheDocument();
       expect(screen.getByTitle('Thu nhỏ')).toBeInTheDocument();
       expect(screen.getByTitle('Phóng to')).toBeInTheDocument();
     });

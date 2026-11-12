@@ -227,7 +227,7 @@ export const Minimap = React.memo(function Minimap({ isVisible = true, onClose }
       </div>
 
       <div className="absolute bottom-1.5 left-2 text-[9.5px] font-mono font-bold text-slate-700 pointer-events-none tracking-wider select-none">
-        BẢN ĐỒ<span className="hidden sm:inline"> (Phím M)</span>
+        BẢN ĐỒ<span className="hidden lg:inline landscape-phone:hidden"> (Phím M)</span>
       </div>
     </div>
   );

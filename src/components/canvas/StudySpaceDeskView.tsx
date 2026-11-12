@@ -93,7 +93,7 @@ export default function StudySpaceDeskView() {
       {/* ================= 1. TOP-LEFT NAV HUD (ViTudy | Tên bàn học | Search) ================= */}
       <div 
         className={clsx(
-          "fixed top-1 left-1 z-40 transition-transform duration-300 ease-out pointer-events-auto",
+          "fixed top-1 left-1 landscape-phone:left-[56px] landscape-header-offset z-40 transition-transform duration-300 ease-out pointer-events-auto",
           isFocusMode && !showTopLeftInFocus ? "-translate-y-[calc(100%+12px)]" : "translate-y-0"
         )}
       >

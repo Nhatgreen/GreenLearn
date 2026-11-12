@@ -232,10 +232,17 @@ export function LeftCreationBar() {
   })();
 
   return (
-    <div className="relative flex flex-col items-center gap-1.5 pointer-events-auto select-none">
-      {/* Miro-style Vertical Tool Island (Compact on mobile <640px, full size on desktop) */}
-      <div className="bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg backdrop-blur-md flex flex-col items-center gap-1 relative">
-        {/* Select (Cursor) Tool */}
+    <>
+      {/* Miro-style Vertical Tool Island: Unified flex column with fixed position, safe-area, 40x40px buttons & 4px gap */}
+      <div 
+        data-tour="left-toolbar-island"
+        className="fixed left-1 sm:left-2 top-1/2 -translate-y-1/2 z-40 bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg backdrop-blur-md flex flex-col items-center gap-1 pointer-events-auto select-none max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-fixed-toolbar"
+        style={{
+          maxHeight: 'calc(100dvh - 16px)',
+          scrollbarWidth: 'none',
+        }}
+      >
+        {/* 1. Select (Cursor) Tool */}
         <button
           title="Con trỏ điều hướng (Kéo di chuyển bàn / Chọn vật thể)"
           onClick={() => {
@@ -244,16 +251,16 @@ export function LeftCreationBar() {
             setIsPenFlyoutOpen(false);
             setIsMoreToolsOpen(false);
           }}
-          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             activeTool === 'cursor'
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <MousePointer className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${activeTool === 'cursor' ? 'text-white' : 'text-slate-900'}`} />
+          <MousePointer className={`w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4] ${activeTool === 'cursor' ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
-        {/* Sticky Note Button (+ Note with vertical color flyout) */}
+        {/* 2. Sticky Note Button (+ Note with vertical color flyout) */}
         <button
           title="Tạo giấy ghi chú (Bấm để chọn màu & kéo thả kích thước)"
           onClick={() => {
@@ -261,16 +268,16 @@ export function LeftCreationBar() {
             setIsPenFlyoutOpen(false);
             setIsMoreToolsOpen(false);
           }}
-          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             activeTool === 'create_note' || isNoteFlyoutOpen
               ? 'bg-[#16A34A] text-white border border-[#15803D] shadow-xs'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <StickyNote className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${activeTool === 'create_note' || isNoteFlyoutOpen ? 'text-white' : 'text-slate-900'}`} />
+          <StickyNote className={`w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4] ${activeTool === 'create_note' || isNoteFlyoutOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
-        {/* Unified Pen Button with Miro-style Full Overlay Flyout */}
+        {/* 3. Unified Pen Button with Miro-style Full Overlay Flyout */}
         <button
           data-tour="tool-pen"
           title="Bộ công cụ bút vẽ, dạ quang, vẽ thông minh & tẩy (Bấm để mở bảng chọn)"
@@ -282,7 +289,7 @@ export function LeftCreationBar() {
               setActiveTool('pen');
             }
           }}
-          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isDrawingActive || isPenFlyoutOpen
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
@@ -294,7 +301,7 @@ export function LeftCreationBar() {
         {/* Gạch chia vùng NẰM TRÊN nút + */}
         <div className="w-5 sm:w-7 h-[1px] bg-slate-200 my-0.5" />
 
-        {/* Nút + Công cụ mở rộng (More tools) - nằm dưới pen và trên lock */}
+        {/* 4. Nút + Công cụ mở rộng (More tools) - nằm dưới pen và trên lock */}
         <button
           title="Công cụ mở rộng (Shapes, Stickers, Code, Table, Mind map...)"
           onClick={() => {
@@ -302,309 +309,316 @@ export function LeftCreationBar() {
             setIsNoteFlyoutOpen(false);
             setIsPenFlyoutOpen(false);
           }}
-          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isMoreToolsOpen
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <Plus className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${isMoreToolsOpen ? 'text-white' : 'text-slate-900'}`} />
+          <Plus className={`w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4] ${isMoreToolsOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
         {/* Gạch chia vùng NẰM DƯỚI nút + */}
         <div className="w-5 sm:w-7 h-[1px] bg-slate-200 my-0.5" />
 
-        {/* Lock Pan View Toggle */}
+        {/* 5. Lock Pan View Toggle */}
         <button
           title={isPanLocked ? 'Mở khóa di chuyển bàn' : 'Khóa góc nhìn bàn học'}
           onClick={togglePanLock}
-          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isPanLocked
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          {isPanLocked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" /> : <Unlock className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />}
+          {isPanLocked ? <Lock className="w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4]" /> : <Unlock className="w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4]" />}
         </button>
 
-        {/* ================= VERTICALLY CENTERED NOTE COLOR FLYOUT ================= */}
-        {isNoteFlyoutOpen && (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-white border border-slate-300 rounded-2xl p-2 shadow-xl flex flex-col gap-2 z-50 animate-fade-in">
-            {stickyColors.map(c => (
-              <button
-                key={c.value}
-                title={`Tạo note màu ${c.label} (Kéo thả vùng để chọn kích thước)`}
-                onClick={() => handleSelectNoteColor(c.value)}
-                style={{ backgroundColor: c.value }}
-                className="w-7 h-7 rounded-lg border border-black/15 shadow-xs hover:scale-125 transition-transform cursor-pointer relative group flex items-center justify-center"
-              >
-                <div className="w-2 h-2 rounded-full bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-            ))}
-          </div>
-        )}
+        {/* Gạch chia vùng ngăn cách công cụ vẽ và bộ nút Undo/Redo */}
+        <div className="w-5 sm:w-7 h-[1px] bg-slate-200 my-0.5" />
 
-        {/* ================= VERTICALLY CENTERED PEN SUB-TOOLBAR FLYOUT ================= */}
-        {isPenFlyoutOpen && (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-white border border-slate-300 rounded-2xl p-2 shadow-2xl flex flex-col items-center gap-2 z-50 animate-fade-in min-w-[46px]">
-            {/* Tool 1: Pen (Bút vẽ thường) */}
-            <button
-              title="Bút vẽ tự do (Pen)"
-              onClick={() => setActiveTool('pen')}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                activeTool === 'pen'
-                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
-                  : 'text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <PenTool className="w-4.5 h-4.5 stroke-[2.4]" />
-            </button>
-
-            {/* Tool 2: Highlighter (Bút dạ quang) */}
-            <button
-              title="Bút dạ quang đánh dấu (Highlighter)"
-              onClick={() => setActiveTool('highlighter')}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                activeTool === 'highlighter'
-                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
-                  : 'text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Highlighter className="w-4.5 h-4.5 stroke-[2.4]" />
-            </button>
-
-            {/* Tool 3: Smart Shape (Vẽ thông minh) */}
-            <button
-              title="Vẽ thông minh: Tự động uốn nắn thành hình tròn, vuông, elip, tam giác hoàn hảo"
-              onClick={() => setActiveTool('smart_shape')}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                activeTool === 'smart_shape'
-                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
-                  : 'text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Sparkles className="w-4.5 h-4.5 stroke-[2.4]" />
-            </button>
-
-            {/* Tool 4: Click Eraser (Tẩy chọn nét) */}
-            <button
-              title="Tẩy chạm: Nhấp vào nét vẽ để xóa"
-              onClick={() => setActiveTool('eraser')}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                activeTool === 'eraser'
-                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
-                  : 'text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <Eraser className="w-4.5 h-4.5 stroke-[2.4]" />
-            </button>
-
-            {/* Tool 5: Area Eraser (Tẩy vùng kéo chọn) */}
-            <button
-              title="Tẩy vùng: Kéo khung chữ nhật để xóa toàn bộ nét vẽ bên trong"
-              onClick={() => setActiveTool('area_eraser')}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                activeTool === 'area_eraser'
-                  ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
-                  : 'text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              <BoxSelect className="w-4.5 h-4.5 stroke-[2.4]" />
-            </button>
-
-            <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
-
-            {/* Stroke Width Selector (3 kích thước: S, M, L) */}
-            <div className="flex flex-col items-center gap-1.5 py-0.5">
-              <button
-                title="Nét mảnh (Nhỏ)"
-                onClick={() => setPenWidthLevel('small')}
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                  penWidthLevel === 'small' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
-                }`}
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-900" />
-              </button>
-              <button
-                title="Nét vừa (Trung bình)"
-                onClick={() => setPenWidthLevel('medium')}
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                  penWidthLevel === 'medium' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
-                }`}
-              >
-                <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
-              </button>
-              <button
-                title="Nét dày (Lớn)"
-                onClick={() => setPenWidthLevel('large')}
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                  penWidthLevel === 'large' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
-                }`}
-              >
-                <div className="w-3.5 h-3.5 rounded-full bg-slate-900" />
-              </button>
-            </div>
-
-            <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
-
-            {/* Single Current Color Button with Compact Popup (Ảnh 1) */}
-            <div className="relative pb-0.5">
-              <button
-                title="Bấm để đổi màu nét vẽ (Mở bảng 6 màu)"
-                onClick={() => setIsPenColorPickerOpen(!isPenColorPickerOpen)}
-                style={{ backgroundColor: penColor }}
-                className="w-7 h-7 rounded-full border-2 border-white ring-2 ring-[#16A34A] shadow-xs hover:scale-115 transition-transform cursor-pointer flex items-center justify-center"
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
-              </button>
-
-              {/* Flyout 6-Color Palette Grid (3 columns x 2 rows) */}
-              {isPenColorPickerOpen && (
-                <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-white border border-slate-300 rounded-2xl p-2 shadow-2xl backdrop-blur-md grid grid-cols-3 gap-2 z-50 animate-fade-in w-28">
-                  {penColors.map(c => (
-                    <button
-                      key={c.value}
-                      title={c.label}
-                      onClick={() => {
-                        setPenColor(c.value);
-                        setIsPenColorPickerOpen(false);
-                      }}
-                      style={{ backgroundColor: c.value }}
-                      className={`w-7 h-7 rounded-full border border-black/15 transition-transform hover:scale-115 cursor-pointer flex items-center justify-center ${
-                        penColor === c.value ? 'ring-2 ring-[#16A34A] scale-105' : ''
-                      }`}
-                    >
-                      {penColor === c.value && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-white shadow-xs" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
-
-            {/* Toggle Finger Drawing (Vẽ bằng ngón tay / Palm Rejection) */}
-            <button
-              title={
-                isFingerDrawingEnabled
-                  ? 'Vẽ bằng ngón tay: Đang BẬT (Chạm 1 ngón để vẽ, 2 ngón để zoom/pan. Bấm để chuyển sang chỉ vẽ bằng bút Stylus)'
-                  : 'Vẽ bằng ngón tay: Đang TẮT (Chế độ Stylus Only: Ngón tay chỉ dùng để pan/zoom, chỉ vẽ bằng bút cảm ứng)'
-              }
-              onClick={() => setIsFingerDrawingEnabled(!isFingerDrawingEnabled)}
-              className={`w-7 h-7 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
-                isFingerDrawingEnabled
-                  ? 'bg-green-50 text-[#16A34A] border border-green-300 font-bold'
-                  : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600 border border-slate-200'
-              }`}
-            >
-              <Hand className="w-4 h-4 stroke-[2.2]" />
-              <span
-                className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border border-white ${
-                  isFingerDrawingEnabled ? 'bg-[#16A34A]' : 'bg-slate-300'
-                }`}
-              />
-            </button>
-          </div>
-        )}
-
-        {/* ================= MORE TOOLS FLYOUT (Miro-style, Zero Search) ================= */}
-        {isMoreToolsOpen && (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-3 bg-white border border-slate-300 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 z-50 animate-fade-in w-72 text-slate-900 select-none">
-            <div className="flex items-center justify-between px-2 pt-1 pb-2 border-b border-slate-100 mb-1">
-              <span className="text-xs font-black text-slate-900 tracking-wide uppercase">
-                Công cụ mở rộng
-              </span>
-              <button
-                onClick={() => setIsMoreToolsOpen(false)}
-                className="text-slate-400 hover:text-slate-700 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-1">
-              {extraTools.map((tool) => (
-                <button
-                  key={tool.id}
-                  onClick={() => handleSelectExtraTool(tool.id)}
-                  className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 transition-all text-left cursor-pointer group"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-white group-hover:shadow-xs border border-slate-200/60 flex items-center justify-center text-slate-800 transition-all flex-shrink-0">
-                    {tool.icon}
-                  </div>
-                  <div className="overflow-hidden">
-                    <div className="text-xs font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors leading-tight">
-                      {tool.title}
-                    </div>
-                    <div className="text-[11px] text-slate-500 truncate leading-tight mt-0.5">
-                      {tool.desc}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Sticker, Emoji & GIF Picker Flyout (Matches Image 1) */}
-        <StickerEmojiPickerFlyout
-          isOpen={isStickerPickerOpen}
-          onClose={() => setIsStickerPickerOpen(false)}
-          onSelect={handleSelectStickerItem}
-        />
-
-        {/* Book Cover Modal */}
-        <BookCoverModal
-          isOpen={isBookCoverModalOpen}
-          onClose={() => setIsBookCoverModalOpen(false)}
-          onPlaceToCenter={handlePlaceBookToCenter}
-          onStartStampPlacement={handleStartStampPlacement}
-        />
-      </div>
-
-      {/* Grouped Undo & Redo Column Pill below toolbar (Width and button sizes matching the main toolbar above) */}
-      <div className="w-full bg-white/95 border border-slate-300 rounded-2xl p-1.5 shadow-md backdrop-blur-md flex flex-col items-center gap-1 text-slate-900">
+        {/* 6. Hoàn tác nét vẽ (Undo) */}
         <button
           title="Hoàn tác nét vẽ (Undo • Ctrl+Z)"
           onClick={undoStroke}
           disabled={strokes.length === 0}
-          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             strokes.length > 0
               ? 'text-slate-800 hover:bg-slate-100 hover:text-black active:scale-95'
               : 'text-slate-300 cursor-not-allowed'
           }`}
         >
-          <Undo2 className="w-5 h-5 stroke-[2.4]" />
+          <Undo2 className="w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4]" />
         </button>
 
+        {/* 7. Làm lại nét vẽ (Redo) */}
         <button
           title="Làm lại nét vẽ (Redo • Ctrl+Y)"
           onClick={redoStroke}
           disabled={redoStack.length === 0}
-          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             redoStack.length > 0
               ? 'text-slate-800 hover:bg-slate-100 hover:text-black active:scale-95'
               : 'text-slate-300 cursor-not-allowed'
           }`}
         >
-          <Redo2 className="w-5 h-5 stroke-[2.4]" />
+          <Redo2 className="w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4]" />
         </button>
 
+        {/* 8. Xóa toàn bộ nét vẽ (chỉ hiện khi có nét vẽ) */}
         {strokes.length > 0 && (
           <>
-            <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
+            <div className="w-5 sm:w-7 h-[1px] bg-slate-200 my-0.5" />
             <button
               title="Xóa toàn bộ nét vẽ"
               onClick={clearStrokes}
-              className="w-11 h-11 rounded-xl flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer active:scale-95"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer active:scale-95"
             >
-              <Trash2 className="w-5 h-5 stroke-[2.4]" />
+              <Trash2 className="w-4.5 h-4.5 sm:w-5 sm:h-5 stroke-[2.4]" />
             </button>
           </>
         )}
       </div>
-    </div>
+
+      {/* ================= VERTICALLY BOUNDED NOTE COLOR FLYOUT ================= */}
+      {isNoteFlyoutOpen && (
+        <div className="fixed left-[52px] sm:left-[64px] top-4 sm:top-1/2 sm:-translate-y-1/2 bg-white border border-slate-300 rounded-2xl p-2 shadow-2xl flex flex-col gap-2 z-50 animate-fade-in max-h-[calc(100dvh-20px)] overflow-y-auto no-scrollbar landscape-subpanel">
+          {stickyColors.map(c => (
+            <button
+              key={c.value}
+              title={`Tạo note màu ${c.label} (Kéo thả vùng để chọn kích thước)`}
+              onClick={() => handleSelectNoteColor(c.value)}
+              style={{ backgroundColor: c.value }}
+              className="w-7 h-7 rounded-lg border border-black/15 shadow-xs hover:scale-125 transition-transform cursor-pointer relative group flex items-center justify-center"
+            >
+              <div className="w-2 h-2 rounded-full bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ================= VERTICALLY BOUNDED PEN SUB-TOOLBAR FLYOUT ================= */}
+      {isPenFlyoutOpen && (
+        <div 
+          data-tour="pen-sub-toolbar"
+          className="fixed left-[52px] sm:left-[64px] top-2 sm:top-1/2 sm:-translate-y-1/2 bg-white/95 border border-slate-300 rounded-2xl p-1.5 sm:p-2 shadow-2xl backdrop-blur-md flex flex-col items-center gap-1.5 sm:gap-2 z-50 animate-fade-in min-w-[44px] max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-subpanel"
+          style={{ maxHeight: 'calc(100dvh - 16px)' }}
+        >
+          {/* Tool 1: Pen (Bút vẽ thường) */}
+          <button
+            title="Bút vẽ tự do (Pen)"
+            onClick={() => setActiveTool('pen')}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+              activeTool === 'pen'
+                ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
+                : 'text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <PenTool className="w-4.5 h-4.5 stroke-[2.4]" />
+          </button>
+
+          {/* Tool 2: Highlighter (Bút dạ quang) */}
+          <button
+            title="Bút dạ quang đánh dấu (Highlighter)"
+            onClick={() => setActiveTool('highlighter')}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+              activeTool === 'highlighter'
+                ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
+                : 'text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <Highlighter className="w-4.5 h-4.5 stroke-[2.4]" />
+          </button>
+
+          {/* Tool 3: Smart Shape (Vẽ thông minh) */}
+          <button
+            title="Vẽ thông minh: Tự động uốn nắn thành hình tròn, vuông, elip, tam giác hoàn hảo"
+            onClick={() => setActiveTool('smart_shape')}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+              activeTool === 'smart_shape'
+                ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
+                : 'text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <Sparkles className="w-4.5 h-4.5 stroke-[2.4]" />
+          </button>
+
+          {/* Tool 4: Click Eraser (Tẩy chọn nét) */}
+          <button
+            title="Tẩy chạm: Nhấp vào nét vẽ để xóa"
+            onClick={() => setActiveTool('eraser')}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+              activeTool === 'eraser'
+                ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
+                : 'text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <Eraser className="w-4.5 h-4.5 stroke-[2.4]" />
+          </button>
+
+          {/* Tool 5: Area Eraser (Tẩy vùng kéo chọn) */}
+          <button
+            title="Tẩy vùng: Kéo khung chữ nhật để xóa toàn bộ nét vẽ bên trong"
+            onClick={() => setActiveTool('area_eraser')}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+              activeTool === 'area_eraser'
+                ? 'bg-[#16A34A] text-white font-bold border border-[#15803D]'
+                : 'text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <BoxSelect className="w-4.5 h-4.5 stroke-[2.4]" />
+          </button>
+
+          <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
+
+          {/* Stroke Width Selector (3 kích thước: S, M, L) */}
+          <div className="flex flex-col items-center gap-1.5 py-0.5">
+            <button
+              title="Nét mảnh (Nhỏ)"
+              onClick={() => setPenWidthLevel('small')}
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+                penWidthLevel === 'small' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
+              }`}
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+            </button>
+            <button
+              title="Nét vừa (Trung bình)"
+              onClick={() => setPenWidthLevel('medium')}
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+                penWidthLevel === 'medium' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
+              }`}
+            >
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-900" />
+            </button>
+            <button
+              title="Nét dày (Lớn)"
+              onClick={() => setPenWidthLevel('large')}
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+                penWidthLevel === 'large' ? 'bg-slate-100 ring-2 ring-[#16A34A]' : 'hover:bg-slate-100'
+              }`}
+            >
+              <div className="w-3.5 h-3.5 rounded-full bg-slate-900" />
+            </button>
+          </div>
+
+          <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
+
+          {/* Single Current Color Button with Compact Popup */}
+          <div className="relative pb-0.5">
+            <button
+              title="Bấm để đổi màu nét vẽ (Mở bảng 6 màu)"
+              onClick={() => setIsPenColorPickerOpen(!isPenColorPickerOpen)}
+              style={{ backgroundColor: penColor }}
+              className="w-7 h-7 rounded-full border-2 border-white ring-2 ring-[#16A34A] shadow-xs hover:scale-115 transition-transform cursor-pointer flex items-center justify-center"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
+            </button>
+
+            {/* Flyout 6-Color Palette Grid (3 columns x 2 rows) */}
+            {isPenColorPickerOpen && (
+              <div className="absolute left-full bottom-0 ml-2 bg-white border border-slate-300 rounded-2xl p-2 shadow-2xl backdrop-blur-md grid grid-cols-3 gap-2 z-50 animate-fade-in w-28">
+                {penColors.map(c => (
+                  <button
+                    key={c.value}
+                    title={c.label}
+                    onClick={() => {
+                      setPenColor(c.value);
+                      setIsPenColorPickerOpen(false);
+                    }}
+                    style={{ backgroundColor: c.value }}
+                    className={`w-7 h-7 rounded-full border border-black/15 transition-transform hover:scale-115 cursor-pointer flex items-center justify-center ${
+                      penColor === c.value ? 'ring-2 ring-[#16A34A] scale-105' : ''
+                    }`}
+                  >
+                    {penColor === c.value && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-white shadow-xs" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
+
+          {/* Toggle Finger Drawing (Vẽ bằng ngón tay / Palm Rejection) */}
+          <button
+            title={
+              isFingerDrawingEnabled
+                ? 'Vẽ bằng ngón tay: Đang BẬT (Chạm 1 ngón để vẽ, 2 ngón để zoom/pan. Bấm để chuyển sang chỉ vẽ bằng bút Stylus)'
+                : 'Vẽ bằng ngón tay: Đang TẮT (Chế độ Stylus Only: Ngón tay chỉ dùng để pan/zoom, chỉ vẽ bằng bút cảm ứng)'
+            }
+            onClick={() => setIsFingerDrawingEnabled(!isFingerDrawingEnabled)}
+            className={`w-7 h-7 rounded-xl flex items-center justify-center transition-all cursor-pointer relative ${
+              isFingerDrawingEnabled
+                ? 'bg-green-50 text-[#16A34A] border border-green-300 font-bold'
+                : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600 border border-slate-200'
+            }`}
+          >
+            <Hand className="w-4 h-4 stroke-[2.2]" />
+            <span
+              className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border border-white ${
+                isFingerDrawingEnabled ? 'bg-[#16A34A]' : 'bg-slate-300'
+              }`}
+            />
+          </button>
+        </div>
+      )}
+
+      {/* ================= MORE TOOLS FLYOUT ================= */}
+      {isMoreToolsOpen && (
+        <div className="fixed left-[52px] sm:left-[64px] top-2 sm:top-1/2 sm:-translate-y-1/2 bg-white border border-slate-300 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 z-50 animate-fade-in w-72 text-slate-900 select-none max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-subpanel">
+          <div className="flex items-center justify-between px-2 pt-1 pb-2 border-b border-slate-100 mb-1">
+            <span className="text-xs font-black text-slate-900 tracking-wide uppercase">
+              Công cụ mở rộng
+            </span>
+            <button
+              onClick={() => setIsMoreToolsOpen(false)}
+              className="text-slate-400 hover:text-slate-700 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="space-y-1">
+            {extraTools.map((tool) => (
+              <button
+                key={tool.id}
+                onClick={() => handleSelectExtraTool(tool.id)}
+                className="w-full flex items-center gap-3 p-2 rounded-xl hover:bg-slate-100 transition-all text-left cursor-pointer group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-white group-hover:shadow-xs border border-slate-200/60 flex items-center justify-center text-slate-800 transition-all flex-shrink-0">
+                  {tool.icon}
+                </div>
+                <div className="overflow-hidden">
+                  <div className="text-xs font-bold text-slate-900 group-hover:text-[#16A34A] transition-colors leading-tight">
+                    {tool.title}
+                  </div>
+                  <div className="text-[11px] text-slate-500 truncate leading-tight mt-0.5">
+                    {tool.desc}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Sticker, Emoji & GIF Picker Flyout */}
+      <StickerEmojiPickerFlyout
+        isOpen={isStickerPickerOpen}
+        onClose={() => setIsStickerPickerOpen(false)}
+        onSelect={handleSelectStickerItem}
+      />
+
+      {/* Book Cover Modal */}
+      <BookCoverModal
+        isOpen={isBookCoverModalOpen}
+        onClose={() => setIsBookCoverModalOpen(false)}
+        onPlaceToCenter={handlePlaceBookToCenter}
+        onStartStampPlacement={handleStartStampPlacement}
+      />
+    </>
   );
 }

@@ -30,7 +30,10 @@ import {
   ShieldCheck, 
   Zap, 
   ClipboardPaste,
-  Sparkles
+  Sparkles,
+  MoreHorizontal,
+  Upload,
+  Share2
 } from 'lucide-react';
 
 function OpenAILogo({ className = "w-4 h-4" }: { className?: string }) {
@@ -54,6 +57,7 @@ export function TopRightWallet() {
   const [mounted, setMounted] = useState(false);
   const [isPetModalOpen, setIsPetModalOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
 
   // Pet Mascot & Streak Hook
   const { pet, currentImageUrl } = usePetMascot();
@@ -259,7 +263,7 @@ export function TopRightWallet() {
 
         <div className="w-[1px] h-5 sm:h-6 bg-slate-200 my-auto mx-0.5" />
 
-        {/* AI Bot Pill */}
+        {/* Desktop Direct AI Bot Pill (Giữ nguyên trên màn hình lớn) */}
         <button
           id="ai-config-trigger-btn"
           data-tour="inteline-btn"
@@ -267,7 +271,7 @@ export function TopRightWallet() {
             setIsAiModalOpen(true);
             setIsPetModalOpen(false);
           }}
-          className={`flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl transition-all cursor-pointer ${
+          className={`hidden md:flex landscape-phone:hidden items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl transition-all cursor-pointer ${
             isAiModalOpen 
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]' 
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
@@ -276,6 +280,59 @@ export function TopRightWallet() {
         >
           <Bot className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${isAiModalOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
+
+        {/* Mobile & Landscape Phone More Menu "⋯" (Gộp Xuất file, Chia sẻ, AI) */}
+        <div className="relative flex md:hidden landscape-phone:flex">
+          <button
+            title="Tùy chọn mở rộng (Xuất file, Chia sẻ, Cài đặt AI)"
+            onClick={() => setIsMoreMenuOpen(prev => !prev)}
+            className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all cursor-pointer ${
+              isMoreMenuOpen 
+                ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]' 
+                : 'text-slate-900 hover:text-black hover:bg-slate-100'
+            }`}
+          >
+            <MoreHorizontal className={`w-5 h-5 stroke-[2.4] ${isMoreMenuOpen ? 'text-white' : 'text-slate-900'}`} />
+          </button>
+
+          {isMoreMenuOpen && (
+            <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-300 rounded-2xl shadow-2xl p-1.5 z-50 animate-fade-in text-xs font-semibold text-slate-800 font-sans">
+              <button
+                onClick={() => {
+                  setIsMoreMenuOpen(false);
+                  window.dispatchEvent(new CustomEvent('greenlearn:trigger-upload'));
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-slate-100 rounded-xl transition-colors text-left font-bold text-slate-900 cursor-pointer"
+              >
+                <Upload className="w-4 h-4 text-[#16A34A] stroke-[2.4]" />
+                <span>Tải lên / Xuất file</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMoreMenuOpen(false);
+                  window.dispatchEvent(new CustomEvent('greenlearn:open-invite-modal'));
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-slate-100 rounded-xl transition-colors text-left font-bold text-slate-900 cursor-pointer"
+              >
+                <Share2 className="w-4 h-4 text-blue-600 stroke-[2.4]" />
+                <span>Chia sẻ phòng học</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMoreMenuOpen(false);
+                  setIsAiModalOpen(true);
+                  setIsPetModalOpen(false);
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-slate-100 rounded-xl transition-colors text-left font-bold text-slate-900 cursor-pointer"
+              >
+                <Bot className="w-4 h-4 text-emerald-600 stroke-[2.4]" />
+                <span>Cài đặt kết nối AI</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* MODAL: Thú Cưng Học Tập & Điểm Danh Chuỗi Ngày */}
