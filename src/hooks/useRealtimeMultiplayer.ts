@@ -28,6 +28,8 @@ export type DeskAction =
   | { type: 'CLEAR_STROKES' }
   | { type: 'REMOVE_STROKE'; payload: { id: string } }
   | { type: 'REQUEST_SPACE_STATE'; payload: { requesterId: string } }
+  | { type: 'SYNC_SPACE_ITEMS'; payload: { targetId?: string; spaceId?: string; spaceName?: string; items: DeskItem[] } }
+  | { type: 'SYNC_SPACE_STROKES'; payload: { targetId?: string; strokes: DrawingStroke[]; isChunk?: boolean; isFirstChunk?: boolean; chunkIndex?: number; totalChunks?: number } }
   | { type: 'SYNC_SPACE_STATE'; payload: { targetId?: string; spaceId?: string; spaceName?: string; items: DeskItem[]; strokes: DrawingStroke[] } };
 
 const DEFAULT_MOCK_PEERS: PeerUser[] = [
@@ -229,7 +231,10 @@ export function useRealtimeMultiplayer(
         onRequestSpaceStateRef.current?.(peerId);
         setTimeout(() => {
           onRequestSpaceStateRef.current?.(peerId);
-        }, 700);
+        }, 500);
+        setTimeout(() => {
+          onRequestSpaceStateRef.current?.(peerId);
+        }, 1400);
       }
     });
 

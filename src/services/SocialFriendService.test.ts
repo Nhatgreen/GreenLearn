@@ -45,7 +45,23 @@ describe('SocialFriendService', () => {
   it('matches names flexibly with accents, case insensitivity and partial names', () => {
     expect(SocialFriendService.matchesNameOrEmail('Nhat', 'Nhật Nguyễn')).toBe(true);
     expect(SocialFriendService.matchesNameOrEmail('Nhật', 'Nhật Nguyễn')).toBe(true);
+    expect(SocialFriendService.matchesNameOrEmail('Nhật Nguyễn', 'nhatnguyen')).toBe(true);
+    expect(SocialFriendService.matchesNameOrEmail('nhatnguyen', 'Nhật Nguyễn')).toBe(true);
     expect(SocialFriendService.matchesNameOrEmail('hoangnam', undefined, 'hoangnam@greenlearn.vn')).toBe(true);
+    expect(SocialFriendService.matchesNameOrEmail('Hoàng Nam', 'Hoàng Nam (CNTT)')).toBe(true);
+    expect(SocialFriendService.matchesNameOrEmail('thutrang', 'Thu Trang (Sư phạm)')).toBe(true);
     expect(SocialFriendService.matchesNameOrEmail('khacnhau', 'Nguyen Van A')).toBe(false);
+  });
+
+  it('supports per-tab uid in sessionStorage and uses profile display name', () => {
+    sessionStorage.clear();
+    const user1 = SocialFriendService.getCurrentUser('nhat@gmail.com', 'Nhật Nguyễn');
+    expect(user1.name).toBe('Nhật Nguyễn');
+    expect(user1.id).toMatch(/^user-/);
+
+    // Simulate second tab in another session
+    sessionStorage.setItem('greenlearn_tab_uid', 'user-tab-2');
+    const user2 = SocialFriendService.getCurrentUser('nhat@gmail.com', 'Nhật Nguyễn');
+    expect(user2.id).toBe('user-tab-2');
   });
 });

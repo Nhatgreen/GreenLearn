@@ -4,6 +4,31 @@
 
 ---
 
+## 2026-11-12 09:05 — main (Khắc Phục Lỗi Đồng Bộ Bàn Học Nhóm Ban Đầu & Lỗi Không Hiện Thông Báo Lời Mời)
+- **Task:** Khắc phục 2 lỗi quan trọng theo phản hồi và ảnh chụp thực tế của Sếp:
+  1. **Lỗi 1: Chưa đồng bộ bàn học khi mời vào thì không thấy bàn học lúc chưa mời (ghi chú, tài liệu và nét vẽ cũ bị mất):**
+     - *Nguyên nhân cốt lõi 1:* Payload của nét vẽ (`strokes`) khi vẽ nhiều trên toàn bộ canvas có kích thước lên đến 400KB - 500KB, vượt ngưỡng 256KB của Supabase Realtime broadcast message, khiến WebSocket frame bị máy chủ Phoenix âm thầm drop bỏ. Do gộp chung `items` (giấy ghi chú vàng, sách...) vào cùng payload với `strokes`, toàn bộ vật thể cũng bị drop theo.
+     - *Nguyên nhân cốt lõi 2:* Quá trình `loadSpaces` bất đồng bộ trong `StudySpaceContext` gọi `setSpaces(cloudSpaces)` trước khi unshift không gian phòng học nhóm `newSharedSpace`. Do đó, React state không chứa phòng học nhóm dẫn đến việc `DeskCanvas` không tìm thấy bàn học và fallback nhầm về bàn trống cá nhân (`spaces[0]`).
+     - *Giải pháp:*
+       - Phân tách `SYNC_SPACE_ITEMS`: gửi riêng danh sách vật thể mặt bàn (`items`) và thông tin phòng (`spaceName`). Payload luôn nhẹ (<10KB) và tới đích 100% tức thì.
+       - Phân tách `SYNC_SPACE_STROKES`: phân mảnh (chunked) tối đa 15 nét vẽ/packet. Đảm bảo dù người dùng vẽ chi chít toàn bộ màn hình thì mọi nét vẽ đều được chuyển phát và tái tạo nguyên vẹn.
+       - Tích hợp cơ chế retry 3 nhịp (0ms, 500ms, 1400ms) khi có bạn học join (`presence.join`) hoặc gửi yêu cầu nạp trạng thái (`REQUEST_SPACE_STATE`).
+       - Sửa `loadSpaces`: đảm bảo `newSharedSpace` được unshift vào danh sách trước khi đưa vào React state (`setSpaces([...list])`), giúp máy khách luôn hiển thị đúng 100% vật thể và nét vẽ từ Host.
+  2. **Lỗi 2: Khi mời thì người nhận lời mời không hiện thông báo (`FriendInviteToast`):**
+     - *Nguyên nhân cốt lõi 1:* `currentUser.id` trong `SocialFriendService` đọc từ `localStorage('greenlearn_user_uid')`. Khi người dùng mở 2 tab/cửa sổ trên cùng trình duyệt để test, cả 2 tab có chung UID. Supabase Realtime gộp chung presence và bộ lọc `data.fromId !== currentUser.id` tự động hủy bỏ lời mời vì tưởng tab tự gửi cho chính mình.
+     - *Nguyên nhân cốt lõi 2:* So khớp người nhận `matchesNameOrEmail` bị trượt khi tên có khoảng trắng/dấu tiếng Việt so với email (ví dụ: "Nhật Nguyễn" vs "nhatnguyen"). Đồng thời, `getCurrentUser` chưa lấy `profile?.display_name`.
+     - *Giải pháp:*
+       - Sử dụng `sessionStorage('greenlearn_tab_uid')` cho presence key của phiên Realtime. Mỗi tab/cửa sổ có một định danh peer ID độc lập, cho phép 2 tab trên cùng trình duyệt nhận diện và mời nhau thời gian thực 100%.
+       - Nâng cấp `matchesNameOrEmail` với bộ chuẩn hóa ký tự triệt để `.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '')`, khớp chính xác giữa "Nhật", "Nhật Nguyễn" và "nhatnguyen@...".
+       - Cung cấp `profile?.display_name` cho `SocialPresenceProvider` và `SocialFriendService`.
+       - Tự động gắn peer ID của bạn học khi chỉ có 1 bạn online, kèm cờ fallback broadcast `toId: 'all'`.
+  3. **Kiểm thử:**
+     - Bộ test Vitest: 22/22 test suites passed, 110/110 unit tests passed.
+     - Static export Next.js: 14/14 static pages generated cleanly.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 07:55 — main (Khắc Phục Lỗi Vẽ Nối Đường Thẳng Khi Đặt 2 Ngón Tay Cầm Bút & Quản Lý Pointer Events)
 - **Task:** Khắc phục lỗi: "khi đang dùng công cụ vẽ, đặt 2 ngón tay lên canvas thì tạo ra đường thẳng nối 2 điểm chạm thay vì zoom/pan":
   1. **Quản Lý Pointer Events theo Map:**

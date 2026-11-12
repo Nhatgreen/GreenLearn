@@ -71,10 +71,13 @@ const DEFAULT_BUDDIES: RecentBuddy[] = [
 
 export class SocialFriendService {
   /** Lấy thông tin người dùng hiện tại */
-  static getCurrentUser(userEmail?: string | null): { id: string; name: string; avatarColor: string } {
+  static getCurrentUser(userEmail?: string | null, profileDisplayName?: string | null): { id: string; name: string; avatarColor: string } {
     let name = '';
     if (typeof window !== 'undefined') {
       name = localStorage.getItem(STORAGE_NICK_KEY) || localStorage.getItem('vitudy_nickname') || '';
+    }
+    if (!name && profileDisplayName) {
+      name = profileDisplayName.trim();
     }
     if (!name && userEmail) {
       name = userEmail.split('@')[0];
@@ -85,9 +88,14 @@ export class SocialFriendService {
 
     let uid = '';
     if (typeof window !== 'undefined') {
-      uid = localStorage.getItem('greenlearn_user_uid') || '';
+      // Dùng sessionStorage cho uid để mỗi tab/cửa sổ có một peer ID riêng biệt,
+      // giúp 2 tab trên cùng trình duyệt có thể nhận diện và mời nhau thời gian thực
+      uid = sessionStorage.getItem('greenlearn_tab_uid') || '';
       if (!uid) {
         uid = `user-${Math.random().toString(36).substring(2, 9)}`;
+        sessionStorage.setItem('greenlearn_tab_uid', uid);
+      }
+      if (!localStorage.getItem('greenlearn_user_uid')) {
         localStorage.setItem('greenlearn_user_uid', uid);
       }
     } else {
@@ -201,19 +209,21 @@ export class SocialFriendService {
   /** So khớp tên hoặc email linh hoạt, không phân biệt hoa thường và dấu tiếng Việt */
   static matchesNameOrEmail(targetName: string, candidateName?: string, candidateEmail?: string): boolean {
     if (!targetName) return false;
-    const t = targetName.trim().toLowerCase();
-    const tNorm = t.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const cleanStr = (s: string) => 
+      s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+
+    const t = cleanStr(targetName);
+    if (!t || t.length < 2) return false;
 
     if (candidateName) {
-      const c = candidateName.trim().toLowerCase();
-      const cNorm = c.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      if (t === c || tNorm === cNorm) return true;
-      if (tNorm.length >= 2 && (cNorm.includes(tNorm) || tNorm.includes(cNorm))) return true;
+      const c = cleanStr(candidateName);
+      if (t === c || c.includes(t) || t.includes(c)) return true;
     }
 
     if (candidateEmail) {
-      const e = candidateEmail.trim().toLowerCase();
-      if (e === t || e.includes(t) || t.includes(e.split('@')[0])) return true;
+      const e = cleanStr(candidateEmail);
+      const ePrefix = cleanStr(candidateEmail.split('@')[0]);
+      if (e === t || e.includes(t) || t.includes(e) || ePrefix === t || ePrefix.includes(t) || t.includes(ePrefix)) return true;
     }
 
     return false;

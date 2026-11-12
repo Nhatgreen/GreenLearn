@@ -69,11 +69,11 @@ export interface SocialPresenceContextType {
 const SocialPresenceContext = createContext<SocialPresenceContextType | null>(null);
 
 export function SocialPresenceProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { activeSpace, multiplayerRoomId, joinMultiplayerRoom } = useStudySpace();
   const router = useRouter();
 
-  const [currentUser, setCurrentUser] = useState(() => SocialFriendService.getCurrentUser(user?.email));
+  const [currentUser, setCurrentUser] = useState(() => SocialFriendService.getCurrentUser(user?.email, profile?.display_name));
   const [buddies, setBuddies] = useState<RecentBuddy[]>(() => SocialFriendService.getRecentBuddies());
   const [incomingInvite, setIncomingInvite] = useState<DeskInviteNotification | null>(null);
   const [incomingJoinRequest, setIncomingJoinRequest] = useState<RoomJoinRequest | null>(null);
@@ -87,9 +87,9 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
 
   // Cập nhật thông tin user khi auth thay đổi
   useEffect(() => {
-    const u = SocialFriendService.getCurrentUser(user?.email);
+    const u = SocialFriendService.getCurrentUser(user?.email, profile?.display_name);
     setCurrentUser(u);
-  }, [user?.email]);
+  }, [user?.email, profile?.display_name]);
 
   // Kết nối Supabase Realtime kênh vitudy-social duy nhất cho toàn ứng dụng
   useEffect(() => {
@@ -152,10 +152,11 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
 
       if (!data) return;
 
-      const isForMe = 
-        (data.toId && data.toId === currentUser.id) || 
+      const isForMe = Boolean(
+        (data.toId && (data.toId === currentUser.id || data.toId === 'all')) || 
         (data.toName && SocialFriendService.matchesNameOrEmail(data.toName, currentUser.name, user?.email)) ||
-        (data.toEmail && SocialFriendService.matchesNameOrEmail(data.toEmail, currentUser.name, user?.email));
+        (data.toEmail && SocialFriendService.matchesNameOrEmail(data.toEmail, currentUser.name, user?.email))
+      );
 
       if (isForMe && data.fromId !== currentUser.id) {
         setIncomingInvite({
@@ -260,13 +261,16 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
     const targetEmail = typeof target === 'string' ? (target.includes('@') ? target.trim() : undefined) : target.email;
     let targetPeerId = typeof target === 'object' ? (target.peerId || target.id) : undefined;
 
-    // Nếu chưa có targetPeerId hoặc là dummy id (như 'buddy-demo-1'), tra cứu trong danh sách peer trực tuyến
-    if (!targetPeerId || targetPeerId.startsWith('buddy-demo')) {
+    // Nếu chưa có targetPeerId hoặc là dummy id (như 'buddy-demo-1' hoặc 'buddy-1731...'), tra cứu trong danh sách peer trực tuyến
+    if (!targetPeerId || targetPeerId.startsWith('buddy-')) {
       const matchPeer = onlinePeersRef.current.find(p => 
         SocialFriendService.matchesNameOrEmail(targetName, p.name, targetEmail)
       );
       if (matchPeer) {
         targetPeerId = matchPeer.id;
+      } else if (onlinePeersRef.current.length === 1) {
+        // Tự động gán nếu chỉ có 1 bạn học duy nhất đang trực tuyến
+        targetPeerId = onlinePeersRef.current[0].id;
       }
     }
 
@@ -284,7 +288,7 @@ export function SocialPresenceProvider({ children }: { children: ReactNode }) {
         type: 'broadcast',
         event: 'desk_invite',
         payload: {
-          toId: targetPeerId,
+          toId: targetPeerId || 'all',
           toName: targetName,
           toEmail: targetEmail,
           fromId: currentUser.id,

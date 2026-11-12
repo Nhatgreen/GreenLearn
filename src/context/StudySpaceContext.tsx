@@ -379,31 +379,93 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
           setStrokes(prev => prev.filter(st => st.id !== id));
           break;
         }
-        case 'SYNC_SPACE_STATE': {
-          const { items, strokes: remoteStrokes, spaceName, spaceId: remoteSpaceId } = action.payload as any;
+        case 'SYNC_SPACE_ITEMS': {
+          const { items, spaceName, spaceId: remoteSpaceId } = action.payload as any;
           const targetId = activeSpaceIdRef.current;
           
           if (Array.isArray(items)) {
             syncedRemoteSpaceRef.current = {
-              items,
-              strokes: Array.isArray(remoteStrokes) ? remoteStrokes : [],
-              spaceName
+              ...(syncedRemoteSpaceRef.current || { strokes: [] }),
+              items: [...items],
+              spaceName: spaceName || syncedRemoteSpaceRef.current?.spaceName
             };
             setSpaces(prev => {
               const exists = prev.some(s => s.id === targetId);
+              const friendlyName = spaceName ? (spaceName.startsWith('Bàn học nhóm') ? spaceName : `Bàn học cùng bạn: ${spaceName}`) : undefined;
               if (exists) {
                 return prev.map(s => {
                   if (s.id !== targetId) return s;
                   return {
                     ...s,
-                    name: spaceName ? (s.name.startsWith('Bàn học nhóm') ? `Bàn học cùng bạn: ${spaceName}` : spaceName) : s.name,
+                    name: friendlyName || s.name,
                     items: [...items]
                   };
                 });
               } else {
                 const newSharedSpace: StudySpace = {
                   id: targetId,
-                  name: spaceName ? `Bàn học cùng bạn: ${spaceName}` : `Bàn học nhóm (${targetId.slice(-6).toUpperCase()})`,
+                  name: friendlyName || `Bàn học nhóm (${targetId.slice(-6).toUpperCase()})`,
+                  subject: 'Học nhóm trực tuyến',
+                  description: 'Bàn học được chia sẻ trực tuyến cùng bạn học',
+                  items: [...items],
+                  threads: [],
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString()
+                };
+                return [newSharedSpace, ...prev];
+              }
+            });
+          }
+          break;
+        }
+        case 'SYNC_SPACE_STROKES': {
+          const { strokes: chunkStrokes, isChunk, isFirstChunk } = action.payload as any;
+          if (Array.isArray(chunkStrokes)) {
+            if (isChunk && !isFirstChunk) {
+              setStrokes(prev => {
+                const existingIds = new Set(prev.map(s => s.id));
+                const newOnly = chunkStrokes.filter(s => !existingIds.has(s.id));
+                const merged = [...prev, ...newOnly];
+                if (syncedRemoteSpaceRef.current) {
+                  syncedRemoteSpaceRef.current.strokes = merged;
+                }
+                return merged;
+              });
+            } else {
+              setStrokes([...chunkStrokes]);
+              if (syncedRemoteSpaceRef.current) {
+                syncedRemoteSpaceRef.current.strokes = [...chunkStrokes];
+              }
+            }
+          }
+          break;
+        }
+        case 'SYNC_SPACE_STATE': {
+          const { items, strokes: remoteStrokes, spaceName, spaceId: remoteSpaceId } = action.payload as any;
+          const targetId = activeSpaceIdRef.current;
+          
+          if (Array.isArray(items)) {
+            syncedRemoteSpaceRef.current = {
+              items: [...items],
+              strokes: Array.isArray(remoteStrokes) ? [...remoteStrokes] : [],
+              spaceName: spaceName || syncedRemoteSpaceRef.current?.spaceName
+            };
+            setSpaces(prev => {
+              const exists = prev.some(s => s.id === targetId);
+              const friendlyName = spaceName ? (spaceName.startsWith('Bàn học nhóm') ? spaceName : `Bàn học cùng bạn: ${spaceName}`) : undefined;
+              if (exists) {
+                return prev.map(s => {
+                  if (s.id !== targetId) return s;
+                  return {
+                    ...s,
+                    name: friendlyName || s.name,
+                    items: [...items]
+                  };
+                });
+              } else {
+                const newSharedSpace: StudySpace = {
+                  id: targetId,
+                  name: friendlyName || `Bàn học nhóm (${targetId.slice(-6).toUpperCase()})`,
                   subject: 'Học nhóm trực tuyến',
                   description: 'Bàn học được chia sẻ trực tuyến cùng bạn học',
                   items: [...items],
@@ -428,14 +490,60 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   const handleRequestSpaceState = useCallback((requesterId?: string) => {
     const curSpace = spacesRef.current.find(s => s.id === activeSpaceIdRef.current) || spacesRef.current[0];
+    const items = curSpace?.items || [];
+    const strokes = strokesRef.current || [];
+    const spaceName = curSpace?.name || 'Bàn học';
+    const spaceId = activeSpaceIdRef.current;
+
+    // 1. Gửi vật thể mặt bàn (luôn nhỏ < 10KB, 100% đến đích ngay lập tức)
+    broadcastDeskActionRef.current({
+      type: 'SYNC_SPACE_ITEMS',
+      payload: {
+        targetId: requesterId || 'all',
+        spaceId,
+        spaceName,
+        items
+      }
+    });
+
+    // 2. Gửi các nét vẽ chia nhỏ (chunked) để không vượt giới hạn 256KB của Supabase Realtime
+    if (strokes.length === 0) {
+      broadcastDeskActionRef.current({
+        type: 'SYNC_SPACE_STROKES',
+        payload: {
+          targetId: requesterId || 'all',
+          strokes: [],
+          isChunk: false
+        }
+      });
+    } else {
+      const CHUNK_SIZE = 15;
+      for (let i = 0; i < strokes.length; i += CHUNK_SIZE) {
+        const chunk = strokes.slice(i, i + CHUNK_SIZE);
+        const isFirstChunk = i === 0;
+        broadcastDeskActionRef.current({
+          type: 'SYNC_SPACE_STROKES',
+          payload: {
+            targetId: requesterId || 'all',
+            strokes: chunk,
+            isChunk: true,
+            isFirstChunk,
+            chunkIndex: Math.floor(i / CHUNK_SIZE),
+            totalChunks: Math.ceil(strokes.length / CHUNK_SIZE)
+          }
+        });
+      }
+    }
+
+    // 3. Gửi SYNC_SPACE_STATE dự phòng cho các client cũ
     broadcastDeskActionRef.current({
       type: 'SYNC_SPACE_STATE',
       payload: {
         targetId: requesterId || 'all',
-        spaceId: activeSpaceIdRef.current,
-        spaceName: curSpace?.name || 'Bàn học',
-        items: curSpace?.items || [],
-        strokes: strokesRef.current || []
+        spaceId,
+        spaceName,
+        items,
+        strokes: strokes.slice(0, 30)
       }
     });
   }, []);
@@ -456,12 +564,32 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     roomPermission: multiplayerPermission,
     setRoomPermission: setMultiplayerPermission,
     startHostingRoom,
-    joinRoom: joinMultiplayerRoom,
+    joinRoom: rawJoinMultiplayerRoom,
     leaveRoom: leaveMultiplayerRoom,
     broadcastDeskAction,
     isFollowPresenter,
     setIsFollowPresenter
   } = realtimeMultiplayer;
+
+  const joinMultiplayerRoom = useCallback((roomId: string, permission: 'view_only' | 'edit' = 'view_only') => {
+    rawJoinMultiplayerRoom(roomId, permission);
+    setActiveSpaceId(roomId);
+    setSpaces(prev => {
+      const exists = prev.some(s => s.id === roomId);
+      if (exists) return prev;
+      const roomSpace: StudySpace = {
+        id: roomId,
+        name: `Bàn học nhóm (${roomId.slice(-6).toUpperCase()})`,
+        subject: 'Học nhóm trực tuyến',
+        description: `Bàn học đồng bộ cùng bạn qua phòng ${roomId}`,
+        items: [],
+        threads: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      return [roomSpace, ...prev];
+    });
+  }, [rawJoinMultiplayerRoom]);
 
   useEffect(() => {
     broadcastDeskActionRef.current = broadcastDeskAction;
@@ -728,20 +856,25 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
     if (status === 'authenticated' && user?.id) {
       StudySpaceService.loadSpaces(user.id).then((cloudSpaces) => {
-        if (cloudSpaces && cloudSpaces.length > 0) {
-          setSpaces(cloudSpaces);
-          setActiveSpaceId(resolveTargetSpaceId(cloudSpaces));
-        } else if (localSpaces && localSpaces.length > 0) {
-          // Chưa có trên cloud nhưng có local -> sync local lên cloud
-          setSpaces(localSpaces);
-          setActiveSpaceId(resolveTargetSpaceId(localSpaces));
-          localSpaces.forEach(s => StudySpaceService.saveSpace(s, user.id).catch(() => {}));
+        const list = (cloudSpaces && cloudSpaces.length > 0) 
+          ? [...cloudSpaces] 
+          : ((localSpaces && localSpaces.length > 0) ? [...localSpaces] : []);
+
+        if (list.length > 0) {
+          const targetId = resolveTargetSpaceId(list);
+          setSpaces([...list]);
+          setActiveSpaceId(targetId);
+          if (localSpaces && localSpaces.length > 0 && (!cloudSpaces || cloudSpaces.length === 0)) {
+            localSpaces.forEach(s => StudySpaceService.saveSpace(s, user.id).catch(() => {}));
+          }
         } else {
           // Tài khoản mới chưa có bàn học -> Khởi tạo bàn học mẫu Demo
           import('@/data/demoSpace').then(({ createDemoStudySpace }) => {
             const demoSpace = createDemoStudySpace(user.id);
-            setSpaces([demoSpace]);
-            setActiveSpaceId(demoSpace.id);
+            const demoList = [demoSpace];
+            const targetId = resolveTargetSpaceId(demoList);
+            setSpaces([...demoList]);
+            setActiveSpaceId(targetId);
             StudySpaceService.saveSpace(demoSpace, user.id).catch(() => {});
           });
         }
@@ -754,12 +887,10 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     }
 
     // Khi là khách (Guest)
-    if (localSpaces && localSpaces.length > 0) {
-      setSpaces(localSpaces);
-      setActiveSpaceId(resolveTargetSpaceId(localSpaces));
-    } else {
-      setActiveSpaceId(resolveTargetSpaceId(INITIAL_SPACES));
-    }
+    const guestList = (localSpaces && localSpaces.length > 0) ? [...localSpaces] : [...INITIAL_SPACES];
+    const targetId = resolveTargetSpaceId(guestList);
+    setSpaces([...guestList]);
+    setActiveSpaceId(targetId);
     if (syncedRemoteSpaceRef.current?.strokes && syncedRemoteSpaceRef.current.strokes.length > 0) {
       setStrokes(syncedRemoteSpaceRef.current.strokes);
     }

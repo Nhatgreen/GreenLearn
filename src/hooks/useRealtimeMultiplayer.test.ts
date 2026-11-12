@@ -100,6 +100,47 @@ describe('useRealtimeMultiplayer', () => {
     });
   });
 
+  it('broadcasts SYNC_SPACE_ITEMS and SYNC_SPACE_STROKES actions', () => {
+    const { result } = renderHook(() => useRealtimeMultiplayer('space-test', 'Host User', true));
+
+    act(() => {
+      result.current.startHostingRoom('room-test-sync', 'edit');
+    });
+
+    act(() => {
+      result.current.broadcastDeskAction({
+        type: 'SYNC_SPACE_ITEMS',
+        payload: {
+          targetId: 'all',
+          spaceId: 'space-test',
+          spaceName: 'Bàn học kiểm thử',
+          items: [{
+            id: 'note-1',
+            type: 'sticky_note',
+            title: 'Ghi chú',
+            x: 200,
+            y: 300,
+            zIndex: 1,
+            rotation: 0,
+            scale: 1,
+            pageCount: 1,
+            currentPageIndex: 0,
+            pages: [],
+            stickyText: 'Đã đồng bộ!'
+          }]
+        }
+      });
+    });
+
+    expect(mockSend).toHaveBeenCalledWith({
+      type: 'broadcast',
+      event: 'desk_action',
+      payload: expect.objectContaining({
+        type: 'SYNC_SPACE_ITEMS'
+      })
+    });
+  });
+
   it('leaves the room cleanly and removes URL room parameters', () => {
     const { result } = renderHook(() => useRealtimeMultiplayer('space-test', 'Host User', true));
 

@@ -14,8 +14,8 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
   }
 
   // Fallback độc lập khi component chạy ngoài SocialPresenceProvider (ví dụ trong unit tests)
-  const { user } = useAuth();
-  const [currentUser, setCurrentUser] = useState(() => SocialFriendService.getCurrentUser(user?.email));
+  const { user, profile } = useAuth();
+  const [currentUser, setCurrentUser] = useState(() => SocialFriendService.getCurrentUser(user?.email, profile?.display_name));
   const [buddies, setBuddies] = useState<RecentBuddy[]>(() => SocialFriendService.getRecentBuddies());
   const [incomingInvite, setIncomingInvite] = useState<DeskInviteNotification | null>(null);
   const [isSocialConnected, setIsSocialConnected] = useState(false);
@@ -23,9 +23,9 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
 
   // Cập nhật thông tin user khi auth thay đổi
   useEffect(() => {
-    const u = SocialFriendService.getCurrentUser(user?.email);
+    const u = SocialFriendService.getCurrentUser(user?.email, profile?.display_name);
     setCurrentUser(u);
-  }, [user?.email]);
+  }, [user?.email, profile?.display_name]);
 
   // Kết nối Supabase Realtime kênh vitudy-social
   useEffect(() => {
@@ -85,11 +85,11 @@ export function useSocialPresence(activeRoomId: string | null = null, currentSpa
 
       if (!data) return;
 
-      const isForMe = 
-        (data.toId && data.toId === currentUser.id) || 
-        (data.toName && currentUser.name && data.toName.toLowerCase() === currentUser.name.toLowerCase()) ||
-        (data.toName && user?.email && data.toName.toLowerCase() === user.email.toLowerCase()) ||
-        (data.toEmail && user?.email && data.toEmail.toLowerCase() === user.email.toLowerCase());
+      const isForMe = Boolean(
+        (data.toId && (data.toId === currentUser.id || data.toId === 'all')) || 
+        (data.toName && SocialFriendService.matchesNameOrEmail(data.toName, currentUser.name, user?.email)) ||
+        (data.toEmail && SocialFriendService.matchesNameOrEmail(data.toEmail, currentUser.name, user?.email))
+      );
 
       if (isForMe && data.fromId !== currentUser.id) {
         setIncomingInvite({
