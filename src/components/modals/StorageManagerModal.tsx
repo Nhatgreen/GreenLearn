@@ -75,7 +75,7 @@ export function StorageManagerModal({ isOpen, onClose }: StorageManagerModalProp
     >
       <div 
         onClick={(e) => e.stopPropagation()}
-        className="bg-white border border-slate-300 rounded-3xl w-full max-w-xl p-6 shadow-2xl relative text-slate-900 animate-fade-in flex flex-col max-h-[88vh]"
+        className="bg-white border border-slate-300 rounded-3xl w-full max-w-xl p-6 shadow-2xl relative text-slate-900 animate-fade-in flex flex-col max-h-[88dvh]"
       >
         {/* 44px close button touch target */}
         <button

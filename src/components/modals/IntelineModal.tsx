@@ -107,7 +107,7 @@ Yêu cầu: Trả lời tự nhiên, chính xác, súc tích và dễ hiểu.`,
 
   return createPortal(
     <div className="fixed inset-0 z-[9990] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white border border-slate-300 rounded-2xl w-full max-w-xl p-6 shadow-2xl flex flex-col max-h-[85vh] text-slate-900 animate-fade-in">
+      <div className="bg-white border border-slate-300 rounded-2xl w-full max-w-xl p-6 shadow-2xl flex flex-col max-h-[85dvh] text-slate-900 animate-fade-in">
         {/* Top Header */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
           <div className="flex items-center gap-2">

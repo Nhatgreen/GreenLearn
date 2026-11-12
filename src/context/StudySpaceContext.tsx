@@ -1322,33 +1322,45 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   const fitAllToScreen = () => {
     const items = activeSpace.items;
+    const winW = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    const winH = typeof window !== 'undefined' ? (window.visualViewport ? window.visualViewport.height : window.innerHeight) : 800;
+
     if (items.length === 0) {
-      resetView();
+      setTransform({
+        x: Math.round(winW / 2),
+        y: Math.round(winH / 2),
+        scale: 1,
+        rotation: 0
+      });
       return;
     }
 
     const minX = Math.min(...items.map(i => i.x));
-    const maxX = Math.max(...items.map(i => i.x + (i.type === 'book' ? 980 : i.type === 'paper' ? 400 : 240)));
+    const maxX = Math.max(...items.map(i => i.x + (i.type === 'book' ? (i.width || 980) : i.type === 'paper' ? (i.width || 480) : (i.width || 240))));
     const minY = Math.min(...items.map(i => i.y));
-    const maxY = Math.max(...items.map(i => i.y + (i.type === 'book' ? 660 : i.type === 'paper' ? 560 : 220)));
+    const maxY = Math.max(...items.map(i => i.y + (i.type === 'book' ? (i.height || 640) : i.type === 'paper' ? (i.height || 640) : (i.height || 220))));
 
-    const contentW = Math.max(maxX - minX, 400);
-    const contentH = Math.max(maxY - minY, 300);
+    const contentW = Math.max(maxX - minX, 320);
+    const contentH = Math.max(maxY - minY, 240);
 
-    const winW = typeof window !== 'undefined' ? window.innerWidth : 1200;
-    const winH = typeof window !== 'undefined' ? window.innerHeight : 800;
+    // Responsive padding based on viewport dimensions
+    const padX = winW < 640 ? 20 : winW < 1024 ? 40 : 100;
+    const padY = winH < 640 ? 30 : winH < 1024 ? 50 : 100;
 
-    const pad = 120;
-    const scale = Math.min((winW - pad * 2) / contentW, (winH - pad * 2) / contentH, 1.2);
+    const availW = Math.max(winW - padX * 2, 200);
+    const availH = Math.max(winH - padY * 2, 200);
+
+    const scale = Math.min(availW / contentW, availH / contentH, 1.0);
     const clampedScale = Math.max(0.25, Math.min(scale, 1.0));
 
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY) / 2;
 
     setTransform({
-      x: winW / 2 - cx * clampedScale,
-      y: winH / 2 - cy * clampedScale,
-      scale: clampedScale
+      x: Math.round(winW / 2 - cx * clampedScale),
+      y: Math.round(winH / 2 - cy * clampedScale),
+      scale: clampedScale,
+      rotation: 0
     });
   };
 

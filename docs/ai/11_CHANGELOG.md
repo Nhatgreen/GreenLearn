@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-11-12 07:30 — main (Cử Chỉ Pinch-Zoom 2 Ngón Tay Canvas Bàn Học 2.5D & Tự Động Căn Vừa Màn Hình Trên Mobile)
+- **Task:** Xử lý yêu cầu cử chỉ thu phóng cảm ứng trên mobile/tablet: "Trên mobile/tablet, pinch-zoom đang làm zoom cả trang thay vì chỉ canvas bàn học":
+  1. **Truy cập Bàn học 2.5D trực tiếp trên Mobile (`src/app/page.tsx`):**
+     - Bỏ chuyển hướng ép buộc vào `MobileCompanionView` cho thiết bị di động `<768px`. Cho phép người dùng mobile và tablet trải nghiệm đầy đủ không gian buồng lái 2.5D (`StudySpaceDeskView`).
+     - Chế độ đồng hành cũ chuyển thành truy cập chủ động qua query param `?view=companion`.
+  2. **Cử chỉ Pinch-Zoom 2 ngón tay Canvas (`src/components/canvas/InfiniteDesk.tsx`):**
+     - Bổ sung bộ bắt sự kiện cảm ứng đa điểm (`onTouchStart`, `onTouchMove`, `onTouchEnd`).
+     - Khi phát hiện 2 ngón tay (`touches.length === 2`), tính khoảng cách Euclidean `Math.hypot(p1.x - p2.x, p1.y - p2.y)` và điều chỉnh tỷ lệ `scale` quanh tiêu điểm chạm, chặn hoàn toàn việc trình duyệt tự động zoom cả trang web.
+     - Cử chỉ 1 ngón tay phục vụ di chuyển mặt bàn (pan) hoặc vẽ nét bút.
+  3. **Chống cuộn giật trang (`src/app/globals.css` & `src/components/canvas/StudySpaceDeskView.tsx`):**
+     - Áp dụng `touch-action: none`, `overscroll-behavior: none` và `min-h-[100dvh]` cho container bàn học.
+  4. **Tự động căn vừa màn hình khi mở bàn học (`fitAllToScreen`):**
+     - Tự động gọi `fitAllToScreen()` sau 80ms khi mở bàn học để toàn bộ sách, tài liệu và ghi chú nằm gọn giữa tầm nhìn.
+  5. **Bộ Test Mới:**
+     - Tạo [`MobileResponsiveDesk.test.tsx`](file:///home/nhat/Documents/DUT/ViTudy/src/components/canvas/MobileResponsiveDesk.test.tsx) với 9 test case cho cảm ứng di động, pinch-zoom và HUD.
+     - `pnpm test`: 21/21 test suites passed, 98/98 tests passed.
+     - `pnpm run build:pages`: 14/14 static pages exported cleanly.
+- **Branch:** `main` (tracked `origin/main`).
+
+---
+
 ## 2026-11-12 01:45 — main (Triển Khai Giao Diện Responsive Toàn Diện Mobile & Tablet, Sửa Lỗi 404 GitHub Pages & Bộ Nhập Liệu Tiếng Việt)
 - **Task:** Triển khai toàn bộ 11 yêu cầu thiết kế Responsive cho Mobile (<640px) và Tablet (640px–1023px) theo phong cách mobile-first, bảo toàn 100% giao diện Desktop (≥1024px) và logic nghiệp vụ, đồng thời sửa lỗi 404 GitHub Pages khi mở link chia sẻ phòng học và lỗi bộ gõ tiếng Việt:
   1. **Thẻ Meta & Safe Area Insets:**

@@ -221,17 +221,17 @@ export function LeftCreationBar() {
   };
 
   const currentPenIcon = (() => {
-    if (activeTool === 'highlighter') return <Highlighter className="w-5 h-5 stroke-[2.4]" />;
-    if (activeTool === 'smart_shape') return <Sparkles className="w-5 h-5 stroke-[2.4]" />;
-    if (activeTool === 'eraser') return <Eraser className="w-5 h-5 stroke-[2.4]" />;
-    if (activeTool === 'area_eraser') return <BoxSelect className="w-5 h-5 stroke-[2.4]" />;
-    return <PenTool className="w-5 h-5 stroke-[2.4]" />;
+    if (activeTool === 'highlighter') return <Highlighter className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />;
+    if (activeTool === 'smart_shape') return <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />;
+    if (activeTool === 'eraser') return <Eraser className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />;
+    if (activeTool === 'area_eraser') return <BoxSelect className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />;
+    return <PenTool className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />;
   })();
 
   return (
     <div className="relative flex flex-col items-center gap-1.5 pointer-events-auto select-none">
-      {/* Miro-style Vertical Tool Island (Optimized compact spacing) */}
-      <div className="bg-white/95 border border-slate-300 rounded-2xl p-1.5 shadow-lg backdrop-blur-md flex flex-col items-center gap-1 relative">
+      {/* Miro-style Vertical Tool Island (Compact on mobile <640px, full size on desktop) */}
+      <div className="bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg backdrop-blur-md flex flex-col items-center gap-1 relative">
         {/* Select (Cursor) Tool */}
         <button
           title="Con trỏ điều hướng (Kéo di chuyển bàn / Chọn vật thể)"
@@ -241,13 +241,13 @@ export function LeftCreationBar() {
             setIsPenFlyoutOpen(false);
             setIsMoreToolsOpen(false);
           }}
-          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             activeTool === 'cursor'
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <MousePointer className={`w-5 h-5 stroke-[2.4] ${activeTool === 'cursor' ? 'text-white' : 'text-slate-900'}`} />
+          <MousePointer className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${activeTool === 'cursor' ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
         {/* Sticky Note Button (+ Note with vertical color flyout) */}
@@ -258,13 +258,13 @@ export function LeftCreationBar() {
             setIsPenFlyoutOpen(false);
             setIsMoreToolsOpen(false);
           }}
-          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             activeTool === 'create_note' || isNoteFlyoutOpen
               ? 'bg-[#16A34A] text-white border border-[#15803D] shadow-xs'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <StickyNote className={`w-5 h-5 stroke-[2.4] ${activeTool === 'create_note' || isNoteFlyoutOpen ? 'text-white' : 'text-slate-900'}`} />
+          <StickyNote className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${activeTool === 'create_note' || isNoteFlyoutOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
         {/* Unified Pen Button with Miro-style Full Overlay Flyout */}
@@ -279,7 +279,7 @@ export function LeftCreationBar() {
               setActiveTool('pen');
             }
           }}
-          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isDrawingActive || isPenFlyoutOpen
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
@@ -289,7 +289,7 @@ export function LeftCreationBar() {
         </button>
 
         {/* Gạch chia vùng NẰM TRÊN nút + */}
-        <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
+        <div className="w-5 sm:w-7 h-[1px] bg-slate-200 my-0.5" />
 
         {/* Nút + Công cụ mở rộng (More tools) - nằm dưới pen và trên lock */}
         <button
@@ -299,29 +299,29 @@ export function LeftCreationBar() {
             setIsNoteFlyoutOpen(false);
             setIsPenFlyoutOpen(false);
           }}
-          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isMoreToolsOpen
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          <Plus className={`w-5 h-5 stroke-[2.4] ${isMoreToolsOpen ? 'text-white' : 'text-slate-900'}`} />
+          <Plus className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${isMoreToolsOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
 
         {/* Gạch chia vùng NẰM DƯỚI nút + */}
-        <div className="w-7 h-[1px] bg-slate-200 my-0.5" />
+        <div className="w-5 sm:w-7 h-[1px] bg-slate-200 my-0.5" />
 
         {/* Lock Pan View Toggle */}
         <button
           title={isPanLocked ? 'Mở khóa di chuyển bàn' : 'Khóa góc nhìn bàn học'}
           onClick={togglePanLock}
-          className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
+          className={`w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center transition-all cursor-pointer ${
             isPanLocked
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]'
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
         >
-          {isPanLocked ? <Lock className="w-5 h-5 stroke-[2.4]" /> : <Unlock className="w-5 h-5 stroke-[2.4]" />}
+          {isPanLocked ? <Lock className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" /> : <Unlock className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />}
         </button>
 
         {/* ================= VERTICALLY CENTERED NOTE COLOR FLYOUT ================= */}

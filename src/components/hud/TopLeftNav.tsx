@@ -120,10 +120,10 @@ export function TopLeftNav() {
 
   return (
     <div className="relative flex flex-col gap-2 pointer-events-auto">
-      {/* HUD Pill: Brand & Space Selector & Slide-out Search (+30% size, bold strokes) */}
-      <div className="flex items-center gap-2.5 bg-white/95 border border-slate-300 rounded-2xl px-4 py-2.5 shadow-sm backdrop-blur-md text-slate-900">
+      {/* HUD Pill: Brand & Space Selector & Slide-out Search (+30% size on desktop, compact on mobile) */}
+      <div className="flex items-center gap-1.5 sm:gap-2.5 bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl px-2.5 py-1.5 sm:px-4 sm:py-2.5 shadow-sm backdrop-blur-md text-slate-900">
         {/* Brand Text GreenLearn in Green (#16A34A) & Dark (#242D3D) */}
-        <div className="flex items-center gap-1.5 pr-3 border-r border-slate-200">
+        <div className="flex items-center gap-1 sm:gap-1.5 pr-2 sm:pr-3 border-r border-slate-200">
           <Link
             href="/?view=home"
             onClick={() => {
@@ -140,11 +140,11 @@ export function TopLeftNav() {
               alt="GreenLearn" 
               width={24}
               height={24}
-              className="w-6 h-6 object-contain flex-shrink-0" 
+              className="w-5 h-5 sm:w-6 sm:h-6 object-contain flex-shrink-0" 
               style={{ width: '24px', height: '24px', maxWidth: '24px', maxHeight: '24px' }}
             />
             <span 
-              className="text-lg font-black tracking-tight select-none leading-none"
+              className="text-sm sm:text-lg font-black tracking-tight select-none leading-none"
             >
               <span className="text-[#16A34A]">Green</span>
               <span className="text-[#242D3D]">Learn</span>
@@ -156,10 +156,10 @@ export function TopLeftNav() {
         <div className="relative">
           <button
             onClick={() => setIsSpaceMenuOpen(!isSpaceMenuOpen)}
-            className="flex items-center gap-1.5 text-sm font-bold text-slate-900 hover:text-black transition-colors px-1 py-0.5 rounded-lg cursor-pointer"
+            className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-bold text-slate-900 hover:text-black transition-colors px-1 py-0.5 rounded-lg cursor-pointer"
           >
-            <BookMarked className="w-4 h-4 text-slate-800 stroke-[2.4]" />
-            <span className="max-w-[220px] truncate">{activeSpace.name}</span>
+            <BookMarked className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-800 stroke-[2.4]" />
+            <span className="max-w-[85px] sm:max-w-[220px] truncate">{activeSpace.name}</span>
             <ChevronDown className="w-3.5 h-3.5 text-slate-500 stroke-[2.4]" />
           </button>
 
@@ -222,7 +222,7 @@ export function TopLeftNav() {
 
           {/* Slide-out Input container */}
           <div className={`transition-all duration-300 ease-out flex items-center overflow-hidden ${
-            isSearchExpanded ? 'w-52 pl-1.5 opacity-100' : 'w-0 pl-0 opacity-0'
+            isSearchExpanded ? 'w-32 sm:w-52 pl-1.5 opacity-100' : 'w-0 pl-0 opacity-0'
           }`}>
             <input
               type="text"

@@ -33,7 +33,9 @@ export function InfiniteDesk() {
     focusedItemId,
     isFocusNoticeVisible,
     triggerFocusNotice,
-    exitFocusMode
+    exitFocusMode,
+    setTransform,
+    fitAllToScreen
   } = useStudySpace();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -41,6 +43,13 @@ export function InfiniteDesk() {
   const [isRotatingView, setIsRotatingView] = useState(false);
   const panStartRef = useRef<{ x: number; y: number } | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+
+  // Active pointers map for multi-touch (pinch-to-zoom and 2-finger pan)
+  const activePointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
+  const pinchStartRef = useRef<{
+    dist: number;
+    mid: { x: number; y: number };
+  } | null>(null);
 
   // SVG Bi-directional View Rotation Cursor
   const rotateCursorSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M7 16 A 10 10 0 0 1 25 16" stroke="white" stroke-width="4.5" stroke-linecap="round"/><path d="M7 16 A 10 10 0 0 1 25 16" stroke="%230f172a" stroke-width="2.5" stroke-linecap="round"/><path d="M4 12 L7 16 L11 13" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 12 L7 16 L11 13" stroke="%230f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 12 L25 16 L21 13" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 12 L25 16 L21 13" stroke="%230f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -184,6 +193,141 @@ export function InfiniteDesk() {
     };
   }, []);
 
+  // Prevent default iOS Safari gesture zoom (pinch on screen) and Ctrl+wheel browser zoom
+  useEffect(() => {
+    const preventGesture = (e: Event) => {
+      e.preventDefault();
+    };
+
+    const handleCtrlWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('gesturestart', preventGesture, { passive: false });
+    document.addEventListener('gesturechange', preventGesture, { passive: false });
+    document.addEventListener('gestureend', preventGesture, { passive: false });
+    window.addEventListener('wheel', handleCtrlWheel, { passive: false });
+
+    return () => {
+      document.removeEventListener('gesturestart', preventGesture);
+      document.removeEventListener('gesturechange', preventGesture);
+      document.removeEventListener('gestureend', preventGesture);
+      window.removeEventListener('wheel', handleCtrlWheel);
+    };
+  }, []);
+
+  // Window pointer event listeners for 2-finger pinch-zoom/pan & 1-finger pan
+  useEffect(() => {
+    let rafId: number | null = null;
+    let pendingFactor = 1;
+    let pendingMid: { x: number; y: number } | null = null;
+    let pendingDx = 0;
+    let pendingDy = 0;
+
+    const handleWindowPointerMove = (e: PointerEvent) => {
+      if (!activePointersRef.current.has(e.pointerId)) return;
+      activePointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      // Two-finger Pinch-to-Zoom & Pan Gesture
+      if (activePointersRef.current.size === 2 && pinchStartRef.current) {
+        const pts = Array.from(activePointersRef.current.values());
+        const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        const mid = {
+          x: (pts[0].x + pts[1].x) / 2,
+          y: (pts[0].y + pts[1].y) / 2,
+        };
+
+        const prevDist = pinchStartRef.current.dist;
+        const prevMid = pinchStartRef.current.mid;
+
+        const factor = dist / prevDist;
+        const dx = mid.x - prevMid.x;
+        const dy = mid.y - prevMid.y;
+
+        pinchStartRef.current = { dist: Math.max(dist, 1), mid };
+
+        pendingFactor *= factor;
+        pendingMid = mid;
+        pendingDx += dx;
+        pendingDy += dy;
+
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            rafId = null;
+            const curFactor = pendingFactor;
+            const curMid = pendingMid;
+            const curDx = pendingDx;
+            const curDy = pendingDy;
+
+            pendingFactor = 1;
+            pendingMid = null;
+            pendingDx = 0;
+            pendingDy = 0;
+
+            if (curMid) {
+              setTransform(prev => {
+                const MIN_SCALE = 0.4;
+                const MAX_SCALE = 2.5;
+                const targetScale = prev.scale * curFactor;
+                const newScale = Math.min(Math.max(Number(targetScale.toFixed(3)), MIN_SCALE), MAX_SCALE);
+                const scaleChange = newScale / prev.scale;
+
+                // Zoom around the midpoint between the 2 fingers + pan offset
+                const newX = Math.round(curMid.x - (curMid.x - prev.x) * scaleChange + curDx);
+                const newY = Math.round(curMid.y - (curMid.y - prev.y) * scaleChange + curDy);
+
+                return {
+                  ...prev,
+                  x: newX,
+                  y: newY,
+                  scale: newScale,
+                };
+              });
+            }
+          });
+        }
+        return;
+      }
+
+      // Single-finger or mouse canvas pan
+      if (panStartRef.current && activePointersRef.current.size === 1) {
+        const dx = e.clientX - panStartRef.current.x;
+        const dy = e.clientY - panStartRef.current.y;
+        panStartRef.current = { x: e.clientX, y: e.clientY };
+        panBy(dx, dy);
+      }
+    };
+
+    const handleWindowPointerUp = (e: PointerEvent) => {
+      activePointersRef.current.delete(e.pointerId);
+
+      if (activePointersRef.current.size < 2) {
+        pinchStartRef.current = null;
+      }
+
+      if (activePointersRef.current.size === 1) {
+        const remaining = Array.from(activePointersRef.current.values())[0];
+        panStartRef.current = { x: remaining.x, y: remaining.y };
+      } else {
+        setIsPanning(false);
+        panStartRef.current = null;
+      }
+    };
+
+    window.addEventListener('pointermove', handleWindowPointerMove);
+    window.addEventListener('pointerup', handleWindowPointerUp);
+    window.addEventListener('pointercancel', handleWindowPointerUp);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('pointermove', handleWindowPointerMove);
+      window.removeEventListener('pointerup', handleWindowPointerUp);
+      window.removeEventListener('pointercancel', handleWindowPointerUp);
+    };
+  }, [panBy, setTransform]);
+
   // Global View Rotation when isViewRotateMode is toggled ON (User can drag anywhere to rotate)
   const handleMouseDownCapture = (e: React.MouseEvent) => {
     if (focusedItemId && isViewRotateMode && e.button === 0) {
@@ -231,77 +375,61 @@ export function InfiniteDesk() {
     }
   };
 
-  // Background pointer down (Canvas Pan)
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0) return;
+  // Background pointer down (Canvas Pan / Multi-touch gesture)
+  const handlePointerDown = (e: React.PointerEvent) => {
     if (isViewRotateMode) return;
-
-    // Never pan via desk background when a drawing/erasing/creating tool is active
-    if (activeTool !== 'cursor') {
-      return;
-    }
+    if (activeTool !== 'cursor') return;
 
     const target = e.target as HTMLElement;
 
-    // Don't pan if clicking directly on a desk item (book, paper, sticky note) or an interactive control
-    if (
-      target.closest('[data-desk-item="true"]') ||
+    // Don't pan if clicking an interactive control
+    const isInteractive = Boolean(
       target.closest('button') ||
       target.closest('input') ||
       target.closest('select') ||
       target.closest('textarea') ||
       target.closest('[data-focus-notice="true"]')
-    ) {
+    );
+
+    const isDeskItem = Boolean(target.closest('[data-desk-item="true"]'));
+
+    if (isInteractive) return;
+
+    if (focusedItemId) {
+      triggerFocusNotice();
       return;
     }
 
-    // Intercept pan attempt when in Focus Reading Mode
-    if (focusedItemId) {
-      triggerFocusNotice();
+    // Always register pointer for pinch tracking (even if on a desk item)
+    activePointersRef.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    // If 2 or more touches are detected, prioritize pinch-to-zoom & 2-finger pan
+    if (activePointersRef.current.size === 2) {
+      setIsPanning(false);
+      panStartRef.current = null;
+      const pts = Array.from(activePointersRef.current.values());
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      const mid = {
+        x: (pts[0].x + pts[1].x) / 2,
+        y: (pts[0].y + pts[1].y) / 2,
+      };
+      pinchStartRef.current = { dist: Math.max(dist, 1), mid };
+      return;
+    }
+
+    // If 1 pointer on a desk item, let the item's own drag handler handle it
+    if (isDeskItem) {
       return;
     }
 
     // Deselect active item when clicking empty space
     selectItem(null);
 
+    // Single pointer on empty desk space -> pan canvas
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+
     setIsPanning(true);
     panStartRef.current = { x: e.clientX, y: e.clientY };
-
-    let rafId: number | null = null;
-    let pendingDx = 0;
-    let pendingDy = 0;
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      if (!panStartRef.current) return;
-      pendingDx += moveEvent.clientX - panStartRef.current.x;
-      pendingDy += moveEvent.clientY - panStartRef.current.y;
-      panStartRef.current = { x: moveEvent.clientX, y: moveEvent.clientY };
-
-      if (!rafId) {
-        rafId = requestAnimationFrame(() => {
-          panBy(pendingDx, pendingDy);
-          pendingDx = 0;
-          pendingDy = 0;
-          rafId = null;
-        });
-      }
-    };
-
-    const handleMouseUp = () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-      if (pendingDx !== 0 || pendingDy !== 0) {
-        panBy(pendingDx, pendingDy);
-      }
-      setIsPanning(false);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
   };
 
   // Double click while in rotate mode resets view rotation to 0°
@@ -391,13 +519,15 @@ export function InfiniteDesk() {
       ref={containerRef}
       onMouseDownCapture={handleMouseDownCapture}
       onDoubleClickCapture={handleDoubleClickCapture}
-      onMouseDown={handleMouseDown}
+      onPointerDown={handlePointerDown}
       onDoubleClick={handleDoubleClick}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={`relative w-screen h-screen overflow-hidden select-none ${getDeskCursor()}`}
+      className={`relative w-screen h-[100dvh] overflow-hidden select-none touch-none overscroll-none ${getDeskCursor()}`}
       style={{
+        touchAction: 'none',
+        overscrollBehavior: 'none',
         cursor: isRotatingView
           ? 'grabbing'
           : isViewRotateMode

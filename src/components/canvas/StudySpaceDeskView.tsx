@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { InfiniteDesk } from './InfiniteDesk';
@@ -18,9 +18,21 @@ import { OnboardingTour } from '../onboarding/OnboardingTour';
 import { ChevronRight, ChevronLeft, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function StudySpaceDeskView() {
-  const { focusedItemId } = useStudySpace();
+  const { focusedItemId, fitAllToScreen, activeSpaceId } = useStudySpace();
   const { addStudySeconds } = usePetMascot();
   const isFocusMode = !!focusedItemId;
+
+  // Auto-fit content to screen and center upon opening the desk
+  const autoFittedSpaceRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (activeSpaceId && autoFittedSpaceRef.current !== activeSpaceId) {
+      autoFittedSpaceRef.current = activeSpaceId;
+      const timer = setTimeout(() => {
+        fitAllToScreen?.();
+      }, 80);
+      return () => clearTimeout(timer);
+    }
+  }, [activeSpaceId, fitAllToScreen]);
 
   // Independent drawer states for each of the 5 HUD islands in focus mode
   const [showTopLeftInFocus, setShowTopLeftInFocus] = useState(false);
@@ -66,7 +78,10 @@ export default function StudySpaceDeskView() {
   }, []);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-white select-none">
+    <div 
+      className="relative w-screen h-[100dvh] overflow-hidden bg-white select-none touch-none overscroll-none"
+      style={{ touchAction: 'none', overscrollBehavior: 'none' }}
+    >
       {/* 2.5D Infinite Canvas Desk */}
       <InfiniteDesk />
 

@@ -149,7 +149,7 @@ export function FriendsRightDrawer({ isFocusMode = false }: FriendsRightDrawerPr
 
       {/* 2. THANH BÊN PHẢI ĐÃ MỞ (EXPANDED FRIENDS DRAWER) */}
       {isOpen && (
-        <div className="fixed right-1 top-1/2 -translate-y-1/2 z-40 pointer-events-auto w-80 max-w-[calc(100vw-16px)] max-h-[85vh] bg-white/98 backdrop-blur-md rounded-2xl border border-slate-300 shadow-2xl p-4 flex flex-col font-sans select-none animate-fade-in">
+        <div className="fixed right-1 top-1/2 -translate-y-1/2 z-40 pointer-events-auto w-80 max-w-[calc(100vw-16px)] max-h-[85dvh] bg-white/98 backdrop-blur-md rounded-2xl border border-slate-300 shadow-2xl p-4 flex flex-col font-sans select-none animate-fade-in">
           {/* HEADER */}
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2 min-w-0">

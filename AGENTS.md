@@ -832,5 +832,14 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
   * Phía Host: Khi phát hiện bạn học mới tham gia (`join`), Host trích xuất `peerId = newPresences?.[0]?.id || key`, lập tức phát broadcast `SYNC_SPACE_STATE` lần 1 kèm lịch phát lần 2 sau 700ms với `targetId: requesterId || 'all'`.
   * Bộ lắng nghe `DESK_ACTION`: Chấp thuận xử lý action khi `targetId === 'all'` hoặc trùng khớp với `userId` của người học. Nhờ đó, ngay khi vừa bước vào phòng, bạn học được nạp đầy đủ 100% toàn bộ tài liệu, giấy ghi chú, sơ đồ tư duy và nét vẽ mà Host đã chuẩn bị sẵn trước đó.
 
+* **Quy Chuẩn Cử Chỉ Phóng To / Thu Nhỏ 2 Ngón Tay & Trải Nghiệm Bàn Học 2.5D Trên Mobile (Mobile Pinch-Zoom & 2.5D Desk Access Standard):**
+  * **Trải nghiệm Bàn học 2.5D nguyên bản trên mọi thiết bị:** Loại bỏ hoàn toàn việc ép chuyển hướng người dùng di động (<768px) sang trang phụ `MobileCompanionView`. Mọi người dùng trên Mobile, Tablet lẫn Desktop đều truy cập trực tiếp vào không gian Bàn học 2.5D (`StudySpaceDeskView`) kèm đầy đủ công cụ học tập. Chế độ đồng hành cũ chỉ mở khi có tham số rõ ràng `?view=companion`.
+  * **Cử chỉ Pinch-Zoom 2 ngón tay mượt mà (Multi-Touch Pinch-to-Zoom):**
+    - Container bàn học bắt buộc thiết lập `touch-action: none` và `overscroll-behavior: none` kết hợp chiều cao dynamic viewport `h-[100dvh]`, ngăn chặn 100% việc trình duyệt Safari/Chrome trên điện thoại tự động zoom cả trang web hoặc giật kéo trang (bounce effect).
+    - Tính toán khoảng cách Euclidean hai ngón tay `Math.hypot(p1.x - p2.x, p1.y - p2.y)` thời gian thực, điều chỉnh tỷ lệ thu phóng `scale` quanh tiêu điểm chạm (focal point) của ngón tay.
+    - Cử chỉ 1 ngón tay phục vụ di chuyển mặt bàn (pan) hoặc vẽ mực tùy theo công cụ đang chọn (`pen` / `cursor`).
+  * **Tự động căn vừa màn hình khi mở bàn học (`fitAllToScreen` Auto-Focus):** Khi người học chuyển vào bàn học, hệ thống tự động tính toán bounding box và gọi `fitAllToScreen()` sau 80ms, đảm bảo toàn bộ sách, tài liệu và ghi chú đều nằm ngay ngắn ở vị trí trung tâm tầm nhìn.
+
+
 
 

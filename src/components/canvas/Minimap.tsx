@@ -14,17 +14,18 @@ export const Minimap = React.memo(function Minimap({ isVisible = true, onClose }
   const containerRef = useRef<HTMLDivElement>(null);
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // Minimap dimensions
-  const miniWidth = 190;
-  const miniHeight = 120;
-  const pad = 10;
-
   // Window viewport representation
   const [viewSize, setViewSize] = useState(() => 
     typeof window !== 'undefined' 
       ? { width: window.innerWidth, height: window.innerHeight } 
       : { width: 1200, height: 800 }
   );
+
+  // Minimap dimensions (compact on screens < 640px, default on desktop)
+  const isSmallScreen = viewSize.width < 640;
+  const miniWidth = isSmallScreen ? 145 : 190;
+  const miniHeight = isSmallScreen ? 90 : 120;
+  const pad = 10;
 
   useEffect(() => {
     setViewSize({ width: window.innerWidth, height: window.innerHeight });
@@ -150,7 +151,7 @@ export const Minimap = React.memo(function Minimap({ isVisible = true, onClose }
             e.stopPropagation();
             onClose();
           }}
-          title="Thu gọn bản đồ (Phím M)"
+          title="Thu gọn bản đồ"
           className="absolute top-1 right-1 text-slate-400 hover:text-slate-800 p-0.5 rounded hover:bg-slate-100 transition-colors z-20 cursor-pointer pointer-events-auto"
         >
           <X className="w-3 h-3 stroke-[2.4]" />
@@ -226,7 +227,7 @@ export const Minimap = React.memo(function Minimap({ isVisible = true, onClose }
       </div>
 
       <div className="absolute bottom-1.5 left-2 text-[9.5px] font-mono font-bold text-slate-700 pointer-events-none tracking-wider select-none">
-        BẢN ĐỒ (Phím M)
+        BẢN ĐỒ<span className="hidden sm:inline"> (Phím M)</span>
       </div>
     </div>
   );

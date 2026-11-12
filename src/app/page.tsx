@@ -66,17 +66,17 @@ function StudySpacePageContent() {
     return <HomePage onEnterDesk={handleEnterDesk} />;
   }
 
-  // Mobile Companion Mode (<768px)
-  if (isMobile) {
+  // Mobile Companion Mode (accessible explicitly via ?view=companion)
+  if (viewParam === 'companion') {
     return (
-      <div className="w-full min-h-screen bg-white overflow-y-auto">
+      <div className="w-full min-h-[100dvh] bg-white overflow-y-auto">
         <MobileCompanionView />
         <GuestBanner user={user} />
       </div>
     );
   }
 
-  // Desktop & Tablet 2.5D Infinite Workspace
+  // Desktop, Tablet & Mobile 2.5D Infinite Workspace
   return (
     <>
       <StudySpaceDeskView />
@@ -88,7 +88,7 @@ function StudySpacePageContent() {
 
 export default function StudySpacePage() {
   return (
-    <Suspense fallback={<div className="w-screen h-screen bg-[#e8ebf0]" />}>
+    <Suspense fallback={<div className="w-screen h-[100dvh] bg-[#e8ebf0]" />}>
       <StudySpacePageContent />
     </Suspense>
   );

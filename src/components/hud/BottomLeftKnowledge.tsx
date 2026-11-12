@@ -447,12 +447,12 @@ export function BottomLeftKnowledge() {
         disabled={isParsingDoc}
         onClick={() => fileInputRef.current?.click()}
         title={isParsingDoc ? "Đang trích xuất tài liệu..." : "Tải lên tài liệu (PDF, Word, Text, Ảnh...)"}
-        className="w-10 h-10 rounded-xl bg-white hover:bg-green-50/80 text-[#16A34A] shadow-sm border border-slate-300 hover:border-green-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group disabled:opacity-75 disabled:cursor-wait"
+        className="w-8.5 h-8.5 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white hover:bg-green-50/80 text-[#16A34A] shadow-sm border border-slate-300 hover:border-green-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group disabled:opacity-75 disabled:cursor-wait"
       >
         {isParsingDoc ? (
-          <Loader2 className="w-4.5 h-4.5 text-[#16A34A] animate-spin" />
+          <Loader2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#16A34A] animate-spin" />
         ) : (
-          <Upload className="w-4.5 h-4.5 text-[#16A34A] stroke-[2.4] group-hover:scale-110 transition-transform" />
+          <Upload className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#16A34A] stroke-[2.4] group-hover:scale-110 transition-transform" />
         )}
       </button>
 
@@ -491,9 +491,9 @@ export function BottomLeftKnowledge() {
           setIsShareModalOpen(true);
         }}
         title="Mời bạn cùng học (Multiplayer Realtime)"
-        className="w-10 h-10 rounded-xl bg-white hover:bg-slate-100 text-slate-800 shadow-sm border border-slate-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group relative"
+        className="w-8.5 h-8.5 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white hover:bg-slate-100 text-slate-800 shadow-sm border border-slate-300 flex items-center justify-center transition-all active:scale-95 cursor-pointer group relative"
       >
-        <Share2 className="w-4.5 h-4.5 text-slate-800 stroke-[2.4] group-hover:scale-110 transition-transform" />
+        <Share2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-slate-800 stroke-[2.4] group-hover:scale-110 transition-transform" />
         {isMultiplayerConnected ? (
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute top-1.5 right-1.5 ring-2 ring-white animate-pulse" />
         ) : supabaseConfigState.isConfigured ? (
@@ -725,7 +725,7 @@ export function BottomLeftKnowledge() {
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white border border-slate-300 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative text-slate-900 animate-fade-in font-sans flex flex-col max-h-[90vh]"
+            className="bg-white border border-slate-300 rounded-3xl w-full max-w-lg p-6 shadow-2xl relative text-slate-900 animate-fade-in font-sans flex flex-col max-h-[90dvh]"
           >
             <button
               onClick={() => setIsShareModalOpen(false)}

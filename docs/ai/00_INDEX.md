@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-12`  
-> **Trạng thái Codebase:** Hoàn thành toàn diện giao diện Responsive Mobile/Tablet theo 11 tiêu chuẩn, khắc phục triệt để lỗi 404 GitHub Pages, lỗi nuốt phím cách khi gõ ghi chú tiếng Việt, và đồng bộ bàn học ban đầu phòng học nhóm. 20/20 test suites pass (89/89 tests), 14/14 static pages build pass, docs:check pass.
+> **Trạng thái Codebase:** Hoàn thành toàn diện cử chỉ Pinch-Zoom 2 ngón tay trên canvas bàn học 2.5D cho mobile/tablet, tự động căn vừa màn hình `fitAllToScreen()`, chặn zoom toàn trang web. 21/21 test suites pass (98/98 tests), 14/14 static pages build pass, docs:check pass.
 
 ---
 

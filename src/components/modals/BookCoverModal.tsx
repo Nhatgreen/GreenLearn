@@ -138,7 +138,7 @@ export function BookCoverModal({
       }}
     >
       <div 
-        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden flex flex-col max-h-[92vh] animate-scale-up"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden flex flex-col max-h-[92dvh] animate-scale-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}

@@ -228,7 +228,7 @@ export function TopRightWallet() {
     <>
       <div 
         data-tour="wallet-market"
-        className="relative flex items-center bg-white/95 border border-slate-300 rounded-2xl p-1.5 shadow-sm backdrop-blur-md pointer-events-auto select-none"
+        className="relative flex items-center bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-sm backdrop-blur-md pointer-events-auto select-none"
       >
         {/* Daily Streak & Pet Button */}
         <button
@@ -237,15 +237,15 @@ export function TopRightWallet() {
             setIsAiModalOpen(false);
           }}
           title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • Chuỗi ${pet.streakDays} ngày liên tiếp (Bấm để xem và điểm danh)`}
-          className={`relative flex items-center justify-center w-11 h-11 rounded-xl transition-all cursor-pointer group ${
+          className={`relative flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl transition-all cursor-pointer group ${
             isPetModalOpen ? 'bg-green-100 border border-green-300' : 'hover:bg-slate-100'
           }`}
         >
-          <div className="relative flex items-center justify-center w-10 h-10">
+          <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10">
             <img
               src={currentImageUrl}
               alt={pet.name}
-              className="w-7.5 h-7.5 object-contain transition-transform group-hover:scale-110 drop-shadow-xs"
+              className="w-6 h-6 sm:w-7.5 sm:h-7.5 object-contain transition-transform group-hover:scale-110 drop-shadow-xs"
             />
             <span
               className={`absolute -bottom-0.5 -right-0.5 text-[9px] font-black font-mono px-1 rounded-full border border-white leading-tight shadow-xs ${
@@ -257,7 +257,7 @@ export function TopRightWallet() {
           </div>
         </button>
 
-        <div className="w-[1px] h-6 bg-slate-200 my-auto mx-0.5" />
+        <div className="w-[1px] h-5 sm:h-6 bg-slate-200 my-auto mx-0.5" />
 
         {/* AI Bot Pill */}
         <button
@@ -267,14 +267,14 @@ export function TopRightWallet() {
             setIsAiModalOpen(true);
             setIsPetModalOpen(false);
           }}
-          className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all cursor-pointer ${
+          className={`flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl transition-all cursor-pointer ${
             isAiModalOpen 
               ? 'bg-[#16A34A] text-white shadow-xs font-bold border border-[#15803D]' 
               : 'text-slate-900 hover:text-black hover:bg-slate-100'
           }`}
           title={`Cài đặt kết nối AI (${selectedProvider === 'byok_gemini' ? 'Google Gemini' : selectedProvider === 'oauth_chatgpt' ? 'ChatGPT OAuth' : 'OpenAI'} - ${selectedModel})`}
         >
-          <Bot className={`w-5 h-5 stroke-[2.4] ${isAiModalOpen ? 'text-white' : 'text-slate-900'}`} />
+          <Bot className={`w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4] ${isAiModalOpen ? 'text-white' : 'text-slate-900'}`} />
         </button>
       </div>
 
@@ -322,7 +322,7 @@ export function TopRightWallet() {
               </div>
             </div>
 
-            <form onSubmit={handleSaveAiConfig} className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
+            <form onSubmit={handleSaveAiConfig} className="space-y-4 max-h-[75dvh] overflow-y-auto pr-1">
               {/* Bước 1: Chọn Nhà Cung Cấp */}
               <div>
                 <label className="text-xs font-bold text-slate-900 block mb-2">
