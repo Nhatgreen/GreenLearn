@@ -1,8 +1,8 @@
 # 00_INDEX.md — Chỉ Mục & Giao Thức Bộ Nhớ Dự Án ViTudy
 
 > **Commit Hash:** `Current Working Tree`  
-> **Cập nhật lần cuối:** `2026-11-12`  
-> **Trạng thái Codebase:** Khắc phục triệt để lỗi đường thẳng 2 ngón khi đang vẽ bằng Pointer Events Map, hủy nét vẽ dở khi $\ge 2$ con trỏ, hoãn ~40ms phát hiện cử chỉ pinch-zoom, hỗ trợ Stylus và Palm Rejection. 22/22 test suites pass (105/105 tests), 14/14 static pages build pass, docs:check pass.
+> **Cập nhật lần cuối:** `2026-11-13`  
+> **Trạng thái Codebase:** Đồng bộ 9 tính năng và sửa lỗi toàn diện từ ViTudy upstream: bộ phân tích Word/PPTX parseUploadedDocumentFile & sanitizeDocumentText, STudy keep-alive cache, Viewer Role Guard, In-situ OCR trên PaperSheet, Pomodoro HUD chip, purgeEmptySpaces, katexHtmlCache toàn cục, và CSP Twemoji/Giphy. 31/31 test suites pass (148/148 tests), 15/15 static pages build pass, docs:check pass.
 
 ---
 

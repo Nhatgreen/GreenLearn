@@ -24,6 +24,7 @@ import {
   Info
 } from 'lucide-react';
 import { getAssetPath } from '@/lib/assets';
+import { PomodoroChip } from './PomodoroChip';
 
 export function TopLeftNav() {
   const { 
@@ -274,6 +275,11 @@ export function TopLeftNav() {
               )}
             </div>
           )}
+        </div>
+
+        {/* Global Pomodoro HUD Chip */}
+        <div className="pl-2 border-l border-slate-200 hidden sm:flex items-center">
+          <PomodoroChip />
         </div>
 
         {/* Direct Invite Button & Dashboard & User Account */}

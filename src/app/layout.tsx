@@ -4,6 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { StudySpaceProvider } from '@/context/StudySpaceContext';
 import { SocialPresenceProvider } from '@/context/SocialPresenceContext';
+import { PomodoroProvider } from '@/context/PomodoroContext';
 import { DebugOverlay } from '@/components/common/DebugOverlay';
 
 export const viewport: Viewport = {
@@ -57,6 +58,10 @@ export default function RootLayout({
     <html lang="vi" className={`${openSans.variable} ${patrickHand.variable} ${lora.variable}`} suppressHydrationWarning spellCheck={false}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://cdn.jsdelivr.net https://media.giphy.com https://*.giphy.com https://*.supabase.co https://img.vietqr.io https://cdn.discordapp.com https://*.googleusercontent.com; media-src 'self' data: blob: https://media.giphy.com https://*.giphy.com; connect-src 'self' https://api.giphy.com https://*.supabase.co wss://*.supabase.co https://img.vietqr.io https://generativelanguage.googleapis.com https://api.openai.com https://cdn.jsdelivr.net blob:; worker-src 'self' blob:; object-src 'none';"
+        />
         <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta httpEquiv="Pragma" content="no-cache" />
         <meta httpEquiv="Expires" content="0" />
@@ -79,8 +84,10 @@ export default function RootLayout({
         <AuthProvider>
           <StudySpaceProvider>
             <SocialPresenceProvider>
-              {children}
-              <DebugOverlay />
+              <PomodoroProvider>
+                {children}
+                <DebugOverlay />
+              </PomodoroProvider>
             </SocialPresenceProvider>
           </StudySpaceProvider>
         </AuthProvider>

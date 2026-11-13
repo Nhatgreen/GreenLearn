@@ -162,11 +162,41 @@ export class StudySpaceService {
         });
       }
 
-      return result;
+      return this.purgeEmptySpaces(result);
     } catch (err) {
       console.warn('Lỗi loadSpaces từ Supabase Cloud:', err);
       return [];
     }
+  }
+
+  /**
+   * Bộ lọc tự động dọn dẹp các không gian học tập rỗng vô danh (purgeEmptySpaces)
+   * Loại bỏ các bàn học rác sinh ra trong quá trình khởi tạo/test không có vật thể,
+   * không có chủ đề trao đổi, và mang tên mặc định.
+   */
+  static purgeEmptySpaces(spaces: StudySpace[], activeSpaceId?: string): StudySpace[] {
+    if (!spaces || spaces.length <= 1) return spaces || [];
+
+    return spaces.filter(space => {
+      // 1. Luôn giữ bàn học đang kích hoạt
+      if (activeSpaceId && space.id === activeSpaceId) return true;
+
+      // 2. Nếu bàn học có vật thể hoặc có inteline threads, giữ lại
+      const hasItems = space.items && space.items.length > 0;
+      const hasThreads = space.threads && space.threads.length > 0;
+      if (hasItems || hasThreads) return true;
+
+      // 3. Nếu người dùng đã đặt tên riêng có chủ đích (không phải tên mặc định rác), giữ lại
+      const trimmedName = (space.name || '').trim().toLowerCase();
+      const isDefaultUnnamed = !trimmedName || 
+        trimmedName === 'bàn học chưa đặt tên' || 
+        trimmedName === 'bàn học mới' || 
+        trimmedName === 'không gian học tập mới' ||
+        /^bàn học mới(\s*\(\d+\)|\s*\d+)?$/i.test(trimmedName);
+
+      // Nếu là bàn rỗng vô danh không có nội dung, loại bỏ (purge)
+      return !isDefaultUnnamed;
+    });
   }
 
   static async saveSpace(space: StudySpace, userId: string): Promise<void> {

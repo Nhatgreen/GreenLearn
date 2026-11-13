@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { generateClozeQuestions, QuizQuestion } from '@/lib/nonAiEngine';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { askAi, parseQuizJsonSafely } from '@/lib/aiClient';
@@ -17,6 +17,7 @@ import {
   BookmarkPlus
 } from 'lucide-react';
 import { MathRenderer } from '@/components/common/MathRenderer';
+import { getStudyToolsCache, updateStudyToolsCache } from '@/lib/studyToolsCache';
 
 interface QuizTabProps {
   fullText: string;
@@ -37,19 +38,36 @@ export function QuizTab({
 }: QuizTabProps) {
   const { addExamSheet, addStickyNote } = useStudySpace();
 
-  const [questionCount, setQuestionCount] = useState<3 | 5 | 10>(5);
-  const [difficulty, setDifficulty] = useState<'Dễ' | 'Vừa' | 'Khó'>('Vừa');
-  const [scope, setScope] = useState<'Trang hiện tại' | 'Cả cuốn sách'>('Cả cuốn sách');
+  const cachedQuiz = getStudyToolsCache(documentTitle)?.quiz;
+
+  const [questionCount, setQuestionCount] = useState<3 | 5 | 10>(cachedQuiz?.questionCount || 5);
+  const [difficulty, setDifficulty] = useState<'Dễ' | 'Vừa' | 'Khó'>((cachedQuiz?.difficulty as any) || 'Vừa');
+  const [scope, setScope] = useState<'Trang hiện tại' | 'Cả cuốn sách'>((cachedQuiz?.scope as any) || 'Cả cuốn sách');
   const [useAi, setUseAi] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [userAnswers, setUserAnswers] = useState<Record<string, number>>({});
-  const [isGraded, setIsGraded] = useState(false);
+  const [questions, setQuestions] = useState<QuizQuestion[]>(cachedQuiz?.questions || []);
+  const [userAnswers, setUserAnswers] = useState<Record<string, number>>(cachedQuiz?.userAnswers || {});
+  const [isGraded, setIsGraded] = useState(cachedQuiz?.showResults || false);
   const [timeLimit, setTimeLimit] = useState<number>(15);
   const [savedNotice, setSavedNotice] = useState<string | null>(null);
   const [aiErrorNotice, setAiErrorNotice] = useState<string | null>(null);
   const [creationSource, setCreationSource] = useState<'ai' | 'offline' | null>(null);
   const [expandedExplanations, setExpandedExplanations] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (questions.length > 0) {
+      updateStudyToolsCache(documentTitle, {
+        quiz: {
+          questions,
+          userAnswers,
+          showResults: isGraded,
+          questionCount,
+          difficulty: difficulty as any,
+          scope: scope as any
+        }
+      });
+    }
+  }, [questions, userAnswers, isGraded, questionCount, difficulty, scope, documentTitle]);
 
   const textToUse = (scope === 'Trang hiện tại' && activePageText && activePageText.trim().length > 20) 
     ? activePageText 

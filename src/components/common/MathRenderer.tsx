@@ -9,13 +9,32 @@ interface MathRendererProps {
   className?: string;
 }
 
-// Global compile cache to avoid re-parsing KaTeX equations on every zoom/pan tick
-const katexCache = new Map<string, string>();
+/**
+ * Bộ nhớ đệm toàn cục KaTeX (katexHtmlCache).
+ * Lưu trữ chuỗi HTML đã biên dịch của các công thức LaTeX,
+ * triệt tiêu hoàn toàn chi phí re-compile (0ms) khi di chuyển, phóng to thu nhỏ
+ * hoặc render lại canvas 2.5D.
+ */
+export const katexHtmlCache = new Map<string, string>();
 
-function renderKatexWithCache(math: string, displayMode: boolean): string {
+/**
+ * Trả về kích thước hiện tại của bộ đệm KaTeX HTML
+ */
+export function getKatexCacheSize(): number {
+  return katexHtmlCache.size;
+}
+
+/**
+ * Xóa trắng bộ đệm KaTeX HTML
+ */
+export function clearKatexCache(): void {
+  katexHtmlCache.clear();
+}
+
+export function renderKatexWithCache(math: string, displayMode: boolean): string {
   const cacheKey = `${displayMode ? 'D' : 'I'}:${math}`;
-  if (katexCache.has(cacheKey)) {
-    return katexCache.get(cacheKey)!;
+  if (katexHtmlCache.has(cacheKey)) {
+    return katexHtmlCache.get(cacheKey)!;
   }
 
   try {
@@ -24,7 +43,7 @@ function renderKatexWithCache(math: string, displayMode: boolean): string {
       throwOnError: false,
       output: 'html',
     });
-    katexCache.set(cacheKey, rendered);
+    katexHtmlCache.set(cacheKey, rendered);
     return rendered;
   } catch {
     return '';

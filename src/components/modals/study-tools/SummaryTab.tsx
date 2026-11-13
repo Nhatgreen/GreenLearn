@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { summarizeWithTextRank } from '@/lib/nonAiEngine';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { askAi } from '@/lib/aiClient';
 import { Sparkles, Copy, Check, StickyNote } from 'lucide-react';
 import { MathRenderer } from '@/components/common/MathRenderer';
+import { getStudyToolsCache, updateStudyToolsCache } from '@/lib/studyToolsCache';
 
 interface SummaryTabProps {
   fullText: string;
@@ -17,10 +18,19 @@ interface SummaryTabProps {
 export function SummaryTab({ fullText, documentTitle, isPaper, targetPos }: SummaryTabProps) {
   const { addStickyNote } = useStudySpace();
 
-  const [summaryResult, setSummaryResult] = useState<string>('');
-  const [useAi, setUseAi] = useState(false);
+  const cached = getStudyToolsCache(documentTitle)?.summary;
+  const [summaryResult, setSummaryResult] = useState<string>(cached?.resultText || '');
+  const [useAi, setUseAi] = useState(cached?.useAi ?? false);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (summaryResult) {
+      updateStudyToolsCache(documentTitle, {
+        summary: { resultText: summaryResult, useAi }
+      });
+    }
+  }, [summaryResult, useAi, documentTitle]);
 
   const handleGenerateSummary = async () => {
     if (!fullText) return;

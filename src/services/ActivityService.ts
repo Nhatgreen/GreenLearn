@@ -49,6 +49,14 @@ export class ActivityService {
   }
 
   /**
+   * Ghi nhận một phiên học tập Pomodoro hoàn thành (ví dụ 25 phút)
+   */
+  static async recordStudySession(minutes = 25): Promise<number> {
+    const seconds = Math.min(minutes * 60, 1800);
+    return this.recordHeartbeat(seconds);
+  }
+
+  /**
    * Khởi động chu kỳ gửi heartbeat tự động mỗi 20 giây
    * Chỉ gửi khi tab đang mở (document.visibilityState === 'visible') và người dùng có tương tác
    */

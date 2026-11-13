@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * @deprecated
+ * File này được giữ lại theo quy tắc an toàn bảo tồn file.
+ * Tính năng OCR quét chữ từ ảnh chụp đã được chuyển trực tiếp in-situ lên thanh công cụ của PaperSheet.tsx.
+ */
+
 import React, { useState } from 'react';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { normalizeNFC } from '@/utils/textNormalization';

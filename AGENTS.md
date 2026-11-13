@@ -900,16 +900,47 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
   * Phía Host: Khi phát hiện bạn học mới tham gia (`join`), Host trích xuất `peerId = newPresences?.[0]?.id || key`, lập tức phát broadcast `SYNC_SPACE_STATE` lần 1 kèm lịch phát lần 2 sau 700ms với `targetId: requesterId || 'all'`.
   * Bộ lắng nghe `DESK_ACTION`: Chấp thuận xử lý action khi `targetId === 'all'` hoặc trùng khớp với `userId` của người học. Nhờ đó, ngay khi vừa bước vào phòng, bạn học được nạp đầy đủ 100% toàn bộ tài liệu, giấy ghi chú, sơ đồ tư duy và nét vẽ mà Host đã chuẩn bị sẵn trước đó.
 
-* **Quy Chuẩn Quản Lý Pointer Events & Cử Chỉ 2 Ngón Khi Cầm Bút Vẽ (Pointer Events, Palm Rejection & Multi-Touch Drawing Standard):**
-  * **Triệt tiêu lỗi nối thẳng 2 ngón tay khi đang cầm bút:** Khi người dùng đang chọn công cụ vẽ (`pen`, `highlighter`, `smart_shape`), việc đặt 2 ngón tay lên canvas để thu phóng/di chuyển bàn học tuyệt đối **KHÔNG ĐƯỢC** vẽ ra một đường thẳng nối 2 điểm chạm.
-  * **Cơ chế quản lý Pointer Events chuẩn:**
-    - Sử dụng `activePointersRef` (`Map<number, PointerData>`) lưu vết toàn bộ các con trỏ đang hoạt động theo `pointerId`.
-    - Khi phát hiện từ 2 con trỏ trở lên (`activePointers.size >= 2`): Hủy ngay lập tức nét vẽ đang dở (`cancelStroke()`, không đưa vào undo/history stack) và chuyển tức thì sang cử chỉ pinch-zoom và pan 2 ngón mượt mà quanh trung điểm chạm.
-    - Bộ đệm khởi tạo nét vẽ ~40ms: Khi chạm 1 ngón tay (`pointerType === 'touch'` và `e.isPrimary`), trì hoãn gọi `startStroke` ~40ms để phát hiện ngón thứ hai. Nếu ngón thứ hai chạm xuống trong 40ms, stroke bị hủy ngay từ đầu mà không sinh nét thừa.
-    - Hỗ trợ bút cảm ứng (Stylus): Khi `pointerType === 'pen'`, nét vẽ bắt đầu ngay lập tức với độ trễ bằng 0ms.
-    - Tùy chọn "Vẽ bằng ngón tay" (`isFingerDrawingEnabled`): Cho phép người dùng chuyển sang chế độ chuyên biệt cho bút cảm ứng (Stylus Only: ngón tay chỉ dùng để pan/zoom, chỉ bút stylus mới được vẽ).
-    - Xử lý `pointercancel` và `pointerup`: Giải phóng `pointerCapture`, dọn sạch con trỏ trong Map và reset toàn bộ trạng thái để ngăn ngừa kẹt thao tác hoặc treo cờ cử chỉ.
-    - `touch-action: none` và `overscroll-behavior: none` bắt buộc có mặt trên canvas và lớp bắt sự kiện vẽ.
+* **Quy Chuẩn Phân Tích & Làm Sạch Tệp Tải Lên (Unified Document Parser & Text Sanitization Standard):**
+  * Sử dụng bộ phân tích đồng nhất `parseUploadedDocumentFile` (hỗ trợ .pdf, .docx, .pptx, ảnh, markdown/txt) kết hợp cơ chế tự chữa lành `sanitizeDocumentText`.
+  * Cơ chế tự chữa lành: Loại bỏ triệt để ký tự NULL `\u0000`, ký tự điều khiển ASCII không in được, ký tự thay thế `\uFFFD`, và chữ ký nhị phân ZIP PK`\x03\x04`. Chuẩn hóa ngắt dòng `\r\n` thành `\n` và áp dụng Unicode NFC.
+  * Triệt tiêu hoàn toàn lỗi đơ/treo `MathRenderer` và lỗi lưu trữ hỏng bộ nhớ khi người học kéo thả tệp Word (.docx) hay PowerPoint (.pptx) trực tiếp lên Bàn học.
+
+* **Quy Chuẩn Bảo Toàn Dữ Liệu Công Cụ Học Tập STudy (STudy Tools State Preservation & Keep-Alive Standard):**
+  * Sử dụng `studyToolsCache.ts` kết hợp mount đồng thời với CSS hidden (`${activeTab === '...' ? 'flex-1' : 'hidden'}`) trên cả modal buồng lái `StudyToolsModal.tsx` và buồng lái in-situ trên `PaperSheet.tsx`.
+  * Triệt tiêu hoàn toàn tình trạng unmount component khi chuyển tab giữa Summary, Quiz, Flashcards, Roadmap; bảo toàn 100% dữ liệu tóm tắt AI vừa tạo, bộ câu hỏi trắc nghiệm vừa sinh và các câu trả lời đang làm dở của người học.
+
+* **Quy Chuẩn Bảo Vệ Quyền Chỉ Xem Khi Mời Bạn Học (Viewer Role Guard Standard):**
+  * Tích hợp hàm kiểm tra `isViewerSession()` và cờ `isViewer` trong `StudySpaceContext.tsx`.
+  * Khi khách truy cập vào bàn học với quyền "Chỉ xem" (`role=viewer` hoặc `perm=view_only` trên URL hoặc trạng thái `multiplayerPermission === 'view_only'` và không phải là Host), hệ thống tự động khóa toàn bộ các thao tác chỉnh sửa:
+    - Kéo thả vị trí vật thể (`updateItemPosition`), thay đổi kích thước (`updateItemDimensions`), đổi tên (`updateItemTitle`), sửa nội dung ghi chú/code block.
+    - Xóa vật thể (`removeDeskItem`), gộp sách (`combineIntoBinder`), biến giấy thành sách (`convertPaperToBook`).
+    - Thêm vật thể mới (`addStickyNote`, `addUploadedDocument`, `addCodeSnippet`, `addMindMapNode`, `addSticker`, `addExamSheet`).
+    - Nét vẽ bút và bút dạ quang (`startStroke`, `addStroke`, `undoStroke`, `redoStroke`, `clearStrokes`, `removeStroke`).
+  * Trong khi đó, người xem vẫn nhận và hiển thị đầy đủ 100% các thao tác và nét vẽ do Host broadcast tới thời gian thực qua kênh Realtime Supabase.
+
+* **Quy Chuẩn OCR Trực Tiếp Trên Tờ Giấy Ảnh (In-Situ OCR Standard):**
+  * Tích hợp nút quét OCR (`FileSearch`) trực tiếp trên thanh công cụ nổi của tờ giấy ảnh (`PaperSheet.tsx`).
+  * Sử dụng Tesseract.js WebAssembly chạy 100% trên trình duyệt (ngôn ngữ `vie+eng`).
+  * Cho phép người học chuyển đổi linh hoạt (toggle) giữa chế độ xem ảnh gốc và chế độ xem văn bản trích xuất `MathRenderer` để bôi đen hỏi AI Inteline hoặc trích xuất thẻ ghi nhớ ra bàn học.
+
+* **Quy Chuẩn Chuẩn Hóa Tên Tài Liệu Ảnh Thông Minh (Smart Document Naming Standard):**
+  * Tiện ích `formatUploadedDocTitle` (`@/utils/documentNaming`) tự động nhận diện và làm sạch các tên file ảnh chụp camera, ảnh chụp màn hình hoặc mã hash máy (như `IMG_...`, `PXL_...`, `DSC_...`, `815733508_...`) thành định dạng chuẩn người đọc được: `Ảnh chụp DD/MM HH:mm`.
+  * Hỗ trợ nhấp đúp đổi tên tài liệu trực tiếp trên tiêu đề tờ giấy (`PaperSheet`) và gáy sách (`BookSpread`).
+
+* **Quy Chuẩn Đồng Hồ Pomodoro Toàn Cục HUD (Global HUD Pomodoro Standard):**
+  * Quản lý tập trung qua `PomodoroContext.tsx` và gắn chip đếm ngược thu nhỏ `PomodoroChip.tsx` lên thanh `TopLeftNav` của bàn học.
+  * Hiển thị thời gian đếm ngược `mm:ss`, nút bắt đầu/tạm dừng nhanh, popover tùy chọn đặt lại và thống kê số phiên hoàn thành hôm nay.
+  * Tự động ghi nhận nhịp tim học tập qua `ActivityService.recordStudySession(25)` và phát event `greenlearn:pomodoro-complete` sau mỗi phiên 25 phút.
+
+* **Quy Chuẩn Dọn Dẹp Bàn Học Trống (Empty Spaces Purge Standard):**
+  * Phương thức `StudySpaceService.purgeEmptySpaces` tự động loại bỏ các không gian rỗng vô danh sinh ra trong quá trình khởi tạo/test (không có item, không có thread, mang tên mặc định), giữ sạch sẽ danh sách "Mở lại gần đây".
+
+* **Quy Chuẩn Bộ Nhớ Đệm KaTeX Toàn Cục (Global KaTeX Compile Cache Standard):**
+  * Xuất khẩu toàn cục `katexHtmlCache` trong `MathRenderer.tsx` để tái sử dụng HTML biên dịch của công thức toán học KaTeX, đạt chi phí biên dịch 0ms trên các lần xem tiếp theo khi pan/zoom canvas.
+
+* **Quy Chuẩn Content Security Policy (CSP Standard):**
+  * Khai báo đầy đủ CSP trong `<head>` của `layout.tsx` với quyền `img-src` và `connect-src` cho Twemoji (`cdn.jsdelivr.net`) và Giphy Live (`api.giphy.com`, `media.giphy.com`, `*.giphy.com`), ngăn ngừa triệt để lỗi chặn ảnh emoji/sticker.
+
 
 
 

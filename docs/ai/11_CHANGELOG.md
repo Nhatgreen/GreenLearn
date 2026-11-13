@@ -4,7 +4,59 @@
 
 ---
 
-## 2026-11-12 16:32 — main (Khóa Cứng Giao Diện Mobile Khi Reload Trên Điện Thoại - Rock-Solid Mobile Hard-Lock Engine)
+## 2026-11-13 22:30 — main (Đồng Bộ 9 Tính Năng & Vá Lỗi Toàn Diện: Word/PPTX Parser, STudy Keep-Alive, Viewer Guard, In-situ OCR, Pomodoro HUD, Purge Empty Spaces, KaTeX Cache, CSP Twemoji/Giphy)
+- **Task:** Giải quyết toàn diện 9 mục tồn đọng, thiếu sót so với ViTudy upstream theo yêu cầu của Sếp:
+  1. **Khắc phục lỗi đơ/treo khi kéo thả tệp Word (.docx) & PowerPoint (.pptx) lên Bàn học:**
+     - Xây dựng cơ chế tự chữa lành `sanitizeDocumentText` (`src/utils/textNormalization.ts`) loại bỏ ký tự NULL `\u0000`, ký tự điều khiển ASCII, rác `\uFFFD`, và chữ ký nhị phân ZIP `PK\x03\x04`.
+     - Xây dựng bộ phân tích đồng nhất `parseUploadedDocumentFile` (`src/services/OfficeParserService.ts`) hỗ trợ PDF, DOCX (mammoth), PPTX (jszip), Ảnh, Markdown/TXT và fallback phòng vệ an toàn.
+     - Cập nhật sự kiện thả tệp `handleDrop` trong `InfiniteDesk.tsx` và `handleFileSelect` trong `BottomLeftKnowledge.tsx` sử dụng `parseUploadedDocumentFile`.
+  2. **Bảo toàn dữ liệu AI & Trắc nghiệm khi chuyển Tab trong STudy:**
+     - Xây dựng bộ nhớ đệm `src/lib/studyToolsCache.ts` lưu trữ AI Summary, Quiz questions/answers, Flashcards theo document ID / title.
+     - Chuyển cơ chế render của `StudyToolsModal.tsx` và buồng lái in-situ trên `PaperSheet.tsx` từ render có điều kiện (unmount) sang mount đồng thời kết hợp CSS hidden, triệt tiêu hoàn toàn việc mất dữ liệu khi chuyển tab.
+  3. **Khóa quyền chỉnh sửa của khách trong phòng "Chỉ xem" (Viewer Role Guard):**
+     - Bổ sung hàm kiểm tra `isViewerSession()` và cờ `isViewer` trong `StudySpaceContext.tsx`.
+     - Khóa toàn bộ các thao tác chỉnh sửa (`updateItemPosition`, `updateItemDimensions`, `updateItemTitle`, `updateStickyNoteText`, `removeDeskItem`, `combineIntoBinder`, `convertPaperToBook`, `addStickyNote`, `addUploadedDocument`, `startStroke`, `addStroke`, `clearStrokes`, `removeStroke`) khi là Viewer, đồng thời vẫn bảo đảm nhận và hiển thị đầy đủ broadcast Realtime từ Host.
+  4. **Công cụ OCR trực tiếp trên Tờ giấy ảnh (`PaperSheet.tsx`):**
+     - Tích hợp nút quét OCR `FileSearch` trực tiếp trên thanh công cụ nổi của `PaperSheet.tsx` sử dụng Tesseract.js WebAssembly (`vie+eng`).
+     - Cho phép bật/tắt giữa xem ảnh gốc và xem văn bản trích xuất `MathRenderer` để bôi đen hỏi AI Inteline hoặc trích xuất thẻ ghi nhớ.
+  5. **Chuẩn hóa tên tài liệu ảnh thông minh (`documentNaming.ts`):**
+     - Xây dựng `src/utils/documentNaming.ts` với hàm `formatUploadedDocTitle` tự động nhận diện và làm sạch mã máy, ảnh camera, screenshot thành `Ảnh chụp DD/MM HH:mm`.
+     - Áp dụng trên `InfiniteDesk.tsx`, `BottomLeftKnowledge.tsx`, `PaperSheet.tsx`.
+  6. **Đồng hồ Pomodoro toàn cục trên HUD Bàn học:**
+     - Xây dựng `src/context/PomodoroContext.tsx` quản lý Pomodoro state toàn cục và tự động ghi nhận nhịp tim học tập qua `ActivityService.recordStudySession(25)`.
+     - Gắn chip đếm ngược thu nhỏ `PomodoroChip.tsx` lên thanh `TopLeftNav.tsx` kèm nút phát/dừng nhanh và popover thống kê.
+  7. **Cơ chế tự động dọn dẹp bàn học trống (`purgeEmptySpaces`):**
+     - Bổ sung phương thức tĩnh `StudySpaceService.purgeEmptySpaces` tự động loại bỏ các bàn học rỗng vô danh (không có item, không có thread, mang tên mặc định) trong `loadSpaces`, `StudySpaceContext`, và `HomePage`.
+  8. **Bộ nhớ đệm KaTeX compile cache toàn cục (`katexHtmlCache`):**
+     - Xuất khẩu toàn cục `katexHtmlCache` trong `src/components/common/MathRenderer.tsx` cùng các helper `getKatexCacheSize()`, `clearKatexCache()`.
+  9. **Khai báo CSP cho Twemoji & Giphy Live:**
+     - Khai báo đầy đủ chính sách CSP trong `<meta http-equiv="Content-Security-Policy">` ở `layout.tsx` cho phép `cdn.jsdelivr.net` (Twemoji SVG) và `api.giphy.com`, `media.giphy.com`, `*.giphy.com` (Giphy GIFs).
+- **Verification:**
+  - `pnpm test`: 31/31 test suites passed (148/148 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Build export GitHub Pages thành công (`out/`).
+  - `pnpm run docs:index` & `pnpm run docs:check`: 284 symbols hợp lệ.
+- **Changed:**
+  - `src/utils/textNormalization.ts`: thêm `sanitizeDocumentText`
+  - `src/utils/documentNaming.ts`: tạo mới `formatUploadedDocTitle`, `isCameraOrMachineGeneratedName`
+  - `src/services/OfficeParserService.ts`: thêm `parseUploadedDocumentFile`, tích hợp sanitize và title formatting
+  - `src/lib/studyToolsCache.ts`: tạo mới bộ nhớ đệm STudy
+  - `src/components/modals/StudyToolsModal.tsx`: mount đồng thời các tab với CSS hidden
+  - `src/components/objects/PaperSheet.tsx`: in-situ OCR, keep-alive STudy tab, Smart title editing
+  - `src/components/modals/study-tools/SummaryTab.tsx`: nạp và lưu cache
+  - `src/components/modals/study-tools/QuizTab.tsx`: nạp và lưu cache
+  - `src/context/StudySpaceContext.tsx`: bổ sung `isViewerSession`, `isViewer` và gác cổng viewer
+  - `src/context/PomodoroContext.tsx`: tạo mới Provider Pomodoro
+  - `src/components/hud/PomodoroChip.tsx`: tạo mới chip HUD Pomodoro
+  - `src/components/hud/TopLeftNav.tsx`: gắn chip Pomodoro
+  - `src/services/StudySpaceService.ts`: thêm `purgeEmptySpaces`
+  - `src/services/ActivityService.ts`: thêm `recordStudySession`
+  - `src/components/common/MathRenderer.tsx`: xuất khẩu `katexHtmlCache`, `getKatexCacheSize`, `clearKatexCache`
+  - `src/app/layout.tsx`: khai báo meta CSP, bọc PomodoroProvider
+  - `src/components/canvas/InfiniteDesk.tsx`: dùng `parseUploadedDocumentFile`
+  - `src/components/hud/BottomLeftKnowledge.tsx`: dùng `parseUploadedDocumentFile`
+  - `AGENTS.md`: cập nhật các quy chuẩn kỹ thuật bắt buộc
+
 - **Task:** Khắc phục triệt để lỗi khi người dùng mở điện thoại rồi bấm tải lại trang (reload) thì giao diện bị lỗi/văng sang layout tablet thay vì giữ cứng giao diện điện thoại:
   1. **Nguyên Nhân Gốc Rễ:**
      - Trình duyệt di động (iOS Safari / Android Chrome) trong vài miligiây đầu khi bấm reload thường báo kích thước giả định chưa scale (980px) hoặc trả về độ phân giải vật lý `screen.width` (1080px/1440px trên Android) thay vì CSS pixels. Khi đó điều kiện `screenW < 600` bị fail và rơi vào breakpoint tablet (`sm:w-18`).

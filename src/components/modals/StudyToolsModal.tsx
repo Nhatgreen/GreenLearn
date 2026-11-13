@@ -148,12 +148,12 @@ export function StudyToolsModal({
         </button>
       </div>
 
-      {/* Tab Body: Pinned container with scrollable content inside */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-white" onWheel={(e) => e.stopPropagation()}>
-        {activeTab === 'summary' && (
+      {/* Tab Body: Pinned container with scrollable content inside, mounted concurrently to preserve AI & quiz states */}
+      <div className="flex-1 flex flex-col overflow-hidden bg-white relative" onWheel={(e) => e.stopPropagation()}>
+        <div className={`h-full flex flex-col ${activeTab === 'summary' ? 'flex-1' : 'hidden'}`}>
           <SummaryTab fullText={fullText} documentTitle={item.title} targetPos={targetPos} />
-        )}
-        {activeTab === 'quiz' && (
+        </div>
+        <div className={`h-full flex flex-col ${activeTab === 'quiz' ? 'flex-1' : 'hidden'}`}>
           <QuizTab 
             fullText={fullText} 
             documentTitle={item.title} 
@@ -161,13 +161,13 @@ export function StudyToolsModal({
             targetPos={targetPos}
             activePageText={activePageText}
           />
-        )}
-        {activeTab === 'flashcards' && (
+        </div>
+        <div className={`h-full flex flex-col ${activeTab === 'flashcards' ? 'flex-1' : 'hidden'}`}>
           <FlashcardTab fullText={fullText} documentTitle={item.title} />
-        )}
-        {activeTab === 'roadmap' && (
+        </div>
+        <div className={`h-full flex flex-col ${activeTab === 'roadmap' ? 'flex-1' : 'hidden'}`}>
           <RoadmapTab pages={item.pages} itemType={item.type} itemId={item.id} />
-        )}
+        </div>
       </div>
     </div>
   );

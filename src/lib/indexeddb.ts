@@ -6,7 +6,7 @@ const DB_VERSION = 1;
 let dbPromise: Promise<IDBPDatabase> | null = null;
 
 export async function getIDB(): Promise<IDBPDatabase | null> {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined' || typeof indexedDB === 'undefined') return null;
 
   if (!dbPromise) {
     dbPromise = openDB(DB_NAME, DB_VERSION, {

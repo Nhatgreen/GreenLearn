@@ -5,7 +5,7 @@ import { DeskItem } from '@/types/studyspace';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { askAi } from '@/lib/aiClient';
 import { useDeskItemInteraction } from '@/hooks/useDeskItemInteraction';
-import { normalizeNFC } from '@/utils/textNormalization';
+import { normalizeNFC, sanitizeDocumentText } from '@/utils/textNormalization';
 import { 
   Trash2, 
   Sparkles, 
@@ -22,7 +22,8 @@ import {
   HelpCircle,
   BookOpen,
   BookmarkPlus,
-  BookPlus
+  BookPlus,
+  FileSearch
 } from 'lucide-react';
 import { RotateTwoWay } from '@/components/icons/RotateTwoWay';
 import { MathRenderer } from '../common/MathRenderer';
@@ -148,6 +149,39 @@ export function PaperSheetComponent({ item, isSelected }: PaperSheetProps) {
     pageNumber: 1,
     title: item.title,
     text: 'Tài liệu chưa có nội dung...'
+  };
+
+  const [isOcrView, setIsOcrView] = useState(false);
+  const [isOcrLoading, setIsOcrLoading] = useState(false);
+  const [ocrText, setOcrText] = useState(activePage.text || '');
+
+  const handleToggleOcr = async () => {
+    if (!activePage.image) return;
+
+    if (isOcrView) {
+      setIsOcrView(false);
+      return;
+    }
+
+    if (ocrText && ocrText.trim().length > 0) {
+      setIsOcrView(true);
+      return;
+    }
+
+    setIsOcrLoading(true);
+    try {
+      const Tesseract = await import('tesseract.js');
+      const result = await Tesseract.recognize(activePage.image, 'vie+eng');
+      const text = sanitizeDocumentText(normalizeNFC(result.data?.text || ''));
+      setOcrText(text);
+      activePage.text = text;
+      setIsOcrView(true);
+    } catch (err: any) {
+      console.error('Lỗi OCR:', err);
+      alert('Không thể nhận diện chữ từ ảnh: ' + (err.message || 'Lỗi không xác định'));
+    } finally {
+      setIsOcrLoading(false);
+    }
   };
 
   // Text selection handler for inline Inteline card
@@ -312,16 +346,17 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
               </button>
             </div>
 
-            {/* Tab Body */}
-            <div className="flex-1 flex flex-col overflow-hidden p-3 bg-white" onWheel={(e) => e.stopPropagation()}>
-              {paperStudyTab === 'summary' ? (
+            {/* Tab Body: Mount concurrently to preserve AI summary and Quiz progress */}
+            <div className="flex-1 flex flex-col overflow-hidden p-3 bg-white relative" onWheel={(e) => e.stopPropagation()}>
+              <div className={`h-full flex flex-col ${paperStudyTab === 'summary' ? 'flex-1' : 'hidden'}`}>
                 <SummaryTab 
                   fullText={activePage.text} 
                   documentTitle={item.title} 
                   isPaper={true}
                   targetPos={{ x: item.x + (isExam ? 460 : 360) + 30, y: item.y }}
                 />
-              ) : (
+              </div>
+              <div className={`h-full flex flex-col ${paperStudyTab === 'quiz' ? 'flex-1' : 'hidden'}`}>
                 <QuizTab 
                   fullText={activePage.text} 
                   documentTitle={item.title} 
@@ -329,7 +364,7 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                   isPaper={true}
                   targetPos={{ x: item.x + (isExam ? 460 : 360) + 30, y: item.y }}
                 />
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -546,8 +581,8 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                 </h4>
               )}
 
-              {/* Reading Text Layer (or PDF Rendered Page Image) */}
-              {activePage.image ? (
+              {/* Reading Text Layer (or PDF/Image with in-situ OCR Text Toggle) */}
+              {activePage.image && !isOcrView ? (
                 <div className="relative flex-1 w-full h-full min-h-0 flex items-center justify-center overflow-hidden bg-white/70 rounded">
                   <img
                     src={activePage.image}
@@ -555,21 +590,41 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                     className="max-w-full max-h-full object-contain pointer-events-none select-none rounded-xs"
                     draggable={false}
                   />
-                  <div 
-                    onMouseDown={(e) => e.stopPropagation()}
-                    className="absolute inset-0 opacity-0 hover:opacity-10 transition-opacity p-2 text-xs overflow-y-auto no-scrollbar cursor-text select-text"
-                    title="Bôi đen văn bản để hỏi Inteline / STudy"
-                  >
-                    <MathRenderer content={activePage.text} />
-                  </div>
+                  {isOcrLoading && (
+                    <div className="absolute inset-0 bg-white/85 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center z-20">
+                      <span className="w-5 h-5 border-2 border-[#16A34A] border-t-transparent rounded-full animate-spin mb-1.5" />
+                      <span className="text-[11px] font-bold text-slate-800">Đang quét chữ OCR...</span>
+                      <span className="text-[9px] text-slate-500 font-medium">Tesseract.js WebAssembly (vie+eng)</span>
+                    </div>
+                  )}
+                  {activePage.text && (
+                    <div 
+                      onMouseDown={(e) => e.stopPropagation()}
+                      className="absolute inset-0 opacity-0 hover:opacity-10 transition-opacity p-2 text-xs overflow-y-auto no-scrollbar cursor-text select-text"
+                      title="Bôi đen văn bản để hỏi Inteline / STudy"
+                    >
+                      <MathRenderer content={activePage.text} />
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div 
                   onMouseDown={(e) => e.stopPropagation()}
                   style={{ textRendering: 'geometricPrecision', WebkitFontSmoothing: 'antialiased' }}
-                  className={`${dynamicFontSize} text-slate-900 font-medium whitespace-pre-line font-sans selection:bg-slate-200 selection:text-slate-900 overflow-hidden flex-1 cursor-text select-text`}
+                  className={`${dynamicFontSize} text-slate-900 font-medium whitespace-pre-line font-sans selection:bg-slate-200 selection:text-slate-900 overflow-y-auto no-scrollbar flex-1 cursor-text select-text p-2`}
                 >
-                  <MathRenderer content={activePage.text} />
+                  {isOcrView && (
+                    <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-green-200 text-[10px] font-semibold text-[#166534] bg-[#F0FDF4] px-2 py-1 rounded select-none">
+                      <span>Văn bản trích xuất OCR:</span>
+                      <button
+                        onClick={() => setIsOcrView(false)}
+                        className="hover:underline text-[#16A34A] font-bold cursor-pointer"
+                      >
+                        Xem ảnh gốc
+                      </button>
+                    </div>
+                  )}
+                  <MathRenderer content={ocrText || activePage.text || 'Trang chưa có văn bản.'} />
                 </div>
               )}
             </div>
@@ -614,6 +669,26 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             >
               <Layers className="w-4 h-4 stroke-[2.4]" />
             </button>
+
+            {/* Quét chữ OCR trực tiếp trên ảnh chụp */}
+            {activePage.image && (
+              <button
+                title={isOcrLoading ? 'Đang nhận diện chữ qua Tesseract.js...' : (isOcrView ? 'Quay lại xem ảnh gốc' : 'Quét chữ OCR từ ảnh (Tesseract.js)')}
+                onClick={handleToggleOcr}
+                disabled={isOcrLoading}
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                  isOcrView 
+                    ? 'bg-[#F0FDF4] text-[#16A34A] border border-[#BBF7D0]' 
+                    : 'text-slate-700 hover:text-[#16A34A] hover:bg-green-50'
+                }`}
+              >
+                {isOcrLoading ? (
+                  <span className="w-4 h-4 border-2 border-[#16A34A] border-t-transparent rounded-full animate-spin inline-block" />
+                ) : (
+                  <FileSearch className="w-4 h-4 stroke-[2.4]" />
+                )}
+              </button>
+            )}
 
             {/* 1 gạch phân vùng với 2 icon xoay góc phóng to */}
             <div className="w-[1px] h-4 bg-slate-200" />

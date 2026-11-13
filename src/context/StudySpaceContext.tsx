@@ -155,6 +155,8 @@ interface StudySpaceContextType {
   broadcastDeskAction: (action: DeskAction) => void;
   isFollowPresenter: boolean;
   setIsFollowPresenter: (follow: boolean) => void;
+  isViewerSession: () => boolean;
+  isViewer: boolean;
 }
 
 const DEFAULT_TRANSFORM: CanvasTransform = {
@@ -575,6 +577,28 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     setIsFollowPresenter
   } = realtimeMultiplayer;
 
+  const isViewerSession = useCallback((): boolean => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const roomParam = params.get('room');
+      const roleParam = params.get('role');
+      const permParam = params.get('perm');
+      if (roomParam) {
+        const isHostedLocally = localStorage.getItem('greenlearn_hosted_room_' + roomParam) === 'true';
+        if (!isHostedLocally && (roleParam === 'viewer' || permParam === 'view_only' || multiplayerPermission === 'view_only')) {
+          return true;
+        }
+      }
+    }
+    const inRoom = isMultiplayerConnected || Boolean(multiplayerRoomId);
+    if (inRoom && !isMultiplayerHost && multiplayerPermission === 'view_only') {
+      return true;
+    }
+    return false;
+  }, [isMultiplayerConnected, multiplayerRoomId, isMultiplayerHost, multiplayerPermission]);
+
+  const isViewer = isViewerSession();
+
   const joinMultiplayerRoom = useCallback((roomId: string, permission: 'view_only' | 'edit' = 'view_only') => {
     rawJoinMultiplayerRoom(roomId, permission);
     setActiveSpaceId(roomId);
@@ -605,6 +629,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const startStroke = (point: { x: number; y: number }, color: string, width: number, isHighlighter: boolean) => {
+    if (isViewerSession()) return;
     setCurrentStroke({
       id: `stroke-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       points: [point],
@@ -699,6 +724,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   const [redoStack, setRedoStack] = useState<import('@/types/studyspace').DrawingStroke[]>([]);
 
   const addStroke = (stroke: import('@/types/studyspace').DrawingStroke) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setStrokes(prev => [...prev, stroke]);
     setRedoStack([]); // reset redo on new stroke
     if (!isApplyingRemoteAction.current) {
@@ -707,6 +733,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const undoStroke = () => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setStrokes(prev => {
       if (prev.length === 0) return prev;
       const last = prev[prev.length - 1];
@@ -716,6 +743,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const redoStroke = () => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setRedoStack(prev => {
       if (prev.length === 0) return prev;
       const nextStroke = prev[prev.length - 1];
@@ -725,6 +753,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const clearStrokes = () => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setStrokes([]);
     setRedoStack([]);
     if (!isApplyingRemoteAction.current) {
@@ -733,6 +762,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const removeStrokeById = (id: string) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setStrokes(prev => prev.filter(s => s.id !== id));
     if (!isApplyingRemoteAction.current) {
       broadcastDeskActionRef.current({ type: 'REMOVE_STROKE', payload: { id } });
@@ -740,6 +770,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const removeStrokesInBox = (box: { x1: number; y1: number; x2: number; y2: number }) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     const minX = Math.min(box.x1, box.x2);
     const maxX = Math.max(box.x1, box.x2);
     const minY = Math.min(box.y1, box.y2);
@@ -891,7 +922,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     }
 
     // Khi là khách (Guest)
-    const guestList = (localSpaces && localSpaces.length > 0) ? [...localSpaces] : [...INITIAL_SPACES];
+    const rawGuestList = (localSpaces && localSpaces.length > 0) ? [...localSpaces] : [...INITIAL_SPACES];
+    const guestList = StudySpaceService.purgeEmptySpaces(rawGuestList, localActiveId || undefined);
     const targetId = resolveTargetSpaceId(guestList);
     setSpaces([...guestList]);
     setActiveSpaceId(targetId);
@@ -1324,6 +1356,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateItemPosition = (id: string, x: number, y: number) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1339,6 +1372,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateItemDimensions = (id: string, width: number, height: number) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1351,6 +1385,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateItemTitle = (id: string, newTitle: string) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1365,6 +1400,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateStickyNoteText = (id: string, text: string) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     const normalized = text.normalize('NFC');
     setSpaces(sList =>
       sList.map(s => {
@@ -1386,6 +1422,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateStickyNoteColor = (id: string, color: string) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1400,6 +1437,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateBookCoverColor = (id: string, color: string) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1414,6 +1452,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateStickyNoteTextAlign = (id: string, align: 'left' | 'center' | 'right') => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1428,6 +1467,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const updateStickyNoteIsBold = (id: string, isBold: boolean) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1443,6 +1483,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   // Convert a loose paper sheet into a bound book with a leather cover
   const convertPaperToBook = (paperId: string, coverColor = 'brown') => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
       sList.map(s => {
         if (s.id !== activeSpaceId) return s;
@@ -1726,6 +1767,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   // Combine non-destructive binder merging
   const combineIntoBinder = (targetId: string, draggedId: string): boolean => {
     if (targetId === draggedId) return false;
+    if (!isApplyingRemoteAction.current && isViewerSession()) return false;
 
     const targetItem = activeSpace.items.find(i => i.id === targetId);
     const draggedItem = activeSpace.items.find(i => i.id === draggedId);
@@ -1862,6 +1904,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const addStickyNote = (text = '', x?: number, y?: number, color = '#fef08a', width?: number, height?: number): string => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return '';
     const noteId = `sticky-${Date.now()}`;
     const w = width || 220;
     const h = height || 200;
@@ -2258,6 +2301,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const addUploadedDocument = (title: string, rawPages: { title?: string; text: string; image?: string }[]) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     const pageCount = rawPages.length;
     const type: 'paper' | 'book' = pageCount <= 1 ? 'paper' : 'book';
 
@@ -2434,6 +2478,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const removeDeskItem = (id: string) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
     if (status === 'authenticated') {
       StudySpaceService.deleteItem(id);
     }
@@ -2557,6 +2602,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         broadcastDeskAction,
         isFollowPresenter,
         setIsFollowPresenter,
+        isViewerSession,
+        isViewer,
         saveStatus,
         saveCurrentSpaceImmediately
       }}

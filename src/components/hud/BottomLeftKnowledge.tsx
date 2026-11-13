@@ -35,7 +35,7 @@ import {
   Plus
 } from 'lucide-react';
 import { getSupabaseConfig, saveSupabaseConfig, clearSupabaseConfig, getSupabase } from '@/lib/supabase';
-import { parsePdfFile } from '@/services/PdfParserService';
+import { parseUploadedDocumentFile } from '@/services/OfficeParserService';
 import { useSocialPresence } from '@/hooks/useSocialPresence';
 import { DeskInviteNotification, SocialFriend } from '@/services/SocialFriendService';
 
@@ -357,61 +357,29 @@ export function BottomLeftKnowledge() {
     document.body.removeChild(a);
   };
 
-  // Handle native file input selection (Real PDF & document extraction)
+  // Handle native file input selection (Real PDF, Word, PowerPoint & document extraction)
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const rawName = file.name.replace(/\.[^/.]+$/, '');
-    const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-    const isImage = file.type.startsWith('image/');
-    const isText = file.type.includes('text') || file.name.endsWith('.md') || file.name.endsWith('.txt');
-
-    let parsedPages: { title?: string; text: string; image?: string }[] = [];
     setIsParsingDoc(true);
 
     try {
-      if (isPdf) {
-        parsedPages = await parsePdfFile(file);
-      } else if (isImage) {
-        const reader = new FileReader();
-        const dataUrl = await new Promise<string>((resolve) => {
-          reader.onload = () => resolve(reader.result as string);
-          reader.readAsDataURL(file);
-        });
-        parsedPages = [{
-          title: rawName,
-          text: '',
-          image: dataUrl
-        }];
-      } else if (isText) {
-        const content = await file.text();
-        const paragraphs = content.split('\n\n').filter(p => p.trim().length > 0);
-        parsedPages = paragraphs.length > 0
-          ? paragraphs.map((p, idx) => ({ title: `Trang ${idx + 1}`, text: p.trim() }))
-          : [{ title: rawName, text: content.trim() }];
-      } else {
-        try {
-          const content = await file.text();
-          parsedPages = [{ title: rawName, text: content.trim() }];
-        } catch {
-          parsedPages = [{ title: rawName, text: `Tệp ${file.name}` }];
-        }
-      }
+      const parsed = await parseUploadedDocumentFile(file);
 
       setPendingDoc({
         file,
-        title: rawName,
+        title: parsed.title,
         description: '',
-        pages: parsedPages,
-        fileSize: `${(file.size / 1024).toFixed(1)} KB`,
-        fileType: file.name.split('.').pop()?.toUpperCase() || 'TỆP'
+        pages: parsed.pages,
+        fileSize: parsed.fileSize,
+        fileType: parsed.fileType
       });
 
       setIsConfirmModalOpen(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi nạp tệp:', err);
-      alert('Không thể trích xuất nội dung tệp. Vui lòng thử lại với file PDF hoặc hình ảnh khác.');
+      alert(err.message || 'Không thể trích xuất nội dung tệp. Vui lòng thử lại với file PDF, Word (.docx), PowerPoint (.pptx) hoặc hình ảnh khác.');
     } finally {
       setIsParsingDoc(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
