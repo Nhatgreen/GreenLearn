@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `fd6355a`  
+> **Commit Hash:** `3973e83`  
 > **Cập nhật lần cuối:** `2026-11-13`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -247,7 +247,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `getPurchasedItemIds` | `fn` | [src/services/MarketPurchaseStorage.ts:L8-L21](file:////home/nhat/Documents/DUT/GreenLearn/src/services/MarketPurchaseStorage.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `GuestBanner` | `component` | [src/components/auth/GuestBanner.tsx:L12-L54](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/GuestBanner.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HeroSection` | `component` | [src/components/landing/HeroSection.tsx:L52-L238](file:////home/nhat/Documents/DUT/GreenLearn/src/components/landing/HeroSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `HomePage` | `component` | [src/components/home/HomePage.tsx:L49-L1658](file:////home/nhat/Documents/DUT/GreenLearn/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `HomePage` | `component` | [src/components/home/HomePage.tsx:L49-L1709](file:////home/nhat/Documents/DUT/GreenLearn/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HostApprovalModal` | `component` | [src/components/social/HostApprovalModal.tsx:L14-L177](file:////home/nhat/Documents/DUT/GreenLearn/src/components/social/HostApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_MARKET_ITEMS` | `component` | [src/data/marketMockData.ts:L24-L1124](file:////home/nhat/Documents/DUT/GreenLearn/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_SPACES` | `component` | [src/data/mockSpaces.ts:L3-L332](file:////home/nhat/Documents/DUT/GreenLearn/src/data/mockSpaces.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -322,7 +322,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `UsePomodoroResult` | `type` | [src/hooks/usePomodoro.ts:L13-L21](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/usePomodoro.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useRealtimeMultiplayer` | `hook` | [src/hooks/useRealtimeMultiplayer.ts:L60-L502](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `UseRealtimeMultiplayerOptions` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L51-L58](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `useResponsiveLayout` | `hook` | [src/hooks/useResponsiveLayout.ts:L147-L215](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `useResponsiveLayout` | `hook` | [src/hooks/useResponsiveLayout.ts:L152-L220](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useSocialPresence` | `hook` | [src/hooks/useSocialPresence.ts:L10-L212](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useSocialPresence.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useStorageManager` | `hook` | [src/hooks/useStorageManager.ts:L65-L216](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `viewport` | `const` | [src/app/layout.tsx:L10-L16](file:////home/nhat/Documents/DUT/GreenLearn/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |

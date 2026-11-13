@@ -6,6 +6,7 @@ describe('useResponsiveLayout', () => {
   const originalInnerWidth = window.innerWidth;
   const originalInnerHeight = window.innerHeight;
   const originalMatchMedia = window.matchMedia;
+  const originalScreen = window.screen;
 
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -18,6 +19,11 @@ describe('useResponsiveLayout', () => {
     window.innerWidth = originalInnerWidth;
     window.innerHeight = originalInnerHeight;
     window.matchMedia = originalMatchMedia;
+    Object.defineProperty(window, 'screen', {
+      writable: true,
+      configurable: true,
+      value: originalScreen,
+    });
     localStorage.clear();
     sessionStorage.clear();
     document.documentElement.removeAttribute('data-device');
@@ -186,5 +192,52 @@ describe('useResponsiveLayout', () => {
     expect(result.current.isMobile).toBe(true);
     expect(result.current.isLockedMobile).toBe(true);
     expect(document.documentElement.getAttribute('data-device')).toBe('mobile');
+  });
+
+  it('preserves mobile layout on reload even if viewport temporarily reports 980px before meta settles', () => {
+    // Phone was previously identified as mobile
+    sessionStorage.setItem('greenlearn_is_mobile', '1');
+    document.documentElement.setAttribute('data-device', 'mobile');
+    
+    // During reload, webkit temporarily reports 980x1400
+    window.innerWidth = 980;
+    window.innerHeight = 1400;
+
+    const { result } = renderHook(() => useResponsiveLayout());
+
+    expect(result.current.isMobile).toBe(true);
+    expect(result.current.isTablet).toBe(false);
+    expect(result.current.isDesktop).toBe(false);
+    expect(result.current.breakpoint).toBe('mobile');
+  });
+
+  it('releases mobile lock on explicit desktop PC with large screen and fine pointer', () => {
+    localStorage.setItem('greenlearn_is_mobile', '1');
+    document.documentElement.setAttribute('data-device', 'mobile');
+
+    window.innerWidth = 1920;
+    window.innerHeight = 1080;
+    Object.defineProperty(window, 'screen', {
+      writable: true,
+      configurable: true,
+      value: { width: 1920, height: 1080 },
+    });
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query.includes('fine') || query.includes('landscape'),
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+
+    const { result } = renderHook(() => useResponsiveLayout());
+
+    expect(result.current.isDesktop).toBe(true);
+    expect(result.current.isMobile).toBe(false);
+    expect(localStorage.getItem('greenlearn_is_mobile')).toBeNull();
+    expect(document.documentElement.getAttribute('data-device')).toBeNull();
   });
 });

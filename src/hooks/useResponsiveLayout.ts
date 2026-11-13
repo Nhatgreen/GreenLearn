@@ -82,12 +82,17 @@ function computeLayout(): ResponsiveLayoutState {
   const isPortrait = isPortraitQuery || h >= w;
   const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-  // Valid locked mobile: keeps phone locked across reloads without misclassifying tablets or desktops
-  const validLockedMobile = isLockedMobile && (isMobileUA || shortestSide < 600 || (isCoarse && w < 768));
+  // Explicit desktop PC: large screen >= 1024px, shortest side >= 600px, not on mobile UA, and not coarse-only pointer
+  const isExplicitDesktop = !isMobileUA && !isCoarse && w >= 1024 && shortestSide >= 600;
+
+  // Valid locked mobile: keeps phone locked across reloads without misclassifying desktops.
+  // If isLockedMobile is true (stored in localStorage/sessionStorage or data-device="mobile" set by <head> script),
+  // it remains strictly locked to mobile UNLESS the device is explicitly a large desktop PC.
+  const validLockedMobile = isLockedMobile && !isExplicitDesktop;
 
   // 1. MOBILE HARD-LOCK:
   // - Smartphone User-Agent (iPhone, Android Mobile)
-  // - Valid mobile lock in sessionStorage/localStorage
+  // - Valid mobile lock in sessionStorage/localStorage/data-device
   // - Physically a phone: shortest side < 600px with touch/coarse pointer
   // - Viewport < 640px
   // - Coarse pointer + portrait with w < 768px or effective screen < 600px
@@ -117,7 +122,7 @@ function computeLayout(): ResponsiveLayoutState {
       localStorage.setItem('greenlearn_is_mobile', '1');
       sessionStorage.setItem('greenlearn_is_mobile', '1');
       document.documentElement.setAttribute('data-device', 'mobile');
-    } else if (isDesktop && !isMobileUA && !hasTouch && !isCoarse && w >= 1024) {
+    } else if (isDesktop && isExplicitDesktop) {
       localStorage.removeItem('greenlearn_is_mobile');
       sessionStorage.removeItem('greenlearn_is_mobile');
       document.documentElement.removeAttribute('data-device');

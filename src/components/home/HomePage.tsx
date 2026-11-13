@@ -570,9 +570,9 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
       )}
 
       {/* ================= MAIN CONTENT ================= */}
-      <main className={`flex-1 p-4 sm:p-6 lg:p-10 ${isMobile ? 'pb-24' : 'pb-10'} responsive-mobile-pb flex flex-col max-w-6xl mx-auto overflow-y-auto w-full`}>
+      <main className={`flex-1 p-4 sm:p-6 lg:p-10 ${isMobile ? 'pb-24' : 'pb-10'} responsive-mobile-pb responsive-mobile-px flex flex-col max-w-6xl mx-auto overflow-y-auto w-full`}>
         {/* Sticky Top Bar (Cố định khi cuộn) */}
-        <header className="sticky top-0 z-20 -mx-4 sm:-mx-6 lg:-mx-10 px-4 sm:px-6 lg:px-10 py-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between mb-5 sm:mb-6 shadow-2xs">
+        <header className="sticky top-0 z-20 -mx-4 sm:-mx-6 lg:-mx-10 px-4 sm:px-6 lg:px-10 py-3.5 bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between mb-5 sm:mb-6 shadow-2xs responsive-mobile-header-mx">
           {/* Hamburger (Mobile) + Breadcrumb */}
           <div className="flex items-center gap-2 min-w-0">
             <button
@@ -699,7 +699,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </div>
 
             {/* 3 Thẻ thống kê */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 responsive-stats-grid">
               {/* Thẻ 1: Tổng bạn bè */}
               <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3.5">
                 <div className="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700 shrink-0">
@@ -1170,7 +1170,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               </div>
             </div>
 
-            <div className="w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+            {/* Desktop & Tablet Table */}
+            <div className={`responsive-desk-table ${isMobile ? 'hidden' : 'hidden sm:block'} w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden`}>
               <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
                 <div className="col-span-5">Tên bàn học</div>
                 <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
@@ -1223,6 +1224,56 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 ))}
               </div>
             </div>
+
+            {/* Mobile Vertical Cards */}
+            <div className={`responsive-desk-cards ${isMobile ? 'block' : 'hidden sm:hidden'} space-y-3`}>
+              {spaces.slice(0, 2).map((space, idx) => (
+                <div
+                  key={space.id}
+                  onClick={() => handleOpenSpace(space.id)}
+                  className="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs active:bg-[#F0FDF4]/50 transition-all flex flex-col gap-3"
+                >
+                  <div className="flex items-start justify-between gap-2.5">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-10 h-8 rounded-lg bg-amber-50 border border-amber-200 shadow-2xs flex-shrink-0 flex items-center justify-center">
+                        <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
+                      </div>
+                      <div className="min-w-0">
+                        <span className="text-sm font-bold text-slate-900 truncate block">
+                          {space.name.replace(/\(Demo\)/i, '').trim()}
+                        </span>
+                        {space.description && (
+                          <p className="text-xs text-slate-500 line-clamp-1 mt-0.5 font-medium">
+                            {space.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <span className="text-[11px] font-medium text-slate-500 shrink-0 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-slate-400" />
+                      <span>{getRecentTimeString(idx)}</span>
+                    </span>
+                  </div>
+
+                  <div className="text-xs text-slate-600 font-semibold bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
+                    {getSpaceSummary(space, idx)}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenSpace(space.id);
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-[#F0FDF4] hover:bg-[#16A34A] text-[#166534] hover:text-white border border-[#BBF7D0] hover:border-[#16A34A] text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 min-h-[44px] active:scale-98"
+                  >
+                    <span>Vào bàn học</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           /* ================= GIAO DIỆN TRANG CHỦ MẶC ĐỊNH ================= */
@@ -1263,7 +1314,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               </div>
 
               {/* 4 Template Cards đồng đều, hài hòa màu sắc */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 responsive-template-grid">
                 {/* Card 1: Bàn học trống */}
                 <div
                   onClick={() => handleSelectTemplate('blank')}

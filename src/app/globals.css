@@ -104,6 +104,22 @@ html, body {
   .responsive-mobile-pb {
     padding-bottom: 6rem !important;
   }
+  .responsive-template-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+  .responsive-stats-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+  .responsive-mobile-px {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  .responsive-mobile-header-mx {
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
 
   .mobile-hide-forced {
     display: none !important;
@@ -137,6 +153,22 @@ html[data-device="mobile"] .responsive-desktop-breadcrumb {
 }
 html[data-device="mobile"] .responsive-mobile-pb {
   padding-bottom: 6rem !important;
+}
+html[data-device="mobile"] .responsive-template-grid {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+html[data-device="mobile"] .responsive-stats-grid {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+html[data-device="mobile"] .responsive-mobile-px {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+html[data-device="mobile"] .responsive-mobile-header-mx {
+  margin-left: -1rem !important;
+  margin-right: -1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
 }
 
 html[data-device="mobile"] .mobile-hide-forced {

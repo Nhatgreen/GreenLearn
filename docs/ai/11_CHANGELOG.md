@@ -4,6 +4,32 @@
 
 ---
 
+## 2026-11-13 23:05 — main (Khắc Phục Lỗi Mất Responsive Bố Cục Nội Dung Khi Reload Trên Điện Thoại — Phương Án 1)
+- **Task:** Khắc phục triệt để lỗi khi người dùng reload lại trang trên điện thoại thì thanh menu chọn dưới đáy vẫn hiển thị nhưng cách bố trí nội dung bị mất responsive và văng sang giao diện máy tính:
+  1. **Nâng cấp cơ chế khóa cứng Mobile trong `useResponsiveLayout.ts`:**
+     - Xác định `isExplicitDesktop = !isMobileUA && !isCoarse && w >= 1024 && shortestSide >= 600`.
+     - Cập nhật `validLockedMobile = isLockedMobile && !isExplicitDesktop`, loại bỏ hoàn toàn điều kiện `shortestSide < 600` hoặc `w < 768` gây lỗi rớt mobile lock trong các tick khởi tạo đầu tiên (khi mobile WebKit tạm báo 980px).
+     - Bảo toàn `isMobile = true` xuyên suốt quá trình reload cho tới khi layout ổn định.
+  2. **Bổ sung quy tắc CSS cưỡng chế cấp độ Root trong `globals.css`:**
+     - Thêm selector `.responsive-template-grid` ép 1 cột duy nhất (`grid-template-columns: repeat(1, minmax(0, 1fr)) !important;`) khi `data-device="mobile"` hoặc media query di động.
+     - Thêm `.responsive-stats-grid`, `.responsive-mobile-px`, `.responsive-mobile-header-mx` khống chế padding và lề header để triệt tiêu hoàn toàn lỗi cuộn ngang.
+  3. **Đồng bộ hóa giao diện thẻ dọc di động cho Tab "Đã gắn dấu sao" trong `HomePage.tsx`:**
+     - Bổ sung bộ đôi `.responsive-desk-table` và `.responsive-desk-cards` cho Tab "Đã gắn dấu sao", xóa bỏ bảng 12 cột hardcode cũ.
+     - Gắn `.responsive-template-grid` vào khối 4 thẻ mẫu và `.responsive-stats-grid` vào khối thống kê bạn bè.
+- **Verification:**
+  - `pnpm test`: 31/31 test suites passed (150/150 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Build export GitHub Pages thành công (`out/`).
+  - `pnpm run docs:index` & `pnpm run docs:check`: Index tài liệu chuẩn xác.
+- **Changed:**
+  - `src/hooks/useResponsiveLayout.ts`: Cải tiến `validLockedMobile` và `isExplicitDesktop`.
+  - `src/hooks/useResponsiveLayout.test.ts`: Bổ sung kiểm thử reload bảo toàn mobile và giải phóng trên desktop.
+  - `src/app/globals.css`: Thêm `.responsive-template-grid`, `.responsive-stats-grid`, `.responsive-mobile-px`, `.responsive-mobile-header-mx`.
+  - `src/components/home/HomePage.tsx`: Thẻ dọc di động cho tab Đã gắn dấu sao, lưới mẫu 1 cột trên mobile.
+  - `AGENTS.md`: Cập nhật quy chuẩn khóa cứng 2 lớp cho giao diện mobile khi reload.
+
+---
+
 ## 2026-11-13 22:30 — main (Đồng Bộ 9 Tính Năng & Vá Lỗi Toàn Diện: Word/PPTX Parser, STudy Keep-Alive, Viewer Guard, In-situ OCR, Pomodoro HUD, Purge Empty Spaces, KaTeX Cache, CSP Twemoji/Giphy)
 - **Task:** Giải quyết toàn diện 9 mục tồn đọng, thiếu sót so với ViTudy upstream theo yêu cầu của Sếp:
   1. **Khắc phục lỗi đơ/treo khi kéo thả tệp Word (.docx) & PowerPoint (.pptx) lên Bàn học:**
