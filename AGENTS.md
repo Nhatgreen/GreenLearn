@@ -235,8 +235,21 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
       * Cung cấp hook `useResponsiveLayout` tự động tính toán lại khi có sự kiện `resize`, `orientationchange`, `window.visualViewport.resize` và `matchMedia` change listeners.
     * **Cơ Chế Khóa Cứng 2 Lớp Cho Giao Diện Mobile Khi Reload (Rock-Solid 2-Tier Mobile Hard-Lock Engine):**
       * **Khóa cứng qua `localStorage` & `sessionStorage`:** Lưu cờ `greenlearn_is_mobile = '1'` và gán thuộc tính `data-device="mobile"` lên thẻ `<html>`. Khi người dùng bấm F5 / Reload trên điện thoại, layout lập tức giữ cứng giao diện mobile ngay từ miligiây đầu tiên, triệt tiêu hoàn toàn độ trễ render hoặc hiện tượng văng sang layout tablet khi trình duyệt chưa kịp tính lại viewport.
+      * **Quy Chuẩn Kiến Trúc Pure CSS Breakpoints (Zero-JS-Condition Responsive Architecture — Kế Thừa ViTudy Upstream):**
+        * **Triệt tiêu hoàn toàn biểu thức điều kiện Boolean JS trong JSX layout:** Tuyệt đối không dùng `${isMobile ? '...' : '...'}` để bật/tắt hiển thị Sidebar, Header, Table vs Card, hoặc Bottom Nav. Mọi cấu trúc layout hiển thị trên màn hình bắt buộc sử dụng Breakpoints CSS Tailwind thuần (`hidden md:flex`, `flex md:hidden`, `hidden sm:block`, `sm:hidden block`).
+        * **Tách biệt 2 Header độc lập trên trang chủ:**
+          * **Mobile Header (`flex md:hidden`):** Hiển thị ở màn hình < 768px, gồm nút Menu Hamburger, logo GreenLearn, chữ thương hiệu `GreenLearn`, huy hiệu chuỗi học / thú cưng rút gọn (`3d` / `Điểm danh`) và Avatar profile.
+          * **Desktop Header (`hidden md:flex`):** Hiển thị ở màn hình >= 768px, gồm Breadcrumb động theo ngữ cảnh, huy hiệu chuỗi học đầy đủ và Avatar profile.
+        * **Bảng Bàn học vs Thẻ Card dọc thuần CSS:**
+          * Bảng 12 cột dùng `hidden sm:block responsive-desk-table` (tự ẩn trên mobile, tự hiện trên tablet/desktop).
+          * Danh sách thẻ card dọc dùng `sm:hidden block responsive-desk-cards` (tự hiện trên mobile, tự ẩn trên tablet/desktop).
+        * **Thanh Bottom Navigation thuần CSS:** Dùng `flex md:hidden responsive-bottom-nav`, cố định dưới đáy màn hình điện thoại với `pb-safe`, tự ẩn trên desktop.
+        * **Thanh công cụ Bàn học (`LeftCreationBar`):**
+          * Trên mobile portrait: Tự động chuyển thành dock ngang bám sát đáy (`max-sm:portrait:bottom-2 max-sm:portrait:left-1/2 max-sm:portrait:-translate-x-1/2 max-sm:portrait:top-auto`).
+          * Trên mobile landscape & desktop: Cột dọc mép trái (`sm:left-1 sm:top-1/2 sm:-translate-y-1/2`).
+        * Nhờ kiến trúc Pure CSS này, trình duyệt render chính xác 100% bố cục di động ngay từ nhịp vẽ đầu tiên (0ms) khi tải lại trang / F5, loại bỏ hoàn toàn hiện tượng vỡ layout bất kể thời điểm hydrat hóa của React.
       * **Xử lý tick giả lập 980px trong `useResponsiveLayout.ts`:**
-        * Trình duyệt di động (Safari/Chrome/WebView) thường tạm báo kích thước viewport 980px trong các tick khởi tạo đầu tiên của quá trình reload. Biến `validLockedMobile` loại bỏ hoàn toàn ràng buộc `shortestSide < 600` hoặc `w < 768`. Khi cờ mobile lock (`data-device="mobile"` hoặc `greenlearn_is_mobile`) đã có, hệ thống **bảo toàn 100% `isMobile = true`** mà không hạ cấp về tablet.
+        * Trình duyệt di động (Safari/Chrome/WebView) thường tạm báo kích thước viewport 980px trong các tick khởi tạo đầu tiên của quá trình reload. Biến `validLockedMobile` loại bỏ hoàn toàn ràng buộc `shortestSide < 600` hoặc `w < 768`. Khi cờ mobile lock (`data-device="mobile"` hoặc `greenlearn_is_mobile` / `vitudy_is_mobile`) đã có, hệ thống **bảo toàn 100% `isMobile = true`** mà không hạ cấp về tablet.
         * Chỉ giải phóng cờ mobile lock khi thiết bị được xác nhận rõ ràng là máy tính để bàn màn hình lớn (`isExplicitDesktop = w >= 1024 && shortestSide >= 600 && !isCoarse && !isMobileUA`).
       * **Inline Script thực thi trước First Paint trong `<head>`:** Nhúng script đồng bộ kiểm tra lock device và gán `html[data-device="mobile"]` ngay trước khi trình duyệt dựng DOM, loại bỏ 100% hiện tượng chớp/nháy (FOUC) layout desktop sang mobile.
       * **Multi-Tick Settle Timers:** Chạy các nhịp settle (50ms, 150ms, 300ms, 600ms, 1000ms) sau khi component mount kèm lắng nghe sự kiện `pageshow`, khắc phục triệt để lỗi Safari/Chrome mobile báo kích thước giả lập 980px trong thời điểm reload.

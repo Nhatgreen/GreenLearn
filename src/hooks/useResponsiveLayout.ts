@@ -48,6 +48,8 @@ function checkStoredMobileLock(): boolean {
   if (typeof window === 'undefined') return false;
   try {
     return (
+      localStorage.getItem('vitudy_is_mobile') === '1' ||
+      sessionStorage.getItem('vitudy_is_mobile') === '1' ||
       localStorage.getItem('greenlearn_is_mobile') === '1' ||
       sessionStorage.getItem('greenlearn_is_mobile') === '1' ||
       document.documentElement.getAttribute('data-device') === 'mobile'
@@ -121,10 +123,14 @@ function computeLayout(): ResponsiveLayoutState {
     if (isMobile) {
       localStorage.setItem('greenlearn_is_mobile', '1');
       sessionStorage.setItem('greenlearn_is_mobile', '1');
+      localStorage.setItem('vitudy_is_mobile', '1');
+      sessionStorage.setItem('vitudy_is_mobile', '1');
       document.documentElement.setAttribute('data-device', 'mobile');
     } else if (isDesktop && isExplicitDesktop) {
       localStorage.removeItem('greenlearn_is_mobile');
       sessionStorage.removeItem('greenlearn_is_mobile');
+      localStorage.removeItem('vitudy_is_mobile');
+      sessionStorage.removeItem('vitudy_is_mobile');
       document.documentElement.removeAttribute('data-device');
     }
   } catch {

@@ -4,6 +4,42 @@
 
 ---
 
+## 2026-11-13 23:30 — main (Chuẩn Hóa Kiến Trúc Pure CSS Breakpoints Từ ViTudy: Khắc Phục Triệt Để 100% Lỗi Responsive Khi Reload Trên Điện Thoại)
+- **Task:** Giải quyết triệt để lỗi mất responsive bố cục nội dung khi reload lại trang trên điện thoại thông minh bằng cách chuyển đổi sang kiến trúc Pure CSS Tailwind Breakpoints kế thừa từ ViTudy upstream (`/home/nhat/Documents/DUT/ViTudy`), đồng thời giữ nguyên 100% nhận diện thẩm mỹ Xanh Lá GreenLearn (`#16A34A`):
+  1. **Triệt tiêu hoàn toàn biểu thức điều kiện Boolean JS trong JSX layout:**
+     - Loại bỏ các class động phụ thuộc React boolean state `${isMobile ? '...' : '...'}` trong `HomePage.tsx`.
+     - Thay thế 100% bằng Pure CSS Tailwind Breakpoints: `hidden md:flex`, `flex md:hidden`, `hidden sm:block`, `sm:hidden block`.
+  2. **Tách biệt 2 Header chuyên biệt độc lập trên HomePage:**
+     - **Mobile Header (`flex md:hidden`):** Hiển thị trên màn hình < 768px, gồm nút Hamburger mở Drawer, logo GreenLearn, chữ thương hiệu `GreenLearn`, huy hiệu chuỗi ngày / thú cưng rút gọn (`3d` / `Điểm danh`) và Avatar profile.
+     - **Desktop Header (`hidden md:flex`):** Hiển thị trên màn hình >= 768px, gồm Breadcrumb động theo ngữ cảnh, huy hiệu chuỗi ngày học đầy đủ và Avatar profile.
+  3. **Chuẩn hóa hiển thị bảng bàn học vs thẻ card di động thuần CSS:**
+     - Cả 3 danh mục ("Trang chủ - Mở lại gần đây", "Bàn học của tôi", "Đã gắn dấu sao") sử dụng:
+       + Bảng 12 cột: `hidden sm:block responsive-desk-table` (tự động ẩn ngay trên mobile trong 0ms).
+       + Thẻ cards dọc: `sm:hidden block responsive-desk-cards` (tự động hiển thị ngay trên mobile trong 0ms).
+  4. **Thanh Bottom Navigation thuần CSS:**
+     - Sử dụng `responsive-bottom-nav fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe flex md:hidden items-center justify-around h-16 shadow-lg select-none`.
+  5. **Tối ưu thanh công cụ Bàn học (`LeftCreationBar` & `StudySpaceDeskView`):**
+     - Trên mobile portrait: Chuyển thành dock ngang bám sát đáy (`max-sm:portrait:bottom-2 max-sm:portrait:left-1/2 max-sm:portrait:-translate-x-1/2 max-sm:portrait:top-auto`).
+     - Flyouts menu phụ (chọn màu note, bút vẽ, công cụ mở rộng) tự động mở lên phía trên dock trên mobile portrait (`max-sm:portrait:bottom-16`).
+     - Giữ nguyên màu xanh lá GreenLearn `#16A34A` cho toàn bộ trạng thái kích hoạt (Active Tools).
+  6. **Đồng bộ hóa cờ storage:**
+     - Bổ sung cả 2 khóa `vitudy_is_mobile` và `greenlearn_is_mobile` trong inline script `<head>` (`layout.tsx`) và `useResponsiveLayout.ts`.
+- **Verification:**
+  - `pnpm test`: 31/31 test suites passed (150/150 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Build export GitHub Pages thành công (15/15 HTML pages + `.nojekyll` + cache-busting version query).
+  - `pnpm run docs:index` & `pnpm run docs:check`: Chỉ mục tài liệu 284 symbols hợp lệ 100%.
+- **Changed:**
+  - `src/app/layout.tsx`: Đồng bộ cờ `vitudy_is_mobile` & `greenlearn_is_mobile` trong inline script.
+  - `src/hooks/useResponsiveLayout.ts`: Hỗ trợ cả 2 khóa storage để giải phóng / bảo toàn cờ mobile.
+  - `src/components/home/HomePage.tsx`: Tách biệt Mobile Header / Desktop Header, loại bỏ biểu thức điều kiện JSX `isMobile ? ... : ...`, dùng Pure CSS cho Bảng, Thẻ Cards, Bottom Nav, Drawer.
+  - `src/components/canvas/StudySpaceDeskView.tsx`: Cấu hình dock ngang đáy cho `LeftCreationBar` trên mobile portrait.
+  - `src/components/hud/LeftCreationBar.tsx`: Chuyển đổi container linh hoạt thích ứng mobile portrait dock và desktop vertical island.
+  - `AGENTS.md`: Cập nhật Quy Chuẩn Kiến Trúc Pure CSS Breakpoints (Zero-JS-Condition Responsive Architecture).
+  - `docs/ai/11_CHANGELOG.md`: Ghi nhật ký phiên làm việc.
+
+---
+
 ## 2026-11-13 23:05 — main (Khắc Phục Lỗi Mất Responsive Bố Cục Nội Dung Khi Reload Trên Điện Thoại — Phương Án 1)
 - **Task:** Khắc phục triệt để lỗi khi người dùng reload lại trang trên điện thoại thì thanh menu chọn dưới đáy vẫn hiển thị nhưng cách bố trí nội dung bị mất responsive và văng sang giao diện máy tính:
   1. **Nâng cấp cơ chế khóa cứng Mobile trong `useResponsiveLayout.ts`:**

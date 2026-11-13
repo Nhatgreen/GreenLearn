@@ -90,10 +90,10 @@ export default function StudySpaceDeskView() {
         <VrFrameOverlay />
       </div>
 
-      {/* ================= 1. TOP-LEFT NAV HUD (ViTudy | Tên bàn học | Search) ================= */}
+      {/* ================= 1. TOP-LEFT NAV HUD (GreenLearn | Tên bàn học | Search) ================= */}
       <div 
         className={clsx(
-          "fixed top-1 left-1 landscape-phone:left-[56px] landscape-header-offset z-40 transition-transform duration-300 ease-out pointer-events-auto",
+          "fixed top-1 left-1 landscape-phone:left-[56px] landscape-header-offset z-40 transition-transform duration-300 ease-out pointer-events-auto max-w-[50vw] sm:max-w-none shrink-0",
           isFocusMode && !showTopLeftInFocus ? "-translate-y-[calc(100%+12px)]" : "translate-y-0"
         )}
       >
@@ -142,11 +142,17 @@ export default function StudySpaceDeskView() {
         )}
       </div>
 
-      {/* ================= 3. LEFT TOOL CREATION BAR ================= */}
+      {/* ================= 3. TOOL CREATION BAR (Dock ngang đáy trên mobile portrait, Dọc mép trái trên landscape & desktop) ================= */}
       <div 
         className={clsx(
-          "fixed left-1 top-1/2 -translate-y-1/2 z-40 transition-transform duration-300 ease-out pointer-events-auto flex items-center",
-          isFocusMode && !showLeftInFocus ? "-translate-x-[calc(100%+12px)]" : "translate-x-0"
+          "fixed z-40 transition-transform duration-300 ease-out pointer-events-auto flex items-center",
+          // Mobile Portrait: Dock ngang đáy
+          "max-sm:portrait:bottom-2 max-sm:portrait:left-1/2 max-sm:portrait:-translate-x-1/2 max-sm:portrait:top-auto",
+          // Landscape & Desktop: Cột dọc mép trái
+          "sm:left-1 sm:top-1/2 sm:-translate-y-1/2 max-sm:landscape:left-1 max-sm:landscape:top-1/2 max-sm:landscape:-translate-y-1/2",
+          isFocusMode && !showLeftInFocus 
+            ? "max-sm:portrait:translate-y-[calc(100%+16px)] sm:-translate-x-[calc(100%+12px)] max-sm:landscape:-translate-x-[calc(100%+12px)]" 
+            : "max-sm:portrait:translate-y-0 sm:translate-x-0 max-sm:landscape:translate-x-0"
         )}
       >
         <LeftCreationBar />
@@ -157,7 +163,7 @@ export default function StudySpaceDeskView() {
             type="button"
             onClick={() => setShowLeftInFocus(prev => !prev)}
             title={showLeftInFocus ? "Thu gọn thanh công cụ vào vách" : "Mở thanh công cụ vẽ & ghi chú"}
-            className="absolute left-full top-1/2 -translate-y-1/2 ml-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#16A34A] border border-slate-300 rounded-r-xl p-1 shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center pointer-events-auto"
+            className="hidden md:flex absolute left-full top-1/2 -translate-y-1/2 ml-1 bg-white/95 hover:bg-white text-slate-700 hover:text-[#16A34A] border border-slate-300 rounded-r-xl p-1 shadow-md cursor-pointer transition-all active:scale-95 items-center justify-center pointer-events-auto"
           >
             {showLeftInFocus ? (
               <ChevronLeft className="w-3.5 h-3.5 stroke-[2.4]" />

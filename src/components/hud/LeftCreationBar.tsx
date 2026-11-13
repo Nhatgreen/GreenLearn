@@ -232,13 +232,14 @@ export function LeftCreationBar() {
   })();
 
   return (
-    <>
-      {/* Miro-style Vertical Tool Island: Unified flex column with fixed position, safe-area, 40x40px buttons & 4px gap */}
+    <div 
+      data-tour="left-toolbar-island"
+      className="relative flex max-sm:portrait:flex-row flex-col items-center gap-1.5 pointer-events-auto select-none"
+    >
+      {/* Tool Island: Horizontal bottom dock on mobile portrait, vertical on landscape and desktop */}
       <div 
-        data-tour="left-toolbar-island"
-        className="fixed left-1 sm:left-2 top-1/2 -translate-y-1/2 z-40 bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg backdrop-blur-md flex flex-col items-center gap-1 pointer-events-auto select-none max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-fixed-toolbar"
+        className="bg-white/95 border border-slate-300 rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg backdrop-blur-md flex max-sm:portrait:flex-row flex-col items-center gap-1 relative max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-fixed-toolbar"
         style={{
-          maxHeight: 'calc(100dvh - 16px)',
           scrollbarWidth: 'none',
         }}
       >
@@ -382,7 +383,7 @@ export function LeftCreationBar() {
 
       {/* ================= VERTICALLY BOUNDED NOTE COLOR FLYOUT ================= */}
       {isNoteFlyoutOpen && (
-        <div className="fixed left-[52px] sm:left-[64px] top-4 sm:top-1/2 sm:-translate-y-1/2 bg-white border border-slate-300 rounded-2xl p-2 shadow-2xl flex flex-col gap-2 z-50 animate-fade-in max-h-[calc(100dvh-20px)] overflow-y-auto no-scrollbar landscape-subpanel">
+        <div className="fixed max-sm:portrait:bottom-16 max-sm:portrait:left-1/2 max-sm:portrait:-translate-x-1/2 max-sm:portrait:top-auto left-[52px] sm:left-[64px] top-4 sm:top-1/2 sm:-translate-y-1/2 bg-white border border-slate-300 rounded-2xl p-2 shadow-2xl flex max-sm:portrait:flex-row flex-col gap-2 z-50 animate-fade-in max-h-[calc(100dvh-20px)] overflow-y-auto no-scrollbar landscape-subpanel">
           {stickyColors.map(c => (
             <button
               key={c.value}
@@ -401,7 +402,7 @@ export function LeftCreationBar() {
       {isPenFlyoutOpen && (
         <div 
           data-tour="pen-sub-toolbar"
-          className="fixed left-[52px] sm:left-[64px] top-2 sm:top-1/2 sm:-translate-y-1/2 bg-white/95 border border-slate-300 rounded-2xl p-1.5 sm:p-2 shadow-2xl backdrop-blur-md flex flex-col items-center gap-1.5 sm:gap-2 z-50 animate-fade-in min-w-[44px] max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-subpanel"
+          className="fixed max-sm:portrait:bottom-16 max-sm:portrait:left-1/2 max-sm:portrait:-translate-x-1/2 max-sm:portrait:top-auto left-[52px] sm:left-[64px] top-2 sm:top-1/2 sm:-translate-y-1/2 bg-white/95 border border-slate-300 rounded-2xl p-1.5 sm:p-2 shadow-2xl backdrop-blur-md flex flex-col items-center gap-1.5 sm:gap-2 z-50 animate-fade-in min-w-[44px] max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-subpanel"
           style={{ maxHeight: 'calc(100dvh - 16px)' }}
         >
           {/* Tool 1: Pen (Bút vẽ thường) */}
@@ -568,7 +569,7 @@ export function LeftCreationBar() {
 
       {/* ================= MORE TOOLS FLYOUT ================= */}
       {isMoreToolsOpen && (
-        <div className="fixed left-[52px] sm:left-[64px] top-2 sm:top-1/2 sm:-translate-y-1/2 bg-white border border-slate-300 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 z-50 animate-fade-in w-72 text-slate-900 select-none max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-subpanel">
+        <div className="fixed max-sm:portrait:bottom-16 max-sm:portrait:left-1/2 max-sm:portrait:-translate-x-1/2 max-sm:portrait:top-auto left-[52px] sm:left-[64px] top-2 sm:top-1/2 sm:-translate-y-1/2 bg-white border border-slate-300 rounded-2xl p-3 shadow-2xl flex flex-col gap-1 z-50 animate-fade-in w-72 text-slate-900 select-none max-h-[calc(100dvh-16px)] overflow-y-auto no-scrollbar landscape-subpanel">
           <div className="flex items-center justify-between px-2 pt-1 pb-2 border-b border-slate-100 mb-1">
             <span className="text-xs font-black text-slate-900 tracking-wide uppercase">
               Công cụ mở rộng
@@ -619,6 +620,6 @@ export function LeftCreationBar() {
         onPlaceToCenter={handlePlaceBookToCenter}
         onStartStampPlacement={handleStartStampPlacement}
       />
-    </>
+    </div>
   );
 }
