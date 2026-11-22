@@ -957,6 +957,37 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
 * **Quy Chuẩn Content Security Policy (CSP Standard):**
   * Khai báo đầy đủ CSP trong `<head>` của `layout.tsx` với quyền `img-src` và `connect-src` cho Twemoji (`cdn.jsdelivr.net`) và Giphy Live (`api.giphy.com`, `media.giphy.com`, `*.giphy.com`), ngăn ngừa triệt để lỗi chặn ảnh emoji/sticker.
 
+* **Quy Chuẩn Vật Thể Bảng Tính & Bài Trình Chiếu (Interactive Spreadsheet & Presentation Standard):**
+  * **Bảng tính tương tác (`SpreadsheetItem.tsx`):**
+    - Hỗ trợ đa trang tính (multi-sheet tabs), cuộn nội dung độc lập, thanh tìm kiếm lọc dữ liệu, phóng to toàn màn hình, và lớp vẽ nét tự do `ItemDrawingOverlay`.
+    - Trạng thái chọn và tab active đồng bộ chuẩn nhận diện màu Xanh Lá GreenLearn `#16A34A` (`bg-green-50 text-[#16A34A] border border-[#16A34A]`).
+    - Nạp từ file tải lên (.xlsx, .xls, .csv, .ods), kéo-thả vào bàn học, hoặc nhập từ liên kết Google Sheets.
+  * **Bài trình chiếu slide (`PresentationItem.tsx`):**
+    - Khung tỷ lệ chuẩn 16:9, nút chuyển slide (phím mũi tên trái/phải, phím Space), thanh định vị slide nhanh, chế độ trình chiếu toàn màn hình tối giản, và ngăn kéo ghi chú diễn giả (Speaker notes).
+    - Hiển thị công thức toán học KaTeX phong phú trong slide body qua `MathRenderer`.
+    - Tự động hiển thị huy hiệu "Đồng bộ" trong phòng học nhóm Realtime.
+
+* **Quy Chuẩn Nhập Tài Liệu Tự Động Từ URL Web (UrlDocumentService Standard):**
+  * Tích hợp dịch vụ `importDocumentFromUrl` (`@/services/UrlDocumentService`) cho phép nhập tự động:
+    - Google Docs $\rightarrow$ Tự động xuất sang `.docx` và nạp thành sách/tài liệu đọc.
+    - Google Sheets $\rightarrow$ Tự động xuất sang `.xlsx` và tạo vật thể Bảng tính đa sheet `SpreadsheetItem`.
+    - Google Slides $\rightarrow$ Tự động xuất sang `.pptx` và tạo vật thể Bài trình chiếu `PresentationItem`.
+    - Google Drive và liên kết tệp trực tiếp (`.pdf`, `.docx`, `.xlsx`, `.pptx`, `.csv`, `.txt`, `.md`).
+    - Trang web tĩnh: Tự động trích xuất tiêu đề và văn bản đọc được từ mã nguồn HTML.
+  * Hộp thoại nhập URL bọc React Portal (`z-[9990]`), hỗ trợ hướng dẫn cấp quyền chi tiết (`GOOGLE_SHARE_GUIDE_STEPS` & `GENERAL_URL_GUIDE_STEPS`) khi tài liệu chưa bật chia sẻ công khai.
+
+* **Quy Chuẩn Linh Vật Mầm Xanh Nổi Tự Do (Floating Mầm Xanh Mascot Standard):**
+  * Giữ nguyên 100% nhận diện hình ảnh và 5 giai đoạn tiến hóa của Mầm Xanh GreenLearn (`public/pet/stage1..5.png` và `sleeping-stage1..5.png`).
+  * **Hoạt động nổi tự do kéo thả (`FloatingPet.tsx`):**
+    - Hiện diện trên toàn bộ ứng dụng qua `src/app/layout.tsx`. Container bọc `pointer-events-none` để tuyệt đối không cản trở thao tác click trên bàn học.
+    - Kéo thả linh hoạt bằng Pointer Events (chuột và màn hình cảm ứng). Khi thả tay, tự động snap bám sát mép trái hoặc mép phải màn hình (`greenlearn_pet_position`).
+    - Ngưỡng kéo 6px: di chuyển dưới 6px được tính là Chạm/Click (Tap).
+  * **Hai trạng thái Ngủ (Sleep) vs Thức (Awake):**
+    - Khi chưa điểm danh hôm nay: Mầm Xanh ngủ thở nhẹ nhàng (`pet-idle-sleep`), có bong bóng chữ `Zzz` bay lơ lửng (`pet-zzz-bubble`).
+    - Chạm vào Mầm Xanh đang ngủ: Kích hoạt hoạt ảnh bừng tỉnh (`pet-wake-animation`), tự động điểm danh tăng chuỗi streak hôm nay, chuyển sang trạng thái Thức (`pet-idle-awake`).
+    - Chạm vào Mầm Xanh đã thức: Mở hộp thoại Chi tiết / Bộ sưu tập Mầm Xanh (`PetMascotModal`).
+  * **Chúc mừng tiến hóa cấp mới:** Khi chuỗi ngày học đạt mốc thăng cấp (Stage 1 $\rightarrow$ 2 $\rightarrow$ 3 $\rightarrow$ 4 $\rightarrow$ 5), tự động bật Modal chúc mừng rực rỡ kèm hoạt ảnh hào quang `pet-evolve-glow` và nút bấm Xanh Lá GreenLearn `#16A34A`.
+
 
 
 

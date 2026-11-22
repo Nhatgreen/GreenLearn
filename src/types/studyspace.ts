@@ -1,4 +1,40 @@
-export type ItemType = 'paper' | 'book' | 'sticky_note' | 'roadmap' | 'exam_sheet' | 'code_block' | 'mind_map' | 'sticker';
+export type ItemType =
+  | 'paper'
+  | 'book'
+  | 'sticky_note'
+  | 'roadmap'
+  | 'exam_sheet'
+  | 'code_block'
+  | 'mind_map'
+  | 'sticker'
+  | 'spreadsheet'
+  | 'presentation';
+
+export interface SpreadsheetSheet {
+  name: string;
+  rows: string[][];
+}
+
+export interface SpreadsheetData {
+  sheets: SpreadsheetSheet[];
+  activeSheetIndex?: number;
+  sourceUrl?: string;
+}
+
+export interface PresentationSlide {
+  id: string;
+  slideNumber: number;
+  title: string;
+  body: string;
+  notes?: string;
+  image?: string;
+}
+
+export interface PresentationData {
+  slides: PresentationSlide[];
+  currentSlideIndex?: number;
+  sourceUrl?: string;
+}
 
 export interface PageContent {
   id: string;
@@ -70,6 +106,8 @@ export interface DeskItem {
     url?: string;
     isSvg?: boolean;
   };
+  spreadsheetData?: SpreadsheetData;
+  presentationData?: PresentationData;
 }
 
 export interface IntelineThread {

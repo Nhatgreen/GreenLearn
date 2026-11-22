@@ -25,7 +25,9 @@ import {
   Video,
   X,
   BookOpen,
-  Hand
+  Hand,
+  Table2,
+  Presentation
 } from 'lucide-react';
 import { StickerEmojiPickerFlyout, StickerPickerItem } from '@/components/hud/StickerEmojiPickerFlyout';
 import { BookCoverModal, BookInitialPage } from '@/components/modals/BookCoverModal';
@@ -50,7 +52,9 @@ export function LeftCreationBar() {
     isFingerDrawingEnabled,
     setIsFingerDrawingEnabled,
     addStickyNote,
-    addBook
+    addBook,
+    addSpreadsheet,
+    addPresentation
   } = useStudySpace();
 
   const [isNoteFlyoutOpen, setIsNoteFlyoutOpen] = useState(false);
@@ -112,6 +116,18 @@ export function LeftCreationBar() {
       icon: <Table className="w-5 h-5 text-slate-800 stroke-[2.2]" />
     },
     {
+      id: 'spreadsheet',
+      title: 'Bảng tính (Spreadsheet)',
+      desc: 'Bảng tính đa trang tính tương tác kiểu Excel',
+      icon: <Table2 className="w-5 h-5 text-emerald-600 stroke-[2.2]" />
+    },
+    {
+      id: 'presentation',
+      title: 'Slide thuyết trình (Presentation)',
+      desc: 'Bộ slide bài giảng thuyết trình 16:9',
+      icon: <Presentation className="w-5 h-5 text-[#16A34A] stroke-[2.2]" />
+    },
+    {
       id: 'mind_map',
       title: 'Mind map',
       desc: 'Sơ đồ tư duy liên kết ý tưởng học tập',
@@ -158,6 +174,14 @@ export function LeftCreationBar() {
     }
     if (toolId === 'shapes_and_lines') {
       setActiveTool('smart_shape');
+      return;
+    }
+    if (toolId === 'spreadsheet') {
+      addSpreadsheet?.('Bảng tính mới');
+      return;
+    }
+    if (toolId === 'presentation') {
+      addPresentation?.('Bài thuyết trình mới');
       return;
     }
     if (toolId === 'book_cover') {

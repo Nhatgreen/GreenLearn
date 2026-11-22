@@ -58,6 +58,7 @@ interface StudySpaceContextType {
   resetView: () => void;
   selectItem: (id: string | null) => void;
   updateItemPosition: (id: string, x: number, y: number) => void;
+  updateDeskItem: (id: string, patch: Partial<DeskItem>) => void;
   updateItemDimensions?: (id: string, width: number, height: number) => void;
   updateItemRotation: (id: string, deltaAngle: number) => void;
   updateItemTitle?: (id: string, newTitle: string) => void;
@@ -78,7 +79,16 @@ interface StudySpaceContextType {
   updateStickyNoteIsBold?: (id: string, isBold: boolean) => void;
   addStickyNote: (text?: string, x?: number, y?: number, color?: string, width?: number, height?: number) => string;
   addBook: (title?: string, x?: number, y?: number, coverColor?: string, initialPages?: { title?: string; text: string; image?: string }[]) => string;
-  addUploadedDocument: (title: string, pages: { title?: string; text: string; image?: string }[]) => void;
+  addUploadedDocument: (
+    title: string,
+    pages: { title?: string; text: string; image?: string }[],
+    options?: {
+      spreadsheetData?: import('@/types/studyspace').SpreadsheetData;
+      presentationData?: import('@/types/studyspace').PresentationData;
+    }
+  ) => void;
+  addSpreadsheet: (title?: string, sheets?: import('@/types/studyspace').SpreadsheetSheet[]) => string;
+  addPresentation: (title?: string, slides?: import('@/types/studyspace').PresentationSlide[]) => string;
   addMarketItemToSpace: (spaceId: string, marketItem: any) => void;
   removeDeskItem: (id: string) => void;
   setSearchQuery: (query: string) => void;
@@ -1371,6 +1381,20 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
+  const updateDeskItem = (id: string, patch: Partial<DeskItem>) => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return;
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return {
+          ...s,
+          updatedAt: new Date().toISOString(),
+          items: s.items.map(item => (item.id === id ? { ...item, ...patch } : item))
+        };
+      })
+    );
+  };
+
   const updateItemDimensions = (id: string, width: number, height: number) => {
     if (!isApplyingRemoteAction.current && isViewerSession()) return;
     setSpaces(sList =>
@@ -2300,10 +2324,23 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     return bookId;
   };
 
-  const addUploadedDocument = (title: string, rawPages: { title?: string; text: string; image?: string }[]) => {
+  const addUploadedDocument = (
+    title: string,
+    rawPages: { title?: string; text: string; image?: string }[],
+    options?: {
+      spreadsheetData?: import('@/types/studyspace').SpreadsheetData;
+      presentationData?: import('@/types/studyspace').PresentationData;
+    }
+  ) => {
     if (!isApplyingRemoteAction.current && isViewerSession()) return;
     const pageCount = rawPages.length;
-    const type: 'paper' | 'book' = pageCount <= 1 ? 'paper' : 'book';
+    const type: import('@/types/studyspace').ItemType = options?.spreadsheetData
+      ? 'spreadsheet'
+      : options?.presentationData
+      ? 'presentation'
+      : pageCount <= 1
+      ? 'paper'
+      : 'book';
 
     const pages: PageContent[] = rawPages.map((p, idx) => ({
       id: `p-${Date.now()}-${idx}`,
@@ -2314,18 +2351,29 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     }));
 
     const newItem: DeskItem = {
-      id: `doc-${Date.now()}`,
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `doc-${Date.now()}`,
       type,
       title: normalizeNFC(title),
       x: 320 + Math.random() * 80,
       y: 200 + Math.random() * 60,
-      rotation: Math.floor(Math.random() * 6) - 3,
+      rotation: type === 'spreadsheet' || type === 'presentation' ? 0 : Math.floor(Math.random() * 6) - 3,
       scale: 1,
       zIndex: maxZIndex + 1,
       pageCount,
       currentPageIndex: 0,
       pages,
-      colorTheme: type === 'book' ? '#1e3a8a' : '#047857'
+      width: type === 'spreadsheet' ? 580 : type === 'presentation' ? 620 : undefined,
+      height: type === 'spreadsheet' ? 400 : type === 'presentation' ? 400 : undefined,
+      spreadsheetData: options?.spreadsheetData,
+      presentationData: options?.presentationData,
+      colorTheme:
+        type === 'spreadsheet'
+          ? '#16A34A'
+          : type === 'presentation'
+          ? '#0D9488'
+          : type === 'book'
+          ? '#1e3a8a'
+          : '#047857'
     };
 
     setSpaces(sList =>
@@ -2334,9 +2382,133 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         return { ...s, items: [...s.items, newItem] };
       })
     );
+    setMaxZIndex(prev => prev + 1);
+    setSelectedItemId(newItem.id);
     if (!isApplyingRemoteAction.current) {
       broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newItem } });
     }
+  };
+
+  const addSpreadsheet = (
+    title = 'Bảng tính mới',
+    sheets?: import('@/types/studyspace').SpreadsheetSheet[]
+  ): string => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return '';
+    const itemId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `sheet-${Date.now()}`;
+    const defaultSheets = sheets || [
+      {
+        name: 'Trang 1',
+        rows: [
+          ['STT', 'Nội dung công việc', 'Số lượng', 'Đơn giá', 'Ghi chú'],
+          ['1', 'Tài liệu học tập', '2', '50.000', 'Đã chuẩn bị'],
+          ['2', 'Giáo trình tham khảo', '1', '120.000', 'Thư viện'],
+          ['3', 'Bộ bài tập ôn luyện', '3', '30.000', 'Đang làm'],
+        ],
+      },
+    ];
+
+    const newItem: DeskItem = {
+      id: itemId,
+      type: 'spreadsheet',
+      title: normalizeNFC(title),
+      x: 340 + Math.random() * 60,
+      y: 200 + Math.random() * 50,
+      rotation: 0,
+      scale: 1,
+      zIndex: maxZIndex + 1,
+      pageCount: defaultSheets.length,
+      currentPageIndex: 0,
+      width: 580,
+      height: 400,
+      pages: defaultSheets.map((s, idx) => ({
+        id: `p-${idx + 1}-${Date.now()}`,
+        pageNumber: idx + 1,
+        title: s.name,
+        text: s.rows.map(r => r.join(' | ')).join('\n'),
+      })),
+      spreadsheetData: {
+        sheets: defaultSheets,
+        activeSheetIndex: 0,
+      },
+      colorTheme: '#16A34A',
+    };
+
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return { ...s, items: [...s.items, newItem] };
+      })
+    );
+    setMaxZIndex(prev => prev + 1);
+    setSelectedItemId(itemId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newItem } });
+    }
+    return itemId;
+  };
+
+  const addPresentation = (
+    title = 'Bài thuyết trình mới',
+    slides?: import('@/types/studyspace').PresentationSlide[]
+  ): string => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return '';
+    const itemId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `pres-${Date.now()}`;
+    const defaultSlides = slides || [
+      {
+        id: `slide-1-${Date.now()}`,
+        slideNumber: 1,
+        title: 'Tiêu Đề Bài Thuyết Trình',
+        body: 'Thuyết trình nhóm học tập GreenLearn\n\nNội dung chính và tóm tắt đề tài.',
+        notes: 'Chào mừng các bạn đến với buổi thuyết trình!',
+      },
+      {
+        id: `slide-2-${Date.now()}`,
+        slideNumber: 2,
+        title: 'Mục Tiêu & Phương Pháp',
+        body: '1. Khám phá kiến thức cốt lõi\n2. Phân tích số liệu và giải pháp\n3. Thảo luận và phản biện nhóm',
+        notes: 'Nhấn mạnh 3 mục tiêu trọng tâm.',
+      },
+    ];
+
+    const newItem: DeskItem = {
+      id: itemId,
+      type: 'presentation',
+      title: normalizeNFC(title),
+      x: 360 + Math.random() * 60,
+      y: 210 + Math.random() * 50,
+      rotation: 0,
+      scale: 1,
+      zIndex: maxZIndex + 1,
+      pageCount: defaultSlides.length,
+      currentPageIndex: 0,
+      width: 620,
+      height: 400,
+      pages: defaultSlides.map((s, idx) => ({
+        id: s.id,
+        pageNumber: idx + 1,
+        title: s.title,
+        text: `## ${s.title}\n\n${s.body}`,
+        notes: s.notes,
+      })),
+      presentationData: {
+        slides: defaultSlides,
+        currentSlideIndex: 0,
+      },
+      colorTheme: '#0D9488',
+    };
+
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return { ...s, items: [...s.items, newItem] };
+      })
+    );
+    setMaxZIndex(prev => prev + 1);
+    setSelectedItemId(itemId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newItem } });
+    }
+    return itemId;
   };
 
   const addExamSheet = (
@@ -2525,6 +2697,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         resetView,
         selectItem,
         updateItemPosition,
+        updateDeskItem,
         updateItemDimensions,
         updateItemRotation,
         updateItemTitle,
@@ -2550,6 +2723,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         updateCodeBlock,
         updateMindMapNode,
         addUploadedDocument,
+        addSpreadsheet,
+        addPresentation,
         addMarketItemToSpace,
         convertPaperToBook,
         addExamSheet,

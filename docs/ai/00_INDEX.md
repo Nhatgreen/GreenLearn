@@ -1,8 +1,8 @@
 # 00_INDEX.md — Chỉ Mục & Giao Thức Bộ Nhớ Dự Án ViTudy
 
 > **Commit Hash:** `Current Working Tree`  
-> **Cập nhật lần cuối:** `2026-11-13`  
-> **Trạng thái Codebase:** Đồng bộ 9 tính năng và sửa lỗi toàn diện từ ViTudy upstream: bộ phân tích Word/PPTX parseUploadedDocumentFile & sanitizeDocumentText, STudy keep-alive cache, Viewer Role Guard, In-situ OCR trên PaperSheet, Pomodoro HUD chip, purgeEmptySpaces, katexHtmlCache toàn cục, và CSP Twemoji/Giphy. 31/31 test suites pass (148/148 tests), 15/15 static pages build pass, docs:check pass.
+> **Cập nhật lần cuối:** `2026-11-22`  
+> **Trạng thái Codebase:** Tích hợp Bảng tính Spreadsheet tương tác đa sheet, Bài trình chiếu slide 16:9 KaTeX, nhập tài liệu tự động từ URL (Google Docs/Sheets/Slides/Drive/Web), và nâng cấp Linh vật Mầm Xanh nổi tự do (kéo thả, snap mép màn hình, ngủ/thức, chạm đánh thức, modal tiến hóa). 33/33 test suites pass (155/155 tests), 15/15 static pages build pass, GitHub Pages export pass, docs:check pass.
 
 ---
 

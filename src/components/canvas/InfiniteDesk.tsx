@@ -10,6 +10,8 @@ import { StickyNoteItem } from '../objects/StickyNoteItem';
 import { CodeBlockItem } from '../objects/CodeBlockItem';
 import { MindMapNodeItem } from '../objects/MindMapNodeItem';
 import { StickerItem } from '../objects/StickerItem';
+import { SpreadsheetItem } from '../objects/SpreadsheetItem';
+import { PresentationItem } from '../objects/PresentationItem';
 import { MindMapConnectors } from './MindMapConnectors';
 import { VisualLinkThreads } from './VisualLinkThreads';
 import { DeskDrawingCanvas } from './DeskDrawingCanvas';
@@ -462,7 +464,17 @@ export function InfiniteDesk() {
       try {
         const parsed = await parseUploadedDocumentFile(file);
         if (parsed.pages.length > 0) {
-          addUploadedDocument(parsed.title, parsed.pages);
+          if (parsed.kind === 'spreadsheet' && parsed.sheets) {
+            addUploadedDocument(parsed.title, parsed.pages, {
+              spreadsheetData: { sheets: parsed.sheets, activeSheetIndex: 0 },
+            });
+          } else if (parsed.kind === 'presentation' && parsed.slides) {
+            addUploadedDocument(parsed.title, parsed.pages, {
+              presentationData: { slides: parsed.slides, currentSlideIndex: 0 },
+            });
+          } else {
+            addUploadedDocument(parsed.title, parsed.pages);
+          }
         }
       } catch (err: any) {
         console.error('Lỗi nạp tệp kéo thả vào bàn học:', err);
@@ -533,8 +545,8 @@ export function InfiniteDesk() {
               {
                 x: item.x,
                 y: item.y,
-                width: item.width || (item.type === 'book' ? 980 : item.type === 'paper' ? 480 : 260),
-                height: item.height || (item.type === 'book' ? 640 : item.type === 'paper' ? 640 : 260),
+                width: item.width || (item.type === 'book' ? 980 : item.type === 'spreadsheet' ? 580 : item.type === 'presentation' ? 620 : item.type === 'paper' ? 480 : 260),
+                height: item.height || (item.type === 'book' ? 640 : (item.type === 'spreadsheet' || item.type === 'presentation') ? 400 : item.type === 'paper' ? 640 : 260),
                 rotation: item.rotation,
               },
               {
@@ -566,6 +578,12 @@ export function InfiniteDesk() {
           }
           if (item.type === 'sticker') {
             return <StickerItem key={item.id} item={item} isSelected={isSelected} />;
+          }
+          if (item.type === 'spreadsheet') {
+            return <SpreadsheetItem key={item.id} item={item} isSelected={isSelected} />;
+          }
+          if (item.type === 'presentation') {
+            return <PresentationItem key={item.id} item={item} isSelected={isSelected} />;
           }
           return null;
         })}

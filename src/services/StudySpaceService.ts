@@ -15,6 +15,12 @@ export function deskItemToRow(item: DeskItem, spaceId: string): DeskDocumentInse
   if (item.type === 'sticker' && item.stickerData) {
     extraDataJson = item.stickerData as unknown as Json;
   }
+  if (item.type === 'spreadsheet' && item.spreadsheetData) {
+    extraDataJson = item.spreadsheetData as unknown as Json;
+  }
+  if (item.type === 'presentation' && item.presentationData) {
+    extraDataJson = item.presentationData as unknown as Json;
+  }
 
   return {
     id: item.id,
@@ -73,6 +79,8 @@ export function rowToDeskItem(row: DeskDocumentRow, pages: PageContent[] = []): 
     mindMapColor: row.item_type === 'mind_map' ? (row.sticky_color || undefined) : undefined,
     mindMapParentId: row.item_type === 'mind_map' && row.source_documents ? (row.source_documents as any)?.parentId : undefined,
     stickerData: row.item_type === 'sticker' && row.exam_data ? (row.exam_data as any) : undefined,
+    spreadsheetData: row.item_type === 'spreadsheet' && row.exam_data ? (row.exam_data as any) : undefined,
+    presentationData: row.item_type === 'presentation' && row.exam_data ? (row.exam_data as any) : undefined,
   };
 }
 

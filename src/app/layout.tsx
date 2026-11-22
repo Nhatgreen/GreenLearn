@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { StudySpaceProvider } from '@/context/StudySpaceContext';
 import { SocialPresenceProvider } from '@/context/SocialPresenceContext';
 import { PomodoroProvider } from '@/context/PomodoroContext';
+import { FloatingPet } from '@/components/pet/FloatingPet';
 import { DebugOverlay } from '@/components/common/DebugOverlay';
 
 export const viewport: Viewport = {
@@ -86,6 +87,7 @@ export default function RootLayout({
             <SocialPresenceProvider>
               <PomodoroProvider>
                 {children}
+                <FloatingPet />
                 <DebugOverlay />
               </PomodoroProvider>
             </SocialPresenceProvider>

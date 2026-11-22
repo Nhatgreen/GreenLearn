@@ -4,6 +4,47 @@
 
 ---
 
+## 2026-11-22 16:24 — main (Tích Hợp Bảng Tính Spreadsheet, Slide Thuyết Trình, Nhập URL Tự Động & Nâng Cấp Linh Vật Mầm Xanh Nổi Tự Do)
+- **Task:** Triển khai 3 tính năng học thuật lớn kế thừa từ ViTudy theo yêu cầu của Sếp, giữ nguyên 100% bản sắc nhận diện thương hiệu Xanh Lá GreenLearn (`#16A34A`):
+  1. **Vật thể Bảng tính tương tác đa trang tính (`SpreadsheetItem.tsx`):**
+     - Hỗ trợ đa trang tính (multi-sheet tabs), cuộn nội dung độc lập, thanh tìm kiếm lọc dữ liệu, phóng to toàn màn hình và vẽ nét ghi chú tự do `ItemDrawingOverlay`.
+     - Cài đặt thư viện `xlsx` và nâng cấp `OfficeParserService.ts` để tự động parse tệp Excel (.xlsx, .xls, .csv, .ods).
+     - Bổ sung nút tạo Bảng tính nhanh trên thanh công cụ sáng tạo `LeftCreationBar.tsx` và hỗ trợ kéo-thả tệp vào bàn học `InfiniteDesk.tsx`.
+  2. **Vật thể Bài trình chiếu slide 16:9 (`PresentationItem.tsx`):**
+     - Khung tỷ lệ chuẩn 16:9, điều khiển chuyển slide (phím mũi tên, Space), chế độ trình chiếu toàn màn hình tối giản, công thức toán học KaTeX phong phú trong slide body qua `MathRenderer`, và ngăn kéo ghi chú diễn giả (Speaker notes).
+     - Nâng cấp `OfficeParserService.ts` để parse tệp PowerPoint (.pptx) thành slide trình chiếu.
+     - Bổ sung nút tạo Bài trình chiếu mới trên `LeftCreationBar.tsx` và hỗ trợ kéo-thả vào bàn học.
+  3. **Nhập tài liệu tự động từ đường dẫn URL (`UrlDocumentService.ts`):**
+     - Tự động nhận diện và chuyển đổi: Google Docs (xuất .docx), Google Sheets (xuất .xlsx thành SpreadsheetItem), Google Slides (xuất .pptx thành PresentationItem), Google Drive, và đường link tệp trực tiếp / trang web tĩnh.
+     - Tích hợp nút `Link2` và hộp thoại nhập URL trên `BottomLeftKnowledge.tsx` kèm hướng dẫn cấp quyền chi tiết (`GOOGLE_SHARE_GUIDE_STEPS`).
+  4. **Nâng cấp Linh vật Mầm Xanh nổi tự do (`FloatingPet.tsx` & `pet.css`):**
+     - Giữ nguyên 100% hình ảnh 5 giai đoạn tiến hóa của Mầm Xanh GreenLearn (`public/pet/stage1..5.png` và `sleeping-stage1..5.png`).
+     - Đổi cách hoạt động chuẩn ViTudy: Kéo thả tự do quanh màn hình bằng Pointer Events, tự động snap bám mép màn hình (`greenlearn_pet_position`).
+     - Trạng thái Ngủ thở nhẹ (`pet-idle-sleep`) kèm bong bóng `Zzz` bay lơ lửng khi chưa điểm danh hôm nay; chạm nhẹ để bừng tỉnh (`pet-wake-animation`) điểm danh tăng streak; chạm khi đã thức để mở hộp thoại Bộ sưu tập (`PetMascotModal`).
+     - Tự động hiển thị Modal chúc mừng Tiến hóa rực rỡ với hào quang `pet-evolve-glow` khi đạt mốc thăng cấp.
+     - Tích hợp vào root `layout.tsx` đồng hành cùng người học trên toàn hệ thống.
+- **Verification:**
+  - `pnpm test`: 33/33 test suites passed (155/155 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Static export GitHub Pages thành công (`out/` + version query cache-busting).
+  - `pnpm run docs:index` & `pnpm run docs:check`: 301 symbols hợp lệ 100%.
+- **Changed:**
+  - `package.json` & `pnpm-lock.yaml`: Bổ sung dependency `xlsx`.
+  - `src/types/studyspace.ts` & `src/types/database.types.ts`: Bổ sung types `spreadsheet`, `presentation`, `SpreadsheetData`, `PresentationData`.
+  - `src/components/objects/SpreadsheetItem.tsx` & `src/components/objects/PresentationItem.tsx`: Tạo component với chuẩn thẩm mỹ Xanh Lá GreenLearn `#16A34A`.
+  - `src/components/canvas/InfiniteDesk.tsx`: Render `spreadsheet` và `presentation`, hỗ trợ kéo-thả nạp bảng tính và bài trình chiếu.
+  - `src/context/StudySpaceContext.tsx`: Bổ sung `updateDeskItem`, `addSpreadsheet`, `addPresentation`, nâng cấp `addUploadedDocument`.
+  - `src/services/OfficeParserService.ts`: Bổ sung bóc tách bảng tính và bài trình chiếu PowerPoint.
+  - `src/services/StudySpaceService.ts`: Ánh xạ `spreadsheetData` và `presentationData` khi lưu/đọc CSDL.
+  - `src/services/UrlDocumentService.ts` & `src/services/UrlDocumentService.test.ts`: Tích hợp dịch vụ nhập tài liệu từ URL.
+  - `src/components/hud/BottomLeftKnowledge.tsx`: Nút mở URL và modal nhập đường dẫn tài liệu.
+  - `src/components/hud/LeftCreationBar.tsx`: Thêm nút tạo nhanh Bảng tính và Bài trình chiếu.
+  - `src/components/pet/pet.css` & `src/components/pet/FloatingPet.tsx` & `src/components/pet/FloatingPet.test.tsx`: Hoạt ảnh và widget Linh vật Mầm Xanh nổi tự do.
+  - `src/app/layout.tsx`: Tích hợp `<FloatingPet />` ở tầng root.
+  - `AGENTS.md`: Cập nhật các quy chuẩn kỹ thuật mới.
+
+---
+
 ## 2026-11-13 23:30 — main (Chuẩn Hóa Kiến Trúc Pure CSS Breakpoints Từ ViTudy: Khắc Phục Triệt Để 100% Lỗi Responsive Khi Reload Trên Điện Thoại)
 - **Task:** Giải quyết triệt để lỗi mất responsive bố cục nội dung khi reload lại trang trên điện thoại thông minh bằng cách chuyển đổi sang kiến trúc Pure CSS Tailwind Breakpoints kế thừa từ ViTudy upstream (`/home/nhat/Documents/DUT/ViTudy`), đồng thời giữ nguyên 100% nhận diện thẩm mỹ Xanh Lá GreenLearn (`#16A34A`):
   1. **Triệt tiêu hoàn toàn biểu thức điều kiện Boolean JS trong JSX layout:**

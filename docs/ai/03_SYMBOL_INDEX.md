@@ -1,7 +1,7 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `7092960`  
-> **Cập nhật lần cuối:** `2026-11-13`  
+> **Commit Hash:** `c3150c8`  
+> **Cập nhật lần cuối:** `2026-11-22`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
 <!-- manual:start -->
@@ -15,7 +15,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `DeskDrawingCanvas` | `component` | [src/components/canvas/DeskDrawingCanvas.tsx:L6-L112](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/DeskDrawingCanvas.tsx) | Canvas vẽ nét bút dạ quang và bút vẽ tự do với chế độ multiply blend |
 | `DeskDrawingInteractionLayer` | `component` | [src/components/canvas/DeskDrawingInteractionLayer.tsx:L6-L683](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/DeskDrawingInteractionLayer.tsx) | Lớp đón bắt sự kiện kéo vẽ mượt mà, phân định vẽ nét vs di chuyển bàn |
 | `DeskGrid` | `component` | [src/components/canvas/DeskGrid.tsx:L5-L50](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/DeskGrid.tsx) | Lưới caro toạ độ bàn học trắng tinh khiết chống mỏi mắt |
-| `InfiniteDesk` | `component` | [src/components/canvas/InfiniteDesk.tsx:L20-L607](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/InfiniteDesk.tsx) | Mặt bàn vô cực 2.5D: quản lý pan, zoom, phím tắt Alt+Drag, bắt sự kiện click |
+| `InfiniteDesk` | `component` | [src/components/canvas/InfiniteDesk.tsx:L22-L625](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/InfiniteDesk.tsx) | Mặt bàn vô cực 2.5D: quản lý pan, zoom, phím tắt Alt+Drag, bắt sự kiện click |
 | `ItemDrawingOverlay` | `component` | [src/components/canvas/ItemDrawingOverlay.tsx:L6-L90](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/ItemDrawingOverlay.tsx) | Thành phần nghiệp vụ của phân hệ Canvas & 2.5D Desk |
 | `MindMapConnectors` | `component` | [src/components/canvas/MindMapConnectors.tsx:L6-L103](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/MindMapConnectors.tsx) | Thành phần nghiệp vụ của phân hệ Canvas & 2.5D Desk |
 | `Minimap` | `component` | [src/components/canvas/Minimap.tsx:L12-L234](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/Minimap.tsx) | Bản đồ radar thu nhỏ góc nhìn toàn cảnh không gian bàn học 2.5D |
@@ -36,6 +36,8 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `MindMapNodeItem` | `component` | [src/components/objects/MindMapNodeItem.tsx:L24-L320](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/MindMapNodeItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `PaperSheet` | `component` | [src/components/objects/PaperSheet.tsx:L893-L893](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PaperSheet.tsx) | Mô phỏng tờ giấy A4/ghi chép đơn lẻ 2.5D với độ xoay tự do và texture giấy |
 | `PaperSheetComponent` | `component` | [src/components/objects/PaperSheet.tsx:L43-L891](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PaperSheet.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `PresentationItem` | `component` | [src/components/objects/PresentationItem.tsx:L25-L356](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PresentationItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `SpreadsheetItem` | `component` | [src/components/objects/SpreadsheetItem.tsx:L15-L279](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/SpreadsheetItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `StickerItem` | `component` | [src/components/objects/StickerItem.tsx:L15-L192](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickerItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1159-L1159](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
 | `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L39-L1157](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
@@ -44,13 +46,13 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 
 | Ký hiệu (Symbol) | Loại (Kind) | Vị trí (File:Lines) | Vai trò chức năng |
 |---|---|---|---|
-| `BottomLeftKnowledge` | `component` | [src/components/hud/BottomLeftKnowledge.tsx:L51-L1172](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/BottomLeftKnowledge.tsx) | HUD góc dưới-trái: nút tải tài liệu và mở chợ chia sẻ tri thức KnowInherit 85/15 |
+| `BottomLeftKnowledge` | `component` | [src/components/hud/BottomLeftKnowledge.tsx:L54-L1337](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/BottomLeftKnowledge.tsx) | HUD góc dưới-trái: nút tải tài liệu và mở chợ chia sẻ tri thức KnowInherit 85/15 |
 | `BottomRightToolkit` | `component` | [src/components/hud/BottomRightToolkit.tsx:L17-L200](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/BottomRightToolkit.tsx) | HUD góc dưới-phải: công cụ bút dạ quang, tạo note, khoá góc nhìn, zoom 100% |
 | `FriendInviteToast` | `component` | [src/components/hud/FriendInviteToast.tsx:L14-L124](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/FriendInviteToast.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `FriendInviteToastProps` | `type` | [src/components/hud/FriendInviteToast.tsx:L8-L12](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/FriendInviteToast.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `FriendsRightDrawer` | `component` | [src/components/hud/FriendsRightDrawer.tsx:L27-L436](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/FriendsRightDrawer.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `InviteModal` | `component` | [src/components/hud/InviteModal.tsx:L15-L131](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/InviteModal.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
-| `LeftCreationBar` | `component` | [src/components/hud/LeftCreationBar.tsx:L33-L625](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/LeftCreationBar.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
+| `LeftCreationBar` | `component` | [src/components/hud/LeftCreationBar.tsx:L35-L649](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/LeftCreationBar.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `MultiplayerBar` | `component` | [src/components/hud/MultiplayerBar.tsx:L20-L397](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/MultiplayerBar.tsx) | HUD cộng tác học nhóm thời gian thực: danh sách avatar, thả cảm xúc emoji |
 | `PomodoroChip` | `component` | [src/components/hud/PomodoroChip.tsx:L7-L149](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/PomodoroChip.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `StickerEmojiPickerFlyout` | `component` | [src/components/hud/StickerEmojiPickerFlyout.tsx:L35-L718](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/StickerEmojiPickerFlyout.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
@@ -93,12 +95,12 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `RoomJoinResponse` | `type` | [src/context/SocialPresenceContext.tsx:L27-L37](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L48-L67](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L71-L470](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L171-L2614](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
+| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L181-L2789](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
 | `useAuth` | `hook` | [src/context/AuthContext.tsx:L302-L308](file:////home/nhat/Documents/DUT/GreenLearn/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `usePomodoroContext` | `hook` | [src/context/PomodoroContext.tsx:L105-L111](file:////home/nhat/Documents/DUT/GreenLearn/src/context/PomodoroContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `UserProfile` | `type` | [src/context/AuthContext.tsx:L11-L16](file:////home/nhat/Documents/DUT/GreenLearn/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L472-L475](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2616-L2622](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
+| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2791-L2797](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
 
 ### Non-AI Engine & Utils
 
@@ -214,11 +216,11 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 |---|---|---|---|
 | `AboutPage` | `component` | [src/app/about/page.tsx:L9-L181](file:////home/nhat/Documents/DUT/GreenLearn/src/app/about/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AccountSettings` | `component` | [src/components/profile/AccountSettings.tsx:L30-L493](file:////home/nhat/Documents/DUT/GreenLearn/src/components/profile/AccountSettings.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `ActiveToolType` | `type` | [src/types/studyspace.ts:L100-L107](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ActiveToolType` | `type` | [src/types/studyspace.ts:L138-L145](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthCallbackPage` | `component` | [src/app/auth/callback/page.tsx:L8-L98](file:////home/nhat/Documents/DUT/GreenLearn/src/app/auth/callback/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthForm` | `component` | [src/components/auth/AuthForm.tsx:L15-L139](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/AuthForm.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthPage` | `component` | [src/app/auth/page.tsx:L12-L143](file:////home/nhat/Documents/DUT/GreenLearn/src/app/auth/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `CanvasTransform` | `type` | [src/types/studyspace.ts:L118-L123](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `CanvasTransform` | `type` | [src/types/studyspace.ts:L156-L161](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `clearKatexCache` | `fn` | [src/components/common/MathRenderer.tsx:L30-L32](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/MathRenderer.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `createDemoStudySpace` | `fn` | [src/data/demoSpace.ts:L3-L97](file:////home/nhat/Documents/DUT/GreenLearn/src/data/demoSpace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DashboardPage` | `component` | [src/app/dashboard/page.tsx:L13-L229](file:////home/nhat/Documents/DUT/GreenLearn/src/app/dashboard/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -228,52 +230,58 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `DeleteAccount` | `component` | [src/components/profile/DeleteAccount.tsx:L23-L262](file:////home/nhat/Documents/DUT/GreenLearn/src/components/profile/DeleteAccount.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DeskAction` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L20-L33](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DeskInviteNotification` | `type` | [src/services/SocialFriendService.ts:L21-L29](file:////home/nhat/Documents/DUT/GreenLearn/src/services/SocialFriendService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `DeskItem` | `type` | [src/types/studyspace.ts:L37-L73](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `deskItemToRow` | `fn` | [src/services/StudySpaceService.ts:L8-L44](file:////home/nhat/Documents/DUT/GreenLearn/src/services/StudySpaceService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `DrawingStroke` | `type` | [src/types/studyspace.ts:L109-L116](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `DeskItem` | `type` | [src/types/studyspace.ts:L73-L111](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `deskItemToRow` | `fn` | [src/services/StudySpaceService.ts:L8-L50](file:////home/nhat/Documents/DUT/GreenLearn/src/services/StudySpaceService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `DrawingStroke` | `type` | [src/types/studyspace.ts:L147-L154](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `EMOJI_CATEGORIES` | `component` | [src/data/stickersAndEmojis.ts:L65-L412](file:////home/nhat/Documents/DUT/GreenLearn/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `EmojiCategory` | `type` | [src/data/stickersAndEmojis.ts:L13-L18](file:////home/nhat/Documents/DUT/GreenLearn/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `EmptyState` | `component` | [src/components/common/EmptyState.tsx:L17-L48](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/EmptyState.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ExamAttemptPayload` | `type` | [src/services/ActivityService.ts:L3-L8](file:////home/nhat/Documents/DUT/GreenLearn/src/services/ActivityService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `ExamQuestion` | `type` | [src/types/studyspace.ts:L17-L24](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `ExamSheetData` | `type` | [src/types/studyspace.ts:L26-L35](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ExamQuestion` | `type` | [src/types/studyspace.ts:L53-L60](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ExamSheetData` | `type` | [src/types/studyspace.ts:L62-L71](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ExamStats` | `type` | [src/services/StatsService.ts:L9-L12](file:////home/nhat/Documents/DUT/GreenLearn/src/services/StatsService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `FaqPage` | `component` | [src/app/faq/page.tsx:L664-L676](file:////home/nhat/Documents/DUT/GreenLearn/src/app/faq/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `FeatureGrid` | `component` | [src/components/landing/FeatureGrid.tsx:L75-L160](file:////home/nhat/Documents/DUT/GreenLearn/src/components/landing/FeatureGrid.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `FlashcardReview` | `type` | [src/services/FlashcardService.ts:L4-L16](file:////home/nhat/Documents/DUT/GreenLearn/src/services/FlashcardService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `FloatingPet` | `component` | [src/components/pet/FloatingPet.tsx:L14-L278](file:////home/nhat/Documents/DUT/GreenLearn/src/components/pet/FloatingPet.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `GENERAL_URL_GUIDE_STEPS` | `component` | [src/services/UrlDocumentService.ts:L27-L31](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `generateCardHash` | `fn` | [src/services/FlashcardService.ts:L18-L27](file:////home/nhat/Documents/DUT/GreenLearn/src/services/FlashcardService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `getDocAccessLog` | `fn` | [src/hooks/useStorageManager.ts:L46-L54](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `getKatexCacheSize` | `fn` | [src/components/common/MathRenderer.tsx:L23-L25](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/MathRenderer.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `getPurchasedItemIds` | `fn` | [src/services/MarketPurchaseStorage.ts:L8-L21](file:////home/nhat/Documents/DUT/GreenLearn/src/services/MarketPurchaseStorage.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `GOOGLE_SHARE_GUIDE_STEPS` | `component` | [src/services/UrlDocumentService.ts:L19-L25](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `GuestBanner` | `component` | [src/components/auth/GuestBanner.tsx:L12-L54](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/GuestBanner.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HeroSection` | `component` | [src/components/landing/HeroSection.tsx:L52-L238](file:////home/nhat/Documents/DUT/GreenLearn/src/components/landing/HeroSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HomePage` | `component` | [src/components/home/HomePage.tsx:L49-L1763](file:////home/nhat/Documents/DUT/GreenLearn/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HostApprovalModal` | `component` | [src/components/social/HostApprovalModal.tsx:L14-L177](file:////home/nhat/Documents/DUT/GreenLearn/src/components/social/HostApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `importDocumentFromUrl` | `fn` | [src/services/UrlDocumentService.ts:L154-L237](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_MARKET_ITEMS` | `component` | [src/data/marketMockData.ts:L24-L1124](file:////home/nhat/Documents/DUT/GreenLearn/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_SPACES` | `component` | [src/data/mockSpaces.ts:L3-L332](file:////home/nhat/Documents/DUT/GreenLearn/src/data/mockSpaces.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `IntelineThread` | `type` | [src/types/studyspace.ts:L75-L85](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `isBinaryOrCorrupted` | `fn` | [src/services/OfficeParserService.ts:L18-L45](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `ItemType` | `type` | [src/types/studyspace.ts:L1-L1](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `IntelineThread` | `type` | [src/types/studyspace.ts:L113-L123](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `isBinaryOrCorrupted` | `fn` | [src/services/OfficeParserService.ts:L46-L75](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ItemType` | `type` | [src/types/studyspace.ts:L1-L11](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `Json` | `type` | [src/types/database.types.ts:L1-L7](file:////home/nhat/Documents/DUT/GreenLearn/src/types/database.types.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `katexHtmlCache` | `const` | [src/components/common/MathRenderer.tsx:L18-L18](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/MathRenderer.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `LandingPage` | `component` | [src/components/landing/LandingPage.tsx:L16-L81](file:////home/nhat/Documents/DUT/GreenLearn/src/components/landing/LandingPage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `loadStoredPetState` | `fn` | [src/hooks/usePetMascot.ts:L30-L56](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/usePetMascot.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `MarketItem` | `type` | [src/data/marketMockData.ts:L3-L22](file:////home/nhat/Documents/DUT/GreenLearn/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `MathRenderer` | `component` | [src/components/common/MathRenderer.tsx:L124-L254](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/MathRenderer.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `metadata` | `const` | [src/app/layout.tsx:L39-L50](file:////home/nhat/Documents/DUT/GreenLearn/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `metadata` | `const` | [src/app/layout.tsx:L40-L51](file:////home/nhat/Documents/DUT/GreenLearn/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `MigrationDialog` | `component` | [src/components/auth/MigrationDialog.tsx:L10-L110](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/MigrationDialog.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `MigrationResult` | `type` | [src/services/SyncService.ts:L5-L9](file:////home/nhat/Documents/DUT/GreenLearn/src/services/SyncService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `OAuthButtons` | `component` | [src/components/auth/OAuthButtons.tsx:L10-L64](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/OAuthButtons.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `OfflineOp` | `type` | [src/services/OfflineQueue.ts:L4-L10](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfflineQueue.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `OnboardingTour` | `component` | [src/components/onboarding/OnboardingTour.tsx:L56-L151](file:////home/nhat/Documents/DUT/GreenLearn/src/components/onboarding/OnboardingTour.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `PageContent` | `type` | [src/types/studyspace.ts:L3-L15](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `paginatePlainText` | `fn` | [src/services/OfficeParserService.ts:L50-L103](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `parseDocxFile` | `fn` | [src/services/OfficeParserService.ts:L108-L132](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `PageContent` | `type` | [src/types/studyspace.ts:L39-L51](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parseDocxFile` | `fn` | [src/services/OfficeParserService.ts:L277-L314](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ParsedPage` | `type` | [src/services/PdfParserService.ts:L5-L11](file:////home/nhat/Documents/DUT/GreenLearn/src/services/PdfParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `ParsedUploadedDocument` | `type` | [src/services/OfficeParserService.ts:L8-L13](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ParsedUploadedDocument` | `type` | [src/services/OfficeParserService.ts:L9-L17](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `parsePdfFile` | `fn` | [src/services/PdfParserService.ts:L17-L94](file:////home/nhat/Documents/DUT/GreenLearn/src/services/PdfParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `parsePptxFile` | `fn` | [src/services/OfficeParserService.ts:L137-L181](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `parseUploadedDocumentFile` | `fn` | [src/services/OfficeParserService.ts:L189-L302](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parsePptxFile` | `fn` | [src/services/OfficeParserService.ts:L465-L468](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parsePptxPresentation` | `fn` | [src/services/OfficeParserService.ts:L378-L460](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parseSpreadsheetFile` | `fn` | [src/services/OfficeParserService.ts:L319-L373](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parseUploadedDocumentFile` | `fn` | [src/services/OfficeParserService.ts:L474-L618](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `parseUploadedDocumentResult` | `fn` | [src/services/OfficeParserService.ts:L623-L635](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PeerUser` | `type` | [src/hooks/useRealtimeMultiplayer.ts:L8-L18](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useRealtimeMultiplayer.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PendingApprovalModal` | `component` | [src/components/social/PendingApprovalModal.tsx:L13-L139](file:////home/nhat/Documents/DUT/GreenLearn/src/components/social/PendingApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PET_STAGES` | `component` | [src/types/pet.ts:L14-L65](file:////home/nhat/Documents/DUT/GreenLearn/src/types/pet.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -282,6 +290,8 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `PetStageInfo` | `type` | [src/types/pet.ts:L3-L12](file:////home/nhat/Documents/DUT/GreenLearn/src/types/pet.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PetState` | `type` | [src/types/pet.ts:L67-L75](file:////home/nhat/Documents/DUT/GreenLearn/src/types/pet.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PomodoroPhase` | `type` | [src/hooks/usePomodoro.ts:L5-L5](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/usePomodoro.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `PresentationData` | `type` | [src/types/studyspace.ts:L33-L37](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `PresentationSlide` | `type` | [src/types/studyspace.ts:L24-L31](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PricingSection` | `component` | [src/components/landing/PricingSection.tsx:L11-L161](file:////home/nhat/Documents/DUT/GreenLearn/src/components/landing/PricingSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `PrivacyPage` | `component` | [src/app/privacy/page.tsx:L8-L99](file:////home/nhat/Documents/DUT/GreenLearn/src/app/privacy/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ProfileHeader` | `component` | [src/components/profile/ProfileHeader.tsx:L13-L146](file:////home/nhat/Documents/DUT/GreenLearn/src/components/profile/ProfileHeader.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -291,27 +301,34 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `recordPurchasedItemId` | `fn` | [src/services/MarketPurchaseStorage.ts:L26-L39](file:////home/nhat/Documents/DUT/GreenLearn/src/services/MarketPurchaseStorage.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `renderKatexWithCache` | `fn` | [src/components/common/MathRenderer.tsx:L34-L51](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/MathRenderer.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ResetPasswordPage` | `component` | [src/app/auth/reset/page.tsx:L10-L176](file:////home/nhat/Documents/DUT/GreenLearn/src/app/auth/reset/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `ResolvedDocumentUrl` | `type` | [src/services/UrlDocumentService.ts:L33-L39](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `resolveImportableUrl` | `fn` | [src/services/UrlDocumentService.ts:L41-L119](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ResponsiveLayoutState` | `type` | [src/hooks/useResponsiveLayout.ts:L5-L20](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `RootLayout` | `component` | [src/app/layout.tsx:L52-L97](file:////home/nhat/Documents/DUT/GreenLearn/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `RootLayout` | `component` | [src/app/layout.tsx:L53-L99](file:////home/nhat/Documents/DUT/GreenLearn/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `RotateTwoWay` | `component` | [src/components/icons/RotateTwoWay.tsx:L11-L29](file:////home/nhat/Documents/DUT/GreenLearn/src/components/icons/RotateTwoWay.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `rowToDeskItem` | `fn` | [src/services/StudySpaceService.ts:L46-L77](file:////home/nhat/Documents/DUT/GreenLearn/src/services/StudySpaceService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `rowToDeskItem` | `fn` | [src/services/StudySpaceService.ts:L52-L85](file:////home/nhat/Documents/DUT/GreenLearn/src/services/StudySpaceService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `sanitizeDocumentText` | `fn` | [src/services/OfficeParserService.ts:L31-L41](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Non-AI Engine & Utils |
 | `savePetState` | `fn` | [src/hooks/usePetMascot.ts:L58-L73](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/usePetMascot.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `SiteFooter` | `component` | [src/components/common/SiteFooter.tsx:L19-L71](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/SiteFooter.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `SKIN_TONES` | `component` | [src/data/stickersAndEmojis.ts:L42-L49](file:////home/nhat/Documents/DUT/GreenLearn/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `SocialFriend` | `type` | [src/services/SocialFriendService.ts:L19-L19](file:////home/nhat/Documents/DUT/GreenLearn/src/services/SocialFriendService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `SpreadsheetData` | `type` | [src/types/studyspace.ts:L18-L22](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `SpreadsheetSheet` | `type` | [src/types/studyspace.ts:L13-L16](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `STICKER_CATEGORIES` | `component` | [src/data/stickersAndEmojis.ts:L417-L608](file:////home/nhat/Documents/DUT/GreenLearn/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StickerCategory` | `type` | [src/data/stickersAndEmojis.ts:L20-L25](file:////home/nhat/Documents/DUT/GreenLearn/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StickerPickerItem` | `type` | [src/data/stickersAndEmojis.ts:L1-L11](file:////home/nhat/Documents/DUT/GreenLearn/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `StorageItemInfo` | `type` | [src/hooks/useStorageManager.ts:L7-L18](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StorageUsage` | `type` | [src/hooks/useStorageManager.ts:L20-L26](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StreakCalendar` | `component` | [src/components/dashboard/StreakCalendar.tsx:L18-L108](file:////home/nhat/Documents/DUT/GreenLearn/src/components/dashboard/StreakCalendar.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `StudySpace` | `type` | [src/types/studyspace.ts:L87-L98](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `StudySpace` | `type` | [src/types/studyspace.ts:L125-L136](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StudySpacePage` | `component` | [src/app/page.tsx:L89-L95](file:////home/nhat/Documents/DUT/GreenLearn/src/app/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `StudyStats` | `component` | [src/components/dashboard/StudyStats.tsx:L14-L189](file:////home/nhat/Documents/DUT/GreenLearn/src/components/dashboard/StudyStats.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `TermsPage` | `component` | [src/app/terms/page.tsx:L8-L83](file:////home/nhat/Documents/DUT/GreenLearn/src/app/terms/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `toTwemojiUrl` | `fn` | [src/data/stickersAndEmojis.ts:L30-L40](file:////home/nhat/Documents/DUT/GreenLearn/src/data/stickersAndEmojis.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `TourStep` | `component` | [src/components/onboarding/TourStep.tsx:L19-L66](file:////home/nhat/Documents/DUT/GreenLearn/src/components/onboarding/TourStep.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `TourStepConfig` | `type` | [src/components/onboarding/TourStep.tsx:L4-L9](file:////home/nhat/Documents/DUT/GreenLearn/src/components/onboarding/TourStep.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `UploadedParseResult` | `type` | [src/services/OfficeParserService.ts:L19-L22](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `UrlImportResult` | `type` | [src/services/UrlDocumentService.ts:L3-L7](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useDeskItemInteraction` | `hook` | [src/hooks/useDeskItemInteraction.ts:L16-L180](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useDeskItemInteraction.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useDiscordActivity` | `hook` | [src/hooks/useDiscordActivity.ts:L22-L114](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useDiscordActivity.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `UseDiscordActivityResult` | `type` | [src/hooks/useDiscordActivity.ts:L8-L20](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useDiscordActivity.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -325,5 +342,5 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `useResponsiveLayout` | `hook` | [src/hooks/useResponsiveLayout.ts:L158-L226](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useResponsiveLayout.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useSocialPresence` | `hook` | [src/hooks/useSocialPresence.ts:L10-L212](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useSocialPresence.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useStorageManager` | `hook` | [src/hooks/useStorageManager.ts:L65-L216](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useStorageManager.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `viewport` | `const` | [src/app/layout.tsx:L10-L16](file:////home/nhat/Documents/DUT/GreenLearn/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `viewport` | `const` | [src/app/layout.tsx:L11-L17](file:////home/nhat/Documents/DUT/GreenLearn/src/app/layout.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 
