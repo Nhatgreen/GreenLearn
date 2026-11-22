@@ -18,6 +18,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
 import { VoiceNoteData } from '@/types/studyspace';
+import { DocumentService } from '@/services/DocumentService';
 
 interface VoiceNoteRecordModalProps {
   isOpen: boolean;
@@ -30,6 +31,67 @@ const SAMPLE_WAVEFORM = [
 ];
 
 const SAMPLE_TRANSCRIPT = 'Chào bạn! Nhớ ôn tập kỹ định lý Cauchy và làm bài tập tích phân trước buổi học nhóm ngày mai nhé.';
+
+/**
+ * Synthesizes a gentle, audible educational notification chime (16-bit PCM Mono WAV)
+ * Used as fallback sample voice note so both local and remote peers can hear sound.
+ */
+function generateSampleVoiceChimeWav(): { blob: Blob; base64: string } {
+  const sampleRate = 11025;
+  const duration = 5.2;
+  const numFrames = Math.floor(sampleRate * duration);
+  const numChannels = 1;
+  const bytesPerSample = 2; // 16-bit PCM
+  const blockAlign = numChannels * bytesPerSample;
+  const byteRate = sampleRate * blockAlign;
+  const dataByteCount = numFrames * blockAlign;
+  const buffer = new ArrayBuffer(44 + dataByteCount);
+  const view = new DataView(buffer);
+
+  const writeString = (offset: number, str: string) => {
+    for (let i = 0; i < str.length; i++) {
+      view.setUint8(offset + i, str.charCodeAt(i));
+    }
+  };
+
+  writeString(0, 'RIFF');
+  view.setUint32(4, 36 + dataByteCount, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true); // PCM
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, byteRate, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, 16, true);
+  writeString(36, 'data');
+  view.setUint32(40, dataByteCount, true);
+
+  // Gentle melody: F4 (349.2), A4 (440), C5 (523.2), E5 (659.2), C5 (523.2)
+  const notes = [349.23, 440.0, 523.25, 659.25, 523.25];
+  let offset = 44;
+  for (let i = 0; i < numFrames; i++) {
+    const t = i / sampleRate;
+    const noteIdx = Math.min(notes.length - 1, Math.floor((t / duration) * notes.length));
+    const freq = notes[noteIdx];
+    const noteTime = t % (duration / notes.length);
+    const env = Math.exp(-noteTime * 4.2);
+    const sampleVal = Math.sin(2 * Math.PI * freq * t) * 0.4 * env;
+    const s = Math.max(-1, Math.min(1, sampleVal));
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+    offset += 2;
+  }
+
+  const blob = new Blob([view], { type: 'audio/wav' });
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const base64 = `data:audio/wav;base64,${btoa(binary)}`;
+  return { blob, base64 };
+}
 
 function formatTime(seconds: number): string {
   if (isNaN(seconds) || !isFinite(seconds) || seconds < 0) return '00:00';
@@ -135,7 +197,14 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
         throw new Error('Trình duyệt không hỗ trợ ghi âm micro');
       }
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        }
+      });
       audioStreamRef.current = stream;
 
       // AudioContext & AnalyserNode for dynamic visualizer
@@ -177,7 +246,7 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
       };
       updateVisualizer();
 
-      // Setup MediaRecorder
+      // Setup MediaRecorder with 24kbps mono Opus for crisp voice & lightweight P2P sync
       const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
         ? 'audio/webm;codecs=opus'
         : MediaRecorder.isTypeSupported('audio/webm')
@@ -186,7 +255,14 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
         ? 'audio/mp4'
         : '';
 
-      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      let recorder: MediaRecorder;
+      try {
+        recorder = mimeType 
+          ? new MediaRecorder(stream, { mimeType, audioBitsPerSecond: 24000 }) 
+          : new MediaRecorder(stream, { audioBitsPerSecond: 24000 });
+      } catch {
+        recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      }
       mediaRecorderRef.current = recorder;
       const chunks: Blob[] = [];
 
@@ -290,14 +366,22 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
     setRecordState('review');
   };
 
-  // Load sample voice note for demo or fallback
+  // Load sample voice note for demo or fallback with real audible melodic chime
   const handleUseSampleVoiceNote = () => {
     stopAllAudioResources();
     setRecordDuration(5.2);
     setWaveformResult(SAMPLE_WAVEFORM);
     setTranscript(SAMPLE_TRANSCRIPT);
-    setRecordedUrl(null);
-    setRecordedBase64(null);
+    try {
+      const { blob, base64 } = generateSampleVoiceChimeWav();
+      setRecordedBlob(blob);
+      setRecordedUrl(URL.createObjectURL(blob));
+      setRecordedBase64(base64);
+    } catch (err) {
+      console.warn('Failed to synthesize sample audio chime:', err);
+      setRecordedUrl(null);
+      setRecordedBase64(null);
+    }
     setRecordState('review');
   };
 
@@ -353,27 +437,67 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
   };
 
   // Final confirmation: Place voice note on the Study Desk
-  const handleSaveAndPlaceOnDesk = () => {
-    const finalData: VoiceNoteData = {
-      audioUrl: recordedUrl || undefined,
-      audioBlob: recordedBase64 || undefined,
-      duration: Math.max(1, Math.round(recordDuration * 10) / 10),
-      waveform: waveformResult,
-      transcript: transcript.trim() || undefined,
-      isTranscribed: !!transcript.trim(),
-      authorName,
-      authorAvatar,
-      authorColor,
-      createdAt: new Date().toISOString()
-    };
+  const [isSaving, setIsSaving] = useState(false);
 
-    if (onSave) {
-      onSave(finalData);
-    } else {
-      addVoiceNote(finalData);
+  const handleSaveAndPlaceOnDesk = async () => {
+    if (isSaving) return;
+    setIsSaving(true);
+
+    try {
+      // Ensure base64 is fully generated from recordedBlob if FileReader hasn't completed yet
+      let finalBase64 = recordedBase64;
+      if (!finalBase64 && recordedBlob) {
+        try {
+          finalBase64 = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(recordedBlob);
+          });
+          setRecordedBase64(finalBase64);
+        } catch (err) {
+          console.warn('Error reading audio blob to base64:', err);
+        }
+      }
+
+      // Attempt cloud upload to Supabase Storage if user is logged in
+      let publicAudioUrl: string | undefined = undefined;
+      try {
+        if (user?.id && recordedBlob) {
+          const ext = recordedBlob.type.includes('mp4') ? 'mp4' : (recordedBlob.type.includes('wav') ? 'wav' : 'webm');
+          const file = new File([recordedBlob], `voicenote-${Date.now()}.${ext}`, { type: recordedBlob.type });
+          const { publicUrl } = await DocumentService.uploadFile(file, user.id);
+          if (publicUrl && !publicUrl.startsWith('blob:')) {
+            publicAudioUrl = publicUrl;
+          }
+        }
+      } catch (err) {
+        // Offline / guest mode fallback to audioBlob base64
+      }
+
+      const finalData: VoiceNoteData = {
+        audioUrl: publicAudioUrl,
+        audioBlob: finalBase64 || undefined,
+        duration: Math.max(1, Math.round(recordDuration * 10) / 10),
+        waveform: waveformResult,
+        transcript: transcript.trim() || undefined,
+        isTranscribed: !!transcript.trim(),
+        authorName,
+        authorAvatar,
+        authorColor,
+        createdAt: new Date().toISOString()
+      };
+
+      if (onSave) {
+        onSave(finalData);
+      } else {
+        addVoiceNote(finalData);
+      }
+
+      onClose();
+    } finally {
+      setIsSaving(false);
     }
-
-    onClose();
   };
 
   if (!isOpen) return null;

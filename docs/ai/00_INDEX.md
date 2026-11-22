@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-22`  
-> **Trạng thái Codebase:** Khắc phục triệt để lỗi không di chuyển được vật thể trên mobile/tablet (chuẩn hóa Pointer Events API toàn diện, bổ sung onPointerDown và class touch-none cho 10 component vật thể bàn học); 37/37 test suites pass (174/174 tests), 15/15 static pages build pass, docs:check pass.
+> **Trạng thái Codebase:** Khắc phục triệt để lỗi bạn học không nghe được Voice Note (tối ưu 24kbps Opus mono, giải mã audioBlob base64 thành local Blob URL trên máy peer, hỗ trợ tải lên Supabase Storage và bản ghi mẫu có chuông thực tế); 37/37 test suites pass (175/175 tests), 15/15 static pages build pass, docs:check pass.
 
 ---
 

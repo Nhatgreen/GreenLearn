@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `b269740`  
+> **Commit Hash:** `caecfe3`  
 > **Cập nhật lần cuối:** `2026-11-22`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -41,7 +41,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `StickerItem` | `component` | [src/components/objects/StickerItem.tsx:L15-L200](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickerItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1163-L1163](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
 | `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L39-L1161](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `VoiceNoteItem` | `component` | [src/components/objects/VoiceNoteItem.tsx:L39-L595](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/VoiceNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `VoiceNoteItem` | `component` | [src/components/objects/VoiceNoteItem.tsx:L39-L642](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/VoiceNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 
 ### HUD & Overlays
 
@@ -79,7 +79,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `StorageManagerModal` | `component` | [src/components/modals/StorageManagerModal.tsx:L26-L264](file:////home/nhat/Documents/DUT/GreenLearn/src/components/modals/StorageManagerModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 | `StudyToolsModal` | `component` | [src/components/modals/StudyToolsModal.tsx:L29-L174](file:////home/nhat/Documents/DUT/GreenLearn/src/components/modals/StudyToolsModal.tsx) | Bộ công cụ ôn tập toàn diện STudy: TextRank, Cloze Quiz, Flashcard, Roadmap |
 | `SummaryTab` | `component` | [src/components/modals/study-tools/SummaryTab.tsx:L18-L231](file:////home/nhat/Documents/DUT/GreenLearn/src/components/modals/study-tools/SummaryTab.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
-| `VoiceNoteRecordModal` | `component` | [src/components/modals/VoiceNoteRecordModal.tsx:L41-L630](file:////home/nhat/Documents/DUT/GreenLearn/src/components/modals/VoiceNoteRecordModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
+| `VoiceNoteRecordModal` | `component` | [src/components/modals/VoiceNoteRecordModal.tsx:L103-L754](file:////home/nhat/Documents/DUT/GreenLearn/src/components/modals/VoiceNoteRecordModal.tsx) | Thành phần nghiệp vụ của phân hệ Modals & Workflows |
 
 ### Context & State
 

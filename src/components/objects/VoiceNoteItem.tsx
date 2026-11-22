@@ -105,14 +105,58 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
     }
   }, [voiceData.transcript]);
 
+  // Resolved playable audio source (local blob URL created from base64, or cloud URL)
+  const [resolvedAudioSource, setResolvedAudioSource] = useState<string | null>(null);
+
   // Audio element initialization & event listeners
   useEffect(() => {
+    let localBlobUrl: string | null = null;
+    let effectiveSource: string | null = null;
+
+    // 1. If audioUrl is an external HTTP/HTTPS URL (e.g. Supabase Storage CDN)
+    if (voiceData.audioUrl && (voiceData.audioUrl.startsWith('http://') || voiceData.audioUrl.startsWith('https://'))) {
+      effectiveSource = voiceData.audioUrl;
+    }
+    // 2. If audioBlob (base64 data URL) is present (standard for P2P/Realtime sync across peers)
+    else if (voiceData.audioBlob) {
+      try {
+        if (voiceData.audioBlob.startsWith('data:')) {
+          const parts = voiceData.audioBlob.split(',');
+          const mimeMatch = parts[0].match(/:(.*?);/);
+          const mime = mimeMatch ? mimeMatch[1] : 'audio/webm';
+          const bstr = atob(parts[1]);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          const blob = new Blob([u8arr], { type: mime });
+          if (typeof window !== 'undefined' && typeof window.URL?.createObjectURL === 'function') {
+            localBlobUrl = window.URL.createObjectURL(blob);
+            effectiveSource = localBlobUrl;
+          } else {
+            effectiveSource = voiceData.audioBlob;
+          }
+        } else {
+          effectiveSource = voiceData.audioBlob;
+        }
+      } catch (err) {
+        console.warn('Error creating local audio blob from base64:', err);
+        effectiveSource = voiceData.audioBlob;
+      }
+    }
+    // 3. Fallback: if audioUrl is a blob: URL (only valid in original creator session)
+    else if (voiceData.audioUrl && voiceData.audioUrl.startsWith('blob:')) {
+      effectiveSource = voiceData.audioUrl;
+    }
+
+    setResolvedAudioSource(effectiveSource);
+
     const audio = new Audio();
     audioRef.current = audio;
 
-    const source = voiceData.audioUrl || voiceData.audioBlob;
-    if (source) {
-      audio.src = source;
+    if (effectiveSource) {
+      audio.src = effectiveSource;
     }
 
     audio.playbackRate = playbackSpeed;
@@ -141,6 +185,9 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
       audioRef.current = null;
+      if (localBlobUrl && typeof window !== 'undefined' && typeof window.URL?.revokeObjectURL === 'function') {
+        window.URL.revokeObjectURL(localBlobUrl);
+      }
     };
   }, [voiceData.audioUrl, voiceData.audioBlob]);
 
@@ -268,7 +315,7 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
   // Download voice note audio
   const handleDownloadAudio = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const source = voiceData.audioUrl || voiceData.audioBlob;
+    const source = resolvedAudioSource || voiceData.audioUrl || voiceData.audioBlob;
     if (!source) return;
     const a = document.createElement('a');
     a.href = source;
@@ -348,7 +395,7 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
         </button>
 
         {/* Download Audio */}
-        {(voiceData.audioUrl || voiceData.audioBlob) && (
+        {(resolvedAudioSource || voiceData.audioUrl || voiceData.audioBlob) && (
           <button
             type="button"
             onClick={handleDownloadAudio}

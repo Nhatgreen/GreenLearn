@@ -124,4 +124,42 @@ describe('VoiceNoteItem Component', () => {
     fireEvent.click(playBtn);
     // Audio plays or simulates playback
   });
+
+  it('correctly resolves and plays audio from remote peer synced audioBlob base64', () => {
+    // Mock URL.createObjectURL and revokeObjectURL
+    const originalCreate = window.URL.createObjectURL;
+    const originalRevoke = window.URL.revokeObjectURL;
+    const mockCreateObjectURL = vi.fn(() => 'blob:mock-peer-blob-url');
+    const mockRevokeObjectURL = vi.fn();
+    window.URL.createObjectURL = mockCreateObjectURL;
+    window.URL.revokeObjectURL = mockRevokeObjectURL;
+
+    // Dummy base64 WAV data (small valid data URI)
+    const remotePeerItem: DeskItem = {
+      ...dummyItem,
+      id: 'voice-remote-peer',
+      voiceNoteData: {
+        duration: 8,
+        waveform: [30, 50, 70, 40],
+        transcript: 'Đoạn ghi âm từ bạn cùng phòng.',
+        authorName: 'Linh',
+        authorColor: '#0068FF',
+        // Peer has an unresolvable creator blob URL AND a valid audioBlob base64
+        audioUrl: 'blob:http://localhost:3000/remote-unreachable-blob',
+        audioBlob: 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=',
+      },
+    };
+
+    const { unmount } = render(<VoiceNoteItem item={remotePeerItem} isSelected={false} />);
+
+    // Should create a local blob URL from the peer's audioBlob base64
+    expect(mockCreateObjectURL).toHaveBeenCalled();
+
+    // Clean up
+    unmount();
+    expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:mock-peer-blob-url');
+
+    window.URL.createObjectURL = originalCreate;
+    window.URL.revokeObjectURL = originalRevoke;
+  });
 });

@@ -4,6 +4,33 @@
 
 ---
 
+## 2026-11-22 20:21 — main (Khắc Phục Lỗi Đồng Bộ Âm Thanh Voice Note Không Nghe Được Giữa Các Bạn Học)
+- **Task:** Khắc phục triệt để lỗi "Voice note người này thì người kia không nghe được" trong phòng học nhóm Realtime:
+  1. **Nguyên nhân gốc rễ:**
+     - `VoiceNoteRecordModal` lưu `audioUrl: recordedUrl` (dạng `blob:http://localhost:3000/...`).
+     - Khi đồng bộ sang máy bạn học (peer) hoặc khi tải lại trang, URL `blob:` này không tồn tại trong bộ nhớ của trình duyệt bạn học $\rightarrow$ thẻ `<audio>` báo lỗi nguồn phát và rơi vào `simulatePlayback()` (chạy giả lập không có tiếng).
+     - Quá trình đọc `FileReader` chuyển sang `base64` bị bất đồng bộ, nếu người dùng bấm "Lưu" nhanh thì `audioBlob` bị `null`, khiến bạn học không nhận được dữ liệu âm thanh nào.
+     - Bitrate ghi âm mặc định không khống chế có thể tạo ra file quá lớn vượt ngưỡng 256KB của Supabase Realtime WebSocket frame.
+     - Bản ghi âm mẫu ("Dùng bản ghi âm mẫu") trước đây để trống `recordedUrl` và `recordedBase64` dẫn đến câm tiếng hoàn toàn.
+  2. **Giải pháp triển khai:**
+     - **Tối ưu ghi âm micro (`VoiceNoteRecordModal.tsx`):** Giới hạn mono channel (`channelCount: 1`), lọc ồn, khử vang và khóa bitrate Opus 24kbps (`audioBitsPerSecond: 24000`), giảm 5x kích thước (10s chỉ ~30KB), nằm trọn vẹn trong ngưỡng an toàn 256KB WebSocket.
+     - **Triệt tiêu race condition:** Chuyển `handleSaveAndPlaceOnDesk` thành async và `await` đảm bảo `finalBase64` luôn sẵn sàng trước khi lưu/phát tán.
+     - **Tải lên đám mây tự động:** Tự động đẩy file âm thanh lên Supabase Storage (`DocumentService.uploadFile`) khi người dùng đã đăng nhập để lấy URL public HTTP/HTTPS CDN; nếu ở chế độ khách/ngoại tuyến thì không gắn URL `blob:` cục bộ mà dùng `audioBlob` base64.
+     - **Tạo âm thanh mẫu thực tế (`generateSampleVoiceChimeWav`):** Tự động tổng hợp chuỗi chuông giai điệu nhẹ nhàng (WAV 16-bit PCM mono) cho bản ghi âm mẫu để khi bấm phát luôn có âm thanh thật.
+     - **Phân giải nguồn phát đa nền tảng (`VoiceNoteItem.tsx`):** Tạo state `resolvedAudioSource` và `useEffect` giải mã chuỗi `audioBlob` base64 thành một `Blob` cục bộ trong bộ nhớ trình duyệt bạn học (`URL.createObjectURL(new Blob(...))`), giúp bạn học nghe trực tiếp từ thẻ `<audio>` native với 100% chất lượng và hỗ trợ tải xuống.
+  3. **Kiểm thử & Xác thực:**
+     - Bổ sung test case trong `VoiceNoteItem.test.tsx` kiểm tra việc giải mã và phát âm thanh từ peer qua `audioBlob` base64.
+     - `pnpm test`: 37/37 test suites pass (175/175 tests pass).
+     - `pnpm build`: Build Next.js 15.1.7 thành công 15/15 static pages.
+     - `pnpm run docs:index` & `pnpm run docs:check`: Passed 100%.
+- **Changed:**
+  - `src/components/modals/VoiceNoteRecordModal.tsx`
+  - `src/components/objects/VoiceNoteItem.tsx`
+  - `src/components/objects/VoiceNoteItem.test.tsx`
+  - `AGENTS.md`, `docs/ai/11_CHANGELOG.md`, `docs/ai/00_INDEX.md`
+
+---
+
 ## 2026-11-22 19:48 — main (Chuẩn Hóa Pointer Events API & Khắc Phục Lỗi Di Chuyển Vật Thể Trên Mobile)
 - **Task:** Tìm hiểu và khắc phục triệt để lỗi không thể di chuyển các đối tượng trên thiết bị di động (mobile/tablet) theo Phương án 1 (Chuẩn hóa Pointer Events API toàn diện):
   1. **Nguyên nhân gốc rễ:**
