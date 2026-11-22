@@ -69,36 +69,10 @@ export function MultiplayerBar() {
         if (isShareModalOpen) setIsShareModalOpen(false);
         if (isDbConfigOpen) setIsDbConfigOpen(false);
       }
-
-      // Quick Mute/Unmute hotkey 'M' (when not inside inputs)
-      const target = e.target as HTMLElement;
-      if (
-        target &&
-        (target.tagName === 'INPUT' ||
-          target.tagName === 'TEXTAREA' ||
-          target.isContentEditable)
-      ) {
-        return;
-      }
-
-      if (e.key === 'm' || e.key === 'M') {
-        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-          e.preventDefault();
-          toggleMute();
-        }
-      }
-
-      // Quick Deafen / Mute speaker hotkey 'D'
-      if (e.key === 'd' || e.key === 'D') {
-        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-          e.preventDefault();
-          toggleDeafen();
-        }
-      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isShareModalOpen, isDbConfigOpen, toggleMute, toggleDeafen]);
+  }, [isShareModalOpen, isDbConfigOpen]);
 
   useEffect(() => {
     const cfg = getSupabaseConfig();
@@ -196,10 +170,10 @@ export function MultiplayerBar() {
               onClick={isMicOn ? toggleMute : toggleMic}
               title={
                 !isMicOn 
-                  ? 'Bật Micro nói chuyện trong phòng (Phím M)' 
+                  ? 'Bật Micro nói chuyện trong phòng' 
                   : isMuted 
-                  ? 'Đang tắt tiếng (Bấm để bật lại mic hoặc nhấn phím M)' 
-                  : 'Micro đang bật (Bấm để tắt tiếng hoặc nhấn phím M)'
+                  ? 'Đang tắt tiếng (Bấm để bật lại mic)' 
+                  : 'Micro đang bật (Bấm để tắt tiếng)'
               }
               className={`relative flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer select-none active:scale-95 touch-target ${
                 !isMicOn
@@ -233,8 +207,8 @@ export function MultiplayerBar() {
               onClick={toggleDeafen}
               title={
                 isDeafened 
-                  ? 'Đang tắt toàn bộ âm thanh phòng học (Bấm để bật lại loa hoặc nhấn phím D)' 
-                  : 'Tắt loa phòng học khi quá ồn (Nhấn phím D)'
+                  ? 'Đang tắt toàn bộ âm thanh phòng học (Bấm để bật lại loa)' 
+                  : 'Tắt loa phòng học khi quá ồn'
               }
               className={`relative flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer select-none active:scale-95 touch-target ${
                 isDeafened

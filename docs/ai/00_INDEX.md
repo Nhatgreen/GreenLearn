@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-22`  
-> **Trạng thái Codebase:** Khắc phục triệt để lỗi bạn học không nghe được Voice Note (tối ưu 24kbps Opus mono, giải mã audioBlob base64 thành local Blob URL trên máy peer, hỗ trợ tải lên Supabase Storage và bản ghi mẫu có chuông thực tế); 37/37 test suites pass (175/175 tests), 15/15 static pages build pass, docs:check pass.
+> **Trạng thái Codebase:** Tắt phím tắt M và D trên thanh MultiplayerBar tránh xung đột với Minimap (phím M) và điều hướng mặt bàn (phím D); 37/37 test suites pass (175/175 tests), 15/15 static pages build pass, docs:check pass.
 
 ---
 

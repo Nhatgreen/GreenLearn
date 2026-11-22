@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-11-22 20:31 — main (Loại Bỏ Phím Tắt M Và D Để Tránh Xung Đột Minimap & Điều Hướng Mặt Bàn)
+- **Task:** Tắt các phím tắt đơn `M` (Mute mic) và `D` (Deafen loa) trong `MultiplayerBar` theo yêu cầu của Sếp vì xung đột với phím `M` bật/tắt bản đồ thu nhỏ (Minimap trong `BottomRightToolkit`) và phím `D` điều hướng camera mặt bàn (WASD trong `InfiniteDesk`):
+  1. **Nguyên nhân gốc rễ:**
+     - Trước đây `MultiplayerBar` bắt sự kiện `keydown` phím `M` và `D` để bật/tắt mic và loa phòng học.
+     - Khi người dùng nhấn phím `M` để xem MiniMap, cả MiniMap lẫn Micro đều bị kích hoạt đồng thời.
+     - Khi người dùng nhấn phím `D` để lia bàn học sang phải, `e.preventDefault()` trong `MultiplayerBar` chặn điều hướng và tự động chuyển trạng thái Loa (Deafen).
+  2. **Giải pháp triển khai:**
+     - `src/components/hud/MultiplayerBar.tsx`:
+       - Loại bỏ hoàn toàn bộ lắng nghe phím `m`/`M` và `d`/`D` trong sự kiện `keydown`.
+       - Giữ lại phím tắt `Escape` để đóng modal cấu hình/chia sẻ.
+       - Cập nhật tooltip nút Micro: `Bật Micro nói chuyện trong phòng` / `Micro đang bật (Bấm để tắt tiếng)` / `Đang tắt tiếng (Bấm để bật lại mic)`.
+       - Cập nhật tooltip nút Loa (Deafen): `Tắt loa phòng học khi quá ồn` / `Đang tắt toàn bộ âm thanh phòng học (Bấm để bật lại loa)`.
+     - Cập nhật quy chuẩn kỹ thuật trong `AGENTS.md`.
+  3. **Kiểm thử & Xác thực:**
+     - `pnpm test`: 37/37 test suites pass (175/175 tests pass).
+     - `pnpm build`: Build Next.js 15.1.7 thành công 15/15 static pages.
+     - `pnpm run docs:index` & `pnpm run docs:check`: Passed 100%.
+- **Changed:**
+  - `src/components/hud/MultiplayerBar.tsx`
+  - `AGENTS.md`, `docs/ai/11_CHANGELOG.md`, `docs/ai/00_INDEX.md`
+
+---
+
 ## 2026-11-22 20:21 — main (Khắc Phục Lỗi Đồng Bộ Âm Thanh Voice Note Không Nghe Được Giữa Các Bạn Học)
 - **Task:** Khắc phục triệt để lỗi "Voice note người này thì người kia không nghe được" trong phòng học nhóm Realtime:
   1. **Nguyên nhân gốc rễ:**

@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `caecfe3`  
+> **Commit Hash:** `fdf1ad1`  
 > **Cập nhật lần cuối:** `2026-11-22`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -54,7 +54,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `FriendsRightDrawer` | `component` | [src/components/hud/FriendsRightDrawer.tsx:L27-L436](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/FriendsRightDrawer.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `InviteModal` | `component` | [src/components/hud/InviteModal.tsx:L15-L131](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/InviteModal.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `LeftCreationBar` | `component` | [src/components/hud/LeftCreationBar.tsx:L37-L668](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/LeftCreationBar.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
-| `MultiplayerBar` | `component` | [src/components/hud/MultiplayerBar.tsx:L25-L590](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/MultiplayerBar.tsx) | HUD cộng tác học nhóm thời gian thực: danh sách avatar, thả cảm xúc emoji |
+| `MultiplayerBar` | `component` | [src/components/hud/MultiplayerBar.tsx:L25-L564](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/MultiplayerBar.tsx) | HUD cộng tác học nhóm thời gian thực: danh sách avatar, thả cảm xúc emoji |
 | `PomodoroChip` | `component` | [src/components/hud/PomodoroChip.tsx:L7-L149](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/PomodoroChip.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `StickerEmojiPickerFlyout` | `component` | [src/components/hud/StickerEmojiPickerFlyout.tsx:L35-L718](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/StickerEmojiPickerFlyout.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `TopLeftNav` | `component` | [src/components/hud/TopLeftNav.tsx:L30-L405](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/TopLeftNav.tsx) | HUD góc trên-trái: chuyển đổi bàn học, tìm kiếm tài liệu, đồng bộ góc nhìn |
