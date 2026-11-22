@@ -4,6 +4,21 @@
 
 ---
 
+## 2026-11-22 16:38 — main (Tinh Gọn Header Trang Chủ: Lược Bỏ Nút Pill Chuỗi Ngày & Thú Cưng)
+- **Task:** Lược bỏ nút con nhộng (pill button) hiển thị "Chuỗi X ngày · Đã điểm danh / Điểm danh" trên Top Header của `HomePage.tsx` (cả Desktop Header lẫn Mobile Header) theo yêu cầu của Sếp:
+  - Do hệ thống đã tích hợp linh vật Mầm Xanh nổi tự do (`FloatingPet`) hiện diện lơ lửng toàn màn hình và widget Mầm Xanh ở Sidebar, nút pill trên Top Header không còn cần thiết và làm chiếm diện tích điều hướng.
+  - Sau khi lược bỏ, Top Header trở nên vô cùng tinh gọn và thanh thoát: chỉ giữ lại Breadcrumb ngữ cảnh bên trái và Avatar profile người dùng bên phải.
+- **Verification:**
+  - `pnpm test`: 33/33 test suites passed (155/155 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run docs:index` & `pnpm run docs:check`: Index và docs nhất quán 100%.
+- **Changed:**
+  - `src/components/home/HomePage.tsx`: Xóa nút pill Mầm Xanh & Chuỗi ngày trên Desktop Header và Mobile Header.
+  - `AGENTS.md`: Cập nhật quy chuẩn thiết kế Top Header và Gamification Mầm Xanh.
+  - `docs/ai/11_CHANGELOG.md`: Ghi nhật ký thay đổi.
+
+---
+
 ## 2026-11-22 16:24 — main (Tích Hợp Bảng Tính Spreadsheet, Slide Thuyết Trình, Nhập URL Tự Động & Nâng Cấp Linh Vật Mầm Xanh Nổi Tự Do)
 - **Task:** Triển khai 3 tính năng học thuật lớn kế thừa từ ViTudy theo yêu cầu của Sếp, giữ nguyên 100% bản sắc nhận diện thương hiệu Xanh Lá GreenLearn (`#16A34A`):
   1. **Vật thể Bảng tính tương tác đa trang tính (`SpreadsheetItem.tsx`):**

@@ -97,8 +97,8 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
         * Tỷ lệ lưới cân đối (`5 - 4 - 3`: Tên bàn 5 cột, Tài liệu & ghi chú 4 cột, Thời gian & Thao tác 3 cột) triệt tiêu khoảng hở trắng bất hợp lý giữa các cột.
         * Thời gian hiển thị rõ nét kèm icon `Clock`, toàn bộ hàng có hover state mượt mà và nút hành động trực quan **"Vào bàn"** với icon `ArrowRight`.
       * **Tối ưu trải nghiệm Gamification Mầm Xanh & Chuỗi ngày học (Encouraging Streak UX):**
-        * Gom thông tin Mầm Xanh về vị trí tương tác chính (nút Mầm Xanh trên top header và widget sidebar), loại bỏ hiển thị lặp lại 3 lần trong khối lời chào.
-        * Khi số ngày chuỗi học tập bằng 0 (`streakDays === 0`), thay vì thông báo "Chuỗi 0 ngày" gây cảm giác tiêu cực, chuyển thành lời kêu gọi hành động tích cực: **"Bắt đầu chuỗi đầu tiên hôm nay"** (top header) và **"Sẵn sàng chuỗi mới"** (sidebar).
+        * Lược bỏ nút pill con nhộng Mầm Xanh trên Top Header (`HomePage`) để giữ thanh điều hướng tinh gọn và thanh thoát, do toàn bộ tính năng tương tác, xem chuỗi ngày, đánh thức, điểm danh và tiến hóa thú cưng đã được đảm nhiệm trọn vẹn bởi linh vật nổi tự do `FloatingPet` (hiện diện toàn màn hình) cùng widget Mầm Xanh ở thanh Sidebar.
+        * Khi số ngày chuỗi học tập bằng 0 (`streakDays === 0`), widget sidebar hiển thị lời kêu gọi hành động tích cực: **"Sẵn sàng chuỗi mới"** thay vì thông báo "Chuỗi 0 ngày" gây cảm giác tiêu cực.
       * **Icon đồng bộ cho toàn bộ mục Sidebar:** Tất cả các mục điều hướng trong Sidebar (`Trang chủ`, `Bàn học của tôi`, `Đã gắn dấu sao`, `Bạn bè`, `Lịch học`, `Trợ giúp`, `Về GreenLearn`) bắt buộc có Lucide SVG icon tương ứng, sắc nét và nhận diện rõ ràng.
     * **Cơ Chế Phê Duyệt Của Chủ Phòng Khi Bạn Học Xin Vào Học Cùng (Host Approval for Room Admission Standard):**
       * Khi người học bấm "Xin vào học cùng" (từ mục Bạn bè trên `HomePage` hoặc thanh ẩn phải `FriendsRightDrawer`), hệ thống **không tự ý kết nối thẳng vào bàn học**, mà phát broadcast `ROOM_JOIN_REQUEST` thời gian thực tới Chủ phòng (Host).

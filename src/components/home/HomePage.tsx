@@ -597,27 +597,6 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {/* Streak & Pet Badge (Mobile Compact) */}
-            <button
-              type="button"
-              onClick={() => setIsPetModalOpen(true)}
-              title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • ${pet.streakDays > 0 ? `Chuỗi ${pet.streakDays} ngày` : 'Chưa có chuỗi ngày'}`}
-              className={`px-2.5 py-1 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-1.5 active:scale-98 touch-target ${
-                isClaimedToday 
-                  ? 'bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534]'
-                  : 'bg-white border border-slate-200 text-slate-800'
-              }`}
-            >
-              <img
-                src={currentImageUrl}
-                alt={pet.name}
-                className="w-4.5 h-4.5 object-contain shrink-0"
-              />
-              <span className="font-bold text-[11px]">
-                {pet.streakDays > 0 ? `${pet.streakDays}d` : (isClaimedToday ? 'Đã nhận' : 'Điểm danh')}
-              </span>
-            </button>
-
             {/* Avatar profile */}
             <Link
               href="/profile?from=home"
@@ -664,32 +643,8 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
             </span>
           </div>
 
-          {/* Right Actions: Pet Mascot Streak Badge + Profile Avatar */}
+          {/* Right Actions: Profile Avatar */}
           <div className="flex items-center gap-3 shrink-0">
-            <button
-              type="button"
-              onClick={() => setIsPetModalOpen(true)}
-              title={`Thú cưng: ${pet.name} (Cấp ${pet.stage}) • ${pet.streakDays > 0 ? `Chuỗi ${pet.streakDays} ngày liên tiếp` : 'Chưa có chuỗi ngày'} (Bấm để xem và điểm danh)`}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-2xs transition-all cursor-pointer flex items-center gap-2 active:scale-98 touch-target ${
-                isClaimedToday 
-                  ? 'bg-[#F0FDF4] border border-[#BBF7D0] text-[#166534]'
-                  : 'bg-white border border-slate-200 text-slate-800 hover:border-[#16A34A] hover:bg-green-50/50 hover:shadow-xs'
-              }`}
-            >
-              <img
-                src={currentImageUrl}
-                alt={pet.name}
-                className="w-5 h-5 object-contain shrink-0"
-              />
-              <span>
-                {pet.streakDays > 0
-                  ? `Chuỗi ${pet.streakDays} ngày · ${isClaimedToday ? 'Đã điểm danh' : 'Điểm danh'}`
-                  : isClaimedToday
-                  ? 'Đã điểm danh hôm nay'
-                  : 'Bắt đầu chuỗi đầu tiên hôm nay'}
-              </span>
-            </button>
-
             {/* Avatar profile */}
             <Link
               href="/profile?from=home"
