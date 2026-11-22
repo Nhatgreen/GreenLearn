@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-22`  
-> **Trạng thái Codebase:** Tối ưu hóa toàn diện hiệu năng và giải phóng rò rỉ bộ nhớ: tách biệt currentStroke qua activeStrokeStore đạt chuẩn vẽ 60-120fps không re-render bàn học, memoize CompletedDeskStrokes, dọn dẹp WebRTC AudioContext/rAF khi peer ngắt kết nối, dynamic import xlsx & mammoth, giới hạn LRU KaTeX cache; 38/38 test suites pass (177/177 tests), 15/15 static pages build pass, docs:check pass.
+> **Trạng thái Codebase:** Hoàn thiện phương thức và giao diện đổi tên bàn học toàn diện (StudySpaceService.renameSpace & StudySpaceContext.renameSpace, TopLeftNav rename modal & inline action, HomePage desktop/mobile rename actions); 38/38 test suites pass (179/179 tests), 15/15 static pages build pass, docs:check pass.
 
 ---
 

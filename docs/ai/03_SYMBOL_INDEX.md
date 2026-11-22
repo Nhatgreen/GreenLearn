@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `1bf3b9b`  
+> **Commit Hash:** `07f0cea`  
 > **Cập nhật lần cuối:** `2026-11-22`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -57,7 +57,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `MultiplayerBar` | `component` | [src/components/hud/MultiplayerBar.tsx:L25-L564](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/MultiplayerBar.tsx) | HUD cộng tác học nhóm thời gian thực: danh sách avatar, thả cảm xúc emoji |
 | `PomodoroChip` | `component` | [src/components/hud/PomodoroChip.tsx:L7-L149](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/PomodoroChip.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
 | `StickerEmojiPickerFlyout` | `component` | [src/components/hud/StickerEmojiPickerFlyout.tsx:L35-L718](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/StickerEmojiPickerFlyout.tsx) | Thành phần nghiệp vụ của phân hệ HUD & Overlays |
-| `TopLeftNav` | `component` | [src/components/hud/TopLeftNav.tsx:L30-L405](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/TopLeftNav.tsx) | HUD góc trên-trái: chuyển đổi bàn học, tìm kiếm tài liệu, đồng bộ góc nhìn |
+| `TopLeftNav` | `component` | [src/components/hud/TopLeftNav.tsx:L31-L521](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/TopLeftNav.tsx) | HUD góc trên-trái: chuyển đổi bàn học, tìm kiếm tài liệu, đồng bộ góc nhìn |
 | `TopRightWallet` | `component` | [src/components/hud/TopRightWallet.tsx:L56-L771](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/TopRightWallet.tsx) | HUD góc trên-phải: hiển thị số dư ViToken, chuỗi điểm danh streak, chọn model AI |
 | `VrFrameOverlay` | `component` | [src/components/hud/VrFrameOverlay.tsx:L5-L15](file:////home/nhat/Documents/DUT/GreenLearn/src/components/hud/VrFrameOverlay.tsx) | Khung viền 4 góc và nhãn chế độ "Không gian học 2.5D" phong cách VR HUD |
 
@@ -97,12 +97,12 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `RoomJoinResponse` | `type` | [src/context/SocialPresenceContext.tsx:L27-L37](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L48-L67](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L71-L470](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L199-L2989](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
+| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L201-L3025](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
 | `useAuth` | `hook` | [src/context/AuthContext.tsx:L302-L308](file:////home/nhat/Documents/DUT/GreenLearn/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `usePomodoroContext` | `hook` | [src/context/PomodoroContext.tsx:L105-L111](file:////home/nhat/Documents/DUT/GreenLearn/src/context/PomodoroContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `UserProfile` | `type` | [src/context/AuthContext.tsx:L11-L16](file:////home/nhat/Documents/DUT/GreenLearn/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L472-L475](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2991-L2997](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
+| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L3027-L3033](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
 
 ### Non-AI Engine & Utils
 
@@ -260,7 +260,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `GOOGLE_SHARE_GUIDE_STEPS` | `component` | [src/services/UrlDocumentService.ts:L19-L25](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `GuestBanner` | `component` | [src/components/auth/GuestBanner.tsx:L12-L54](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/GuestBanner.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HeroSection` | `component` | [src/components/landing/HeroSection.tsx:L52-L238](file:////home/nhat/Documents/DUT/GreenLearn/src/components/landing/HeroSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `HomePage` | `component` | [src/components/home/HomePage.tsx:L54-L2045](file:////home/nhat/Documents/DUT/GreenLearn/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `HomePage` | `component` | [src/components/home/HomePage.tsx:L55-L2182](file:////home/nhat/Documents/DUT/GreenLearn/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HostApprovalModal` | `component` | [src/components/social/HostApprovalModal.tsx:L14-L177](file:////home/nhat/Documents/DUT/GreenLearn/src/components/social/HostApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `importDocumentFromUrl` | `fn` | [src/services/UrlDocumentService.ts:L154-L237](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_MARKET_ITEMS` | `component` | [src/data/marketMockData.ts:L24-L1124](file:////home/nhat/Documents/DUT/GreenLearn/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |

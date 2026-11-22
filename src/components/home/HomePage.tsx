@@ -33,7 +33,8 @@ import {
   Menu,
   CheckSquare,
   Square,
-  AlertTriangle
+  AlertTriangle,
+  Pencil
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
@@ -53,7 +54,7 @@ interface HomePageProps {
 
 export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   const { user, profile, status } = useAuth();
-  const { spaces, switchSpace, createSpaceFromTemplate, deleteSpaces } = useStudySpace();
+  const { spaces, switchSpace, createSpaceFromTemplate, deleteSpaces, renameSpace } = useStudySpace();
   const { pet, info, currentImageUrl, isClaimedToday, claimToday } = usePetMascot();
   const router = useRouter();
   const { isMobile, isTablet, isDesktop } = useResponsiveLayout();
@@ -133,6 +134,30 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
     e.stopPropagation();
     setSelectedSpaceIds([spaceId]);
     setIsBatchDeleteModalOpen(true);
+  };
+
+  // State đổi tên bàn học
+  const [renameTargetSpace, setRenameTargetSpace] = useState<StudySpace | null>(null);
+  const [renameValue, setRenameValue] = useState('');
+  const [isRenaming, setIsRenaming] = useState(false);
+
+  const handleOpenRename = (e: React.MouseEvent, space: StudySpace) => {
+    e.stopPropagation();
+    setRenameTargetSpace(space);
+    setRenameValue(space.name.replace(/\(Demo\)/i, '').trim());
+  };
+
+  const handleConfirmRename = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!renameTargetSpace || !renameValue.trim()) return;
+    setIsRenaming(true);
+    try {
+      await renameSpace(renameTargetSpace.id, renameValue.trim());
+      setRenameTargetSpace(null);
+      setRenameValue('');
+    } finally {
+      setIsRenaming(false);
+    }
   };
 
   const [searchFilter, setSearchFilter] = useState('');
@@ -1295,6 +1320,14 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                             </button>
                             <button
                               type="button"
+                              title="Đổi tên bàn học"
+                              onClick={(e) => handleOpenRename(e, space)}
+                              className="p-1.5 text-slate-400 hover:text-[#16A34A] rounded-lg hover:bg-green-50 transition-colors cursor-pointer touch-target opacity-70 group-hover:opacity-100"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
                               title="Xóa bàn học này"
                               onClick={(e) => handleOpenSingleDelete(e, space.id)}
                               className="p-1.5 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer touch-target opacity-70 group-hover:opacity-100"
@@ -1378,14 +1411,24 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                           <span>{getSpaceTimeString(space)}</span>
                         </span>
                         {!isSelectionMode && (
-                          <button
-                            type="button"
-                            title="Xóa bàn học"
-                            onClick={(e) => handleOpenSingleDelete(e, space.id)}
-                            className="p-1 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              title="Đổi tên bàn học"
+                              onClick={(e) => handleOpenRename(e, space)}
+                              className="p-1 text-slate-400 hover:text-[#16A34A] rounded-lg hover:bg-green-50 transition-colors cursor-pointer"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              title="Xóa bàn học"
+                              onClick={(e) => handleOpenSingleDelete(e, space.id)}
+                              className="p-1 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -1807,10 +1850,18 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                                 e.stopPropagation();
                                 handleOpenSpace(space.id);
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-green-50 group-hover:bg-[#16A34A] text-[#166534] group-hover:text-white border border-green-200 group-hover:border-[#16A34A] text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1"
+                              className="px-2.5 py-1 rounded-lg bg-green-50 group-hover:bg-[#16A34A] text-[#166534] group-hover:text-white border border-green-200 group-hover:border-[#16A34A] text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer"
                             >
                               <span>Vào bàn</span>
                               <ArrowRight className="w-3 h-3" />
+                            </button>
+                            <button
+                              type="button"
+                              title="Đổi tên bàn học"
+                              onClick={(e) => handleOpenRename(e, space)}
+                              className="p-1.5 text-slate-400 hover:text-[#16A34A] rounded-lg hover:bg-green-50 transition-colors cursor-pointer touch-target opacity-70 group-hover:opacity-100"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </div>
@@ -1872,10 +1923,20 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                             </div>
                           </div>
 
-                          <span className="text-[11px] font-medium text-slate-500 shrink-0 flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-slate-400" />
-                            <span>{getSpaceTimeString(space)}</span>
-                          </span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <span className="text-[11px] font-medium text-slate-500 flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-slate-400" />
+                              <span>{getSpaceTimeString(space)}</span>
+                            </span>
+                            <button
+                              type="button"
+                              title="Đổi tên bàn học"
+                              onClick={(e) => handleOpenRename(e, space)}
+                              className="p-1 text-slate-400 hover:text-[#16A34A] rounded-lg hover:bg-green-50 transition-colors cursor-pointer"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
 
                         {/* Middle: Tóm tắt tài liệu & ghi chú */}
@@ -2036,6 +2097,82 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 )}
               </button>
             </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Modal: Đổi Tên Bàn Học */}
+      {renameTargetSpace && createPortal(
+        <div 
+          className="fixed inset-0 z-[9995] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => {
+            if (!isRenaming) {
+              setRenameTargetSpace(null);
+              setRenameValue('');
+            }
+          }}
+        >
+          <div 
+            className="bg-white border border-slate-300 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-slate-900 animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Pencil className="w-4.5 h-4.5 text-[#16A34A] stroke-[2.4]" />
+                <span>Đổi tên bàn học</span>
+              </h3>
+              <button
+                type="button"
+                disabled={isRenaming}
+                onClick={() => {
+                  setRenameTargetSpace(null);
+                  setRenameValue('');
+                }}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+              Nhập tên mới cho không gian bàn học của bạn.
+            </p>
+            <form onSubmit={handleConfirmRename} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-slate-700 block mb-1">
+                  Tên bàn học mới
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="Ví dụ: Ôn thi cuối kỳ, Đề án tốt nghiệp..."
+                  value={renameValue}
+                  onChange={(e) => setRenameValue(e.target.value)}
+                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-green-200"
+                />
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+                <button
+                  type="button"
+                  disabled={isRenaming}
+                  onClick={() => {
+                    setRenameTargetSpace(null);
+                    setRenameValue('');
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100 cursor-pointer disabled:opacity-50"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={isRenaming || !renameValue.trim()}
+                  className="px-4 py-2 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer transition-colors"
+                >
+                  {isRenaming ? 'Đang lưu...' : 'Lưu thay đổi'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>,
         document.body

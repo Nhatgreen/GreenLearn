@@ -128,4 +128,16 @@ describe('StudySpaceService', () => {
     expect(cleanedIds).not.toContain('space-empty-garbage'); // purged!
     expect(cleanedIds).not.toContain('space-empty-unnamed'); // purged!
   });
+
+  it('renameSpace validates input and returns false on empty name or missing spaceId', async () => {
+    const res1 = await StudySpaceService.renameSpace('', 'New Name');
+    expect(res1).toBe(false);
+
+    const res2 = await StudySpaceService.renameSpace('space-1', '   ');
+    expect(res2).toBe(false);
+
+    const res3 = await StudySpaceService.renameSpace('space-1', 'Valid Name');
+    // When Supabase is not configured in test env, returns false
+    expect(res3).toBe(false);
+  });
 });

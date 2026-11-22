@@ -239,6 +239,38 @@ export class StudySpaceService {
     }
   }
 
+  static async renameSpace(spaceId: string, newName: string, userId?: string): Promise<boolean> {
+    const supabase = getSupabase();
+    if (!supabase || !spaceId) return false;
+
+    const trimmed = newName.trim();
+    if (!trimmed) return false;
+
+    try {
+      const updatePayload: Record<string, any> = {
+        name: trimmed,
+        updated_at: new Date().toISOString(),
+      };
+      if (userId) {
+        updatePayload.owner_id = userId;
+      }
+
+      const { error } = await supabase
+        .from('study_spaces')
+        .update(updatePayload)
+        .eq('id', spaceId);
+
+      if (error) {
+        console.warn('Lỗi renameSpace trên Supabase:', error);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.warn('Lỗi renameSpace:', err);
+      return false;
+    }
+  }
+
   static async upsertItems(spaceId: string, items: DeskItem[]): Promise<void> {
     const supabase = getSupabase();
     if (!supabase || !spaceId || items.length === 0) return;

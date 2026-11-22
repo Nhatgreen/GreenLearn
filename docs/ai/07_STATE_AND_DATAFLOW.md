@@ -9,9 +9,12 @@
 
 ### 1. `StudySpaceContext`
 * **Vị trí file:** [`src/context/StudySpaceContext.tsx:L1-L620`](file:///F:/AppMaking/ViTudy/src/context/StudySpaceContext.tsx#L1-L620)
-* **Trạng thái cốt lõi:**
+* **Trạng thái cốt lõi & Phương thức quản lý:**
   * `spaces: StudySpace[]`: Danh sách bàn học của người dùng.
   * `activeSpaceId: string`: ID bàn học hiện hành.
+  * `renameSpace(spaceId: string, newName: string): Promise<boolean>`: Đổi tên bàn học, cập nhật `updatedAt`, đồng bộ `localStorage` và Supabase Cloud.
+  * `deleteSpaces(spaceIds: string[]): Promise<boolean>`: Xóa đơn lẻ hoặc hàng loạt bàn học.
+  * `createSpace(name, subject)` / `createSpaceFromTemplate`: Tạo bàn học mới hoặc từ mẫu.
   * `transform: CanvasTransform`: Toạ độ camera `{ x, y, scale }`. Mặc định `{ x: 0, y: 0, scale: 1.0 }`.
   * `selectedItemId: string | null`: ID vật thể đang được chọn (đưa lên `zIndex` cao nhất).
   * `activeTool: 'cursor' | 'pen' | 'highlighter' | 'eraser'`: Công cụ tương tác bàn học.

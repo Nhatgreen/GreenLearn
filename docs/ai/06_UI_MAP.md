@@ -40,8 +40,9 @@ RootLayout (src/app/layout.tsx)
 
 ### 1. HUD Góc Trên-Trái: Quản Lý Bàn & Đổi Tên
 * **Vị trí file:** [`src/components/hud/TopLeftNav.tsx`](file:///F:/AppMaking/ViTudy/src/components/hud/TopLeftNav.tsx) (`TopLeftNav`)
-* **Context/State phụ thuộc:** `useStudySpace()` (`spaces`, `activeSpaceId`, `activeSpace`, `switchSpace`, `createSpace`, `searchQuery`, `setSearchQuery`).
+* **Context/State phụ thuộc:** `useStudySpace()` (`spaces`, `activeSpaceId`, `activeSpace`, `switchSpace`, `createSpace`, `renameSpace`, `searchQuery`, `setSearchQuery`).
 * **Bảng màu:** Monochromatic (Nền `white/95`, viền `slate-300`, chữ `slate-900`).
+* **Tính năng:** Chuyển đổi bàn học, tạo bàn học mới, nút bút chì `Pencil` đổi tên bàn học hiện tại và đổi tên từng bàn học trong dropdown qua modal React Portal (`z-[9995]`).
 
 ### 2. HUD Góc Trên-Phải: Chuỗi Ngày, Chợ Tài Liệu, Ví ViToken & Cấu Hình AI
 * **Vị trí file:** [`src/components/hud/TopRightWallet.tsx`](file:///F:/AppMaking/ViTudy/src/components/hud/TopRightWallet.tsx) (`TopRightWallet`)

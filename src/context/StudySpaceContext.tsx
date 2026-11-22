@@ -185,6 +185,8 @@ interface StudySpaceContextType {
   micError: string | null;
   // Batch Space Deletion
   deleteSpaces: (spaceIds: string[]) => Promise<boolean>;
+  // Space Renaming
+  renameSpace: (spaceId: string, newName: string) => Promise<boolean>;
 }
 
 const DEFAULT_TRANSFORM: CanvasTransform = {
@@ -1354,6 +1356,39 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
     return true;
   }, [spaces, activeSpaceId, status, user]);
+
+  // Rename a study space
+  const renameSpace = useCallback(async (spaceId: string, newName: string): Promise<boolean> => {
+    const trimmed = newName.trim();
+    if (!trimmed || !spaceId) return false;
+
+    const nowIso = new Date().toISOString();
+
+    setSpaces(prev => {
+      const next = prev.map(s => {
+        if (s.id !== spaceId) return s;
+        return {
+          ...s,
+          name: trimmed,
+          updatedAt: nowIso,
+        };
+      });
+      try {
+        localStorage.setItem('greenlearn_spaces', JSON.stringify(next));
+      } catch (err) {}
+      return next;
+    });
+
+    if (status === 'authenticated' && user?.id) {
+      try {
+        await StudySpaceService.renameSpace(spaceId, trimmed, user.id);
+      } catch (err) {
+        console.warn('Lỗi renameSpace trên cloud:', spaceId, err);
+      }
+    }
+
+    return true;
+  }, [status, user]);
 
   const panBy = (dx: number, dy: number) => {
     if (focusedItemId) {
@@ -2980,7 +3015,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         toggleMute: voiceChat.toggleMute,
         toggleDeafen: voiceChat.toggleDeafen,
         micError: voiceChat.micError,
-        deleteSpaces
+        deleteSpaces,
+        renameSpace
       }}
     >
       {children}

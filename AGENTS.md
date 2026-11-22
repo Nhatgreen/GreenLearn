@@ -43,6 +43,15 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
     * **Cập nhật mốc mở lần cuối (`lastOpenedAt`):** Khi người dùng mở hoặc chuyển đổi bàn học (`switchSpace` / `handleOpenSpace`), hệ thống tự động cập nhật `lastOpenedAt = new Date().toISOString()` và đồng bộ ngay vào `localStorage('greenlearn_spaces')`.
     * **Triệt tiêu hoàn toàn chuỗi Mock thời gian tĩnh & Tóm tắt giả lập:** Nghiêm cấm sử dụng các hàm mock theo chỉ số index mảng (như hardcode `"14:20 hôm nay"`, `"2 giờ trước"`, `"Hôm qua 21:15"` hoặc mock tóm tắt `"1 slide · 1 đề thi trắc nghiệm"` cho bàn học trống). Mọi nhãn thời gian trên `HomePage` (cả Desktop lẫn Mobile ở tất cả các tab) bắt buộc đọc từ `formatRelativeTimeVN(space.lastOpenedAt || space.updatedAt || space.createdAt)`. Nếu bàn học rỗng, hiển thị trung thực `Bàn học trống · Chưa có tài liệu`.
     * **Sắp xếp danh sách "Mở lại gần đây":** Bảng bàn học mở lại gần đây trên trang chủ bắt buộc được sắp xếp giảm dần theo mốc thời gian truy cập gần nhất (`lastOpenedAt || updatedAt || createdAt`), bảo đảm bàn vừa tạo hoặc vừa học xong luôn hiển thị đầu tiên với nhãn "Vừa xong" hoặc "X phút trước".
+  * **Quy Chuẩn Đổi Tên Bàn Học Toàn Diện (Study Space Renaming Standard):**
+    * **Kiến trúc Service & State hai tầng (`StudySpaceService.renameSpace` & `StudySpaceContext.renameSpace`):**
+      * Kiểm tra xác thực (validation): Tên bàn học sau khi `.trim()` không được để trống hoặc chỉ chứa khoảng trắng.
+      * Cập nhật đồng bộ tức thì trên State cục bộ (`spaces`), tự động cập nhật mốc thời gian `updatedAt = new Date().toISOString()`, lưu trữ bền vững vào `localStorage('greenlearn_spaces')`.
+      * Tự động đồng bộ lên Supabase Cloud (`study_spaces.update({ name, updated_at })`) khi người dùng đã đăng nhập.
+    * **Điểm Chạm Trực Quan Đa Nền Tảng (Cross-Screen Renaming Touchpoints):**
+      * **Trên Bàn Học (`TopLeftNav`):** Cung cấp icon chỉnh sửa bút chì `Pencil` ngay bên cạnh tên bàn học hiện tại trên thanh navigation để đổi tên nhanh; đồng thời trong menu danh sách bàn học, mỗi mục bàn học đều có icon bút chì để đổi tên bất kỳ bàn học nào.
+      * **Trên Trang Chủ (`HomePage`):** Tích hợp nút icon `Pencil` (title="Đổi tên bàn học") ở cột Thao tác trên cả bảng Desktop/Tablet và thẻ Mobile Cards (ở tab Bàn học của tôi, Bàn học đã gắn dấu sao, và Mở lại gần đây).
+      * **Hộp thoại Modal Đổi Tên Chuẩn React Portal:** Mọi modal đổi tên đều bọc `createPortal(..., document.body)` với `z-[9995]`, hỗ trợ autofocus vào ô nhập liệu, phím `Enter` để lưu nhanh, phím `Escape` để hủy, kèm nút "Lưu thay đổi" mang sắc xanh GreenLearn `#16A34A` chuẩn nhận diện thương hiệu.
   * **Quy Chuẩn Công Cụ Học Tập In-Situ & KaTeX (In-Situ Cockpit & Rich KaTeX Math Rendering):**
     * STudy hiển thị dạng buồng lái in-situ (`absolute inset-0 z-40 bg-white rounded-2xl border border-slate-300`) trực tiếp trên mặt sách (`BookSpread`) thay vì mở modal portal nổi tách rời bên ngoài, triệt tiêu hoàn toàn lỗi đứt gãy tương tác và xé lớp hiển thị.
     * Hỗ trợ phím tắt `Escape` để đóng nhanh buồng lái in-situ.

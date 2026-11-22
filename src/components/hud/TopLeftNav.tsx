@@ -22,7 +22,8 @@ import {
   BarChart2,
   Share2,
   Info,
-  Mic
+  Mic,
+  Pencil
 } from 'lucide-react';
 import { getAssetPath } from '@/lib/assets';
 import { PomodoroChip } from './PomodoroChip';
@@ -34,6 +35,7 @@ export function TopLeftNav() {
     activeSpace, 
     switchSpace, 
     createSpace,
+    renameSpace,
     searchQuery,
     setSearchQuery,
     selectItem,
@@ -52,6 +54,10 @@ export function TopLeftNav() {
   const [isNewSpaceModalOpen, setIsNewSpaceModalOpen] = useState(false);
   const [newSpaceName, setNewSpaceName] = useState('');
   const [newSpaceSubject, setNewSpaceSubject] = useState('');
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
+  const [spaceToRename, setSpaceToRename] = useState<{ id: string; name: string } | null>(null);
+  const [renameInput, setRenameInput] = useState('');
+  const [isSubmittingRename, setIsSubmittingRename] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -82,6 +88,27 @@ export function TopLeftNav() {
     setNewSpaceSubject('');
     setIsNewSpaceModalOpen(false);
     setIsSpaceMenuOpen(false);
+  };
+
+  const handleOpenRename = (space: { id: string; name: string }) => {
+    setSpaceToRename(space);
+    setRenameInput(space.name.replace(/\(Demo\)/i, '').trim());
+    setIsRenameModalOpen(true);
+    setIsSpaceMenuOpen(false);
+  };
+
+  const handleRenameSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!spaceToRename || !renameInput.trim()) return;
+    setIsSubmittingRename(true);
+    try {
+      await renameSpace(spaceToRename.id, renameInput.trim());
+      setIsRenameModalOpen(false);
+      setSpaceToRename(null);
+      setRenameInput('');
+    } finally {
+      setIsSubmittingRename(false);
+    }
   };
 
   // Filtered documents on current desk
@@ -156,7 +183,7 @@ export function TopLeftNav() {
         </div>
 
         {/* Space Dropdown Button */}
-        <div className="relative">
+        <div className="relative flex items-center gap-0.5 sm:gap-1">
           <button
             onClick={() => setIsSpaceMenuOpen(!isSpaceMenuOpen)}
             className="flex items-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-bold text-slate-900 hover:text-black transition-colors px-1 py-0.5 rounded-lg cursor-pointer"
@@ -164,6 +191,18 @@ export function TopLeftNav() {
             <BookMarked className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-800 stroke-[2.4]" />
             <span className="max-w-[70px] sm:max-w-[220px] truncate">{activeSpace.name}</span>
             <ChevronDown className="w-3.5 h-3.5 text-slate-500 stroke-[2.4]" />
+          </button>
+
+          <button
+            type="button"
+            title="Đổi tên bàn học này"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenRename(activeSpace);
+            }}
+            className="p-1 text-slate-400 hover:text-[#16A34A] hover:bg-green-50 rounded-md transition-colors cursor-pointer"
+          >
+            <Pencil className="w-3 h-3 stroke-[2.2]" />
           </button>
 
           {/* Spaces Menu */}
@@ -174,21 +213,34 @@ export function TopLeftNav() {
               </div>
               <div className="space-y-1 max-h-48 overflow-y-auto my-1">
                 {spaces.map(s => (
-                  <button
+                  <div
                     key={s.id}
                     onClick={() => {
                       switchSpace(s.id);
                       setIsSpaceMenuOpen(false);
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors cursor-pointer ${
+                    className={`w-full group text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors cursor-pointer ${
                       s.id === activeSpaceId 
                         ? 'bg-green-50 text-[#166534] border border-[#BBF7D0] font-bold' 
                         : 'text-slate-800 hover:bg-slate-50 font-semibold'
                     }`}
                   >
-                    <span className="truncate">{s.name}</span>
-                    <span className="text-[10px] text-slate-400 font-mono font-bold">{s.items.length} món</span>
-                  </button>
+                    <span className="truncate pr-2">{s.name}</span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="text-[10px] text-slate-400 font-mono font-bold">{s.items.length} món</span>
+                      <button
+                        type="button"
+                        title="Đổi tên bàn học"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenRename(s);
+                        }}
+                        className="p-1 text-slate-400 hover:text-[#16A34A] hover:bg-white rounded transition-colors"
+                      >
+                        <Pencil className="w-3 h-3 stroke-[2.2]" />
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
 
@@ -393,6 +445,70 @@ export function TopLeftNav() {
                   className="px-4 py-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer transition-colors"
                 >
                   Tạo bàn học
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Modal: Đổi Tên Bàn Học */}
+      {isRenameModalOpen && spaceToRename && mounted && createPortal(
+        <div 
+          className="fixed inset-0 z-[9995] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setIsRenameModalOpen(false)}
+        >
+          <div 
+            className="bg-white border border-slate-300 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-slate-900 animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <Pencil className="w-4 h-4 text-[#16A34A] stroke-[2.4]" />
+                <span>Đổi tên bàn học</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsRenameModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs text-slate-500 mb-4">
+              Nhập tên mới cho không gian bàn học của bạn.
+            </p>
+            <form onSubmit={handleRenameSubmit} className="space-y-3.5">
+              <div>
+                <label className="text-xs font-semibold text-slate-700 block mb-1">
+                  Tên bàn học mới
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="Ví dụ: Ôn thi cuối kỳ, Đề án tốt nghiệp..."
+                  value={renameInput}
+                  onChange={(e) => setRenameInput(e.target.value)}
+                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 outline-none focus:border-[#16A34A] focus:ring-1 focus:ring-green-200"
+                />
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+                <button
+                  type="button"
+                  disabled={isSubmittingRename}
+                  onClick={() => setIsRenameModalOpen(false)}
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 cursor-pointer disabled:opacity-50"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingRename || !renameInput.trim()}
+                  className="px-4 py-1.5 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-50 text-white rounded-lg text-xs font-bold shadow-xs cursor-pointer transition-colors"
+                >
+                  {isSubmittingRename ? 'Đang lưu...' : 'Lưu thay đổi'}
                 </button>
               </div>
             </form>

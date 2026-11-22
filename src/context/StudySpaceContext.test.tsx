@@ -62,4 +62,42 @@ describe('StudySpaceContext - Viewer Role Guard', () => {
     expect(switched?.lastOpenedAt).toBeDefined();
     expect(result.current.activeSpaceId).toBe(firstSpaceId);
   });
+
+  it('renames a space successfully and rejects invalid names', async () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <AuthProvider>
+        <StudySpaceProvider>{children}</StudySpaceProvider>
+      </AuthProvider>
+    );
+
+    const { result } = renderHook(() => useStudySpace(), { wrapper });
+
+    const targetSpace = result.current.spaces[0];
+    const originalName = targetSpace.name;
+
+    // 1. Thử đổi tên rỗng hoặc chỉ có khoảng trắng
+    let invalidRes: boolean = true;
+    await act(async () => {
+      invalidRes = await result.current.renameSpace(targetSpace.id, '   ');
+    });
+    expect(invalidRes).toBe(false);
+    expect(result.current.spaces.find(s => s.id === targetSpace.id)?.name).toBe(originalName);
+
+    // 2. Đổi tên hợp lệ
+    let successRes: boolean = false;
+    await act(async () => {
+      successRes = await result.current.renameSpace(targetSpace.id, '  Bàn học Chuyên Sâu AI  ');
+    });
+    expect(successRes).toBe(true);
+
+    const updated = result.current.spaces.find(s => s.id === targetSpace.id);
+    expect(updated?.name).toBe('Bàn học Chuyên Sâu AI');
+    expect(updated?.updatedAt).toBeDefined();
+
+    // Kiểm tra đã lưu vào localStorage
+    const savedSpacesJson = localStorage.getItem('greenlearn_spaces');
+    expect(savedSpacesJson).toBeTruthy();
+    const savedSpaces = JSON.parse(savedSpacesJson!);
+    expect(savedSpaces.find((s: any) => s.id === targetSpace.id)?.name).toBe('Bàn học Chuyên Sâu AI');
+  });
 });

@@ -14,6 +14,7 @@ vi.mock('next/navigation', () => ({
 const mockDeleteSpaces = vi.fn().mockResolvedValue(true);
 const mockSwitchSpace = vi.fn();
 const mockCreateSpaceFromTemplate = vi.fn();
+const mockRenameSpace = vi.fn().mockResolvedValue(true);
 
 const sampleSpaces = [
   {
@@ -47,6 +48,7 @@ vi.mock('@/context/StudySpaceContext', () => ({
     switchSpace: mockSwitchSpace,
     createSpaceFromTemplate: mockCreateSpaceFromTemplate,
     deleteSpaces: mockDeleteSpaces,
+    renameSpace: mockRenameSpace,
   }),
 }));
 
@@ -167,5 +169,36 @@ describe('HomePage Bulk Space Selection & Deletion', () => {
     // Đối với bàn học rỗng, hiển thị "Bàn học trống · Chưa có tài liệu"
     const emptySummaries = screen.getAllByText(/Bàn học trống · Chưa có tài liệu/i);
     expect(emptySummaries.length).toBeGreaterThan(0);
+  });
+
+  it('allows renaming a study space via rename button and modal', async () => {
+    render(<HomePage onEnterDesk={vi.fn()} />);
+
+    // Chuyển sang tab Bàn học của tôi
+    const deskNavButtons = screen.getAllByRole('button', { name: /Bàn học/i });
+    fireEvent.click(deskNavButtons[0]);
+
+    // Tìm các nút icon đổi tên
+    const renameButtons = screen.getAllByTitle(/Đổi tên bàn học/i);
+    expect(renameButtons.length).toBeGreaterThan(0);
+
+    // Click nút đổi tên của bàn học đầu tiên
+    fireEvent.click(renameButtons[0]);
+
+    // Xuất hiện modal đổi tên
+    expect(screen.getByRole('heading', { name: /Đổi tên bàn học/i })).toBeDefined();
+
+    // Tìm input và nhập tên mới
+    const input = screen.getByPlaceholderText(/Ví dụ: Ôn thi cuối kỳ/i);
+    expect(input).toBeDefined();
+    fireEvent.change(input, { target: { value: 'Giải tích 1 Chuyên Sâu' } });
+
+    // Bấm nút Lưu thay đổi
+    const saveBtn = screen.getByRole('button', { name: /Lưu thay đổi/i });
+    fireEvent.click(saveBtn);
+
+    await waitFor(() => {
+      expect(mockRenameSpace).toHaveBeenCalledWith('space-1', 'Giải tích 1 Chuyên Sâu');
+    });
   });
 });

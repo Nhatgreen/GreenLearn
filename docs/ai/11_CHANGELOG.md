@@ -4,6 +4,42 @@
 
 ---
 
+## 2026-11-22 22:38 — uncommitted (Bổ Sung Phương Thức & Giao Diện Đổi Tên Bàn Học Toàn Diện)
+- **Task:** Thêm phương thức đổi tên bàn học (Study Space Renaming) ở cả tầng Service, State Context và giao diện người dùng theo yêu cầu của Sếp:
+  1. **Tầng Service (`StudySpaceService.renameSpace`):**
+     - Hiện thực hóa hàm tĩnh `renameSpace(spaceId, newName, userId?)`: Kiểm tra tên hợp lệ sau khi `.trim()`, cập nhật `name` và `updated_at: new Date().toISOString()`, đồng bộ lên Supabase Cloud (`study_spaces`).
+  2. **Tầng State Context (`StudySpaceContext.renameSpace`):**
+     - Thêm `renameSpace(spaceId: string, newName: string): Promise<boolean>` vào `StudySpaceContextType`.
+     - Cập nhật state `spaces`, tự động gắn mốc thời gian `updatedAt`, đồng bộ bền vững vào `localStorage('greenlearn_spaces')` và gọi `StudySpaceService.renameSpace` nếu đã đăng nhập.
+  3. **Giao Diện Người Dùng (HUD & Home):**
+     - **Thanh Navigation Bàn Học (`TopLeftNav.tsx`):**
+       - Bổ sung nút icon bút chì `Pencil` cạnh tên bàn học hiện tại để đổi tên nhanh bàn học đang mở.
+       - Trong menu dropdown bàn học, bổ sung nút `Pencil` cho từng bàn học trong danh sách.
+       - Modal "Đổi tên bàn học" bọc React Portal (`z-[9995]`), tự động focus input, hỗ trợ phím `Enter` / `Escape`.
+     - **Màn Hình Trang Chủ (`HomePage.tsx`):**
+       - Bổ sung nút icon `Pencil` (title="Đổi tên bàn học") ở cột Thao tác trên Desktop/Tablet table và Mobile Cards tại các tab "Bàn học của tôi" (`my_desks`), "Bàn học đã gắn dấu sao" (`starred`), và "Mở lại gần đây".
+       - Modal "Đổi tên bàn học" chuẩn React Portal với nút hành động "Lưu thay đổi" sắc xanh GreenLearn `#16A34A`.
+  4. **Kiểm Thử & Quy Chuẩn:**
+     - Bổ sung unit tests cho `StudySpaceService.renameSpace` và `StudySpaceContext.renameSpace` (179/179 tests pass, 38/38 test suites pass).
+     - Bổ sung test kiểm thử đổi tên qua modal trên `HomePage.test.tsx`.
+     - Build tĩnh Next.js 15/15 pages pass.
+     - Cập nhật quy chuẩn `AGENTS.md` (Study Space Renaming Standard).
+- **Changed:**
+  - `src/services/StudySpaceService.ts`
+  - `src/services/StudySpaceService.test.ts`
+  - `src/context/StudySpaceContext.tsx`
+  - `src/context/StudySpaceContext.test.tsx`
+  - `src/components/hud/TopLeftNav.tsx`
+  - `src/components/home/HomePage.tsx`
+  - `src/components/home/HomePage.test.tsx`
+  - `AGENTS.md`
+  - `docs/ai/06_UI_MAP.md`
+  - `docs/ai/07_STATE_AND_DATAFLOW.md`
+  - `docs/ai/11_CHANGELOG.md`
+  - `docs/ai/00_INDEX.md`
+
+---
+
 ## 2026-11-22 20:48 — main (Tối Ưu Hóa Toàn Diện Hiệu Năng Runtime & Giải Phóng Rò Rỉ Bộ Nhớ Trình Duyệt)
 - **Task:** Triển khai gói tối ưu hóa hiệu năng runtime, chu kỳ render 60-120fps và giải phóng bộ nhớ trình duyệt theo báo cáo `PERF-MEM-2026-11` được Sếp phê duyệt:
   1. **Tách biệt nét vẽ dở `currentStroke` khỏi Context gốc qua `activeStrokeStore`:**
