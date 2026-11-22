@@ -7,7 +7,8 @@ import { recognizeSmartShape } from '@/utils/smartShape';
 import { useAuth } from '@/hooks/useAuth';
 import { StudySpaceService } from '@/services/StudySpaceService';
 import { OfflineQueue } from '@/services/OfflineQueue';
-import { useRealtimeMultiplayer, PeerUser, DeskAction } from '@/hooks/useRealtimeMultiplayer';
+import { useRealtimeMultiplayer, PeerUser, DeskAction, VoiceSignal } from '@/hooks/useRealtimeMultiplayer';
+import { useWebRtcVoiceChat } from '@/hooks/useWebRtcVoiceChat';
 
 export interface CreationPlacementTemplate {
   itemType?: import('@/types/studyspace').ItemType;
@@ -167,6 +168,16 @@ interface StudySpaceContextType {
   setIsFollowPresenter: (follow: boolean) => void;
   isViewerSession: () => boolean;
   isViewer: boolean;
+  // WebRTC Voice Chat State & Controls
+  isMicOn: boolean;
+  isMuted: boolean;
+  isSpeaking: boolean;
+  speakingPeers: Record<string, boolean>;
+  peerAudioVolumes: Record<string, number>;
+  setPeerAudioVolume: (peerId: string, volume: number) => void;
+  toggleMic: () => Promise<void>;
+  toggleMute: () => void;
+  micError: string | null;
 }
 
 const DEFAULT_TRANSFORM: CanvasTransform = {
@@ -564,13 +575,33 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     });
   }, []);
 
+  // Incoming Voice WebRTC signal callback reference
+  const incomingVoiceSignalHandlerRef = useRef<((senderId: string, signal: VoiceSignal) => void) | null>(null);
+
+  const handleIncomingVoiceSignal = useCallback((senderId: string, signal: VoiceSignal) => {
+    incomingVoiceSignalHandlerRef.current?.(senderId, signal);
+  }, []);
+
   const realtimeMultiplayer = useRealtimeMultiplayer({
     spaceId: activeSpaceId,
     currentUserName,
     transform,
     onDeskAction: handleRemoteDeskAction,
-    onRequestSpaceState: handleRequestSpaceState
+    onRequestSpaceState: handleRequestSpaceState,
+    onVoiceSignal: handleIncomingVoiceSignal
   });
+
+  const voiceChat = useWebRtcVoiceChat({
+    currentUserId: realtimeMultiplayer.userId,
+    peers: realtimeMultiplayer.peers,
+    isConnected: realtimeMultiplayer.isConnected,
+    sendVoiceSignal: realtimeMultiplayer.sendVoiceSignal,
+    broadcastVoiceState: realtimeMultiplayer.broadcastVoiceState
+  });
+
+  useEffect(() => {
+    incomingVoiceSignalHandlerRef.current = voiceChat.handleIncomingSignal;
+  }, [voiceChat.handleIncomingSignal]);
 
   const {
     peers: multiplayerPeers,
@@ -2780,7 +2811,17 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         isViewerSession,
         isViewer,
         saveStatus,
-        saveCurrentSpaceImmediately
+        saveCurrentSpaceImmediately,
+        // WebRTC Voice Chat State & Controls
+        isMicOn: voiceChat.isMicOn,
+        isMuted: voiceChat.isMuted,
+        isSpeaking: voiceChat.isSpeaking,
+        speakingPeers: voiceChat.speakingPeers,
+        peerAudioVolumes: voiceChat.peerVolumes,
+        setPeerAudioVolume: voiceChat.setPeerVolume,
+        toggleMic: voiceChat.toggleMic,
+        toggleMute: voiceChat.toggleMute,
+        micError: voiceChat.micError
       }}
     >
       {children}

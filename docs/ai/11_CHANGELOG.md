@@ -4,6 +4,32 @@
 
 ---
 
+## 2026-11-22 17:19 — main (Tích Hợp Đàm Thoại Giọng Nói Voice Chat Phòng Học Nhóm WebRTC P2P Chuẩn Discord)
+- **Task:** Triển khai tính năng đàm thoại âm thanh trực tiếp (Voice Chat) trong phòng học nhóm Multiplayer theo chuẩn Discord theo yêu cầu của Sếp:
+  1. **Kiến trúc WebRTC Audio P2P Mesh & Supabase Signaling:**
+     - Tận dụng kênh Supabase Realtime có sẵn (`room-${roomId}`) để gửi/nhận gói tin bắt tay SDP/ICE Candidate (`voice_signal`) và trạng thái mic (`voice_state`).
+     - Tích hợp STUN server Google công khai (`stun:stun.l.google.com:19302`), hoạt động 100% miễn phí, bảo mật mã hóa P2P đầu cuối.
+  2. **Trải nghiệm đàm thoại chuẩn Discord:**
+     - Nút điều khiển Mic trên thanh `MultiplayerBar` (Bật Mic, Đã tắt mic, Đang bật mic).
+     - Phím tắt công thái học: Nhấn phím `M` (khi không gõ text) để Bật / Tắt mic tức thì.
+     - Âm thanh phản hồi xúc giác âm thanh Web Audio API (`playMuteChime`, `playUnmuteChime`) êm ái khi Mute/Unmute.
+     - Hiệu ứng Viền Xanh Phát Sáng Khi Nói (Speaking Glow Indicator): Phát hiện âm lượng thời gian thực qua `AnalyserNode`, avatar bạn học viền xanh lá nhấp nháy khi nói chuyện.
+     - Điều khiển âm lượng độc lập cho từng người học trong Modal Chia sẻ (0% - 100%).
+- **Verification:**
+  - `pnpm test`: 34/34 test suites passed (158/158 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Static export GitHub Pages passed.
+  - `pnpm run docs:index` & `pnpm run docs:check`: Index và docs nhất quán 100%.
+- **Changed:**
+  - `src/lib/soundFx.ts`: Utility phát âm thanh bíp Mute/Unmute qua Web Audio API.
+  - `src/hooks/useRealtimeMultiplayer.ts`: Mở rộng types `VoiceSignal`, `PeerUser`, thêm `voice_signal` & `voice_state` broadcasts.
+  - `src/hooks/useWebRtcVoiceChat.ts` & `src/hooks/useWebRtcVoiceChat.test.ts`: Hook quản trị kết nối WebRTC Mesh, VAD speaking detector, audio elements.
+  - `src/context/StudySpaceContext.tsx`: Tích hợp Voice Chat vào Context toàn cục.
+  - `src/components/hud/MultiplayerBar.tsx`: Nút Mic, speaking glow indicator trên avatar, phím tắt M, thanh kéo volume từng peer.
+  - `AGENTS.md` & `docs/ai/11_CHANGELOG.md`: Cập nhật quy chuẩn và nhật ký phát triển.
+
+---
+
 ## 2026-11-22 16:38 — main (Tinh Gọn Header Trang Chủ: Lược Bỏ Nút Pill Chuỗi Ngày & Thú Cưng)
 - **Task:** Lược bỏ nút con nhộng (pill button) hiển thị "Chuỗi X ngày · Đã điểm danh / Điểm danh" trên Top Header của `HomePage.tsx` (cả Desktop Header lẫn Mobile Header) theo yêu cầu của Sếp:
   - Do hệ thống đã tích hợp linh vật Mầm Xanh nổi tự do (`FloatingPet`) hiện diện lơ lửng toàn màn hình và widget Mầm Xanh ở Sidebar, nút pill trên Top Header không còn cần thiết và làm chiếm diện tích điều hướng.

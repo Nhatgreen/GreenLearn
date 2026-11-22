@@ -15,7 +15,14 @@ export interface PeerUser {
   camera?: { x: number; y: number; scale: number; rotation: number };
   isPresenter?: boolean;
   lastActive?: number;
+  isMuted?: boolean;
+  isSpeaking?: boolean;
 }
+
+export type VoiceSignal =
+  | { type: 'offer'; sdp: RTCSessionDescriptionInit }
+  | { type: 'answer'; sdp: RTCSessionDescriptionInit }
+  | { type: 'ice-candidate'; candidate: RTCIceCandidateInit };
 
 export type DeskAction =
   | { type: 'ITEM_MOVE'; payload: { id: string; x: number; y: number } }
@@ -55,6 +62,7 @@ export interface UseRealtimeMultiplayerOptions {
   transform?: CanvasTransform;
   onDeskAction?: (action: DeskAction) => void;
   onRequestSpaceState?: (requesterId: string) => void;
+  onVoiceSignal?: (senderId: string, signal: VoiceSignal) => void;
 }
 
 export function useRealtimeMultiplayer(
@@ -77,7 +85,8 @@ export function useRealtimeMultiplayer(
     isHostInitial = true,
     transform,
     onDeskAction,
-    onRequestSpaceState
+    onRequestSpaceState,
+    onVoiceSignal
   } = options;
 
   const [peers, setPeers] = useState<PeerUser[]>([]);
@@ -129,6 +138,11 @@ export function useRealtimeMultiplayer(
   useEffect(() => {
     onRequestSpaceStateRef.current = onRequestSpaceState;
   }, [onRequestSpaceState]);
+
+  const onVoiceSignalRef = useRef(onVoiceSignal);
+  useEffect(() => {
+    onVoiceSignalRef.current = onVoiceSignal;
+  }, [onVoiceSignal]);
 
   const transformRef = useRef(transform);
   useEffect(() => {
@@ -273,6 +287,22 @@ export function useRealtimeMultiplayer(
       onDeskActionRef.current?.(action);
     });
 
+    // 5. Voice WebRTC Signaling Broadcast
+    channel.on('broadcast', { event: 'voice_signal' }, (payload) => {
+      const { senderId, targetId, signal } = payload.payload || {};
+      if (targetId === userId && onVoiceSignalRef.current && signal) {
+        onVoiceSignalRef.current(senderId, signal);
+      }
+    });
+
+    // 6. Voice State (Mute & Speaking indicator) Broadcast
+    channel.on('broadcast', { event: 'voice_state' }, (payload) => {
+      const { peerId, isMuted, isSpeaking } = payload.payload || {};
+      if (peerId && peerId !== userId) {
+        setPeers(prev => prev.map(p => p.id === peerId ? { ...p, isMuted, isSpeaking } : p));
+      }
+    });
+
     // Subscribe to channel
     channel.subscribe((status) => {
       if (status === 'SUBSCRIBED') {
@@ -387,6 +417,26 @@ export function useRealtimeMultiplayer(
     });
   }, [isConnected, userId]);
 
+  // Send WebRTC Signaling packet to target peer
+  const sendVoiceSignal = useCallback((targetId: string, signal: VoiceSignal) => {
+    if (!channelRef.current || !isConnected) return;
+    channelRef.current.send({
+      type: 'broadcast',
+      event: 'voice_signal',
+      payload: { senderId: userId, targetId, signal }
+    });
+  }, [isConnected, userId]);
+
+  // Broadcast local mute & speaking indicator
+  const broadcastVoiceState = useCallback((isMuted: boolean, isSpeaking: boolean) => {
+    if (!channelRef.current || !isConnected) return;
+    channelRef.current.send({
+      type: 'broadcast',
+      event: 'voice_state',
+      payload: { peerId: userId, isMuted, isSpeaking }
+    });
+  }, [isConnected, userId]);
+
   // Start hosting a study room
   const startHostingRoom = useCallback((customRoomId?: string, permission: 'view_only' | 'edit' = 'view_only') => {
     const targetRoomId = customRoomId || `${spaceId || 'space'}-${Math.random().toString(36).substring(2, 8)}`;
@@ -497,6 +547,9 @@ export function useRealtimeMultiplayer(
     broadcastCamera,
     isFollowPresenter,
     setIsFollowPresenter,
-    toggleSimulation
+    toggleSimulation,
+    userId,
+    sendVoiceSignal,
+    broadcastVoiceState
   };
 }
