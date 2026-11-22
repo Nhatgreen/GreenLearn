@@ -1038,8 +1038,22 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
       + Cơ chế phòng vệ rỗng: Nếu người dùng xóa toàn bộ các bàn học hiện có, hệ thống tự động khởi tạo ngay một bàn học trống mặc định (`Bàn học mới`), ngăn ngừa hoàn toàn tình trạng crash ứng dụng hoặc màn hình trắng không có bàn học nào.
       + Sau khi xóa hoàn tất, hiển thị thông báo toast màu xanh lá GreenLearn ("Đã xóa thành công X bàn học.") và tự động biến mất sau 3.5 giây.
 
-
-
-
+* **Quy Chuẩn Hiệu Năng Runtime & Quản Lý Bộ Nhớ Trình Duyệt (Browser Performance & Zero-Leak Memory Management Standard):**
+  * **Tách Biệt Trạng Thái Vẽ Nét Tần Số Cao (`activeStrokeStore`):**
+    - Trạng thái nét vẽ dở `currentStroke` (cập nhật 60-120fps trên từng pixel di chuyển chuột/bút stylus) **tuyệt đối không đặt trong state của Context gốc (`StudySpaceContext`)**.
+    - Sử dụng `activeStrokeStore` kết hợp React 18/19 `useSyncExternalStore` để chỉ kích hoạt re-render cục bộ cho component `<DeskDrawingCanvas />`, ngăn chặn hoàn toàn việc ép ~87 components khác trên bàn học re-render liên tục khi đang vẽ.
+    - Phân tách và bọc `React.memo` cho lớp nét vẽ đã hoàn thành (`<CompletedDeskStrokes />`), loại bỏ việc tính toán lại chuỗi SVG Path (`pointsToSvgPath`) cho các nét cũ khi người dùng đang vẽ thêm nét mới.
+  * **Giải Phóng Bộ Nhớ WebRTC Voice Chat & Web Audio API:**
+    - Khi bạn học ngắt kết nối (`pc.onconnectionstatechange` sang `disconnected`/`failed`/`closed`) hoặc rời phòng presence:
+      + Đóng ngay `AudioContext` của peer đó (`ctx.close().catch(...)`).
+      + Xóa khỏi `peerAudioAnalysersRef` để lập tức kết thúc vòng lặp `requestAnimationFrame(checkRemoteVolume)`.
+      + Ngắt kết nối `pc.close()`, gán `audio.srcObject = null`, xóa phần tử HTML Audio và reset trạng thái speaking trong state.
+  * **Nạp Trễ Dynamic Import Thư Viện Nặng (Code Splitting for Heavy Parsers):**
+    - Các thư viện văn phòng dung lượng lớn như `xlsx` (~1.2MB) và `mammoth` bắt buộc sử dụng dynamic `await import('xlsx')` và `await import('mammoth')` bên trong các hàm xử lý tài liệu tương ứng (`parseSpreadsheetFile`, `parseDocxFile`), triệt tiêu việc nạp mã nguồn phân tích bảng tính vào RAM khi người dùng chỉ đọc sách hay vẽ ghi chú.
+  * **Quản Lý Bộ Nhớ Đệm KaTeX Bền Vững (Bounded KaTeX LRU Cache):**
+    - Áp dụng trần giới hạn tối đa `MAX_KATEX_CACHE_ENTRIES = 1000` cho `katexHtmlCache` trong `MathRenderer.tsx`. Khi số lượng công thức toán vượt ngưỡng 1000, tự động thu hồi (evict) các công thức cũ nhất theo nguyên lý LRU để giữ kích thước RAM luôn ổn định trong các phiên học kéo dài.
+  * **Dọn Dẹp Timer & Thu Hồi Blob URLs:**
+    - Toàn bộ các interval phát mô phỏng audio trong `VoiceNoteItem` và `VoiceNoteRecordModal` bắt buộc được lưu trữ qua `useRef` và dọn dẹp (`clearInterval`) khi dừng, tạm dừng hoặc unmount.
+    - Tự động gọi `URL.revokeObjectURL(blobUrl)` khi đóng modal ghi âm hoặc hủy bản ghi âm để giải phóng bộ nhớ nhị phân khỏi RAM trình duyệt.
 
 

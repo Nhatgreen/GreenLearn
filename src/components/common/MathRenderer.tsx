@@ -31,10 +31,16 @@ export function clearKatexCache(): void {
   katexHtmlCache.clear();
 }
 
+export const MAX_KATEX_CACHE_ENTRIES = 1000;
+
 export function renderKatexWithCache(math: string, displayMode: boolean): string {
   const cacheKey = `${displayMode ? 'D' : 'I'}:${math}`;
   if (katexHtmlCache.has(cacheKey)) {
-    return katexHtmlCache.get(cacheKey)!;
+    // Refresh access order (LRU)
+    const val = katexHtmlCache.get(cacheKey)!;
+    katexHtmlCache.delete(cacheKey);
+    katexHtmlCache.set(cacheKey, val);
+    return val;
   }
 
   try {
@@ -43,6 +49,11 @@ export function renderKatexWithCache(math: string, displayMode: boolean): string
       throwOnError: false,
       output: 'html',
     });
+    // LRU eviction: keep memory bounded
+    if (katexHtmlCache.size >= MAX_KATEX_CACHE_ENTRIES) {
+      const oldestKey = katexHtmlCache.keys().next().value;
+      if (oldestKey) katexHtmlCache.delete(oldestKey);
+    }
     katexHtmlCache.set(cacheKey, rendered);
     return rendered;
   } catch {

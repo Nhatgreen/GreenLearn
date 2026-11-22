@@ -4,6 +4,46 @@
 
 ---
 
+## 2026-11-22 20:48 — main (Tối Ưu Hóa Toàn Diện Hiệu Năng Runtime & Giải Phóng Rò Rỉ Bộ Nhớ Trình Duyệt)
+- **Task:** Triển khai gói tối ưu hóa hiệu năng runtime, chu kỳ render 60-120fps và giải phóng bộ nhớ trình duyệt theo báo cáo `PERF-MEM-2026-11` được Sếp phê duyệt:
+  1. **Tách biệt nét vẽ dở `currentStroke` khỏi Context gốc qua `activeStrokeStore`:**
+     - Tạo mới `src/lib/activeStrokeStore.ts` sử dụng `useSyncExternalStore` để chỉ kích hoạt re-render cục bộ duy nhất cho component `<DeskDrawingCanvas />`.
+     - Cập nhật `StudySpaceContext.tsx`: `startStroke`, `appendPoint`, `finishStroke`, `cancelStroke` tương tác trực tiếp qua store. Triệt tiêu hoàn toàn hiện tượng ép ~87 components bàn học re-render ở tần số 60-120Hz khi đang vẽ nét bút/dạ quang.
+  2. **Memoize lớp nét vẽ đã hoàn thành (`<CompletedDeskStrokes />`):**
+     - Trong `DeskDrawingCanvas.tsx` và `ItemDrawingOverlay.tsx`: Tách riêng các nét vẽ đã hoàn thiện và bọc `React.memo`, đưa các hàm tính toán `pointsToSvgPath` và `renderStrokeElement` ra ngoài scope component. Khi vẽ nét mới, không tính toán lại chuỗi SVG của 50-100 nét cũ.
+  3. **Khắc phục triệt để rò rỉ `requestAnimationFrame` và `AudioContext` trong WebRTC Voice Chat:**
+     - Trong `src/hooks/useWebRtcVoiceChat.ts`: Hiện thực hóa hàm `cleanupPeer(peerId)` gọi `ctx.close()`, xóa khỏi `peerAudioAnalysersRef` để kết thúc vòng lặp `checkRemoteVolume` rAF, ngắt `RTCPeerConnection`, gán `audio.srcObject = null` và giải phóng bộ nhớ khi peer ngắt kết nối hoặc unmount.
+     - Bổ sung effect đồng bộ presence để tự động giải phóng tài nguyên cho bất kỳ peer nào rời phòng.
+  4. **Nạp trễ (Dynamic Import) thư viện văn phòng `xlsx` và `mammoth`:**
+     - Trong `src/services/OfficeParserService.ts`: Chuyển top-level imports của `mammoth` và `xlsx` (~1.2MB) thành dynamic `await import('mammoth')` và `await import('xlsx')` chỉ nạp khi người dùng mở tệp .docx hoặc .xlsx.
+  5. **Giới hạn LRU Cache cho KaTeX Compile:**
+     - Trong `src/components/common/MathRenderer.tsx`: Bổ sung trần giới hạn `MAX_KATEX_CACHE_ENTRIES = 1000` với cơ chế thu hồi LRU để ngăn ngừa phình to bộ nhớ RAM trong các phiên học toán kéo dài.
+  6. **Dọn dẹp Timer mô phỏng âm thanh & Thu hồi Blob URLs:**
+     - Trong `VoiceNoteItem.tsx` và `VoiceNoteRecordModal.tsx`: Lưu trữ `simulationIntervalRef` và dọn dẹp khi pause/stop/unmount.
+     - Tự động gọi `URL.revokeObjectURL(recordedUrl)` khi đóng modal ghi âm để giải phóng bộ nhớ nhị phân.
+  7. **Kiểm thử & Xác thực:**
+     - `npx vitest run`: 38/38 test suites pass (177/177 tests pass).
+     - `npm run build`: 15/15 static pages build pass (Shared First Load JS 106 kB, Home desk 291 kB).
+     - `npm run build:pages`: Static export cho GitHub Pages thành công 100%.
+     - `npm run docs:index` & `npm run docs:check`: Passed.
+- **Changed:**
+  - `src/lib/activeStrokeStore.ts` (mới)
+  - `src/lib/activeStrokeStore.test.ts` (mới)
+  - `src/context/StudySpaceContext.tsx`
+  - `src/components/canvas/DeskDrawingCanvas.tsx`
+  - `src/components/canvas/ItemDrawingOverlay.tsx`
+  - `src/hooks/useWebRtcVoiceChat.ts`
+  - `src/services/OfficeParserService.ts`
+  - `src/components/common/MathRenderer.tsx`
+  - `src/components/objects/VoiceNoteItem.tsx`
+  - `src/components/modals/VoiceNoteRecordModal.tsx`
+  - `AGENTS.md`
+  - `docs/ai/00_INDEX.md`
+  - `docs/ai/09_ISSUES_AND_TODO.md`
+  - `docs/ai/11_CHANGELOG.md`
+
+---
+
 ## 2026-11-22 20:31 — main (Loại Bỏ Phím Tắt M Và D Để Tránh Xung Đột Minimap & Điều Hướng Mặt Bàn)
 - **Task:** Tắt các phím tắt đơn `M` (Mute mic) và `D` (Deafen loa) trong `MultiplayerBar` theo yêu cầu của Sếp vì xung đột với phím `M` bật/tắt bản đồ thu nhỏ (Minimap trong `BottomRightToolkit`) và phím `D` điều hướng camera mặt bàn (WASD trong `InfiniteDesk`):
   1. **Nguyên nhân gốc rễ:**

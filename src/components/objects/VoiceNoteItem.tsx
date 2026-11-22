@@ -81,6 +81,21 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const waveformContainerRef = useRef<HTMLDivElement>(null);
   const deleteTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Clear timers on unmount
+  useEffect(() => {
+    return () => {
+      if (simulationIntervalRef.current) {
+        clearInterval(simulationIntervalRef.current);
+        simulationIntervalRef.current = null;
+      }
+      if (deleteTimerRef.current) {
+        clearTimeout(deleteTimerRef.current);
+        deleteTimerRef.current = null;
+      }
+    };
+  }, []);
 
   // Hook for unified drag-and-move and touch rotation
   const {
@@ -211,6 +226,10 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
     if (!audio) return;
 
     if (isPlaying) {
+      if (simulationIntervalRef.current) {
+        clearInterval(simulationIntervalRef.current);
+        simulationIntervalRef.current = null;
+      }
       audio.pause();
       setIsPlaying(false);
     } else {
@@ -237,12 +256,19 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
   }, [isPlaying, voiceData.duration]);
 
   const simulatePlayback = () => {
+    if (simulationIntervalRef.current) {
+      clearInterval(simulationIntervalRef.current);
+      simulationIntervalRef.current = null;
+    }
     setIsPlaying(true);
     const start = Date.now();
-    const interval = setInterval(() => {
+    simulationIntervalRef.current = setInterval(() => {
       const elapsed = (Date.now() - start) / 1000;
       if (elapsed >= (voiceData.duration || 5)) {
-        clearInterval(interval);
+        if (simulationIntervalRef.current) {
+          clearInterval(simulationIntervalRef.current);
+          simulationIntervalRef.current = null;
+        }
         setIsPlaying(false);
         setCurrentTime(0);
       } else {

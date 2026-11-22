@@ -7,6 +7,7 @@ import { recognizeSmartShape } from '@/utils/smartShape';
 import { useAuth } from '@/hooks/useAuth';
 import { StudySpaceService } from '@/services/StudySpaceService';
 import { OfflineQueue } from '@/services/OfflineQueue';
+import { activeStrokeStore } from '@/lib/activeStrokeStore';
 import { useRealtimeMultiplayer, PeerUser, DeskAction, VoiceSignal } from '@/hooks/useRealtimeMultiplayer';
 import { useWebRtcVoiceChat } from '@/hooks/useWebRtcVoiceChat';
 
@@ -301,7 +302,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   const [stickyCreationColor, setStickyCreationColor] = useState<string | null>(null);
   const [stickyCreationTemplate, setStickyCreationTemplate] = useState<CreationPlacementTemplate | null>(null);
   const [strokes, setStrokes] = useState<import('@/types/studyspace').DrawingStroke[]>([]);
-  const [currentStroke, setCurrentStroke] = useState<import('@/types/studyspace').DrawingStroke | null>(null);
+  // High-frequency in-progress stroke is decoupled into activeStrokeStore to eliminate 60-120fps re-renders of the root context
 
   // Multiplayer Realtime Synchronized State & Dispatcher
   const isApplyingRemoteAction = useRef(false);
@@ -681,7 +682,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   const startStroke = (point: { x: number; y: number }, color: string, width: number, isHighlighter: boolean) => {
     if (isViewerSession()) return;
-    setCurrentStroke({
+    activeStrokeStore.setStroke({
       id: `stroke-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       points: [point],
       color,
@@ -691,70 +692,63 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
   };
 
   const appendPoint = (point: { x: number; y: number }) => {
-    setCurrentStroke(prev => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        points: [...prev.points, point]
-      };
-    });
+    activeStrokeStore.appendPoint(point);
   };
 
   const finishStroke = () => {
-    setCurrentStroke(prev => {
-      if (prev && prev.points.length > 1) {
-        let finalPoints = prev.points;
-        if (activeTool === 'smart_shape') {
-          finalPoints = recognizeSmartShape(prev.points);
-        }
+    const prev = activeStrokeStore.getStroke();
+    activeStrokeStore.setStroke(null);
+    if (!prev || prev.points.length <= 1) return;
 
-        // Check if stroke started over a desk document (book, paper, or sticky note)
-        const curSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
-        const sortedItems = [...(curSpace?.items || [])].sort((a, b) => b.zIndex - a.zIndex);
-        const p0 = finalPoints[0];
+    let finalPoints = prev.points;
+    if (activeTool === 'smart_shape') {
+      finalPoints = recognizeSmartShape(prev.points);
+    }
 
-        let targetItem: import('@/types/studyspace').DeskItem | null = null;
-        let localPoints = finalPoints;
+    // Check if stroke started over a desk document (book, paper, or sticky note)
+    const curSpace = spaces.find(s => s.id === activeSpaceId) || spaces[0];
+    const sortedItems = [...(curSpace?.items || [])].sort((a, b) => b.zIndex - a.zIndex);
+    const p0 = finalPoints[0];
 
-        for (const item of sortedItems) {
-          const w = item.type === 'book' ? 980 : item.type === 'paper' ? (item.isExamSheet ? 380 : 360) : (item.width || 220);
-          const h = item.type === 'book' ? 640 : item.type === 'paper' ? (item.isExamSheet ? 490 : 500) : (item.height || 200);
+    let targetItem: import('@/types/studyspace').DeskItem | null = null;
+    let localPoints = finalPoints;
 
-          const dx = p0.x - item.x;
-          const dy = p0.y - item.y;
-          const rad = (-item.rotation * Math.PI) / 180;
-          const localX = dx * Math.cos(rad) - dy * Math.sin(rad);
-          const localY = dx * Math.sin(rad) + dy * Math.cos(rad);
+    for (const item of sortedItems) {
+      const w = item.type === 'book' ? 980 : item.type === 'paper' ? (item.isExamSheet ? 380 : 360) : (item.width || 220);
+      const h = item.type === 'book' ? 640 : item.type === 'paper' ? (item.isExamSheet ? 490 : 500) : (item.height || 200);
 
-          if (localX >= -10 && localX <= w + 10 && localY >= -10 && localY <= h + 10) {
-            targetItem = item;
-            localPoints = finalPoints.map(p => {
-              const pdx = p.x - item.x;
-              const pdy = p.y - item.y;
-              return {
-                x: Math.round((pdx * Math.cos(rad) - pdy * Math.sin(rad)) * 10) / 10,
-                y: Math.round((pdx * Math.sin(rad) + pdy * Math.cos(rad)) * 10) / 10
-              };
-            });
-            break;
-          }
-        }
+      const dx = p0.x - item.x;
+      const dy = p0.y - item.y;
+      const rad = (-item.rotation * Math.PI) / 180;
+      const localX = dx * Math.cos(rad) - dy * Math.sin(rad);
+      const localY = dx * Math.sin(rad) + dy * Math.cos(rad);
 
-        const completedStroke: import('@/types/studyspace').DrawingStroke = targetItem
-          ? { ...prev, points: localPoints, attachedToItemId: targetItem.id }
-          : { ...prev, points: finalPoints, attachedToItemId: undefined };
-
-        setStrokes(s => [...s, completedStroke]);
-        if (!isApplyingRemoteAction.current) {
-          broadcastDeskActionRef.current({ type: 'DRAW_STROKE', payload: { stroke: completedStroke } });
-        }
+      if (localX >= -10 && localX <= w + 10 && localY >= -10 && localY <= h + 10) {
+        targetItem = item;
+        localPoints = finalPoints.map(p => {
+          const pdx = p.x - item.x;
+          const pdy = p.y - item.y;
+          return {
+            x: Math.round((pdx * Math.cos(rad) - pdy * Math.sin(rad)) * 10) / 10,
+            y: Math.round((pdx * Math.sin(rad) + pdy * Math.cos(rad)) * 10) / 10
+          };
+        });
+        break;
       }
-      return null;
-    });
+    }
+
+    const completedStroke: import('@/types/studyspace').DrawingStroke = targetItem
+      ? { ...prev, points: localPoints, attachedToItemId: targetItem.id }
+      : { ...prev, points: finalPoints, attachedToItemId: undefined };
+
+    setStrokes(s => [...s, completedStroke]);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'DRAW_STROKE', payload: { stroke: completedStroke } });
+    }
   };
 
   const cancelStroke = () => {
-    setCurrentStroke(null);
+    activeStrokeStore.setStroke(null);
   };
 
   const [isFingerDrawingEnabled, setIsFingerDrawingEnabledState] = useState<boolean>(() => {
@@ -2938,7 +2932,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         stickyCreationTemplate,
         setStickyCreationTemplate,
         strokes,
-        currentStroke,
+        currentStroke: activeStrokeStore.getStroke(),
         startStroke,
         appendPoint,
         finishStroke,

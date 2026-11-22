@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-22`  
-> **Trạng thái Codebase:** Tắt phím tắt M và D trên thanh MultiplayerBar tránh xung đột với Minimap (phím M) và điều hướng mặt bàn (phím D); 37/37 test suites pass (175/175 tests), 15/15 static pages build pass, docs:check pass.
+> **Trạng thái Codebase:** Tối ưu hóa toàn diện hiệu năng và giải phóng rò rỉ bộ nhớ: tách biệt currentStroke qua activeStrokeStore đạt chuẩn vẽ 60-120fps không re-render bàn học, memoize CompletedDeskStrokes, dọn dẹp WebRTC AudioContext/rAF khi peer ngắt kết nối, dynamic import xlsx & mammoth, giới hạn LRU KaTeX cache; 38/38 test suites pass (177/177 tests), 15/15 static pages build pass, docs:check pass.
 
 ---
 

@@ -1,7 +1,4 @@
 import JSZip from 'jszip';
-// @ts-ignore
-import mammoth from 'mammoth';
-import * as XLSX from 'xlsx';
 import type { PresentationSlide, SpreadsheetSheet } from '@/types/studyspace';
 import { ParsedPage, parsePdfFile } from './PdfParserService';
 import { formatUploadedDocTitle } from '@/utils/documentNaming';
@@ -296,6 +293,8 @@ export async function parseDocxFile(file: File): Promise<ParsedPage[]> {
     const mammothInput = isNodeRuntime
       ? { buffer: Buffer.from(arrayBuffer) }
       : { arrayBuffer };
+    const mammothModule = await import('mammoth');
+    const mammoth = (mammothModule as any).default || mammothModule;
     const result = await mammoth.extractRawText(mammothInput);
     const rawText = (result.value || '').trim();
 
@@ -324,6 +323,7 @@ export async function parseSpreadsheetFile(
     throw new Error('Tệp bảng tính rỗng hoặc không hợp lệ.');
   }
 
+  const XLSX = await import('xlsx');
   const workbook = XLSX.read(arrayBuffer, { type: 'array' });
   if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
     throw new Error('Tệp bảng tính không chứa trang tính (sheet) nào.');

@@ -122,9 +122,16 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const previewIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const previewAudioRef = useRef<HTMLAudioElement | null>(null);
   const speechRecognitionRef = useRef<any>(null);
   const recordedPeaksRef = useRef<number[]>([]);
+  const recordedUrlRef = useRef<string | null>(null);
+
+  // Sync ref with state
+  useEffect(() => {
+    recordedUrlRef.current = recordedUrl;
+  }, [recordedUrl]);
 
   const authorName = profile?.display_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Bạn';
   const authorAvatar = profile?.avatar_url || user?.user_metadata?.avatar_url || undefined;
@@ -139,6 +146,10 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = null;
+    }
+    if (previewIntervalRef.current) {
+      clearInterval(previewIntervalRef.current);
+      previewIntervalRef.current = null;
     }
     if (speechRecognitionRef.current) {
       try {
@@ -166,6 +177,12 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
     if (previewAudioRef.current) {
       previewAudioRef.current.pause();
       previewAudioRef.current = null;
+    }
+    if (recordedUrlRef.current && recordedUrlRef.current.startsWith('blob:')) {
+      try {
+        URL.revokeObjectURL(recordedUrlRef.current);
+      } catch {}
+      recordedUrlRef.current = null;
     }
   };
 
@@ -388,16 +405,23 @@ export function VoiceNoteRecordModal({ isOpen, onClose, onSave }: VoiceNoteRecor
   // Review audio playback toggle
   const handleTogglePreviewPlay = () => {
     if (!recordedUrl) {
+      if (previewIntervalRef.current) {
+        clearInterval(previewIntervalRef.current);
+        previewIntervalRef.current = null;
+      }
       // Simulate preview
       if (isPreviewPlaying) {
         setIsPreviewPlaying(false);
       } else {
         setIsPreviewPlaying(true);
         const start = Date.now();
-        const interval = setInterval(() => {
+        previewIntervalRef.current = setInterval(() => {
           const elapsed = (Date.now() - start) / 1000;
           if (elapsed >= recordDuration) {
-            clearInterval(interval);
+            if (previewIntervalRef.current) {
+              clearInterval(previewIntervalRef.current);
+              previewIntervalRef.current = null;
+            }
             setIsPreviewPlaying(false);
             setPreviewCurrentTime(0);
           } else {

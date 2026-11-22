@@ -1,50 +1,53 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useStudySpace } from '@/context/StudySpaceContext';
 
-export function ItemDrawingOverlay({ itemId }: { itemId: string }) {
+const pointsToSvgPath = (points: { x: number; y: number }[]) => {
+  if (points.length < 2) return '';
+  if (points.length === 2) {
+    return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
+  }
+
+  const first = points[0];
+  const last = points[points.length - 1];
+  const isClosedPolygon = points.length <= 8 && Math.hypot(first.x - last.x, first.y - last.y) < 10;
+
+  // Polygons: straight lines between vertices (triangles, squares, rectangles)
+  if (isClosedPolygon) {
+    let d = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      d += ` L ${points[i].x} ${points[i].y}`;
+    }
+    d += ' Z';
+    return d;
+  }
+
+  // Freehand strokes & smooth circles: midpoint quadratic bezier curves
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length - 1; i++) {
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const midX = (p1.x + p2.x) / 2;
+    const midY = (p1.y + p2.y) / 2;
+    d += ` Q ${p1.x} ${p1.y}, ${midX} ${midY}`;
+  }
+  const lastPt = points[points.length - 1];
+  d += ` L ${lastPt.x} ${lastPt.y}`;
+  if (Math.hypot(first.x - lastPt.x, first.y - lastPt.y) < 10) {
+    d += ' Z';
+  }
+  return d;
+};
+
+export const ItemDrawingOverlay = React.memo(function ItemDrawingOverlay({ itemId }: { itemId: string }) {
   const { strokes } = useStudySpace();
-  const itemStrokes = strokes.filter(s => s.attachedToItemId === itemId);
+  const itemStrokes = useMemo(
+    () => strokes.filter((s) => s.attachedToItemId === itemId),
+    [strokes, itemId]
+  );
 
   if (itemStrokes.length === 0) return null;
-
-  const pointsToSvgPath = (points: { x: number; y: number }[]) => {
-    if (points.length < 2) return '';
-    if (points.length === 2) {
-      return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
-    }
-
-    const first = points[0];
-    const last = points[points.length - 1];
-    const isClosedPolygon = points.length <= 8 && Math.hypot(first.x - last.x, first.y - last.y) < 10;
-
-    // Polygons: straight lines between vertices (triangles, squares, rectangles)
-    if (isClosedPolygon) {
-      let d = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 1; i < points.length; i++) {
-        d += ` L ${points[i].x} ${points[i].y}`;
-      }
-      d += ' Z';
-      return d;
-    }
-
-    // Freehand strokes & smooth circles: midpoint quadratic bezier curves
-    let d = `M ${points[0].x} ${points[0].y}`;
-    for (let i = 1; i < points.length - 1; i++) {
-      const p1 = points[i];
-      const p2 = points[i + 1];
-      const midX = (p1.x + p2.x) / 2;
-      const midY = (p1.y + p2.y) / 2;
-      d += ` Q ${p1.x} ${p1.y}, ${midX} ${midY}`;
-    }
-    const lastPt = points[points.length - 1];
-    d += ` L ${lastPt.x} ${lastPt.y}`;
-    if (Math.hypot(first.x - lastPt.x, first.y - lastPt.y) < 10) {
-      d += ' Z';
-    }
-    return d;
-  };
 
   return (
     <svg className="absolute inset-0 pointer-events-none z-30 overflow-visible w-full h-full">
@@ -87,4 +90,4 @@ export function ItemDrawingOverlay({ itemId }: { itemId: string }) {
       })}
     </svg>
   );
-}
+});

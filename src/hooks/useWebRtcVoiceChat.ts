@@ -216,6 +216,47 @@ export function useWebRtcVoiceChat({
   }, [peerVolumes, setupRemoteSpeakingDetection]);
 
   /**
+   * Clean up all audio resources, Web Audio contexts, analysers and peer connections for a disconnected peer
+   */
+  const cleanupPeer = useCallback((peerId: string) => {
+    // 1. Audio element
+    const audio = remoteAudioElementsRef.current.get(peerId);
+    if (audio) {
+      audio.srcObject = null;
+      try { audio.pause(); } catch {}
+      remoteAudioElementsRef.current.delete(peerId);
+    }
+
+    // 2. Audio analyser & AudioContext (stops checkRemoteVolume rAF loop and releases hardware audio)
+    const analyserEntry = peerAudioAnalysersRef.current.get(peerId);
+    if (analyserEntry) {
+      peerAudioAnalysersRef.current.delete(peerId);
+      try {
+        analyserEntry.ctx.close().catch(() => {});
+      } catch {}
+    }
+
+    // 3. RTCPeerConnection
+    const pc = peerConnectionsRef.current.get(peerId);
+    if (pc) {
+      try {
+        if (pc.connectionState !== 'closed') {
+          pc.close();
+        }
+      } catch {}
+      peerConnectionsRef.current.delete(peerId);
+    }
+
+    // 4. Reset speaking state
+    setSpeakingPeers((prev) => {
+      if (!prev[peerId]) return prev;
+      const next = { ...prev };
+      delete next[peerId];
+      return next;
+    });
+  }, []);
+
+  /**
    * Create RTCPeerConnection for a peer
    */
   const createPeerConnection = useCallback((peerId: string) => {
@@ -249,14 +290,10 @@ export function useWebRtcVoiceChat({
       }
     };
 
-    // Connection state changes
+    // Connection state changes: thorough cleanup on disconnect or failure
     pc.onconnectionstatechange = () => {
       if (pc.connectionState === 'disconnected' || pc.connectionState === 'failed' || pc.connectionState === 'closed') {
-        const audio = remoteAudioElementsRef.current.get(peerId);
-        if (audio) {
-          audio.srcObject = null;
-          remoteAudioElementsRef.current.delete(peerId);
-        }
+        cleanupPeer(peerId);
       }
     };
 
@@ -268,7 +305,7 @@ export function useWebRtcVoiceChat({
     }
 
     return pc;
-  }, [attachRemoteAudio]);
+  }, [attachRemoteAudio, cleanupPeer]);
 
   /**
    * Initiate offer to a peer (Polite caller pattern: caller has lower userId)
@@ -478,6 +515,16 @@ export function useWebRtcVoiceChat({
     });
   }, [peers, isMicOn, isConnected, currentUserId, callPeer]);
 
+  // Clean up any peers that left the room presence
+  useEffect(() => {
+    const currentPeerIds = new Set(peers.map((p) => p.id));
+    peerConnectionsRef.current.forEach((_, peerId) => {
+      if (!currentPeerIds.has(peerId)) {
+        cleanupPeer(peerId);
+      }
+    });
+  }, [peers, cleanupPeer]);
+
   // Cleanup on unmount or room leave
   useEffect(() => {
     return () => {
@@ -490,13 +537,21 @@ export function useWebRtcVoiceChat({
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      peerConnectionsRef.current.forEach((pc) => pc.close());
+      peerConnectionsRef.current.forEach((pc) => {
+        try {
+          if (pc.connectionState !== 'closed') pc.close();
+        } catch {}
+      });
+      peerConnectionsRef.current.clear();
       remoteAudioElementsRef.current.forEach((audio) => {
         audio.srcObject = null;
+        try { audio.pause(); } catch {}
       });
+      remoteAudioElementsRef.current.clear();
       peerAudioAnalysersRef.current.forEach(({ ctx }) => {
         ctx.close().catch(() => {});
       });
+      peerAudioAnalysersRef.current.clear();
     };
   }, []);
 
