@@ -37,12 +37,14 @@ export function MultiplayerBar() {
     setIsFollowPresenter,
     isMicOn,
     isMuted,
+    isDeafened,
     isSpeaking,
     speakingPeers,
     peerAudioVolumes,
     setPeerAudioVolume,
     toggleMic,
     toggleMute,
+    toggleDeafen,
     micError
   } = useStudySpace();
 
@@ -85,10 +87,18 @@ export function MultiplayerBar() {
           toggleMute();
         }
       }
+
+      // Quick Deafen / Mute speaker hotkey 'D'
+      if (e.key === 'd' || e.key === 'D') {
+        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          toggleDeafen();
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isShareModalOpen, isDbConfigOpen, toggleMute]);
+  }, [isShareModalOpen, isDbConfigOpen, toggleMute, toggleDeafen]);
 
   useEffect(() => {
     const cfg = getSupabaseConfig();
@@ -213,6 +223,34 @@ export function MultiplayerBar() {
                 <>
                   <Mic className={`w-3.5 h-3.5 text-white ${isSpeaking ? 'animate-bounce' : ''}`} />
                   <span className="hidden sm:inline text-[11px]">{isSpeaking ? 'Đang nói...' : 'Đang bật mic'}</span>
+                </>
+              )}
+            </button>
+
+            {/* Discord-like Deafen / Mute Speaker Button */}
+            <button
+              type="button"
+              onClick={toggleDeafen}
+              title={
+                isDeafened 
+                  ? 'Đang tắt toàn bộ âm thanh phòng học (Bấm để bật lại loa hoặc nhấn phím D)' 
+                  : 'Tắt loa phòng học khi quá ồn (Nhấn phím D)'
+              }
+              className={`relative flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer select-none active:scale-95 touch-target ${
+                isDeafened
+                  ? 'bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 shadow-2xs'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+              }`}
+            >
+              {isDeafened ? (
+                <>
+                  <VolumeX className="w-3.5 h-3.5 text-rose-500" />
+                  <span className="hidden sm:inline text-[11px]">Đã tắt loa</span>
+                </>
+              ) : (
+                <>
+                  <Volume2 className="w-3.5 h-3.5 text-slate-600" />
+                  <span className="hidden sm:inline text-[11px]">Loa</span>
                 </>
               )}
             </button>
@@ -410,8 +448,11 @@ export function MultiplayerBar() {
               </div>
 
               {/* Hotkey hint */}
-              <div className="mt-2 text-[10px] text-slate-400 flex items-center justify-between">
-                <span>Mẹo: Nhấn phím <kbd className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 font-mono font-bold">M</kbd> để Bật / Tắt mic tức thì</span>
+              <div className="mt-2 text-[10px] text-slate-400 flex flex-wrap items-center justify-between gap-1">
+                <span>Phím tắt: <kbd className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 font-mono font-bold">M</kbd> Bật/Tắt Mic • <kbd className="px-1 py-0.5 bg-slate-200 rounded text-slate-700 font-mono font-bold">D</kbd> Bật/Tắt Loa</span>
+                {isDeafened && (
+                  <span className="text-rose-500 font-bold">● Đang tắt loa phòng</span>
+                )}
               </div>
             </div>
 

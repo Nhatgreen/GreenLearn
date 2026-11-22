@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { PeerUser, VoiceSignal } from './useRealtimeMultiplayer';
-import { playMuteChime, playUnmuteChime } from '@/lib/soundFx';
+import { playMuteChime, playUnmuteChime, playDeafenChime, playUndeafenChime } from '@/lib/soundFx';
 
 export interface UseWebRtcVoiceChatOptions {
   currentUserId: string;
@@ -29,6 +29,7 @@ export function useWebRtcVoiceChat({
 }: UseWebRtcVoiceChatOptions) {
   const [isMicOn, setIsMicOn] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isDeafened, setIsDeafened] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [speakingPeers, setSpeakingPeers] = useState<Record<string, boolean>>({});
   const [peerVolumes, setPeerVolumes] = useState<Record<string, number>>({});
@@ -40,6 +41,11 @@ export function useWebRtcVoiceChat({
   const peerAudioAnalysersRef = useRef<Map<string, { ctx: AudioContext; analyser: AnalyserNode }>>(new Map());
   const localAudioContextRef = useRef<AudioContext | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+
+  const isDeafenedRef = useRef(isDeafened);
+  useEffect(() => {
+    isDeafenedRef.current = isDeafened;
+  }, [isDeafened]);
 
   // Stable references for callbacks
   const sendVoiceSignalRef = useRef(sendVoiceSignal);
@@ -194,8 +200,11 @@ export function useWebRtcVoiceChat({
       audioEl = new Audio();
       audioEl.autoplay = true;
       (audioEl as any).playsInline = true;
+      audioEl.muted = isDeafenedRef.current;
       audioEl.volume = peerVolumes[peerId] !== undefined ? peerVolumes[peerId] : 1.0;
       remoteAudioElementsRef.current.set(peerId, audioEl);
+    } else {
+      audioEl.muted = isDeafenedRef.current;
     }
 
     audioEl.srcObject = stream;
@@ -420,6 +429,30 @@ export function useWebRtcVoiceChat({
   }, [isMuted, toggleMic]);
 
   /**
+   * Toggle Deafen (Mute / Unmute all incoming audio from room)
+   */
+  const toggleDeafen = useCallback(() => {
+    setIsDeafened((prev) => {
+      const next = !prev;
+      remoteAudioElementsRef.current.forEach((audioEl, peerId) => {
+        if (next) {
+          audioEl.muted = true;
+        } else {
+          audioEl.muted = false;
+          audioEl.volume = peerVolumes[peerId] !== undefined ? peerVolumes[peerId] : 1.0;
+        }
+      });
+
+      if (next) {
+        playDeafenChime();
+      } else {
+        playUndeafenChime();
+      }
+      return next;
+    });
+  }, [peerVolumes]);
+
+  /**
    * Adjust volume for a specific peer
    */
   const setPeerVolume = useCallback((peerId: string, volume: number) => {
@@ -427,7 +460,10 @@ export function useWebRtcVoiceChat({
     setPeerVolumes((prev) => ({ ...prev, [peerId]: clamped }));
     const audioEl = remoteAudioElementsRef.current.get(peerId);
     if (audioEl) {
-      audioEl.volume = clamped;
+      if (!isDeafenedRef.current) {
+        audioEl.volume = clamped;
+        audioEl.muted = clamped === 0;
+      }
     }
   }, []);
 
@@ -467,12 +503,14 @@ export function useWebRtcVoiceChat({
   return {
     isMicOn,
     isMuted,
+    isDeafened,
     isSpeaking,
     speakingPeers,
     peerVolumes,
     micError,
     toggleMic,
     toggleMute,
+    toggleDeafen,
     setPeerVolume,
     handleIncomingSignal,
   };

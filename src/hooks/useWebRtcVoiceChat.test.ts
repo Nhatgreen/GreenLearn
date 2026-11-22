@@ -23,6 +23,7 @@ describe('useWebRtcVoiceChat', () => {
 
     expect(result.current.isMicOn).toBe(false);
     expect(result.current.isMuted).toBe(false);
+    expect(result.current.isDeafened).toBe(false);
     expect(result.current.isSpeaking).toBe(false);
     expect(result.current.speakingPeers).toEqual({});
     expect(result.current.peerVolumes).toEqual({});
@@ -71,5 +72,29 @@ describe('useWebRtcVoiceChat', () => {
 
     // Should not crash even in jsdom environment where RTCPeerConnection is mock/undefined
     expect(result.current.isMicOn).toBe(false);
+  });
+
+  it('toggles deafen state correctly to mute all incoming audio', () => {
+    const { result } = renderHook(() =>
+      useWebRtcVoiceChat({
+        currentUserId: 'user-1',
+        peers: [],
+        isConnected: true,
+        sendVoiceSignal: mockSendVoiceSignal,
+        broadcastVoiceState: mockBroadcastVoiceState,
+      })
+    );
+
+    expect(result.current.isDeafened).toBe(false);
+
+    act(() => {
+      result.current.toggleDeafen();
+    });
+    expect(result.current.isDeafened).toBe(true);
+
+    act(() => {
+      result.current.toggleDeafen();
+    });
+    expect(result.current.isDeafened).toBe(false);
   });
 });

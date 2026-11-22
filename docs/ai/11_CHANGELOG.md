@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-11-22 17:28 — main (Bổ Sung Nút Bật / Tắt Loa Phòng Học Khi Ồn Chuẩn Discord Deafen)
+- **Task:** Thêm nút Bật / Tắt Loa (Speaker Deafen) trên thanh phòng học nhóm để người học có thể ngắt toàn bộ âm thanh phòng khi thấy ồn ào theo yêu cầu của Sếp:
+  - Tích hợp state `isDeafened` và hàm `toggleDeafen` trong `useWebRtcVoiceChat.ts`: khi kích hoạt, toàn bộ phần tử audio của các bạn học khác trong phòng lập tức bị tắt tiếng (`muted = true`).
+  - Nút Bật / Tắt Loa trên `MultiplayerBar.tsx` (icon `Volume2` khi bình thường, `VolumeX` màu hồng đỏ khi đã tắt loa).
+  - Phím tắt công thái học: Nhấn phím `D` (khi không gõ text) để Bật / Tắt loa phòng tức thì.
+  - Âm thanh phản hồi Web Audio API: `playDeafenChime` (âm trầm 650Hz $\to$ 280Hz) khi tắt loa và `playUndeafenChime` (âm cao vút 280Hz $\to$ 700Hz) khi bật lại loa.
+- **Verification:**
+  - `pnpm test`: 34/34 test suites passed (159/159 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Static export GitHub Pages passed.
+  - `pnpm run docs:index` & `pnpm run docs:check`: Index và docs nhất quán 100%.
+- **Changed:**
+  - `src/lib/soundFx.ts`: Bổ sung `playDeafenChime` và `playUndeafenChime`.
+  - `src/hooks/useWebRtcVoiceChat.ts` & `src/hooks/useWebRtcVoiceChat.test.ts`: Bổ sung `isDeafened`, `toggleDeafen` và unit tests.
+  - `src/context/StudySpaceContext.tsx`: Truyền `isDeafened` và `toggleDeafen` vào Context toàn cục.
+  - `src/components/hud/MultiplayerBar.tsx`: Nút Loa/Tắt Loa, phím tắt `D`, hiển thị trạng thái tắt loa.
+  - `AGENTS.md` & `docs/ai/11_CHANGELOG.md`: Cập nhật quy chuẩn và nhật ký phát triển.
+
+---
+
 ## 2026-11-22 17:19 — main (Tích Hợp Đàm Thoại Giọng Nói Voice Chat Phòng Học Nhóm WebRTC P2P Chuẩn Discord)
 - **Task:** Triển khai tính năng đàm thoại âm thanh trực tiếp (Voice Chat) trong phòng học nhóm Multiplayer theo chuẩn Discord theo yêu cầu của Sếp:
   1. **Kiến trúc WebRTC Audio P2P Mesh & Supabase Signaling:**

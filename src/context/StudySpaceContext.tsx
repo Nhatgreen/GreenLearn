@@ -171,12 +171,14 @@ interface StudySpaceContextType {
   // WebRTC Voice Chat State & Controls
   isMicOn: boolean;
   isMuted: boolean;
+  isDeafened: boolean;
   isSpeaking: boolean;
   speakingPeers: Record<string, boolean>;
   peerAudioVolumes: Record<string, number>;
   setPeerAudioVolume: (peerId: string, volume: number) => void;
   toggleMic: () => Promise<void>;
   toggleMute: () => void;
+  toggleDeafen: () => void;
   micError: string | null;
 }
 
@@ -2815,12 +2817,14 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         // WebRTC Voice Chat State & Controls
         isMicOn: voiceChat.isMicOn,
         isMuted: voiceChat.isMuted,
+        isDeafened: voiceChat.isDeafened,
         isSpeaking: voiceChat.isSpeaking,
         speakingPeers: voiceChat.speakingPeers,
         peerAudioVolumes: voiceChat.peerVolumes,
         setPeerAudioVolume: voiceChat.setPeerVolume,
         toggleMic: voiceChat.toggleMic,
         toggleMute: voiceChat.toggleMute,
+        toggleDeafen: voiceChat.toggleDeafen,
         micError: voiceChat.micError
       }}
     >
