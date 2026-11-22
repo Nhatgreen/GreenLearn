@@ -127,10 +127,12 @@ export const CodeBlockItem = React.memo(function CodeBlockItem({ item, isSelecte
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[2.4]" /> : <Copy className="w-3.5 h-3.5" />}
           </button>
           <button
+            type="button"
+            onPointerDown={handleRotateMouseDown}
             onMouseDown={handleRotateMouseDown}
             onDoubleClick={handleRotateDoubleClick}
-            title="Xoay (Kéo để xoay, nhấp đúp về 0°)"
-            className="p-1 rounded-md bg-white border border-slate-200 text-slate-500 hover:text-amber-700 hover:bg-slate-50 shadow-xs transition-colors cursor-grab"
+            title="Xoay (Kéo để xoay 360°, nhấp đúp hoặc chạm 2 lần về 0°)"
+            className="p-1 rounded-md bg-white border border-slate-200 text-slate-500 hover:text-amber-700 hover:bg-slate-50 shadow-xs transition-colors cursor-grab touch-none touch-target"
           >
             <RotateTwoWay className="w-3.5 h-3.5" />
           </button>

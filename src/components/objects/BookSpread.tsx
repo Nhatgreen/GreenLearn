@@ -499,10 +499,12 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             {/* Tab 4: Brown (Nâu) - Xoay */}
             <div className="relative group/tab flex items-center">
               <button
+                type="button"
+                onPointerDown={handleRotateMouseDown}
                 onMouseDown={handleRotateMouseDown}
                 onDoubleClick={handleRotateDoubleClick}
-                title="Kéo để xoay sách tự do 360°, nhấn đúp căn thẳng 0°"
-                className="h-8 w-[48px] group-hover/tab:w-[92px] bg-[#78350f] hover:bg-[#92400e] active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-grab active:cursor-grabbing overflow-hidden"
+                title="Kéo để xoay sách tự do 360°, nhấn đúp hoặc chạm 2 lần căn thẳng 0°"
+                className="h-8 w-[48px] group-hover/tab:w-[92px] bg-[#78350f] hover:bg-[#92400e] active:scale-95 text-white flex items-center justify-between pl-[16px] pr-4 gap-0 group-hover/tab:gap-2 transition-[width] duration-200 ease-out shadow-md cursor-grab active:cursor-grabbing overflow-hidden touch-none touch-target"
                 style={{
                   clipPath: 'polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%)'
                 }}

@@ -1016,11 +1016,13 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
 
         {/* Free Continuous 360 Rotation */}
         <button
-          title="Kéo chuột để xoay ghi chú tự do, nhấn đúp để xoay thẳng ngay ngắn (0°)"
+          type="button"
+          title="Kéo để xoay ghi chú tự do 360°, nhấn đúp hoặc chạm 2 lần để xoay thẳng (0°)"
           aria-label="Xoay ghi chú tự do"
+          onPointerDown={handleRotateMouseDown}
           onMouseDown={handleRotateMouseDown}
           onDoubleClick={handleRotateDoubleClick}
-          className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-slate-900 transition-colors cursor-grab active:cursor-grabbing"
+          className="p-1 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-slate-900 transition-colors cursor-grab active:cursor-grabbing touch-none touch-target"
         >
           <RotateTwoWay className="w-3.5 h-3.5 stroke-[2.4]" />
         </button>

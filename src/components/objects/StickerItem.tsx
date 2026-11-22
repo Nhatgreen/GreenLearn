@@ -101,10 +101,12 @@ export const StickerItem = React.memo(function StickerItem({ item, isSelected }:
           className="absolute -top-9 left-1/2 -translate-x-1/2 flex items-center gap-1 p-1 bg-white border border-slate-200/90 shadow-md rounded-full text-slate-600 text-xs z-50 animate-fade-in select-none"
         >
           <button
+            type="button"
+            onPointerDown={handleRotateMouseDown}
             onMouseDown={handleRotateMouseDown}
             onDoubleClick={handleRotateDoubleClick}
-            title="Xoay (Kéo để xoay, nhấp đúp về 0°)"
-            className="p-1 rounded-full text-slate-500 hover:text-amber-700 hover:bg-slate-100 transition-colors cursor-grab"
+            title="Xoay (Kéo để xoay 360°, nhấp đúp hoặc chạm 2 lần về 0°)"
+            className="p-1 rounded-full text-slate-500 hover:text-amber-700 hover:bg-slate-100 transition-colors cursor-grab touch-none touch-target"
           >
             <RotateTwoWay className="w-3.5 h-3.5" />
           </button>

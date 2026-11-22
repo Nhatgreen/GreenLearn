@@ -742,10 +742,12 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
           <Maximize2 className="w-4 h-4 stroke-[2.4]" />
         </button>
         <button
-          title="Kéo để xoay tài liệu tự do, nhấn đúp để xoay thẳng ngay ngắn (0°)"
+          type="button"
+          title="Kéo để xoay tài liệu tự do 360°, nhấn đúp hoặc chạm 2 lần để xoay thẳng ngay ngắn (0°)"
+          onPointerDown={handleRotateMouseDown}
           onMouseDown={handleRotateMouseDown}
           onDoubleClick={handleRotateDoubleClick}
-          className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-slate-900 transition-colors cursor-grab active:cursor-grabbing"
+          className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-slate-900 transition-colors cursor-grab active:cursor-grabbing touch-none touch-target"
         >
           <RotateTwoWay className="w-4 h-4 stroke-[2.4]" />
         </button>

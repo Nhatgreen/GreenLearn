@@ -330,16 +330,18 @@ export function InfiniteDesk() {
     };
   }, [panBy, setTransform]);
 
-  // Global View Rotation when isViewRotateMode is toggled ON (User can drag anywhere to rotate)
-  const handleMouseDownCapture = (e: React.MouseEvent) => {
-    if (focusedItemId && isViewRotateMode && e.button === 0) {
+  // Global View Rotation when isViewRotateMode is toggled ON (User can drag anywhere to rotate - Mobile & Desktop)
+  const handleMouseDownCapture = (e: React.PointerEvent | React.MouseEvent) => {
+    if ('button' in e && e.button !== 0) return;
+
+    if (focusedItemId && isViewRotateMode) {
       e.preventDefault();
       e.stopPropagation();
       triggerFocusNotice();
       return;
     }
 
-    if (isViewRotateMode && e.button === 0) {
+    if (isViewRotateMode) {
       // Don't intercept clicks on HUD buttons or modals
       const target = e.target as HTMLElement;
       if (target.closest('button[title*="xoay"]') || target.closest('[data-hud="true"]') || target.closest('[data-focus-notice="true"]')) {
@@ -351,21 +353,30 @@ export function InfiniteDesk() {
       setIsRotatingView(true);
       let lastX = e.clientX;
 
-      const handleRotateMouseMove = (moveEvent: MouseEvent) => {
-        const dx = moveEvent.clientX - lastX;
-        lastX = moveEvent.clientX;
+      const handleRotateMove = (moveEvent: PointerEvent | MouseEvent | TouchEvent) => {
+        const clientX = 'touches' in moveEvent ? (moveEvent as TouchEvent).touches[0]?.clientX ?? lastX : (moveEvent as MouseEvent).clientX;
+        const dx = clientX - lastX;
+        lastX = clientX;
         // Dragging right rotates view left; dragging left rotates view right
         rotateDeskBy(-dx * 0.35);
       };
 
-      const handleRotateMouseUp = () => {
+      const handleRotateUp = () => {
         setIsRotatingView(false);
-        window.removeEventListener('mousemove', handleRotateMouseMove);
-        window.removeEventListener('mouseup', handleRotateMouseUp);
+        window.removeEventListener('pointermove', handleRotateMove as any);
+        window.removeEventListener('pointerup', handleRotateUp as any);
+        window.removeEventListener('touchmove', handleRotateMove as any);
+        window.removeEventListener('touchend', handleRotateUp as any);
+        window.removeEventListener('mousemove', handleRotateMove as any);
+        window.removeEventListener('mouseup', handleRotateUp as any);
       };
 
-      window.addEventListener('mousemove', handleRotateMouseMove);
-      window.addEventListener('mouseup', handleRotateMouseUp);
+      window.addEventListener('pointermove', handleRotateMove as any);
+      window.addEventListener('pointerup', handleRotateUp as any);
+      window.addEventListener('touchmove', handleRotateMove as any);
+      window.addEventListener('touchend', handleRotateUp as any);
+      window.addEventListener('mousemove', handleRotateMove as any);
+      window.addEventListener('mouseup', handleRotateUp as any);
     }
   };
 
@@ -493,6 +504,7 @@ export function InfiniteDesk() {
   return (
     <div
       ref={containerRef}
+      onPointerDownCapture={handleMouseDownCapture}
       onMouseDownCapture={handleMouseDownCapture}
       onDoubleClickCapture={handleDoubleClickCapture}
       onPointerDown={handlePointerDown}

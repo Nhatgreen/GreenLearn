@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `20ce52a`  
+> **Commit Hash:** `7513056`  
 > **Cập nhật lần cuối:** `2026-11-22`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -15,7 +15,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `DeskDrawingCanvas` | `component` | [src/components/canvas/DeskDrawingCanvas.tsx:L6-L112](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/DeskDrawingCanvas.tsx) | Canvas vẽ nét bút dạ quang và bút vẽ tự do với chế độ multiply blend |
 | `DeskDrawingInteractionLayer` | `component` | [src/components/canvas/DeskDrawingInteractionLayer.tsx:L6-L683](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/DeskDrawingInteractionLayer.tsx) | Lớp đón bắt sự kiện kéo vẽ mượt mà, phân định vẽ nét vs di chuyển bàn |
 | `DeskGrid` | `component` | [src/components/canvas/DeskGrid.tsx:L5-L50](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/DeskGrid.tsx) | Lưới caro toạ độ bàn học trắng tinh khiết chống mỏi mắt |
-| `InfiniteDesk` | `component` | [src/components/canvas/InfiniteDesk.tsx:L22-L625](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/InfiniteDesk.tsx) | Mặt bàn vô cực 2.5D: quản lý pan, zoom, phím tắt Alt+Drag, bắt sự kiện click |
+| `InfiniteDesk` | `component` | [src/components/canvas/InfiniteDesk.tsx:L22-L637](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/InfiniteDesk.tsx) | Mặt bàn vô cực 2.5D: quản lý pan, zoom, phím tắt Alt+Drag, bắt sự kiện click |
 | `ItemDrawingOverlay` | `component` | [src/components/canvas/ItemDrawingOverlay.tsx:L6-L90](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/ItemDrawingOverlay.tsx) | Thành phần nghiệp vụ của phân hệ Canvas & 2.5D Desk |
 | `MindMapConnectors` | `component` | [src/components/canvas/MindMapConnectors.tsx:L6-L103](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/MindMapConnectors.tsx) | Thành phần nghiệp vụ của phân hệ Canvas & 2.5D Desk |
 | `Minimap` | `component` | [src/components/canvas/Minimap.tsx:L12-L234](file:////home/nhat/Documents/DUT/GreenLearn/src/components/canvas/Minimap.tsx) | Bản đồ radar thu nhỏ góc nhìn toàn cảnh không gian bàn học 2.5D |
@@ -28,19 +28,19 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | Ký hiệu (Symbol) | Loại (Kind) | Vị trí (File:Lines) | Vai trò chức năng |
 |---|---|---|---|
 | `BOOK_COVER_PRESETS` | `component` | [src/components/objects/BookSpread.tsx:L39-L80](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/BookSpread.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `BookSpread` | `component` | [src/components/objects/BookSpread.tsx:L1200-L1200](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/BookSpread.tsx) | Mô phỏng cuốn sách mở 2.5D, phân trang động DOM, bìa cứng, gờ gáy và popover Inteline |
-| `BookSpreadComponent` | `component` | [src/components/objects/BookSpread.tsx:L82-L1198](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/BookSpread.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `CodeBlockItem` | `component` | [src/components/objects/CodeBlockItem.tsx:L15-L197](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/CodeBlockItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `ExamQuizCard` | `component` | [src/components/objects/ExamQuizCard.tsx:L750-L750](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/ExamQuizCard.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `ExamQuizCardComponent` | `component` | [src/components/objects/ExamQuizCard.tsx:L46-L748](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/ExamQuizCard.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `MindMapNodeItem` | `component` | [src/components/objects/MindMapNodeItem.tsx:L24-L320](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/MindMapNodeItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `PaperSheet` | `component` | [src/components/objects/PaperSheet.tsx:L893-L893](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PaperSheet.tsx) | Mô phỏng tờ giấy A4/ghi chép đơn lẻ 2.5D với độ xoay tự do và texture giấy |
-| `PaperSheetComponent` | `component` | [src/components/objects/PaperSheet.tsx:L43-L891](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PaperSheet.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `BookSpread` | `component` | [src/components/objects/BookSpread.tsx:L1202-L1202](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/BookSpread.tsx) | Mô phỏng cuốn sách mở 2.5D, phân trang động DOM, bìa cứng, gờ gáy và popover Inteline |
+| `BookSpreadComponent` | `component` | [src/components/objects/BookSpread.tsx:L82-L1200](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/BookSpread.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `CodeBlockItem` | `component` | [src/components/objects/CodeBlockItem.tsx:L15-L199](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/CodeBlockItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `ExamQuizCard` | `component` | [src/components/objects/ExamQuizCard.tsx:L752-L752](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/ExamQuizCard.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `ExamQuizCardComponent` | `component` | [src/components/objects/ExamQuizCard.tsx:L46-L750](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/ExamQuizCard.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `MindMapNodeItem` | `component` | [src/components/objects/MindMapNodeItem.tsx:L24-L322](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/MindMapNodeItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `PaperSheet` | `component` | [src/components/objects/PaperSheet.tsx:L895-L895](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PaperSheet.tsx) | Mô phỏng tờ giấy A4/ghi chép đơn lẻ 2.5D với độ xoay tự do và texture giấy |
+| `PaperSheetComponent` | `component` | [src/components/objects/PaperSheet.tsx:L43-L893](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PaperSheet.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `PresentationItem` | `component` | [src/components/objects/PresentationItem.tsx:L25-L356](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/PresentationItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 | `SpreadsheetItem` | `component` | [src/components/objects/SpreadsheetItem.tsx:L15-L279](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/SpreadsheetItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `StickerItem` | `component` | [src/components/objects/StickerItem.tsx:L15-L192](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickerItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
-| `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1159-L1159](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
-| `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L39-L1157](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `StickerItem` | `component` | [src/components/objects/StickerItem.tsx:L15-L194](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickerItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
+| `StickyNoteItem` | `component` | [src/components/objects/StickyNoteItem.tsx:L1161-L1161](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Giấy ghi chú dán bàn học (Patrick Hand font, NFC normalized, xoay 360°) |
+| `StickyNoteItemComponent` | `component` | [src/components/objects/StickyNoteItem.tsx:L39-L1159](file:////home/nhat/Documents/DUT/GreenLearn/src/components/objects/StickyNoteItem.tsx) | Thành phần nghiệp vụ của phân hệ Objects (Sách, Giấy, Note) |
 
 ### HUD & Overlays
 
@@ -333,7 +333,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `TourStepConfig` | `type` | [src/components/onboarding/TourStep.tsx:L4-L9](file:////home/nhat/Documents/DUT/GreenLearn/src/components/onboarding/TourStep.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `UploadedParseResult` | `type` | [src/services/OfficeParserService.ts:L19-L22](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `UrlImportResult` | `type` | [src/services/UrlDocumentService.ts:L3-L7](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `useDeskItemInteraction` | `hook` | [src/hooks/useDeskItemInteraction.ts:L16-L180](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useDeskItemInteraction.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `useDeskItemInteraction` | `hook` | [src/hooks/useDeskItemInteraction.ts:L16-L275](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useDeskItemInteraction.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `useDiscordActivity` | `hook` | [src/hooks/useDiscordActivity.ts:L22-L114](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useDiscordActivity.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `UseDiscordActivityResult` | `type` | [src/hooks/useDiscordActivity.ts:L8-L20](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/useDiscordActivity.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `usePetMascot` | `hook` | [src/hooks/usePetMascot.ts:L75-L214](file:////home/nhat/Documents/DUT/GreenLearn/src/hooks/usePetMascot.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |

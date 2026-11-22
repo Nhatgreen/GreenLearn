@@ -4,6 +4,30 @@
 
 ---
 
+## 2026-11-22 17:39 — main (Nâng Cấp Nút Xoay Vật Thể Chuẩn Pointer Events Hoạt Động Hoàn Hảo Trên Điện Thoại)
+- **Task:** Sửa triệt để lỗi không thể xoay vật thể trên điện thoại di động theo yêu cầu của Sếp:
+  1. **Chuyển đổi sang Pointer Events API toàn diện (`useDeskItemInteraction.ts`):**
+     - Thay thế sự kiện chuột thuần (`onMouseDown` + `mousemove`) bằng `onPointerDown` + `setPointerCapture(pointerId)`.
+     - Lắng nghe đồng bộ các sự kiện `pointermove`, `pointerup`, `touchmove`, `touchend` và `mousemove`, đảm bảo 100% khi ngón tay kéo xoay trên màn hình cảm ứng điện thoại thì vật thể xoay mượt mà theo thời gian thực.
+  2. **Chặn trình duyệt cướp thao tác cuộn (`touch-none touch-target`):**
+     - Bổ sung `touch-none` và `touch-target` vào nút xoay của toàn bộ các vật thể (`BookSpread`, `PaperSheet`, `StickyNoteItem`, `ExamQuizCard`, `StickerItem`, `CodeBlockItem`, `MindMapNodeItem`), ngăn chặn hoàn toàn việc điện thoại tự ý cuộn hoặc trôi bàn học.
+  3. **Hỗ trợ thao tác Chạm 2 lần (Mobile Double Tap Reset 0°):**
+     - Tích hợp bộ đệm thời gian `lastTapTimeRef < 320ms`, cho phép người dùng chạm 2 lần nhanh bằng ngón tay trên điện thoại để tự động căn thẳng tài liệu về ngay ngắn 0°.
+  4. **Nâng cấp chế độ xoay bàn học toàn cục (`InfiniteDesk.tsx`):**
+     - Bổ sung `onPointerDownCapture` và touch drag cho chế độ xoay bàn học `isViewRotateMode` trên mobile.
+- **Verification:**
+  - `pnpm test`: 35/35 test suites passed (162/162 tests passed).
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Static export GitHub Pages passed.
+  - `pnpm run docs:index` & `pnpm run docs:check`: Index và docs nhất quán 100%.
+- **Changed:**
+  - `src/hooks/useDeskItemInteraction.ts` & `src/hooks/useDeskItemInteraction.test.ts`: Nâng cấp Pointer & Touch event handling, double tap detection.
+  - `src/components/objects/BookSpread.tsx`, `PaperSheet.tsx`, `StickyNoteItem.tsx`, `ExamQuizCard.tsx`, `StickerItem.tsx`, `CodeBlockItem.tsx`, `MindMapNodeItem.tsx`: Gắn `onPointerDown`, `touch-none`, `touch-target`.
+  - `src/components/canvas/InfiniteDesk.tsx`: Hỗ trợ Pointer & Touch cho view rotate mode.
+  - `AGENTS.md` & `docs/ai/11_CHANGELOG.md`: Cập nhật quy chuẩn và nhật ký phát triển.
+
+---
+
 ## 2026-11-22 17:28 — main (Bổ Sung Nút Bật / Tắt Loa Phòng Học Khi Ồn Chuẩn Discord Deafen)
 - **Task:** Thêm nút Bật / Tắt Loa (Speaker Deafen) trên thanh phòng học nhóm để người học có thể ngắt toàn bộ âm thanh phòng khi thấy ồn ào theo yêu cầu của Sếp:
   - Tích hợp state `isDeafened` và hàm `toggleDeafen` trong `useWebRtcVoiceChat.ts`: khi kích hoạt, toàn bộ phần tử audio của các bạn học khác trong phòng lập tức bị tắt tiếng (`muted = true`).

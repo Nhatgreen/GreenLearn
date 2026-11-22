@@ -227,10 +227,12 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
 
           {/* Rotate Tool */}
           <button
+            type="button"
             onPointerDown={handleRotateMouseDown}
+            onMouseDown={handleRotateMouseDown}
             onDoubleClick={handleRotateDoubleClick}
-            title="Xoay node (nhấp đúp căn 0°)"
-            className="p-1 rounded-md text-slate-500 hover:text-amber-700 hover:bg-slate-100 transition-colors cursor-grab"
+            title="Xoay node (nhấp đúp hoặc chạm 2 lần căn 0°)"
+            className="p-1 rounded-md text-slate-500 hover:text-amber-700 hover:bg-slate-100 transition-colors cursor-grab touch-none touch-target"
           >
             <RotateTwoWay className="w-3.5 h-3.5" />
           </button>

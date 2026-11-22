@@ -724,10 +724,12 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
 
         {/* Nút Xoay 360 */}
         <button
-          title="Kéo để xoay thẻ trắc nghiệm 360°, nhấn đúp căn thẳng 0°"
+          type="button"
+          title="Kéo để xoay thẻ trắc nghiệm 360°, nhấn đúp hoặc chạm 2 lần căn thẳng 0°"
+          onPointerDown={handleRotateMouseDown}
           onMouseDown={handleRotateMouseDown}
           onDoubleClick={handleRotateDoubleClick}
-          className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-700 hover:text-slate-900 transition-colors cursor-grab active:cursor-grabbing"
+          className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-700 hover:text-slate-900 transition-colors cursor-grab active:cursor-grabbing touch-none touch-target"
         >
           <RotateTwoWay className="w-4 h-4" />
         </button>

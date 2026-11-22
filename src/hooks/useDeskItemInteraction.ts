@@ -47,9 +47,12 @@ export function useDeskItemInteraction({
     latestY: itemY,
   });
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    // Left click only
-    if (e.button !== 0) return;
+  const lastTapTimeRef = useRef<number>(0);
+
+  // Unified drag-and-move handle (Pointer & Mouse & Touch)
+  const handlePointerDown = useCallback((e: React.PointerEvent | React.MouseEvent) => {
+    // Left click only for mouse
+    if ('button' in e && e.button !== 0) return;
     
     // Ignore interactive element clicks
     const target = e.target as HTMLElement;
@@ -68,6 +71,14 @@ export function useDeskItemInteraction({
     selectItem(itemId);
     setIsDragging(true);
 
+    const pointerId = 'pointerId' in e ? (e as React.PointerEvent).pointerId : null;
+    const targetEl = e.currentTarget as HTMLElement;
+    if (pointerId !== null && targetEl && targetEl.setPointerCapture) {
+      try {
+        targetEl.setPointerCapture(pointerId);
+      } catch (err) {}
+    }
+
     dragRef.current = {
       startX: e.clientX,
       startY: e.clientY,
@@ -79,9 +90,9 @@ export function useDeskItemInteraction({
 
     let rafId: number | null = null;
 
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const deltaScreenX = moveEvent.clientX - dragRef.current.startX;
-      const deltaScreenY = moveEvent.clientY - dragRef.current.startY;
+    const updateMove = (clientX: number, clientY: number) => {
+      const deltaScreenX = clientX - dragRef.current.startX;
+      const deltaScreenY = clientY - dragRef.current.startY;
 
       const deskRad = (-(transform.rotation || 0) * Math.PI) / 180;
       const unrotDx = deltaScreenX * Math.cos(deskRad) - deltaScreenY * Math.sin(deskRad);
@@ -104,14 +115,34 @@ export function useDeskItemInteraction({
       }
     };
 
-    const handleMouseUp = () => {
+    const handlePointerMove = (moveEvent: PointerEvent | MouseEvent) => {
+      updateMove(moveEvent.clientX, moveEvent.clientY);
+    };
+
+    const handleTouchMove = (touchEvent: TouchEvent) => {
+      if (touchEvent.touches.length > 0) {
+        updateMove(touchEvent.touches[0].clientX, touchEvent.touches[0].clientY);
+      }
+    };
+
+    const handlePointerUp = () => {
       if (rafId) {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
+      if (pointerId !== null && targetEl && targetEl.releasePointerCapture) {
+        try {
+          targetEl.releasePointerCapture(pointerId);
+        } catch (err) {}
+      }
       setIsDragging(false);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handlePointerUp);
+      window.removeEventListener('mousemove', handlePointerMove);
+      window.removeEventListener('mouseup', handlePointerUp);
 
       updateItemPosition(itemId, dragRef.current.latestX, dragRef.current.latestY);
       if (onDropCheck) {
@@ -119,17 +150,39 @@ export function useDeskItemInteraction({
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handlePointerUp);
+    window.addEventListener('mousemove', handlePointerMove);
+    window.addEventListener('mouseup', handlePointerUp);
   }, [itemId, itemX, itemY, transform.scale, transform.rotation, bringToFront, selectItem, updateItemPosition, onDropCheck]);
 
-  // Continuous 360 rotation handle
-  const handleRotateMouseDown = useCallback((e: React.MouseEvent) => {
+  // Continuous 360 rotation handle (Mobile Touch & Pointer & Mouse Unified)
+  const handleRotatePointerDown = useCallback((e: React.PointerEvent | React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
 
+    // Mobile double tap detection (within 320ms) -> reset rotation to 0°
+    const now = Date.now();
+    if (now - lastTapTimeRef.current < 320) {
+      setItemRotation(itemId, 0);
+      lastTapTimeRef.current = 0;
+      return;
+    }
+    lastTapTimeRef.current = now;
+
     bringToFront(itemId);
     selectItem(itemId);
+
+    const pointerId = 'pointerId' in e ? (e as React.PointerEvent).pointerId : null;
+    const targetEl = e.currentTarget as HTMLElement;
+    if (pointerId !== null && targetEl && targetEl.setPointerCapture) {
+      try {
+        targetEl.setPointerCapture(pointerId);
+      } catch (err) {}
+    }
 
     const itemWorldCenterX = itemX + width / 2;
     const itemWorldCenterY = itemY + height / 2;
@@ -141,31 +194,71 @@ export function useDeskItemInteraction({
     const itemCenterX = rotScaledX + transform.x;
     const itemCenterY = rotScaledY + transform.y;
 
-    const startMouseAngle = Math.atan2(e.clientY - itemCenterY, e.clientX - itemCenterX) * (180 / Math.PI);
+    const startPointerAngle = Math.atan2(e.clientY - itemCenterY, e.clientX - itemCenterX) * (180 / Math.PI);
     const startItemRotation = rotation;
 
-    const handleRotateMouseMove = (moveEvent: MouseEvent) => {
-      const currentMouseAngle = Math.atan2(moveEvent.clientY - itemCenterY, moveEvent.clientX - itemCenterX) * (180 / Math.PI);
-      const deltaAngle = currentMouseAngle - startMouseAngle;
+    let rafId: number | null = null;
+
+    const updateRotation = (clientX: number, clientY: number) => {
+      const currentPointerAngle = Math.atan2(clientY - itemCenterY, clientX - itemCenterX) * (180 / Math.PI);
+      const deltaAngle = currentPointerAngle - startPointerAngle;
       let rawRot = Math.round(startItemRotation + deltaAngle);
       // Magnetic snap to 0° within ±2.5° for crisp reading alignment
       const normalizedMod = ((rawRot % 360) + 360) % 360;
       if (normalizedMod <= 2.5 || normalizedMod >= 357.5) {
         rawRot = 0;
       }
-      setItemRotation(itemId, rawRot);
+      if (!rafId) {
+        rafId = requestAnimationFrame(() => {
+          setItemRotation(itemId, rawRot);
+          rafId = null;
+        });
+      }
     };
 
-    const handleRotateMouseUp = () => {
-      window.removeEventListener('mousemove', handleRotateMouseMove);
-      window.removeEventListener('mouseup', handleRotateMouseUp);
+    const handlePointerMove = (moveEvent: PointerEvent | MouseEvent) => {
+      moveEvent.preventDefault();
+      moveEvent.stopPropagation();
+      updateRotation(moveEvent.clientX, moveEvent.clientY);
     };
 
-    window.addEventListener('mousemove', handleRotateMouseMove);
-    window.addEventListener('mouseup', handleRotateMouseUp);
+    const handleTouchMove = (touchEvent: TouchEvent) => {
+      if (touchEvent.touches.length > 0) {
+        touchEvent.preventDefault();
+        touchEvent.stopPropagation();
+        updateRotation(touchEvent.touches[0].clientX, touchEvent.touches[0].clientY);
+      }
+    };
+
+    const handlePointerUp = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      if (pointerId !== null && targetEl && targetEl.releasePointerCapture) {
+        try {
+          targetEl.releasePointerCapture(pointerId);
+        } catch (err) {}
+      }
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handlePointerUp);
+      window.removeEventListener('mousemove', handlePointerMove);
+      window.removeEventListener('mouseup', handlePointerUp);
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: false });
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handlePointerUp);
+    window.addEventListener('mousemove', handlePointerMove);
+    window.addEventListener('mouseup', handlePointerUp);
   }, [itemId, itemX, itemY, width, height, rotation, transform.scale, transform.rotation, transform.x, transform.y, bringToFront, selectItem, setItemRotation]);
 
-  const handleRotateDoubleClick = useCallback((e: React.MouseEvent) => {
+  const handleRotateDoubleClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setItemRotation(itemId, 0);
@@ -173,8 +266,10 @@ export function useDeskItemInteraction({
 
   return {
     isDragging,
-    handleMouseDown,
-    handleRotateMouseDown,
+    handleMouseDown: handlePointerDown, // Backward compatibility
+    handlePointerDown,
+    handleRotateMouseDown: handleRotatePointerDown, // Backward compatibility
+    handleRotatePointerDown,
     handleRotateDoubleClick,
   };
 }
