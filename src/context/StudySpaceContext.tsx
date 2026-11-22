@@ -114,6 +114,8 @@ interface StudySpaceContextType {
     customWidth?: number,
     customHeight?: number
   ) => string;
+  addVoiceNote: (voiceData: import('@/types/studyspace').VoiceNoteData, x?: number, y?: number) => string;
+  updateVoiceNoteTranscript: (id: string, transcript: string) => void;
   updateCodeBlock: (id: string, snippet: string, language?: string) => void;
   updateMindMapNode: (id: string, text: string, color?: string, shape?: 'pill' | 'rectangle' | 'cloud') => void;
   strokes: import('@/types/studyspace').DrawingStroke[];
@@ -2240,6 +2242,80 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     return stickerId;
   };
 
+  const addVoiceNote = (voiceData: import('@/types/studyspace').VoiceNoteData, x?: number, y?: number): string => {
+    if (!isApplyingRemoteAction.current && isViewerSession()) return '';
+    const voiceId = `voice-${Date.now()}`;
+    const w = 340;
+    const h = 76;
+
+    let targetX = x;
+    let targetY = y;
+    if (targetX === undefined || targetY === undefined) {
+      const viewW = typeof window !== 'undefined' ? window.innerWidth : 1280;
+      const viewH = typeof window !== 'undefined' ? window.innerHeight : 800;
+      const curScale = transform.scale || 1;
+      const centerX = (-transform.x + (viewW / 2)) / curScale - (w / 2);
+      const centerY = (-transform.y + (viewH / 2)) / curScale - (h / 2);
+      const jitterX = Math.round(Math.random() * 40 - 20);
+      const jitterY = Math.round(Math.random() * 40 - 20);
+      targetX = Math.round(centerX + jitterX);
+      targetY = Math.round(centerY + jitterY);
+    }
+
+    const newVoiceNote: DeskItem = {
+      id: voiceId,
+      type: 'voice_note',
+      title: 'Note ghi âm',
+      x: targetX,
+      y: targetY,
+      rotation: 0,
+      scale: 1,
+      zIndex: maxZIndex + 1,
+      pageCount: 1,
+      currentPageIndex: 0,
+      pages: [],
+      voiceNoteData: voiceData,
+      width: w,
+      height: h,
+    };
+
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return { ...s, items: [...s.items, newVoiceNote] };
+      })
+    );
+    setSelectedItemId(voiceId);
+    if (!isApplyingRemoteAction.current) {
+      broadcastDeskActionRef.current({ type: 'ADD_ITEM', payload: { item: newVoiceNote } });
+    }
+    return voiceId;
+  };
+
+  const updateVoiceNoteTranscript = (id: string, transcript: string) => {
+    const normalized = normalizeNFC(transcript);
+    setSpaces(sList =>
+      sList.map(s => {
+        if (s.id !== activeSpaceId) return s;
+        return {
+          ...s,
+          items: s.items.map(item =>
+            item.id === id && item.voiceNoteData
+              ? {
+                  ...item,
+                  voiceNoteData: {
+                    ...item.voiceNoteData,
+                    transcript: normalized,
+                    isTranscribed: true
+                  }
+                }
+              : item
+          )
+        };
+      })
+    );
+  };
+
   const updateCodeBlock = (id: string, snippet: string, language?: string) => {
     setSpaces(sList =>
       sList.map(s => {
@@ -2835,6 +2911,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         addCodeBlock,
         addMindMapNode,
         addSticker,
+        addVoiceNote,
+        updateVoiceNoteTranscript,
         updateCodeBlock,
         updateMindMapNode,
         addUploadedDocument,

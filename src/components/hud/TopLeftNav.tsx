@@ -21,7 +21,8 @@ import {
   User as UserIcon,
   BarChart2,
   Share2,
-  Info
+  Info,
+  Mic
 } from 'lucide-react';
 import { getAssetPath } from '@/lib/assets';
 import { PomodoroChip } from './PomodoroChip';
@@ -114,6 +115,7 @@ export function TopLeftNav() {
     if (item.isExamSheet) return <GraduationCap className="w-3.5 h-3.5 text-[#16A34A] flex-shrink-0" />;
     if (item.type === 'book') return <BookOpen className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />;
     if (item.type === 'sticky_note') return <StickyNote className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />;
+    if (item.type === 'voice_note') return <Mic className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />;
     return <FileText className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />;
   };
 

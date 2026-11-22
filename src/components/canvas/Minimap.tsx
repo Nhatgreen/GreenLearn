@@ -176,8 +176,8 @@ export const Minimap = React.memo(function Minimap({ isVisible = true, onClose }
 
       {/* Desk Items on Minimap */}
       {activeSpace.items.map(item => {
-        const itemRawW = item.width || (item.type === 'book' ? 980 : item.type === 'paper' ? 380 : item.type === 'code_block' ? 480 : item.type === 'mind_map' ? 240 : 200);
-        const itemRawH = item.height || (item.type === 'book' ? 640 : item.type === 'paper' ? 490 : item.type === 'code_block' ? 200 : item.type === 'mind_map' ? 64 : 180);
+        const itemRawW = item.width || (item.type === 'book' ? 980 : item.type === 'paper' ? 380 : item.type === 'code_block' ? 480 : item.type === 'mind_map' ? 240 : item.type === 'voice_note' ? 340 : 200);
+        const itemRawH = item.height || (item.type === 'book' ? 640 : item.type === 'paper' ? 490 : item.type === 'code_block' ? 200 : item.type === 'mind_map' ? 64 : item.type === 'voice_note' ? 76 : 180);
         const itemW = itemRawW * scale;
         const itemH = itemRawH * scale;
         const itemX = toMiniX(item.x);
@@ -189,6 +189,7 @@ export const Minimap = React.memo(function Minimap({ isVisible = true, onClose }
           if (item.type === 'code_block') return 'bg-[#060b1c] border border-cyan-500/80';
           if (item.type === 'mind_map') return 'bg-purple-500 border border-purple-400 rounded-full';
           if (item.type === 'sticker') return 'bg-amber-400 border border-amber-300';
+          if (item.type === 'voice_note') return 'bg-[#0068FF] border border-blue-400 rounded-full';
           return 'bg-amber-400 border border-amber-500';
         };
 

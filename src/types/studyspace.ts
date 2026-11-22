@@ -8,7 +8,8 @@ export type ItemType =
   | 'mind_map'
   | 'sticker'
   | 'spreadsheet'
-  | 'presentation';
+  | 'presentation'
+  | 'voice_note';
 
 export interface SpreadsheetSheet {
   name: string;
@@ -34,6 +35,19 @@ export interface PresentationData {
   slides: PresentationSlide[];
   currentSlideIndex?: number;
   sourceUrl?: string;
+}
+
+export interface VoiceNoteData {
+  audioUrl?: string;
+  audioBlob?: string; // Base64 data URL for persistence and peer syncing
+  duration: number; // in seconds
+  waveform: number[]; // normalized amplitudes (0 to 100)
+  transcript?: string;
+  isTranscribed?: boolean;
+  authorName?: string;
+  authorAvatar?: string;
+  authorColor?: string;
+  createdAt?: string;
 }
 
 export interface PageContent {
@@ -108,6 +122,7 @@ export interface DeskItem {
   };
   spreadsheetData?: SpreadsheetData;
   presentationData?: PresentationData;
+  voiceNoteData?: VoiceNoteData;
 }
 
 export interface IntelineThread {

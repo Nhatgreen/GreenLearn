@@ -27,10 +27,12 @@ import {
   BookOpen,
   Hand,
   Table2,
-  Presentation
+  Presentation,
+  Mic
 } from 'lucide-react';
 import { StickerEmojiPickerFlyout, StickerPickerItem } from '@/components/hud/StickerEmojiPickerFlyout';
 import { BookCoverModal, BookInitialPage } from '@/components/modals/BookCoverModal';
+import { VoiceNoteRecordModal } from '@/components/modals/VoiceNoteRecordModal';
 
 export function LeftCreationBar() {
   const {
@@ -63,6 +65,7 @@ export function LeftCreationBar() {
   const [isMoreToolsOpen, setIsMoreToolsOpen] = useState(false);
   const [isStickerPickerOpen, setIsStickerPickerOpen] = useState(false);
   const [isBookCoverModalOpen, setIsBookCoverModalOpen] = useState(false);
+  const [isVoiceNoteModalOpen, setIsVoiceNoteModalOpen] = useState(false);
 
   // Note pastel colors
   const stickyColors = [
@@ -132,6 +135,12 @@ export function LeftCreationBar() {
       title: 'Mind map',
       desc: 'Sơ đồ tư duy liên kết ý tưởng học tập',
       icon: <Network className="w-5 h-5 text-slate-800 stroke-[2.2]" />
+    },
+    {
+      id: 'voice_note',
+      title: 'Note ghi âm',
+      desc: 'Ghi âm giọng nói & bong bóng âm thanh Zalo',
+      icon: <Mic className="w-5 h-5 text-blue-600 stroke-[2.2]" />
     },
     {
       id: 'screen_record',
@@ -222,6 +231,10 @@ export function LeftCreationBar() {
         typeLabel: 'Sơ đồ tư duy (Mind map)'
       });
       setActiveTool('create_note');
+      return;
+    }
+    if (toolId === 'voice_note') {
+      setIsVoiceNoteModalOpen(true);
       return;
     }
     if (toolId === 'stickers' || toolId === 'emojis_and_gifs' || toolId === 'stickers_and_emojis') {
@@ -643,6 +656,12 @@ export function LeftCreationBar() {
         onClose={() => setIsBookCoverModalOpen(false)}
         onPlaceToCenter={handlePlaceBookToCenter}
         onStartStampPlacement={handleStartStampPlacement}
+      />
+
+      {/* Voice Note Recording Modal */}
+      <VoiceNoteRecordModal
+        isOpen={isVoiceNoteModalOpen}
+        onClose={() => setIsVoiceNoteModalOpen(false)}
       />
     </div>
   );

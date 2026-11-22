@@ -21,6 +21,9 @@ export function deskItemToRow(item: DeskItem, spaceId: string): DeskDocumentInse
   if (item.type === 'presentation' && item.presentationData) {
     extraDataJson = item.presentationData as unknown as Json;
   }
+  if (item.type === 'voice_note' && item.voiceNoteData) {
+    extraDataJson = item.voiceNoteData as unknown as Json;
+  }
 
   return {
     id: item.id,
@@ -81,6 +84,7 @@ export function rowToDeskItem(row: DeskDocumentRow, pages: PageContent[] = []): 
     stickerData: row.item_type === 'sticker' && row.exam_data ? (row.exam_data as any) : undefined,
     spreadsheetData: row.item_type === 'spreadsheet' && row.exam_data ? (row.exam_data as any) : undefined,
     presentationData: row.item_type === 'presentation' && row.exam_data ? (row.exam_data as any) : undefined,
+    voiceNoteData: row.item_type === 'voice_note' && row.exam_data ? (row.exam_data as any) : undefined,
   };
 }
 

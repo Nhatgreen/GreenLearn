@@ -187,6 +187,17 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
 * **Thống Nhất Màu Sắc Icon HUD (Black & White Strict Icon Scheme):**
   * Toàn bộ biểu tượng icon trong HUD **chỉ sử dụng màu Đen (`text-slate-900`) trên nền trắng**, hoặc **Trắng (`text-white`) trên nền cam thương hiệu**. Tuyệt đối không phối màu đa dạng lung tung (xanh, đỏ, vàng...).
   * Khi người dùng nhấp chọn hoặc một công cụ/nút đang kích hoạt trên nền trắng: **phần nền chuyển sang xám đậm hơn (`bg-slate-200`)** để biểu thị trạng thái đang chọn.
+* **Quy Chuẩn Note Ghi Âm & Bong Bóng Thoại Âm Thanh Zalo (Voice Note Desk Widget Standard):**
+  * **Luồng khởi tạo & Ghi âm:** Khởi tạo từ nút "Note ghi âm" trong menu Công cụ mở rộng (`LeftCreationBar.tsx`). Hộp thoại ghi âm trực tiếp (`VoiceNoteRecordModal`) hiển thị sóng âm động thời gian thực (Web Audio API `AnalyserNode`), bộ đếm thời gian `MM:SS`, công cụ nhận diện giọng nói tiếng Việt tự động (`SpeechRecognition`), cùng chế độ dự phòng tạo bản ghi âm mẫu.
+  * **Bố cục tổng thể (Horizontal Layout):** Nằm ngang, gồm 2 thành phần chính đặt cạnh nhau: Avatar người tạo bên trái và Thanh phát âm thanh (`Audio Bubble`) bên phải.
+  * **Avatar người tạo:** Hình tròn nhỏ nằm ở góc trên bên trái, tách biệt nhẹ khỏi thanh phát âm thanh để nhận diện người nói trong không gian học nhóm. Hiển thị hiệu ứng viền phát sáng (speaking ripple) khi đang phát âm thanh.
+  * **Thanh phát âm thanh (Audio Bubble):**
+    * Khung hình chữ nhật bo góc lớn (pill / rounded rectangle `rounded-[22px]`), nền trắng (`#FFFFFF`), đổ bóng nhẹ (`shadow-md`) nổi bật trên mặt bàn học.
+    * Nút Play/Pause hình tròn màu xanh dương nổi bật (`#0068FF`) với biểu tượng tam giác trắng ở giữa.
+    * Biểu đồ sóng âm (`Waveform`) dạng các thanh dọc bo tròn; phần đã phát hiển thị màu xanh dương đậm (`#0068FF`), phần chưa phát hiển thị màu xám nhạt (`bg-slate-200`). Cho phép click hoặc kéo chuột trên sóng âm để tua nhanh/chậm vị trí phát.
+    * Bộ đếm thời gian định dạng `MM:SS` (ví dụ: `00:04`) nằm ngay bên dưới sóng âm.
+    * Nút phụ hình vuông bo góc nền xám nhạt bên phải chứa icon Speech-to-Text (`FileText`): Bấm để mở/đóng thẻ phụ đề văn bản bên dưới, hỗ trợ sao chép, chỉnh sửa và nút "Tạo Note" chuyển văn bản giọng nói thành thẻ ghi chú dán (Sticky Note) trực tiếp trên bàn học.
+  * **Tương tác bàn học:** Kéo thả tự do (`useDeskItemInteraction`), thanh công cụ nổi hỗ trợ xoay (chạm 2 lần về 0°), đổi tốc độ phát (1x, 1.25x, 1.5x, 2x), bật/tắt tiếng, tải audio và xóa an toàn 2 bước.
 * **Quy Chuẩn Đồng Bộ Chợ Tài Liệu (Marketplace Standards — Trang Chợ & Modal Chợ):**
   * **Thống nhất tên gọi & thương hiệu duy nhất:** Toàn bộ hệ thống (menu, sidebar, header, modal) gọi thống nhất là **"Chợ Tài Liệu"** (xóa bỏ hoàn toàn tên cũ "Chợ Tri Thức KnowInherit"). Phụ đề chuẩn: *"Kho tri thức mở ViTudy — Khám phá và trao đổi tài liệu học tập cùng cộng đồng."*
   * **Thống nhất 3 loại tài liệu & icon:**

@@ -12,6 +12,7 @@ import { MindMapNodeItem } from '../objects/MindMapNodeItem';
 import { StickerItem } from '../objects/StickerItem';
 import { SpreadsheetItem } from '../objects/SpreadsheetItem';
 import { PresentationItem } from '../objects/PresentationItem';
+import { VoiceNoteItem } from '../objects/VoiceNoteItem';
 import { MindMapConnectors } from './MindMapConnectors';
 import { VisualLinkThreads } from './VisualLinkThreads';
 import { DeskDrawingCanvas } from './DeskDrawingCanvas';
@@ -557,8 +558,8 @@ export function InfiniteDesk() {
               {
                 x: item.x,
                 y: item.y,
-                width: item.width || (item.type === 'book' ? 980 : item.type === 'spreadsheet' ? 580 : item.type === 'presentation' ? 620 : item.type === 'paper' ? 480 : 260),
-                height: item.height || (item.type === 'book' ? 640 : (item.type === 'spreadsheet' || item.type === 'presentation') ? 400 : item.type === 'paper' ? 640 : 260),
+                width: item.width || (item.type === 'book' ? 980 : item.type === 'spreadsheet' ? 580 : item.type === 'presentation' ? 620 : item.type === 'paper' ? 480 : item.type === 'voice_note' ? 340 : 260),
+                height: item.height || (item.type === 'book' ? 640 : (item.type === 'spreadsheet' || item.type === 'presentation') ? 400 : item.type === 'paper' ? 640 : item.type === 'voice_note' ? 76 : 260),
                 rotation: item.rotation,
               },
               {
@@ -596,6 +597,9 @@ export function InfiniteDesk() {
           }
           if (item.type === 'presentation') {
             return <PresentationItem key={item.id} item={item} isSelected={isSelected} />;
+          }
+          if (item.type === 'voice_note') {
+            return <VoiceNoteItem key={item.id} item={item} isSelected={isSelected} />;
           }
           return null;
         })}

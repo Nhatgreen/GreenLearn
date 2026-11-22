@@ -4,6 +4,45 @@
 
 ---
 
+## 2026-11-22 19:10 — main (Tích Hợp Tính Năng Note Ghi Âm & Bong Bóng Thoại Zalo Trên Bàn Học)
+- **Task:** Thêm tính năng "Note ghi âm" (Voice Note) trong menu Công cụ mở rộng của Bàn học (Study Desk / Whiteboard):
+  1. **Menu Công cụ mở rộng (`LeftCreationBar.tsx`):**
+     - Bổ sung công cụ "Note ghi âm" (icon `Mic`) vào danh sách `extraTools`.
+     - Nhấp chọn mở ngay hộp thoại ghi âm chuyên dụng `VoiceNoteRecordModal`.
+  2. **Hộp thoại ghi âm giọng nói (`VoiceNoteRecordModal.tsx`):**
+     - Ghi âm thời gian thực với `MediaRecorder` và visualizer sóng âm động dựa trên Web Audio API `AnalyserNode`.
+     - Tự động nhận diện giọng nói tiếng Việt chuyển thành phụ đề văn bản (`SpeechRecognition`).
+     - Hỗ trợ chế độ nghe thử trước khi lưu và chế độ tạo bản ghi âm mẫu dự phòng khi thiết bị chưa có quyền micro.
+  3. **Thẻ ghi chú âm thanh trên bàn học (`VoiceNoteItem.tsx`):**
+     - Thiết kế theo chuẩn bong bóng thoại ghi âm Zalo:
+       - **Avatar người tạo bên trái:** Hình tròn nhỏ tách biệt nhẹ, hiển thị avatar/initials, đèn báo viền phát sáng (speaking ripple) khi phát âm thanh.
+       - **Thanh phát âm thanh (Audio Bubble) bên phải:** Khung pill nền trắng bo cong lớn (`rounded-[22px]`), đổ bóng nhẹ `shadow-md`.
+       - **Bên trái trong bubble:** Nút Play/Pause tròn màu xanh dương nổi bật (`#0068FF`) với icon tam giác trắng.
+       - **Ở giữa trong bubble:** Biểu đồ sóng âm (`Waveform`) dạng thanh dọc bo tròn (phần đã phát màu `#0068FF`, chưa phát màu `bg-slate-200`, hỗ trợ click/tua nhanh) kèm bộ đếm thời gian `MM:SS` ngay bên dưới.
+       - **Bên phải trong bubble:** Nút vuông bo góc xám nhạt với icon Speech-to-Text (`FileText`) bật/tắt thẻ phụ đề văn bản, cho phép sao chép, chỉnh sửa và tạo thẻ Sticky Note trực tiếp trên bàn học.
+     - Kéo thả tự do (`useDeskItemInteraction`), thanh công cụ nổi chỉnh tốc độ phát (1x, 1.25x, 1.5x, 2x), bật/tắt tiếng, tải file âm thanh và nút xóa an toàn 2 bước.
+  4. **Tầng Dữ Liệu & Đồng Bộ (`studyspace.ts`, `database.types.ts`, `StudySpaceService.ts`, `StudySpaceContext.tsx`):**
+     - Bổ sung kiểu `ItemType = ... | 'voice_note'` và giao diện `VoiceNoteData`.
+     - Thêm `addVoiceNote` và `updateVoiceNoteTranscript` vào `StudySpaceContext` đồng bộ qua Supabase Realtime và lưu trữ bền vững.
+- **Verification:**
+  - `npm test`: 37/37 test suites passed (172/172 tests passed), bao gồm 5 tests mới trong `VoiceNoteItem.test.tsx`.
+  - `npm run build`: Build Next.js 15.1.7 thành công 15/15 static pages.
+  - `npm run docs:index` & `npm run docs:check`: Index và docs nhất quán 100%.
+- **Changed:**
+  - `src/types/studyspace.ts` & `src/types/database.types.ts`
+  - `src/services/StudySpaceService.ts`
+  - `src/context/StudySpaceContext.tsx`
+  - `src/components/canvas/InfiniteDesk.tsx`
+  - `src/components/canvas/Minimap.tsx`
+  - `src/components/hud/LeftCreationBar.tsx`
+  - `src/components/hud/TopLeftNav.tsx`
+  - `src/components/objects/VoiceNoteItem.tsx` (mới)
+  - `src/components/modals/VoiceNoteRecordModal.tsx` (mới)
+  - `src/components/objects/VoiceNoteItem.test.tsx` (mới)
+  - `AGENTS.md` & `docs/ai/`
+
+---
+
 ## 2026-11-22 18:35 — main (Khắc Phục Toàn Diện Sai Lệch Thời Gian & Tóm Tắt Khi Tạo/Mở Bàn Học)
 - **Task:** Sửa triệt để lỗi hiển thị sai thời gian và tóm tắt bàn học trên trang chủ (`HomePage`) theo Phương án 1 (Kiến trúc chuẩn):
   1. **Tầng Dữ Liệu & Context (`StudySpaceContext.tsx` & `mockSpaces.ts`):**
