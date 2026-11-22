@@ -137,7 +137,7 @@ export function StickyNoteItemComponent({ item, isSelected }: StickyNoteItemProp
   }, []);
 
   // Hook for unified drag-and-move and continuous 360 rotation
-  const { isDragging, handleMouseDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
+  const { isDragging, handleMouseDown, handlePointerDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
     itemId: item.id,
     itemX: item.x,
     itemY: item.y,
@@ -737,9 +737,10 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
     >
       {/* Tape Strip at Top (Enlarged +30% width: 84px, +20% height: 24px - Drag Handle) */}
       <div 
+        onPointerDown={handlePointerDown}
         onMouseDown={handleMouseDown}
         title="Cầm băng keo để kéo ghi chú"
-        className="absolute -top-3 left-1/2 -translate-x-1/2 w-[84px] h-6 bg-amber-100/75 hover:bg-amber-100 border border-amber-200/60 shadow-xs backdrop-blur-[1px] z-20 cursor-grab active:cursor-grabbing transition-colors"
+        className="absolute -top-3 left-1/2 -translate-x-1/2 w-[84px] h-6 bg-amber-100/75 hover:bg-amber-100 border border-amber-200/60 shadow-xs backdrop-blur-[1px] z-20 cursor-grab active:cursor-grabbing transition-colors touch-none touch-target"
         style={{ transform: 'translateX(-50%) rotate(-2deg)' }}
       />
 
@@ -803,9 +804,10 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
 
         {/* Footer (Drag handle: Editable Note name, Expand Toggle & Character count) */}
         <div 
+          onPointerDown={handlePointerDown}
           onMouseDown={handleMouseDown}
           title="Cầm chân ghi chú để di chuyển"
-          className="flex-shrink-0 flex items-center justify-between text-[11px] text-stone-700 font-mono pt-1.5 border-t border-black/10 select-none cursor-grab active:cursor-grabbing relative z-10"
+          className="flex-shrink-0 flex items-center justify-between text-[11px] text-stone-700 font-mono pt-1.5 border-t border-black/10 select-none cursor-grab active:cursor-grabbing relative z-10 touch-none"
         >
           {isEditingTitle ? (
             <input

@@ -4,6 +4,49 @@
 
 ---
 
+## 2026-11-22 19:48 — main (Chuẩn Hóa Pointer Events API & Khắc Phục Lỗi Di Chuyển Vật Thể Trên Mobile)
+- **Task:** Tìm hiểu và khắc phục triệt để lỗi không thể di chuyển các đối tượng trên thiết bị di động (mobile/tablet) theo Phương án 1 (Chuẩn hóa Pointer Events API toàn diện):
+  1. **Nguyên nhân gốc rễ:**
+     - Các component vật thể chỉ gắn sự kiện chuột `onMouseDown={handleMouseDown}` cho các tay cầm kéo (drag handles).
+     - Trên mobile màn hình cảm ứng, khi ngón tay vuốt kéo (touch drag), trình duyệt di động tự động hủy bỏ (suppress) các sự kiện chuột giả lập (`mousedown`, `mousemove`) để ưu tiên cử chỉ cuộn trang $\rightarrow$ `mousedown` không bao giờ kích hoạt khi vuốt kéo trên điện thoại.
+     - Các tay cầm kéo thiếu thuộc tính CSS `touch-action: none` (`touch-none`), khiến trình duyệt bắn sự kiện `pointercancel` làm đứt quãng lượt kéo.
+     - `SpreadsheetItem` và `PresentationItem` tự xử lý chuột bằng `MouseEvent` thuần, chưa hỗ trợ Pointer/Touch.
+  2. **Giải pháp triển khai:**
+     - Nâng cấp `useDeskItemInteraction.ts`: Lắng nghe sự kiện `pointermove` / `touchmove` với `{ passive: false }` và gọi `preventDefault()`, xử lý Pointer Capture và cập nhật tọa độ bù trừ góc xoay/zoom chuẩn xác.
+     - Đồng bộ chuyển sang `onPointerDown={handlePointerDown}` và bổ sung class `touch-none` (hoặc `touch-none touch-target`) cho toàn bộ tay cầm kéo thả trong 10 component vật thể:
+       - `StickyNoteItem.tsx` (dải băng keo top và thanh footer).
+       - `BookSpread.tsx` (bìa da sách, 2 thanh header chương sách, 2 thanh footer số trang, nhãn tiêu đề bottom).
+       - `PaperSheet.tsx` (header đề thi luyện tập, header tài liệu, footer số trang).
+       - `ExamQuizCard.tsx` (header làm bài, header xem câu hỏi, header tổng kết điểm).
+       - `StickerItem.tsx` (khung kéo sticker).
+       - `VoiceNoteItem.tsx` (bong bóng thoại audio).
+       - `CodeBlockItem.tsx` (nhãn tiêu đề code block).
+       - `MindMapNodeItem.tsx` (khung kéo node sơ đồ tư duy).
+       - `SpreadsheetItem.tsx` (thanh header bảng tính).
+       - `PresentationItem.tsx` (thanh header slide thuyết trình).
+     - Nâng cấp `SpreadsheetItem` & `PresentationItem` sang Pointer Events với `setPointerCapture` và `touch-none`.
+  3. **Kiểm thử & Xác thực:**
+     - Bổ sung 2 bài test mới trong `useDeskItemInteraction.test.ts` kiểm thử di chuyển bằng Pointer Events và Touch Events.
+     - `pnpm test`: 37/37 test suites passed (174/174 tests passed).
+     - `pnpm build`: Build Next.js 15.1.7 thành công 15/15 static pages.
+     - `pnpm run docs:index` & `pnpm run docs:check`: Passed 100%.
+- **Changed:**
+  - `src/hooks/useDeskItemInteraction.ts`
+  - `src/hooks/useDeskItemInteraction.test.ts`
+  - `src/components/objects/StickyNoteItem.tsx`
+  - `src/components/objects/BookSpread.tsx`
+  - `src/components/objects/PaperSheet.tsx`
+  - `src/components/objects/ExamQuizCard.tsx`
+  - `src/components/objects/StickerItem.tsx`
+  - `src/components/objects/VoiceNoteItem.tsx`
+  - `src/components/objects/CodeBlockItem.tsx`
+  - `src/components/objects/MindMapNodeItem.tsx`
+  - `src/components/objects/SpreadsheetItem.tsx`
+  - `src/components/objects/PresentationItem.tsx`
+  - `AGENTS.md`, `docs/ai/11_CHANGELOG.md`, `docs/ai/00_INDEX.md`
+
+---
+
 ## 2026-11-22 19:10 — main (Tích Hợp Tính Năng Note Ghi Âm & Bong Bóng Thoại Zalo Trên Bàn Học)
 - **Task:** Thêm tính năng "Note ghi âm" (Voice Note) trong menu Công cụ mở rộng của Bàn học (Study Desk / Whiteboard):
   1. **Menu Công cụ mở rộng (`LeftCreationBar.tsx`):**

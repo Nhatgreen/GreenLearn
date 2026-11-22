@@ -111,7 +111,7 @@ export function PaperSheetComponent({ item, isSelected }: PaperSheetProps) {
   const paperRef = useRef<HTMLDivElement>(null);
 
   // Hook for unified drag-and-move and continuous 360 rotation
-  const { isDragging, handleMouseDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
+  const { isDragging, handleMouseDown, handlePointerDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
     itemId: item.id,
     itemX: item.x,
     itemY: item.y,
@@ -373,8 +373,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Exam Header (Drag handle) */}
             <div 
+              onPointerDown={handlePointerDown}
               onMouseDown={handleMouseDown}
-              className="border-b border-slate-200 pb-2.5 mb-3 cursor-grab active:cursor-grabbing select-none"
+              className="border-b border-slate-200 pb-2.5 mb-3 cursor-grab active:cursor-grabbing select-none touch-none"
             >
               <div className="flex items-center justify-between text-[10px] font-mono font-bold text-slate-500 mb-1">
                 <span className="px-2 py-0.5 rounded-full bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0]">
@@ -532,8 +533,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
             <div className="flex-1 flex flex-col overflow-hidden">
               {/* Header (Drag handle & Click-to-Edit Title) */}
               <div 
+                onPointerDown={handlePointerDown}
                 onMouseDown={handleMouseDown}
-                className="flex items-center justify-between border-b border-stone-200 pb-2 mb-2.5 cursor-grab active:cursor-grabbing select-none"
+                className="flex items-center justify-between border-b border-stone-200 pb-2 mb-2.5 cursor-grab active:cursor-grabbing select-none touch-none"
               >
                 <div 
                   className="flex items-center gap-1.5 overflow-hidden flex-1 mr-2" 
@@ -631,8 +633,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
 
             {/* Paper Sheet Footer (Drag Handle & WCAG-compliant Contrast) */}
             <div 
+              onPointerDown={handlePointerDown}
               onMouseDown={handleMouseDown}
-              className="pt-2 border-t border-stone-200 mt-2 flex items-center justify-between text-[10px] text-slate-600 font-semibold font-mono select-none cursor-grab active:cursor-grabbing"
+              className="pt-2 border-t border-stone-200 mt-2 flex items-center justify-between text-[10px] text-slate-600 font-semibold font-mono select-none cursor-grab active:cursor-grabbing touch-none"
             >
               <span>GreenLearn Doc</span>
               <span>1 trang</span>

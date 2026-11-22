@@ -86,6 +86,7 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
   const {
     isDragging,
     handleMouseDown,
+    handlePointerDown,
     handleRotateMouseDown,
     handleRotateDoubleClick
   } = useDeskItemInteraction({
@@ -411,8 +412,9 @@ export const VoiceNoteItem = React.memo(function VoiceNoteItem({ item, isSelecte
         {/* 2. Right Component: Audio Bubble (Zalo Voice Bubble Specs) */}
         <div className="flex flex-col">
           <div
+            onPointerDown={handlePointerDown}
             onMouseDown={handleMouseDown}
-            className={`flex items-center gap-3.5 px-4 py-2.5 bg-white rounded-[22px] border transition-all cursor-grab active:cursor-grabbing select-none ${
+            className={`flex items-center gap-3.5 px-4 py-2.5 bg-white rounded-[22px] border transition-all cursor-grab active:cursor-grabbing select-none touch-none ${
               isSelected 
                 ? 'border-[#0068FF] shadow-lg shadow-blue-500/10 ring-2 ring-[#0068FF]/20' 
                 : 'border-slate-200/90 shadow-md shadow-slate-200/70 hover:shadow-lg hover:border-slate-300'

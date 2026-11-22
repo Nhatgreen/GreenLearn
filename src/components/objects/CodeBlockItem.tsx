@@ -22,6 +22,7 @@ export const CodeBlockItem = React.memo(function CodeBlockItem({ item, isSelecte
   const {
     isDragging,
     handleMouseDown,
+    handlePointerDown,
     handleRotateMouseDown,
     handleRotateDoubleClick
   } = useDeskItemInteraction({
@@ -106,12 +107,17 @@ export const CodeBlockItem = React.memo(function CodeBlockItem({ item, isSelecte
     >
       {/* Title Label: Drag handle matching StickyNoteItem behavior */}
       <div 
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          selectItem(item.id);
+          handlePointerDown(e);
+        }}
         onMouseDown={(e) => {
           e.stopPropagation();
           selectItem(item.id);
           handleMouseDown(e);
         }}
-        className="flex items-center justify-between px-1 mb-1.5 select-none cursor-grab active:cursor-grabbing"
+        className="flex items-center justify-between px-1 mb-1.5 select-none cursor-grab active:cursor-grabbing touch-none"
       >
         <span className="text-slate-600 font-semibold text-sm tracking-tight" style={{ textRendering: 'geometricPrecision' }}>
           Code block

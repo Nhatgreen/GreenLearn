@@ -36,6 +36,7 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
   const {
     isDragging,
     handleMouseDown,
+    handlePointerDown,
     handleRotateMouseDown,
     handleRotateDoubleClick
   } = useDeskItemInteraction({
@@ -139,6 +140,11 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
         e.stopPropagation();
         selectItem(item.id);
       }}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        selectItem(item.id);
+        handlePointerDown(e);
+      }}
       onMouseDown={(e) => {
         e.stopPropagation();
         selectItem(item.id);
@@ -153,7 +159,7 @@ export const MindMapNodeItem = React.memo(function MindMapNodeItem({ item, isSel
         height: nodeHeight,
         textRendering: 'geometricPrecision'
       }}
-      className={`group select-none ${
+      className={`group select-none touch-none ${
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       }`}
     >

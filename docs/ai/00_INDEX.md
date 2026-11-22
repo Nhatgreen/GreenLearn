@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-22`  
-> **Trạng thái Codebase:** Khắc phục triệt để lỗi sai lệch thời gian và tóm tắt bàn học trên trang chủ (bổ sung lastOpenedAt chuẩn kiến trúc, kết nối formatRelativeTimeVN, sắp xếp bàn học gần đây theo thời gian thực); tích hợp tính năng chọn nhiều bàn học để xóa hàng loạt; 36/36 test suites pass (167/167 tests), 15/15 static pages build pass, GitHub Pages export pass, docs:check pass.
+> **Trạng thái Codebase:** Khắc phục triệt để lỗi không di chuyển được vật thể trên mobile/tablet (chuẩn hóa Pointer Events API toàn diện, bổ sung onPointerDown và class touch-none cho 10 component vật thể bàn học); 37/37 test suites pass (174/174 tests), 15/15 static pages build pass, docs:check pass.
 
 ---
 

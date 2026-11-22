@@ -62,7 +62,7 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
   const CARD_HEIGHT = 490;
 
   // Unified drag-and-move and continuous 360 rotation
-  const { isDragging, handleMouseDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
+  const { isDragging, handleMouseDown, handlePointerDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
     itemId: item.id,
     itemX: item.x,
     itemY: item.y,
@@ -300,8 +300,9 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
             <div className="flex-1 flex flex-col justify-between p-5 select-none">
               {/* Header: Drag handle & Editable Title */}
               <div 
+                onPointerDown={handlePointerDown}
                 onMouseDown={handleMouseDown}
-                className="flex items-center justify-between border-b border-black/10 pb-2.5 cursor-grab active:cursor-grabbing"
+                className="flex items-center justify-between border-b border-black/10 pb-2.5 cursor-grab active:cursor-grabbing touch-none"
               >
                 <div className="flex items-center gap-2 overflow-hidden flex-1 mr-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A] flex-shrink-0 shadow-xs" />
@@ -386,8 +387,9 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
             <div className="flex-1 flex flex-col justify-between select-none overflow-hidden">
               {/* Question Header */}
               <div 
+                onPointerDown={handlePointerDown}
                 onMouseDown={handleMouseDown}
-                className="px-4 pt-3 pb-2 border-b border-black/10 flex items-center justify-between cursor-grab active:cursor-grabbing bg-black/[0.02]"
+                className="px-4 pt-3 pb-2 border-b border-black/10 flex items-center justify-between cursor-grab active:cursor-grabbing bg-black/[0.02] touch-none"
               >
                 {viewingFromSummary ? (
                   <button
@@ -593,8 +595,9 @@ export function ExamQuizCardComponent({ item, isSelected }: ExamQuizCardProps) {
             <div className="flex-1 flex flex-col justify-between p-4 select-none overflow-hidden">
               {/* Header */}
               <div 
+                onPointerDown={handlePointerDown}
                 onMouseDown={handleMouseDown}
-                className="border-b border-black/10 pb-2 flex items-center justify-between cursor-grab active:cursor-grabbing"
+                className="border-b border-black/10 pb-2 flex items-center justify-between cursor-grab active:cursor-grabbing touch-none"
               >
                 <div className="flex items-center gap-1.5">
                   <Award className="w-4 h-4 text-[#16A34A]" />

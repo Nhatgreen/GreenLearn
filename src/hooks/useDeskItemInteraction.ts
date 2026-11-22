@@ -116,11 +116,17 @@ export function useDeskItemInteraction({
     };
 
     const handlePointerMove = (moveEvent: PointerEvent | MouseEvent) => {
+      if ('cancelable' in moveEvent && moveEvent.cancelable) {
+        moveEvent.preventDefault();
+      }
       updateMove(moveEvent.clientX, moveEvent.clientY);
     };
 
     const handleTouchMove = (touchEvent: TouchEvent) => {
       if (touchEvent.touches.length > 0) {
+        if (touchEvent.cancelable) {
+          touchEvent.preventDefault();
+        }
         updateMove(touchEvent.touches[0].clientX, touchEvent.touches[0].clientY);
       }
     };
@@ -150,10 +156,10 @@ export function useDeskItemInteraction({
       }
     };
 
-    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointermove', handlePointerMove, { passive: false });
     window.addEventListener('pointerup', handlePointerUp);
     window.addEventListener('pointercancel', handlePointerUp);
-    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('touchend', handlePointerUp);
     window.addEventListener('mousemove', handlePointerMove);
     window.addEventListener('mouseup', handlePointerUp);

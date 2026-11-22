@@ -193,7 +193,7 @@ export function BookSpreadComponent({ item, isSelected }: BookSpreadProps) {
   }, [isSelected, isFullScreen, item.id, turnBookPage, totalPages]);
 
   // Hook for unified drag-and-move and continuous 360 rotation (width 980 to match 3x cover width)
-  const { isDragging, handleMouseDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
+  const { isDragging, handleMouseDown, handlePointerDown, handleRotateMouseDown, handleRotateDoubleClick } = useDeskItemInteraction({
     itemId: item.id,
     itemX: item.x,
     itemY: item.y,
@@ -364,12 +364,17 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
 
         {/* ================= RICH LEATHER HARDCOVER (3X HORIZONTAL MARGIN: 42PX - DRAGGABLE ON LEATHER) ================= */}
         <div 
+          onPointerDown={(e) => {
+            if (e.target === e.currentTarget) {
+              handlePointerDown(e);
+            }
+          }}
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) {
               handleMouseDown(e);
             }
           }}
-          className="w-full h-full rounded-2xl flex relative z-10 overflow-visible cursor-grab active:cursor-grabbing transition-colors duration-300"
+          className="w-full h-full rounded-2xl flex relative z-10 overflow-visible cursor-grab active:cursor-grabbing transition-colors duration-300 touch-none"
           style={{
             background: currentCover.gradient,
             border: currentCover.border,
@@ -636,8 +641,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                   <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Chapter Header (Drag handle) */}
                     <div 
+                      onPointerDown={handlePointerDown}
                       onMouseDown={handleMouseDown}
-                      className="pb-2 mb-3 border-b border-stone-200/90 flex items-center justify-between flex-shrink-0 cursor-grab active:cursor-grabbing select-none"
+                      className="pb-2 mb-3 border-b border-stone-200/90 flex items-center justify-between flex-shrink-0 cursor-grab active:cursor-grabbing select-none touch-none"
                     >
                       <span className="text-xs font-bold tracking-tight text-slate-800 truncate font-sans block flex-1 pr-2">
                         {underneathLeftLeaf.chapterTitle}
@@ -674,8 +680,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
 
                   {/* Left Page Footer (Drag handle): Only Page Number in Bottom-Left Corner */}
                   <div 
+                    onPointerDown={handlePointerDown}
                     onMouseDown={handleMouseDown}
-                    className="flex-shrink-0 text-left text-xs font-mono font-semibold text-stone-600 pt-2 border-t border-stone-200/80 mt-2 pl-2 select-none cursor-grab active:cursor-grabbing"
+                    className="flex-shrink-0 text-left text-xs font-mono font-semibold text-stone-600 pt-2 border-t border-stone-200/80 mt-2 pl-2 select-none cursor-grab active:cursor-grabbing touch-none"
                   >
                     {underneathLeftLeaf.pageNumber}
                   </div>
@@ -711,8 +718,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
                   <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Chapter Header (Drag handle) */}
                     <div 
+                      onPointerDown={handlePointerDown}
                       onMouseDown={handleMouseDown}
-                      className="pb-2 mb-3 border-b border-stone-200/90 flex items-center justify-between flex-shrink-0 cursor-grab active:cursor-grabbing select-none"
+                      className="pb-2 mb-3 border-b border-stone-200/90 flex items-center justify-between flex-shrink-0 cursor-grab active:cursor-grabbing select-none touch-none"
                     >
                       <span className="text-xs font-bold tracking-tight text-slate-800 truncate font-sans block flex-1 pr-2">
                         {underneathRightLeaf.chapterTitle}
@@ -749,8 +757,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
 
                   {/* Right Page Footer (Drag handle): Only Page Number in Bottom-Right Corner */}
                   <div 
+                    onPointerDown={handlePointerDown}
                     onMouseDown={handleMouseDown}
-                    className="flex-shrink-0 text-right text-xs font-mono font-semibold text-stone-600 pt-2 border-t border-stone-200/80 mt-2 pr-2 select-none cursor-grab active:cursor-grabbing"
+                    className="flex-shrink-0 text-right text-xs font-mono font-semibold text-stone-600 pt-2 border-t border-stone-200/80 mt-2 pr-2 select-none cursor-grab active:cursor-grabbing touch-none"
                   >
                     {underneathRightLeaf.pageNumber}
                   </div>
@@ -997,8 +1006,9 @@ Trả lời trực tiếp, ngắn gọn, súc tích, dễ hiểu nhất (tối �
 
         {/* ================= BOTTOM TITLE BADGE (Drag handle - Miro-style clean white) ================= */}
         <div 
+          onPointerDown={handlePointerDown}
           onMouseDown={handleMouseDown}
-          className="absolute top-full mt-3.5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 bg-white/95 text-slate-800 text-xs font-semibold px-4 py-1.5 rounded-full shadow-md border border-slate-200/90 backdrop-blur-md pointer-events-auto select-none transition-all duration-200 z-20 cursor-grab active:cursor-grabbing hover:border-slate-300"
+          className="absolute top-full mt-3.5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 bg-white/95 text-slate-800 text-xs font-semibold px-4 py-1.5 rounded-full shadow-md border border-slate-200/90 backdrop-blur-md pointer-events-auto select-none transition-all duration-200 z-20 cursor-grab active:cursor-grabbing hover:border-slate-300 touch-none"
           onClick={(e) => e.stopPropagation()}
         >
           <span className="truncate max-w-[340px]">

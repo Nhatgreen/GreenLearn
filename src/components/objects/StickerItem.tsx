@@ -21,6 +21,7 @@ export const StickerItem = React.memo(function StickerItem({ item, isSelected }:
   const {
     isDragging,
     handleMouseDown,
+    handlePointerDown,
     handleRotateMouseDown,
     handleRotateDoubleClick
   } = useDeskItemInteraction({
@@ -77,6 +78,11 @@ export const StickerItem = React.memo(function StickerItem({ item, isSelected }:
         e.stopPropagation();
         selectItem(item.id);
       }}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        selectItem(item.id);
+        handlePointerDown(e);
+      }}
       onMouseDown={(e) => {
         e.stopPropagation();
         selectItem(item.id);
@@ -90,7 +96,7 @@ export const StickerItem = React.memo(function StickerItem({ item, isSelected }:
         width,
         height
       }}
-      className={`group select-none flex items-center justify-center ${
+      className={`group select-none flex items-center justify-center touch-none ${
         isDragging ? 'cursor-grabbing' : 'cursor-grab'
       }`}
     >

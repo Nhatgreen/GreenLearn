@@ -82,11 +82,21 @@ export const PresentationItem = React.memo(function PresentationItem({
     return () => window.removeEventListener('keydown', handleKey);
   }, [isFullscreen, currentIdx, slides.length]);
 
-  const handleHeaderMouseDown = (e: React.MouseEvent) => {
+  const handleHeaderPointerDown = (e: React.PointerEvent | React.MouseEvent) => {
+    if ('button' in e && e.button !== 0) return;
     if ((e.target as HTMLElement).closest('button')) return;
     e.stopPropagation();
     selectItem(item.id);
     bringToFront(item.id);
+
+    const pointerId = 'pointerId' in e ? (e as React.PointerEvent).pointerId : null;
+    const targetEl = e.currentTarget as HTMLElement;
+    if (pointerId !== null && targetEl && targetEl.setPointerCapture) {
+      try {
+        targetEl.setPointerCapture(pointerId);
+      } catch (err) {}
+    }
+
     dragRef.current = {
       startX: e.clientX,
       startY: e.clientY,
@@ -94,22 +104,36 @@ export const PresentationItem = React.memo(function PresentationItem({
       itemY: item.y,
     };
 
-    const handleMove = (ev: MouseEvent) => {
+    const handleMove = (ev: PointerEvent | MouseEvent) => {
       if (!dragRef.current) return;
+      if ('cancelable' in ev && ev.cancelable) {
+        ev.preventDefault();
+      }
       const dx = (ev.clientX - dragRef.current.startX) / transform.scale;
       const dy = (ev.clientY - dragRef.current.startY) / transform.scale;
       updateDeskItem(item.id, {
-        x: dragRef.current.itemX + dx,
-        y: dragRef.current.itemY + dy,
+        x: Math.round(dragRef.current.itemX + dx),
+        y: Math.round(dragRef.current.itemY + dy),
       });
     };
 
     const handleUp = () => {
       dragRef.current = null;
+      if (pointerId !== null && targetEl && targetEl.releasePointerCapture) {
+        try {
+          targetEl.releasePointerCapture(pointerId);
+        } catch (err) {}
+      }
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleUp);
+      window.removeEventListener('pointercancel', handleUp);
       window.removeEventListener('mousemove', handleMove);
       window.removeEventListener('mouseup', handleUp);
     };
 
+    window.addEventListener('pointermove', handleMove, { passive: false });
+    window.addEventListener('pointerup', handleUp);
+    window.addEventListener('pointercancel', handleUp);
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('mouseup', handleUp);
   };
@@ -117,6 +141,10 @@ export const PresentationItem = React.memo(function PresentationItem({
   return (
     <>
       <div
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          selectItem(item.id);
+        }}
         onMouseDown={(e) => {
           e.stopPropagation();
           selectItem(item.id);
@@ -137,8 +165,9 @@ export const PresentationItem = React.memo(function PresentationItem({
       >
         {/* Header Bar */}
         <div
-          onMouseDown={handleHeaderMouseDown}
-          className="px-3 py-2 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2 cursor-grab active:cursor-grabbing select-none"
+          onPointerDown={handleHeaderPointerDown}
+          onMouseDown={handleHeaderPointerDown}
+          className="px-3 py-2 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2 cursor-grab active:cursor-grabbing select-none touch-none"
         >
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-6 h-6 rounded-md bg-green-50 text-[#16A34A] border border-green-200 flex items-center justify-center flex-shrink-0">
