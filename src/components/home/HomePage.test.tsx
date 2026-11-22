@@ -156,4 +156,16 @@ describe('HomePage Bulk Space Selection & Deletion', () => {
     expect(screen.queryByText(/Xác nhận xóa 1 bàn học\?/i)).toBeNull();
     expect(mockDeleteSpaces).not.toHaveBeenCalled();
   });
+
+  it('renders real space summary and relative time without hardcoded mock strings', () => {
+    render(<HomePage onEnterDesk={vi.fn()} />);
+
+    // Không còn bất kỳ chuỗi mock nào như "14:20 hôm nay"
+    expect(screen.queryByText('14:20 hôm nay')).toBeNull();
+    expect(screen.queryByText('Hôm qua 21:15')).toBeNull();
+
+    // Đối với bàn học rỗng, hiển thị "Bàn học trống · Chưa có tài liệu"
+    const emptySummaries = screen.getAllByText(/Bàn học trống · Chưa có tài liệu/i);
+    expect(emptySummaries.length).toBeGreaterThan(0);
+  });
 });

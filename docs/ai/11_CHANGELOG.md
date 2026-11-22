@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-11-22 18:35 — main (Khắc Phục Toàn Diện Sai Lệch Thời Gian & Tóm Tắt Khi Tạo/Mở Bàn Học)
+- **Task:** Sửa triệt để lỗi hiển thị sai thời gian và tóm tắt bàn học trên trang chủ (`HomePage`) theo Phương án 1 (Kiến trúc chuẩn):
+  1. **Tầng Dữ Liệu & Context (`StudySpaceContext.tsx` & `mockSpaces.ts`):**
+     - Đảm bảo toàn bộ luồng tạo bàn học (`createSpace`, `createSpaceFromTemplate`, `roomSpace`, `fallbackSpace`) khởi tạo đầy đủ `createdAt`, `updatedAt`, và `lastOpenedAt: new Date().toISOString()`.
+     - Trong `switchSpace`: Khi người dùng chuyển sang hoặc mở bàn học, tự động cập nhật `lastOpenedAt = new Date().toISOString()` và đồng bộ ngay vào `localStorage('greenlearn_spaces')`.
+     - Cập nhật `INITIAL_SPACES` trong `mockSpaces.ts` bổ sung `lastOpenedAt`.
+  2. **Giao Diện Trang Chủ (`HomePage.tsx`):**
+     - Loại bỏ hoàn toàn hàm mock cứng theo index `getRecentTimeString(index)` vốn gây ra hiện tượng hardcode cố định `"14:20 hôm nay"`, `"2 giờ trước"`, `"Hôm qua 21:15"`, `"4 ngày trước"`.
+     - Thay bằng `getSpaceTimeString(space: StudySpace)` kết nối trực tiếp với hàm chuẩn `formatRelativeTimeVN(space.lastOpenedAt || space.updatedAt || space.createdAt)`.
+     - Cập nhật `getSpaceSummary`: Loại bỏ mock data giả lập `"1 slide · 1 đề thi trắc nghiệm"` khi bàn học trống; hiển thị trung thực `Bàn học trống · Chưa có tài liệu` hoặc tóm tắt chính xác các loại tài liệu thực tế (giáo trình, tài liệu, ghi chú, đề thi, bảng tính, slide).
+     - Sắp xếp mục **"Mở lại gần đây"** (`recentDisplayedSpaces`) giảm dần theo thời gian truy cập gần nhất (`lastOpenedAt || updatedAt || createdAt`), bảo đảm bàn học vừa tạo hoặc vừa học xong luôn hiển thị đầu tiên với nhãn "Vừa xong" hoặc "X phút trước".
+- **Verification:**
+  - `pnpm test`: 36/36 test suites passed (167/167 tests passed), bao gồm cả test mới trong `StudySpaceContext.test.tsx` và `HomePage.test.tsx`.
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run docs:index` & `pnpm run docs:check`: Index và docs nhất quán 100%.
+- **Changed:**
+  - `src/context/StudySpaceContext.tsx` & `src/context/StudySpaceContext.test.tsx`: Bổ sung `lastOpenedAt` trong luồng tạo/mở bàn học và unit tests.
+  - `src/components/home/HomePage.tsx` & `src/components/home/HomePage.test.tsx`: Đấu nối `formatRelativeTimeVN`, sắp xếp bàn học gần đây, sửa tóm tắt tài liệu rỗng và unit tests.
+  - `src/data/mockSpaces.ts`: Bổ sung `lastOpenedAt`.
+  - `AGENTS.md` & `docs/ai/11_CHANGELOG.md`: Cập nhật quy chuẩn và nhật ký phát triển.
+
+---
+
 ## 2026-11-22 17:50 — main (Tích Hợp Tùy Chọn Chọn Nhiều Bàn Học Cùng Lúc Để Xóa Hàng Loạt)
 - **Task:** Thêm tính năng chọn nhiều bàn học cùng lúc để xóa hàng loạt theo yêu cầu của Sếp:
   1. **Tầng Dữ Liệu & Context (`StudySpaceContext.tsx`):**

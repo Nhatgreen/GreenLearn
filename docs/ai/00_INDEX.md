@@ -2,7 +2,7 @@
 
 > **Commit Hash:** `Current Working Tree`  
 > **Cập nhật lần cuối:** `2026-11-22`  
-> **Trạng thái Codebase:** Tích hợp Bảng tính Spreadsheet tương tác đa sheet, Bài trình chiếu slide 16:9 KaTeX, nhập tài liệu tự động từ URL (Google Docs/Sheets/Slides/Drive/Web), và nâng cấp Linh vật Mầm Xanh nổi tự do (kéo thả, snap mép màn hình, ngủ/thức, chạm đánh thức, modal tiến hóa). 33/33 test suites pass (155/155 tests), 15/15 static pages build pass, GitHub Pages export pass, docs:check pass.
+> **Trạng thái Codebase:** Khắc phục triệt để lỗi sai lệch thời gian và tóm tắt bàn học trên trang chủ (bổ sung lastOpenedAt chuẩn kiến trúc, kết nối formatRelativeTimeVN, sắp xếp bàn học gần đây theo thời gian thực); tích hợp tính năng chọn nhiều bàn học để xóa hàng loạt; 36/36 test suites pass (167/167 tests), 15/15 static pages build pass, GitHub Pages export pass, docs:check pass.
 
 ---
 

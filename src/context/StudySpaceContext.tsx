@@ -221,7 +221,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
           items: [],
           threads: [],
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          lastOpenedAt: new Date().toISOString()
         };
         return [roomSpace, ...INITIAL_SPACES];
       }
@@ -441,7 +442,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
                   items: [...items],
                   threads: [],
                   createdAt: new Date().toISOString(),
-                  updatedAt: new Date().toISOString()
+                  updatedAt: new Date().toISOString(),
+                  lastOpenedAt: new Date().toISOString()
                 };
                 return [newSharedSpace, ...prev];
               }
@@ -502,7 +504,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
                   items: [...items],
                   threads: [],
                   createdAt: new Date().toISOString(),
-                  updatedAt: new Date().toISOString()
+                  updatedAt: new Date().toISOString(),
+                  lastOpenedAt: new Date().toISOString()
                 };
                 return [newSharedSpace, ...prev];
               }
@@ -658,7 +661,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         items: [],
         threads: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        lastOpenedAt: new Date().toISOString()
       };
       return [roomSpace, ...prev];
     });
@@ -925,7 +929,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
           items: cached?.items || currentRoomSpace?.items || [],
           threads: [],
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
+          lastOpenedAt: new Date().toISOString()
         };
         spaceList.unshift(newSharedSpace);
         return newSharedSpace.id;
@@ -1063,27 +1068,49 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
 
   const switchSpace = (spaceId: string) => {
     if (spaces.some(s => s.id === spaceId)) {
+      const nowIso = new Date().toISOString();
       setActiveSpaceId(spaceId);
       setSelectedItemId(null);
       resetView();
+      setSpaces(prev => {
+        const next = prev.map(s => (s.id === spaceId ? { ...s, lastOpenedAt: nowIso } : s));
+        try {
+          localStorage.setItem('greenlearn_spaces', JSON.stringify(next));
+          localStorage.setItem('greenlearn_active_space_id', spaceId);
+        } catch {
+          // ignore
+        }
+        return next;
+      });
     }
   };
 
   const createSpace = (name: string, subject: string) => {
     const newSpaceId = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `space-${Date.now()}`;
+    const nowIso = new Date().toISOString();
     const newSpace: StudySpace = {
       id: newSpaceId,
       name,
       subject,
       description: `Không gian học tập bộ môn ${subject}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      lastOpenedAt: nowIso,
       items: []
     };
     if (status === 'authenticated' && user?.id) {
       StudySpaceService.saveSpace(newSpace, user.id);
     }
-    setSpaces(prev => [...prev, newSpace]);
+    setSpaces(prev => {
+      const next = [...prev, newSpace];
+      try {
+        localStorage.setItem('greenlearn_spaces', JSON.stringify(next));
+        localStorage.setItem('greenlearn_active_space_id', newSpace.id);
+      } catch {
+        // ignore
+      }
+      return next;
+    });
     setActiveSpaceId(newSpace.id);
   };
 
@@ -1253,13 +1280,15 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
       ];
     }
 
+    const nowIso = new Date().toISOString();
     const newSpace: StudySpace = {
       id: newSpaceId,
       name,
       subject,
       description: `Bàn học ${name}`,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      lastOpenedAt: nowIso,
       items
     };
 
@@ -1295,6 +1324,7 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         description: 'Bàn học mới được tạo tự động',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        lastOpenedAt: new Date().toISOString(),
         items: []
       };
       nextSpaces = [fallbackSpace];

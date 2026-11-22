@@ -8,6 +8,7 @@ export const INITIAL_SPACES: StudySpace[] = [
     description: 'Không gian nghiên cứu Đại số tuyến tính, Giải tích đa biến và Tối ưu hoá cho AI.',
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
+    lastOpenedAt: '2026-01-01T00:00:00.000Z',
     items: [
       {
         id: 'doc-book-ml',
@@ -275,6 +276,7 @@ $$\\nabla f = \\left[ \\frac{\\partial f}{\\partial x_1}, \\frac{\\partial f}{\\
     description: 'Giáo trình, ma trận nhầm lẫn',
     createdAt: '2026-01-02T00:00:00.000Z',
     updatedAt: '2026-01-02T00:00:00.000Z',
+    lastOpenedAt: '2026-01-02T00:00:00.000Z',
     items: [
       {
         id: 'doc-book-dl',

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -43,6 +43,7 @@ import { SocialFriendService } from '@/services/SocialFriendService';
 import { PetMascotModal } from '@/components/pet/PetMascotModal';
 import { getAssetPath } from '@/lib/assets';
 import { StudySpace } from '@/types/studyspace';
+import { formatRelativeTimeVN } from '@/lib/dateVN';
 import { useResponsiveLayout } from '@/hooks/useResponsiveLayout';
 
 interface HomePageProps {
@@ -201,32 +202,31 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   };
 
   // Helper tính số tài liệu thực tế của bàn học
-  const getSpaceSummary = (space: StudySpace, index: number) => {
+  const getSpaceSummary = (space: StudySpace) => {
     if (space.items && space.items.length > 0) {
       const books = space.items.filter(i => i.type === 'book').length;
       const papers = space.items.filter(i => i.type === 'paper').length;
       const notes = space.items.filter(i => i.type === 'sticky_note').length;
       const quizzes = space.items.filter(i => i.type === 'exam_sheet').length;
+      const spreadsheets = space.items.filter(i => i.type === 'spreadsheet').length;
+      const presentations = space.items.filter(i => i.type === 'presentation').length;
       
       const parts: string[] = [];
       if (books > 0) parts.push(`${books} giáo trình`);
-      if (papers > 0) parts.push(`${papers} đề thi`);
+      if (papers > 0) parts.push(`${papers} tài liệu`);
       if (notes > 0) parts.push(`${notes} ghi chú`);
-      if (quizzes > 0) parts.push(`${quizzes} trắc nghiệm`);
+      if (quizzes > 0) parts.push(`${quizzes} đề thi`);
+      if (spreadsheets > 0) parts.push(`${spreadsheets} bảng tính`);
+      if (presentations > 0) parts.push(`${presentations} slide`);
       if (parts.length > 0) return parts.join(' · ');
     }
-    // Fallback theo index
-    if (index === 0) return '1 giáo trình · 3 ghi chú';
-    if (index === 1) return '1 slide · 1 đề thi trắc nghiệm';
-    return '2 giáo trình · 1 vở nháp';
+    return 'Bàn học trống · Chưa có tài liệu';
   };
 
-  // Helper hiển thị thời gian mở cụ thể
-  const getRecentTimeString = (index: number) => {
-    if (index === 0) return '14:20 hôm nay';
-    if (index === 1) return '2 giờ trước';
-    if (index === 2) return 'Hôm qua 21:15';
-    return `${index + 1} ngày trước`;
+  // Helper hiển thị thời gian truy cập / tạo bàn học chuẩn xác
+  const getSpaceTimeString = (space: StudySpace) => {
+    const timestamp = space.lastOpenedAt || space.updatedAt || space.createdAt;
+    return formatRelativeTimeVN(timestamp);
   };
 
   // Filter spaces based on search
@@ -240,7 +240,17 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
     );
   });
 
+  // Bàn học mở lại gần đây: sắp xếp theo thời gian truy cập mới nhất lên đầu
+  const recentSortedSpaces = useMemo(() => {
+    return [...filteredSpaces].sort((a, b) => {
+      const timeA = new Date(a.lastOpenedAt || a.updatedAt || a.createdAt || 0).getTime();
+      const timeB = new Date(b.lastOpenedAt || b.updatedAt || b.createdAt || 0).getTime();
+      return timeB - timeA;
+    });
+  }, [filteredSpaces]);
+
   const displayedSpaces = showAllSpaces ? filteredSpaces : filteredSpaces.slice(0, 5);
+  const recentDisplayedSpaces = showAllSpaces ? recentSortedSpaces : recentSortedSpaces.slice(0, 5);
 
   return (
     <div className="w-full min-h-screen overflow-x-hidden bg-slate-50 text-slate-900 flex font-sans selection:bg-green-100 selection:text-[#166534]">
@@ -1254,7 +1264,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                       </div>
 
                       <div className="col-span-4 text-xs text-slate-600 font-medium">
-                        {getSpaceSummary(space, idx)}
+                        {getSpaceSummary(space)}
                       </div>
 
                       <div className="col-span-3 flex items-center justify-end gap-2 pr-1">
@@ -1270,7 +1280,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                           <>
                             <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
                               <Clock className="w-3.5 h-3.5 text-slate-400" />
-                              <span>{getRecentTimeString(idx)}</span>
+                              <span>{getSpaceTimeString(space)}</span>
                             </span>
                             <button
                               type="button"
@@ -1365,7 +1375,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                       <div className="flex items-center gap-1.5 shrink-0">
                         <span className="text-[11px] font-medium text-slate-500 flex items-center gap-1">
                           <Clock className="w-3 h-3 text-slate-400" />
-                          <span>{getRecentTimeString(idx)}</span>
+                          <span>{getSpaceTimeString(space)}</span>
                         </span>
                         {!isSelectionMode && (
                           <button
@@ -1381,7 +1391,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                     </div>
 
                     <div className="text-xs text-slate-600 font-semibold bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
-                      {getSpaceSummary(space, idx)}
+                      {getSpaceSummary(space)}
                     </div>
 
                     {isSelectionMode ? (
@@ -1457,13 +1467,13 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                     </div>
 
                     <div className="col-span-4 text-xs text-slate-600 font-medium">
-                      {getSpaceSummary(space, idx)}
+                      {getSpaceSummary(space)}
                     </div>
 
                     <div className="col-span-3 flex items-center justify-end gap-2.5 pr-1">
                       <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{getRecentTimeString(idx)}</span>
+                        <span>{getSpaceTimeString(space)}</span>
                       </span>
                       <button
                         type="button"
@@ -1509,12 +1519,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
                     <span className="text-[11px] font-medium text-slate-500 shrink-0 flex items-center gap-1">
                       <Clock className="w-3 h-3 text-slate-400" />
-                      <span>{getRecentTimeString(idx)}</span>
+                      <span>{getSpaceTimeString(space)}</span>
                     </span>
                   </div>
 
                   <div className="text-xs text-slate-600 font-semibold bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
-                    {getSpaceSummary(space, idx)}
+                    {getSpaceSummary(space)}
                   </div>
 
                   <button
@@ -1731,12 +1741,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 </div>
 
                 <div className="divide-y divide-slate-100">
-                  {displayedSpaces.length === 0 ? (
+                  {recentDisplayedSpaces.length === 0 ? (
                     <div className="py-10 text-center text-xs text-slate-400 italic">
                       Chưa có bàn học nào phù hợp với tìm kiếm
                     </div>
                   ) : (
-                    displayedSpaces.map((space, idx) => {
+                    recentDisplayedSpaces.map((space, idx) => {
                       const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
                       const isDemo = space.name.includes('(Demo)');
 
@@ -1782,14 +1792,14 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
                           {/* Cột 2: Tài liệu & Ghi chú (col-span-4) */}
                           <div className="col-span-4 text-xs text-slate-600 font-medium">
-                            {getSpaceSummary(space, idx)}
+                            {getSpaceSummary(space)}
                           </div>
 
                           {/* Cột 3: Thời gian & Nút Vào bàn (col-span-3) */}
                           <div className="col-span-3 flex items-center justify-end gap-2.5 pr-1">
                             <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
                               <Clock className="w-3.5 h-3.5 text-slate-400" />
-                              <span>{getRecentTimeString(idx)}</span>
+                              <span>{getSpaceTimeString(space)}</span>
                             </span>
                             <button
                               type="button"
@@ -1812,12 +1822,12 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
               {/* Mobile Vertical Card List — Pure CSS (< sm) Triệt tiêu cuộn ngang */}
               <div className="sm:hidden block space-y-3 responsive-desk-cards">
-                {displayedSpaces.length === 0 ? (
+                {recentDisplayedSpaces.length === 0 ? (
                   <div className="py-8 text-center text-xs text-slate-400 italic bg-white border border-slate-200 rounded-2xl">
                     Chưa có bàn học nào phù hợp với tìm kiếm
                   </div>
                 ) : (
-                  displayedSpaces.map((space, idx) => {
+                  recentDisplayedSpaces.map((space, idx) => {
                     const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
                     const isDemo = space.name.includes('(Demo)');
 
@@ -1864,13 +1874,13 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
 
                           <span className="text-[11px] font-medium text-slate-500 shrink-0 flex items-center gap-1">
                             <Clock className="w-3 h-3 text-slate-400" />
-                            <span>{getRecentTimeString(idx)}</span>
+                            <span>{getSpaceTimeString(space)}</span>
                           </span>
                         </div>
 
                         {/* Middle: Tóm tắt tài liệu & ghi chú */}
                         <div className="text-xs text-slate-600 font-semibold bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
-                          {getSpaceSummary(space, idx)}
+                          {getSpaceSummary(space)}
                         </div>
 
                         {/* Bottom: Nút Vào bàn full-width min-h-[44px] */}

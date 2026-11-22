@@ -1,6 +1,6 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `fef7623`  
+> **Commit Hash:** `2a849da`  
 > **Cập nhật lần cuối:** `2026-11-22`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
@@ -95,12 +95,12 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `RoomJoinResponse` | `type` | [src/context/SocialPresenceContext.tsx:L27-L37](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceContextType` | `type` | [src/context/SocialPresenceContext.tsx:L48-L67](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `SocialPresenceProvider` | `context` | [src/context/SocialPresenceContext.tsx:L71-L470](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L196-L2887](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
+| `StudySpaceProvider` | `context` | [src/context/StudySpaceContext.tsx:L196-L2917](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Provider quản lý toàn bộ state bàn học, tài liệu, toạ độ, nét vẽ, zIndex |
 | `useAuth` | `hook` | [src/context/AuthContext.tsx:L302-L308](file:////home/nhat/Documents/DUT/GreenLearn/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `usePomodoroContext` | `hook` | [src/context/PomodoroContext.tsx:L105-L111](file:////home/nhat/Documents/DUT/GreenLearn/src/context/PomodoroContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `UserProfile` | `type` | [src/context/AuthContext.tsx:L11-L16](file:////home/nhat/Documents/DUT/GreenLearn/src/context/AuthContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
 | `useSocialPresenceContext` | `hook` | [src/context/SocialPresenceContext.tsx:L472-L475](file:////home/nhat/Documents/DUT/GreenLearn/src/context/SocialPresenceContext.tsx) | Thành phần nghiệp vụ của phân hệ Context & State |
-| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2889-L2895](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
+| `useStudySpace` | `hook` | [src/context/StudySpaceContext.tsx:L2919-L2925](file:////home/nhat/Documents/DUT/GreenLearn/src/context/StudySpaceContext.tsx) | Hook truy cập trạng thái không gian bàn học, camera, danh sách tài liệu |
 
 ### Non-AI Engine & Utils
 
@@ -256,11 +256,11 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `GOOGLE_SHARE_GUIDE_STEPS` | `component` | [src/services/UrlDocumentService.ts:L19-L25](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `GuestBanner` | `component` | [src/components/auth/GuestBanner.tsx:L12-L54](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/GuestBanner.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HeroSection` | `component` | [src/components/landing/HeroSection.tsx:L52-L238](file:////home/nhat/Documents/DUT/GreenLearn/src/components/landing/HeroSection.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `HomePage` | `component` | [src/components/home/HomePage.tsx:L53-L2035](file:////home/nhat/Documents/DUT/GreenLearn/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `HomePage` | `component` | [src/components/home/HomePage.tsx:L54-L2045](file:////home/nhat/Documents/DUT/GreenLearn/src/components/home/HomePage.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `HostApprovalModal` | `component` | [src/components/social/HostApprovalModal.tsx:L14-L177](file:////home/nhat/Documents/DUT/GreenLearn/src/components/social/HostApprovalModal.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `importDocumentFromUrl` | `fn` | [src/services/UrlDocumentService.ts:L154-L237](file:////home/nhat/Documents/DUT/GreenLearn/src/services/UrlDocumentService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `INITIAL_MARKET_ITEMS` | `component` | [src/data/marketMockData.ts:L24-L1124](file:////home/nhat/Documents/DUT/GreenLearn/src/data/marketMockData.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `INITIAL_SPACES` | `component` | [src/data/mockSpaces.ts:L3-L332](file:////home/nhat/Documents/DUT/GreenLearn/src/data/mockSpaces.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `INITIAL_SPACES` | `component` | [src/data/mockSpaces.ts:L3-L334](file:////home/nhat/Documents/DUT/GreenLearn/src/data/mockSpaces.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `IntelineThread` | `type` | [src/types/studyspace.ts:L113-L123](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `isBinaryOrCorrupted` | `fn` | [src/services/OfficeParserService.ts:L46-L75](file:////home/nhat/Documents/DUT/GreenLearn/src/services/OfficeParserService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ItemType` | `type` | [src/types/studyspace.ts:L1-L11](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
