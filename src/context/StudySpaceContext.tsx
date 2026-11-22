@@ -180,6 +180,8 @@ interface StudySpaceContextType {
   toggleMute: () => void;
   toggleDeafen: () => void;
   micError: string | null;
+  // Batch Space Deletion
+  deleteSpaces: (spaceIds: string[]) => Promise<boolean>;
 }
 
 const DEFAULT_TRANSFORM: CanvasTransform = {
@@ -1276,6 +1278,56 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
     resetView();
     return newSpaceId;
   };
+
+  // Batch delete spaces (supporting multi-selection)
+  const deleteSpaces = useCallback(async (spaceIds: string[]): Promise<boolean> => {
+    if (!spaceIds || spaceIds.length === 0) return false;
+
+    const idSet = new Set(spaceIds);
+    const remaining = spaces.filter(s => !idSet.has(s.id));
+
+    let nextSpaces = remaining;
+    if (nextSpaces.length === 0) {
+      const fallbackSpace: StudySpace = {
+        id: `space-${Date.now()}`,
+        name: 'Bàn học cá nhân',
+        subject: 'Toán học & Khoa học',
+        description: 'Bàn học mới được tạo tự động',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        items: []
+      };
+      nextSpaces = [fallbackSpace];
+    }
+
+    let nextActiveId = activeSpaceId;
+    if (idSet.has(activeSpaceId)) {
+      nextActiveId = nextSpaces[0].id;
+      setActiveSpaceId(nextActiveId);
+    }
+
+    setSpaces(nextSpaces);
+
+    try {
+      localStorage.setItem('greenlearn_spaces', JSON.stringify(nextSpaces));
+      localStorage.setItem('greenlearn_active_space_id', nextActiveId);
+      spaceIds.forEach(id => {
+        localStorage.removeItem(`greenlearn_strokes_${id}`);
+      });
+    } catch (err) {}
+
+    if (status === 'authenticated' && user?.id) {
+      for (const id of spaceIds) {
+        try {
+          await StudySpaceService.deleteSpace(id);
+        } catch (err) {
+          console.warn('Lỗi xóa bàn học trên cloud:', id, err);
+        }
+      }
+    }
+
+    return true;
+  }, [spaces, activeSpaceId, status, user]);
 
   const panBy = (dx: number, dy: number) => {
     if (focusedItemId) {
@@ -2825,7 +2877,8 @@ export function StudySpaceProvider({ children }: { children: React.ReactNode }) 
         toggleMic: voiceChat.toggleMic,
         toggleMute: voiceChat.toggleMute,
         toggleDeafen: voiceChat.toggleDeafen,
-        micError: voiceChat.micError
+        micError: voiceChat.micError,
+        deleteSpaces
       }}
     >
       {children}

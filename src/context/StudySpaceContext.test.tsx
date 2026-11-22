@@ -18,4 +18,16 @@ describe('StudySpaceContext - Viewer Role Guard', () => {
     expect(result.current.isViewer).toBe(false);
     expect(result.current.isViewerSession()).toBe(false);
   });
+
+  it('provides deleteSpaces function for batch deletion', async () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <AuthProvider>
+        <StudySpaceProvider>{children}</StudySpaceProvider>
+      </AuthProvider>
+    );
+
+    const { result } = renderHook(() => useStudySpace(), { wrapper });
+
+    expect(typeof result.current.deleteSpaces).toBe('function');
+  });
 });

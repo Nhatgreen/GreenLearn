@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
@@ -29,7 +30,10 @@ import {
   CalendarDays,
   HelpCircle,
   Info,
-  Menu
+  Menu,
+  CheckSquare,
+  Square,
+  AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useStudySpace } from '@/context/StudySpaceContext';
@@ -48,25 +52,87 @@ interface HomePageProps {
 
 export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
   const { user, profile, status } = useAuth();
-  const { spaces, switchSpace, createSpaceFromTemplate } = useStudySpace();
+  const { spaces, switchSpace, createSpaceFromTemplate, deleteSpaces } = useStudySpace();
   const { pet, info, currentImageUrl, isClaimedToday, claimToday } = usePetMascot();
   const router = useRouter();
   const { isMobile, isTablet, isDesktop } = useResponsiveLayout();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [isPetModalOpen, setIsPetModalOpen] = useState(false);
   const [claimFeedback, setClaimFeedback] = useState<string | null>(null);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
-  // Esc listener for mobile drawer
+  // Bulk Selection & Deletion State
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [selectedSpaceIds, setSelectedSpaceIds] = useState<string[]>([]);
+  const [isBatchDeleteModalOpen, setIsBatchDeleteModalOpen] = useState(false);
+  const [isDeletingSpaces, setIsDeletingSpaces] = useState(false);
+  const [deleteToast, setDeleteToast] = useState<string | null>(null);
+
+  // Esc listener for mobile drawer and selection mode / modal
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMobileDrawerOpen) {
-        setIsMobileDrawerOpen(false);
+      if (e.key === 'Escape') {
+        if (isBatchDeleteModalOpen) {
+          setIsBatchDeleteModalOpen(false);
+        } else if (isSelectionMode) {
+          setIsSelectionMode(false);
+          setSelectedSpaceIds([]);
+        } else if (isMobileDrawerOpen) {
+          setIsMobileDrawerOpen(false);
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobileDrawerOpen]);
+  }, [isMobileDrawerOpen, isSelectionMode, isBatchDeleteModalOpen]);
+
+  const toggleSelectSpace = (spaceId: string) => {
+    setSelectedSpaceIds(prev => 
+      prev.includes(spaceId) ? prev.filter(id => id !== spaceId) : [...prev, spaceId]
+    );
+  };
+
+  const handleSelectAllSpaces = () => {
+    if (selectedSpaceIds.length === spaces.length) {
+      setSelectedSpaceIds([]);
+    } else {
+      setSelectedSpaceIds(spaces.map(s => s.id));
+    }
+  };
+
+  const handleExitSelectionMode = () => {
+    setIsSelectionMode(false);
+    setSelectedSpaceIds([]);
+  };
+
+  const handleBatchDeleteConfirm = async () => {
+    if (selectedSpaceIds.length === 0) return;
+    setIsDeletingSpaces(true);
+    try {
+      const count = selectedSpaceIds.length;
+      await deleteSpaces(selectedSpaceIds);
+      setSelectedSpaceIds([]);
+      setIsSelectionMode(false);
+      setIsBatchDeleteModalOpen(false);
+      setDeleteToast(`Đã xóa thành công ${count} bàn học.`);
+      setTimeout(() => setDeleteToast(null), 3500);
+    } catch (err) {
+      console.error('Lỗi khi xóa bàn học:', err);
+    } finally {
+      setIsDeletingSpaces(false);
+    }
+  };
+
+  const handleOpenSingleDelete = (e: React.MouseEvent, spaceId: string) => {
+    e.stopPropagation();
+    setSelectedSpaceIds([spaceId]);
+    setIsBatchDeleteModalOpen(true);
+  };
 
   const [searchFilter, setSearchFilter] = useState('');
   const [showAllSpaces, setShowAllSpaces] = useState(false);
@@ -679,6 +745,17 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
           </div>
         )}
 
+        {/* Thông báo thao tác bàn học nổi ngắn */}
+        {deleteToast && (
+          <div className="mb-4 p-3 rounded-xl bg-green-50 border border-[#BBF7D0] text-xs font-semibold text-[#166534] flex items-center justify-between animate-fade-in shadow-xs">
+            <span className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#16A34A] shrink-0" />
+              <span>{deleteToast}</span>
+            </span>
+            <button onClick={() => setDeleteToast(null)} className="text-slate-400 hover:text-slate-600 font-bold px-1.5 cursor-pointer">✕</button>
+          </div>
+        )}
+
         {activeNav === 'friends' ? (
           /* ================= GIAO DIỆN QUẢN LÝ BẠN BÈ & NHÓM HỌC ================= */
           <div className="flex-1 flex flex-col animate-fade-in">
@@ -1007,7 +1084,7 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
         ) : activeNav === 'my_desks' ? (
           /* ================= GIAO DIỆN BÀN HỌC CỦA TÔI ================= */
           <div className="flex-1 flex flex-col animate-fade-in">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <div>
                 <h1 
                   className="font-bold text-slate-900 tracking-tight flex items-center gap-2.5 leading-tight"
@@ -1023,36 +1100,137 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => handleSelectTemplate('blank')}
-                className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px]"
-              >
-                <Plus className="w-4 h-4 stroke-[2.4]" />
-                <span>Tạo bàn học mới</span>
-              </button>
+              <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+                {isSelectionMode ? (
+                  <button
+                    type="button"
+                    onClick={handleExitSelectionMode}
+                    className="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs active:scale-95 min-h-[44px]"
+                  >
+                    <X className="w-4 h-4 text-slate-500" />
+                    <span>Hủy chọn</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsSelectionMode(true)}
+                    disabled={spaces.length === 0}
+                    className="px-3.5 py-2.5 rounded-xl border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs active:scale-95 min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <CheckSquare className="w-4 h-4 text-slate-600" />
+                    <span>Chọn nhiều</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => handleSelectTemplate('blank')}
+                  className="bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-green-600/20 cursor-pointer active:scale-95 flex items-center justify-center gap-1.5 w-full sm:w-auto min-h-[44px]"
+                >
+                  <Plus className="w-4 h-4 stroke-[2.4]" />
+                  <span>Tạo bàn học mới</span>
+                </button>
+              </div>
             </div>
+
+            {/* Thanh tác vụ chọn hàng loạt (Bulk Action Toolbar) */}
+            {isSelectionMode && (
+              <div className="mb-4 p-3 rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0] shadow-2xs flex flex-wrap items-center justify-between gap-3 animate-fade-in">
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                  <span className="text-xs font-bold text-slate-800 bg-white border border-[#BBF7D0] px-3 py-1.5 rounded-xl shadow-2xs flex items-center gap-1.5">
+                    <CheckSquare className="w-3.5 h-3.5 text-[#16A34A]" />
+                    <span>
+                      Đã chọn <strong className="text-[#166534]">{selectedSpaceIds.length}</strong> / {spaces.length} bàn học
+                    </span>
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={handleSelectAllSpaces}
+                    className="text-xs font-bold text-[#166534] hover:text-[#15803D] bg-white/80 hover:bg-white border border-[#BBF7D0] px-3 py-1.5 rounded-xl transition-all cursor-pointer active:scale-95 shadow-2xs"
+                  >
+                    {selectedSpaceIds.length === spaces.length ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsBatchDeleteModalOpen(true)}
+                    disabled={selectedSpaceIds.length === 0}
+                    className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Xóa đã chọn ({selectedSpaceIds.length})</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Desktop & Tablet Table (Pure CSS: >= sm) */}
             <div className="hidden sm:block w-full bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden responsive-desk-table">
-              <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200">
-                <div className="col-span-5">Tên bàn học</div>
+              <div className="grid grid-cols-12 text-xs font-bold text-slate-700 py-3 px-4 bg-slate-50/80 border-b border-slate-200 items-center">
+                <div className="col-span-5 flex items-center gap-2.5">
+                  {isSelectionMode && (
+                    <button
+                      type="button"
+                      onClick={handleSelectAllSpaces}
+                      title={selectedSpaceIds.length === spaces.length ? "Bỏ chọn tất cả" : "Chọn tất cả"}
+                      className="text-slate-400 hover:text-[#16A34A] transition-colors cursor-pointer"
+                    >
+                      {selectedSpaceIds.length === spaces.length && spaces.length > 0 ? (
+                        <CheckSquare className="w-4.5 h-4.5 text-[#16A34A]" />
+                      ) : (
+                        <Square className="w-4.5 h-4.5" />
+                      )}
+                    </button>
+                  )}
+                  <span>Tên bàn học</span>
+                </div>
                 <div className="col-span-4 text-left">Tài liệu & ghi chú</div>
-                <div className="col-span-3 text-right pr-2">Mở lần cuối & Thao tác</div>
+                <div className="col-span-3 text-right pr-2">
+                  {isSelectionMode ? 'Trạng thái chọn' : 'Mở lần cuối & Thao tác'}
+                </div>
               </div>
 
               <div className="divide-y divide-slate-100">
                 {spaces.map((space, idx) => {
                   const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
                   const isDemo = space.name.includes('(Demo)');
+                  const isSelected = selectedSpaceIds.includes(space.id);
 
                   return (
                     <div
                       key={space.id}
-                      onClick={() => handleOpenSpace(space.id)}
-                      className="grid grid-cols-12 items-center py-3.5 px-4 hover:bg-[#F0FDF4]/70 transition-all cursor-pointer group"
+                      onClick={() => {
+                        if (isSelectionMode) {
+                          toggleSelectSpace(space.id);
+                        } else {
+                          handleOpenSpace(space.id);
+                        }
+                      }}
+                      className={`grid grid-cols-12 items-center py-3.5 px-4 transition-all cursor-pointer group ${
+                        isSelected
+                          ? 'bg-[#F0FDF4] border-l-4 border-l-[#16A34A]'
+                          : 'hover:bg-[#F0FDF4]/70'
+                      }`}
                     >
                       <div className="col-span-5 pr-3 flex items-center gap-3">
+                        {isSelectionMode && (
+                          <div
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSelectSpace(space.id);
+                            }}
+                            className="cursor-pointer shrink-0"
+                          >
+                            {isSelected ? (
+                              <CheckSquare className="w-4.5 h-4.5 text-[#16A34A]" />
+                            ) : (
+                              <Square className="w-4.5 h-4.5 text-slate-300 hover:text-slate-500" />
+                            )}
+                          </div>
+                        )}
                         <div className="w-12 h-9 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs flex-shrink-0 flex items-center justify-center relative overflow-hidden group-hover:border-[#16A34A]/60 transition-colors">
                           <BookOpen className="w-4 h-4 text-[#16A34A]" />
                         </div>
@@ -1079,22 +1257,42 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                         {getSpaceSummary(space, idx)}
                       </div>
 
-                      <div className="col-span-3 flex items-center justify-end gap-2.5 pr-1">
-                        <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
-                          <span>{getRecentTimeString(idx)}</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenSpace(space.id);
-                          }}
-                          className="px-2.5 py-1 rounded-lg bg-green-50 group-hover:bg-[#16A34A] text-[#166534] group-hover:text-white border border-green-200 group-hover:border-[#16A34A] text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1"
-                        >
-                          <span>Vào bàn</span>
-                          <ArrowRight className="w-3 h-3" />
-                        </button>
+                      <div className="col-span-3 flex items-center justify-end gap-2 pr-1">
+                        {isSelectionMode ? (
+                          <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border transition-all ${
+                            isSelected
+                              ? 'bg-[#16A34A] text-white border-[#15803D]'
+                              : 'bg-slate-100 text-slate-500 border-slate-200'
+                          }`}>
+                            {isSelected ? 'Đã chọn' : 'Bấm để chọn'}
+                          </span>
+                        ) : (
+                          <>
+                            <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5 text-slate-400" />
+                              <span>{getRecentTimeString(idx)}</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenSpace(space.id);
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-green-50 group-hover:bg-[#16A34A] text-[#166534] group-hover:text-white border border-green-200 group-hover:border-[#16A34A] text-[11px] font-bold transition-all shadow-2xs flex items-center gap-1 cursor-pointer"
+                            >
+                              <span>Vào bàn</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                            <button
+                              type="button"
+                              title="Xóa bàn học này"
+                              onClick={(e) => handleOpenSingleDelete(e, space.id)}
+                              className="p-1.5 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer touch-target opacity-70 group-hover:opacity-100"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   );
@@ -1107,15 +1305,41 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
               {spaces.map((space, idx) => {
                 const cleanSpaceName = space.name.replace(/\(Demo\)/i, '').trim();
                 const isDemo = space.name.includes('(Demo)');
+                const isSelected = selectedSpaceIds.includes(space.id);
 
                 return (
                   <div
                     key={space.id}
-                    onClick={() => handleOpenSpace(space.id)}
-                    className="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xs active:bg-[#F0FDF4]/50 transition-all flex flex-col gap-3"
+                    onClick={() => {
+                      if (isSelectionMode) {
+                        toggleSelectSpace(space.id);
+                      } else {
+                        handleOpenSpace(space.id);
+                      }
+                    }}
+                    className={`border rounded-2xl p-4 shadow-2xs transition-all flex flex-col gap-3 cursor-pointer ${
+                      isSelected
+                        ? 'bg-[#F0FDF4] border-[#16A34A] ring-2 ring-[#16A34A]/30'
+                        : 'bg-white border-slate-200 active:bg-[#F0FDF4]/50'
+                    }`}
                   >
                     <div className="flex items-start justify-between gap-2.5">
                       <div className="flex items-center gap-3 min-w-0">
+                        {isSelectionMode && (
+                          <div
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSelectSpace(space.id);
+                            }}
+                            className="cursor-pointer shrink-0"
+                          >
+                            {isSelected ? (
+                              <CheckSquare className="w-5 h-5 text-[#16A34A]" />
+                            ) : (
+                              <Square className="w-5 h-5 text-slate-300" />
+                            )}
+                          </div>
+                        )}
                         <div className="w-10 h-8 rounded-lg bg-slate-100 border border-slate-200 shadow-2xs flex-shrink-0 flex items-center justify-center">
                           <BookOpen className="w-4 h-4 text-[#16A34A]" />
                         </div>
@@ -1138,27 +1362,49 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
                         </div>
                       </div>
 
-                      <span className="text-[11px] font-medium text-slate-500 shrink-0 flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-slate-400" />
-                        <span>{getRecentTimeString(idx)}</span>
-                      </span>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="text-[11px] font-medium text-slate-500 flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-slate-400" />
+                          <span>{getRecentTimeString(idx)}</span>
+                        </span>
+                        {!isSelectionMode && (
+                          <button
+                            type="button"
+                            title="Xóa bàn học"
+                            onClick={(e) => handleOpenSingleDelete(e, space.id)}
+                            className="p-1 text-slate-300 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     <div className="text-xs text-slate-600 font-semibold bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/60">
                       {getSpaceSummary(space, idx)}
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenSpace(space.id);
-                      }}
-                      className="w-full py-2.5 rounded-xl bg-[#F0FDF4] hover:bg-[#16A34A] text-[#166534] hover:text-white border border-[#BBF7D0] hover:border-[#16A34A] text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 min-h-[44px] active:scale-98"
-                    >
-                      <span>Vào bàn học</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
+                    {isSelectionMode ? (
+                      <div className={`w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                        isSelected
+                          ? 'bg-[#16A34A] text-white shadow-xs'
+                          : 'bg-slate-100 text-slate-600 border border-slate-200'
+                      }`}>
+                        {isSelected ? '✓ Đã chọn bàn học này' : 'Chạm để chọn'}
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenSpace(space.id);
+                        }}
+                        className="w-full py-2.5 rounded-xl bg-[#F0FDF4] hover:bg-[#16A34A] text-[#166534] hover:text-white border border-[#BBF7D0] hover:border-[#16A34A] text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 min-h-[44px] active:scale-98 cursor-pointer"
+                      >
+                        <span>Vào bàn học</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 );
               })}
@@ -1713,6 +1959,77 @@ export function HomePage({ onEnterDesk, onCreateSpace }: HomePageProps) {
         isOpen={isPetModalOpen}
         onClose={() => setIsPetModalOpen(false)}
       />
+
+      {/* MODAL: Xác Nhận Xóa Bàn Học (Hàng Loạt Hoặc Đơn Lẻ) — Strict Portal Rule */}
+      {isBatchDeleteModalOpen && mounted && typeof document !== 'undefined' && createPortal(
+        <div 
+          className="fixed inset-0 z-[9995] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in"
+          onClick={() => {
+            if (!isDeletingSpaces) setIsBatchDeleteModalOpen(false);
+          }}
+        >
+          <div
+            className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 max-w-md w-full shadow-2xl animate-scale-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-red-600 shrink-0">
+                <AlertTriangle className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-base font-bold text-slate-900 leading-snug">
+                  Xác nhận xóa {selectedSpaceIds.length} bàn học?
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Hành động này sẽ xóa vĩnh viễn <strong className="text-slate-800">{selectedSpaceIds.length}</strong> bàn học đã chọn cùng toàn bộ tài liệu, giáo trình, vở ghi chép và nét vẽ bên trong. Không thể khôi phục dữ liệu này.
+                </p>
+              </div>
+            </div>
+
+            {/* Danh sách các bàn học sắp xóa */}
+            <div className="my-4 max-h-40 overflow-y-auto divide-y divide-slate-100 bg-slate-50 rounded-xl border border-slate-200 p-2 text-xs">
+              {spaces
+                .filter(s => selectedSpaceIds.includes(s.id))
+                .map((s) => (
+                  <div key={s.id} className="py-1.5 px-2 flex items-center gap-2 text-slate-700 font-medium">
+                    <BookOpen className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span className="truncate">{s.name.replace(/\(Demo\)/i, '').trim()}</span>
+                  </div>
+                ))}
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                disabled={isDeletingSpaces}
+                onClick={() => setIsBatchDeleteModalOpen(false)}
+                className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
+                disabled={isDeletingSpaces}
+                onClick={handleBatchDeleteConfirm}
+                className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer active:scale-95"
+              >
+                {isDeletingSpaces ? (
+                  <>
+                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Đang xóa...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Xác nhận xóa vĩnh viễn</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

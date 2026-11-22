@@ -4,6 +4,36 @@
 
 ---
 
+## 2026-11-22 17:50 — main (Tích Hợp Tùy Chọn Chọn Nhiều Bàn Học Cùng Lúc Để Xóa Hàng Loạt)
+- **Task:** Thêm tính năng chọn nhiều bàn học cùng lúc để xóa hàng loạt theo yêu cầu của Sếp:
+  1. **Tầng Dữ Liệu & Context (`StudySpaceContext.tsx`):**
+     - Bổ sung phương thức `deleteSpaces: (spaceIds: string[]) => Promise<boolean>` vào `StudySpaceContext`.
+     - Lọc bỏ các bàn học được chọn, cập nhật `spaces` trong React state và `localStorage`.
+     - Dọn dẹp sạch sẽ strokes nét vẽ liên quan đến bàn học bị xóa.
+     - Gọi `StudySpaceService.deleteSpace(id)` đồng bộ xóa vĩnh viễn trên Supabase Cloud.
+     - Cơ chế phòng vệ rỗng: Nếu xóa sạch toàn bộ bàn học, tự động khởi tạo bàn học trống mặc định tránh lỗi màn hình trắng.
+  2. **Giao Diện Chọn Nhiều & Tác Vụ Hàng Loạt (`HomePage.tsx`):**
+     - Nút chuyển đổi "Chọn nhiều" / "Hủy chọn" trên thanh tiêu đề "Bàn học của tôi".
+     - Thanh Bulk Action Toolbar hiển thị số lượng bàn học đã chọn, nút "Chọn tất cả" / "Bỏ chọn tất cả", và nút "Xóa đã chọn (X)" màu đỏ cảnh báo.
+     - Checkbox trực quan trên từng dòng Desktop Table và thẻ Mobile Cards; nhấp dòng hoặc thẻ để toggle chọn mà không cướp sự kiện điều hướng vào bàn học.
+     - Nút icon Thùng rác nhỏ hỗ trợ xóa đơn lẻ an toàn ngay khi không ở chế độ chọn nhiều.
+     - Hỗ trợ phím tắt `Escape` để hủy chọn nhiều hoặc đóng modal.
+  3. **Hộp Thoại Xác Nhận An Toàn 2 Bước (Strict Portal Rule — `z-[9995]`):**
+     - Bọc qua `createPortal(..., document.body)` với `z-[9995]` loại bỏ hoàn toàn lỗi co rúm layout.
+     - Liệt kê danh sách các bàn học bị ảnh hưởng, cảnh báo dữ liệu không thể phục hồi, nút "Xác nhận xóa vĩnh viễn" kèm spinner loading.
+     - Thông báo toast xanh lá GreenLearn ("Đã xóa thành công X bàn học.") tự tắt sau 3.5 giây.
+- **Verification:**
+  - `pnpm test`: 36/36 test suites passed (165/165 tests passed), bao gồm cả `HomePage.test.tsx` mới.
+  - `pnpm run build`: 15/15 static pages build passed.
+  - `pnpm run build:pages`: Static export GitHub Pages passed.
+  - `pnpm run docs:index` & `pnpm run docs:check`: Index và docs nhất quán 100%.
+- **Changed:**
+  - `src/context/StudySpaceContext.tsx` & `src/context/StudySpaceContext.test.tsx`: Bổ sung `deleteSpaces` và unit tests.
+  - `src/components/home/HomePage.tsx` & `src/components/home/HomePage.test.tsx`: Bổ sung chế độ chọn nhiều, Bulk Toolbar, checkbox hàng, modal xác nhận portal và unit tests.
+  - `AGENTS.md` & `docs/ai/11_CHANGELOG.md`: Cập nhật quy chuẩn và nhật ký phát triển.
+
+---
+
 ## 2026-11-22 17:39 — main (Nâng Cấp Nút Xoay Vật Thể Chuẩn Pointer Events Hoạt Động Hoàn Hảo Trên Điện Thoại)
 - **Task:** Sửa triệt để lỗi không thể xoay vật thể trên điện thoại di động theo yêu cầu của Sếp:
   1. **Chuyển đổi sang Pointer Events API toàn diện (`useDeskItemInteraction.ts`):**

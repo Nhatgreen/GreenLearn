@@ -999,6 +999,25 @@ Tài liệu này lưu giữ toàn bộ các quy tắc, quyết định kiến tr
     - Chạm vào Mầm Xanh đã thức: Mở hộp thoại Chi tiết / Bộ sưu tập Mầm Xanh (`PetMascotModal`).
   * **Chúc mừng tiến hóa cấp mới:** Khi chuỗi ngày học đạt mốc thăng cấp (Stage 1 $\rightarrow$ 2 $\rightarrow$ 3 $\rightarrow$ 4 $\rightarrow$ 5), tự động bật Modal chúc mừng rực rỡ kèm hoạt ảnh hào quang `pet-evolve-glow` và nút bấm Xanh Lá GreenLearn `#16A34A`.
 
+* **Quy Chuẩn Chọn Nhiều & Xóa Bàn Học Hàng Loạt (Bulk Space Selection & Deletion Standard):**
+  * **Chế độ Chọn Nhiều (Selection Mode) trên Trang Quản Lý Bàn Học (`HomePage`):**
+    - Cung cấp nút chuyển đổi "Chọn nhiều" / "Hủy chọn" trên thanh tiêu đề của mục "Bàn học của tôi" (`activeNav === 'my_desks'`).
+    - Khi kích hoạt `isSelectionMode`:
+      + Xuất hiện **Thanh tác vụ chọn hàng loạt (Bulk Action Toolbar)** cố định phía trên danh sách: hiển thị huy hiệu "Đã chọn X / Y bàn học", nút "Chọn tất cả" / "Bỏ chọn tất cả", và nút "Xóa đã chọn (X)" màu đỏ cảnh báo (`bg-red-600 hover:bg-red-700 text-white font-bold`).
+      + Trên bảng Desktop và thẻ Mobile: xuất hiện ô checkbox vuông (`CheckSquare` / `Square`), nhấp vào bất kỳ đâu trên dòng hoặc thẻ sẽ toggle trạng thái chọn bàn học đó mà không kích hoạt điều hướng vào bàn học. Hàng hoặc thẻ được chọn hiển thị viền xanh lá `#16A34A` và nền mềm `#F0FDF4`.
+    - Hỗ trợ phím tắt `Escape` để thoát nhanh chế độ chọn nhiều hoặc đóng modal xác nhận.
+  * **Hộp thoại Xác Nhận Xóa An Toàn 2 Bước (Strict Portal Confirmation Modal — `z-[9995]`):**
+    - Modal xác nhận xóa bắt buộc render qua `createPortal(..., document.body)` với `z-[9995]` để triệt tiêu lỗi co rúm hoặc xé khung do container cha có CSS `transform`.
+    - Cảnh báo rõ ràng với icon `AlertTriangle` đỏ: hiển thị số lượng bàn học sắp xóa, cảnh báo dữ liệu không thể phục hồi, và danh sách xem trước các bàn học bị ảnh hưởng.
+    - Cung cấp trạng thái loading xoay tròn trên nút "Xác nhận xóa vĩnh viễn" và vô hiệu hóa nút trong quá trình xử lý.
+  * **Xử lý Dữ liệu Bền Vững & Dọn Dẹp Toàn Diện (`deleteSpaces`):**
+    - Phương thức `deleteSpaces(spaceIds: string[])` trong `StudySpaceContext`:
+      + Lọc bỏ triệt để các ID khỏi danh sách `spaces` trong React state và `localStorage`.
+      + Dọn dẹp sạch sẽ toàn bộ nét vẽ của bút và dạ quang liên quan đến bàn học bị xóa (`greenlearn_drawing_strokes_[id]` & `vitudy_drawing_strokes_[id]`).
+      + Đồng bộ xóa trên máy chủ Supabase Cloud (`StudySpaceService.deleteSpace`) khi người dùng đã đăng nhập.
+      + Cơ chế phòng vệ rỗng: Nếu người dùng xóa toàn bộ các bàn học hiện có, hệ thống tự động khởi tạo ngay một bàn học trống mặc định (`Bàn học mới`), ngăn ngừa hoàn toàn tình trạng crash ứng dụng hoặc màn hình trắng không có bàn học nào.
+      + Sau khi xóa hoàn tất, hiển thị thông báo toast màu xanh lá GreenLearn ("Đã xóa thành công X bàn học.") và tự động biến mất sau 3.5 giây.
+
 
 
 
