@@ -316,6 +316,56 @@ export interface Database {
           window_start?: string
         }
       }
+      api_tokens: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          last4: string
+          created_at: string
+          expires_at: string
+          last_used_at: string | null
+          revoked_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name?: string
+          token_hash: string
+          last4: string
+          created_at?: string
+          expires_at?: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          last4?: string
+          expires_at?: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+        }
+      }
+    }
+    Functions: {
+      create_api_token: {
+        Args: {
+          p_name?: string
+        }
+        Returns: {
+          id: string
+          token: string
+          expires_at: string
+        }[]
+      }
+      revoke_api_token: {
+        Args: {
+          p_id: string
+        }
+        Returns: boolean
+      }
     }
   }
 }

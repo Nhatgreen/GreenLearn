@@ -21,6 +21,7 @@ import {
   HardDrive
 } from 'lucide-react';
 import { StorageManagerModal } from '../modals/StorageManagerModal';
+import { AntigravityMcpSettings } from './AntigravityMcpSettings';
 import Link from 'next/link';
 
 interface AccountSettingsProps {
@@ -482,6 +483,9 @@ export function AccountSettings({ profile }: AccountSettingsProps) {
           <span>Mở Trình quản lý bộ nhớ</span>
         </button>
       </section>
+
+      {/* 4. Kết nối Antigravity (MCP Chỉ đọc) */}
+      <AntigravityMcpSettings />
 
       {/* Storage Manager Modal */}
       <StorageManagerModal

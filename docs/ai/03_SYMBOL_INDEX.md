@@ -1,7 +1,7 @@
 # 03_SYMBOL_INDEX.md — Chỉ Mục Toàn Bộ Ký Hiệu Codebase ViTudy
 
-> **Commit Hash:** `07f0cea`  
-> **Cập nhật lần cuối:** `2026-11-22`  
+> **Commit Hash:** `87d2dff`  
+> **Cập nhật lần cuối:** `2026-11-28`  
 > **Quy ước:** Symbol | Kind | File:Lines (Symbol) | Vai trò chức năng
 
 <!-- manual:start -->
@@ -223,8 +223,9 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | Ký hiệu (Symbol) | Loại (Kind) | Vị trí (File:Lines) | Vai trò chức năng |
 |---|---|---|---|
 | `AboutPage` | `component` | [src/app/about/page.tsx:L9-L181](file:////home/nhat/Documents/DUT/GreenLearn/src/app/about/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `AccountSettings` | `component` | [src/components/profile/AccountSettings.tsx:L30-L493](file:////home/nhat/Documents/DUT/GreenLearn/src/components/profile/AccountSettings.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `AccountSettings` | `component` | [src/components/profile/AccountSettings.tsx:L31-L497](file:////home/nhat/Documents/DUT/GreenLearn/src/components/profile/AccountSettings.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `ActiveToolType` | `type` | [src/types/studyspace.ts:L153-L160](file:////home/nhat/Documents/DUT/GreenLearn/src/types/studyspace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `AntigravityMcpSettings` | `component` | [src/components/profile/AntigravityMcpSettings.tsx:L72-L407](file:////home/nhat/Documents/DUT/GreenLearn/src/components/profile/AntigravityMcpSettings.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthCallbackPage` | `component` | [src/app/auth/callback/page.tsx:L8-L98](file:////home/nhat/Documents/DUT/GreenLearn/src/app/auth/callback/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthForm` | `component` | [src/components/auth/AuthForm.tsx:L15-L139](file:////home/nhat/Documents/DUT/GreenLearn/src/components/auth/AuthForm.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `AuthPage` | `component` | [src/app/auth/page.tsx:L12-L143](file:////home/nhat/Documents/DUT/GreenLearn/src/app/auth/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
@@ -232,7 +233,7 @@ Tài liệu này được đồng bộ tự động qua `npm run docs:index` và
 | `clearKatexCache` | `fn` | [src/components/common/MathRenderer.tsx:L30-L32](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/MathRenderer.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `createDemoStudySpace` | `fn` | [src/data/demoSpace.ts:L3-L97](file:////home/nhat/Documents/DUT/GreenLearn/src/data/demoSpace.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DashboardPage` | `component` | [src/app/dashboard/page.tsx:L13-L229](file:////home/nhat/Documents/DUT/GreenLearn/src/app/dashboard/page.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
-| `Database` | `type` | [src/types/database.types.ts:L9-L321](file:////home/nhat/Documents/DUT/GreenLearn/src/types/database.types.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
+| `Database` | `type` | [src/types/database.types.ts:L9-L371](file:////home/nhat/Documents/DUT/GreenLearn/src/types/database.types.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DayStudyTime` | `type` | [src/services/StatsService.ts:L3-L7](file:////home/nhat/Documents/DUT/GreenLearn/src/services/StatsService.ts) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DebugOverlay` | `component` | [src/components/common/DebugOverlay.tsx:L7-L139](file:////home/nhat/Documents/DUT/GreenLearn/src/components/common/DebugOverlay.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
 | `DeleteAccount` | `component` | [src/components/profile/DeleteAccount.tsx:L23-L262](file:////home/nhat/Documents/DUT/GreenLearn/src/components/profile/DeleteAccount.tsx) | Thành phần nghiệp vụ của phân hệ Types & Data |
