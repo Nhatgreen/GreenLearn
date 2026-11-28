@@ -62,13 +62,25 @@ BEGIN
         RAISE EXCEPTION 'invalid_name: Tên token phải từ 1 đến 60 ký tự.' USING ERRCODE = '22023';
     END IF;
 
-    -- Tận dụng bảng rate_limits (0003) để chống spam tạo token (tối đa 10 lần/giờ)
-    SELECT rl.allowed, rl.reset_at
-    INTO v_rate_allowed, v_reset_at
-    FROM public.consume_rate_limit(v_user_id, 'create_api_token', 10, INTERVAL '1 hour') AS rl;
+    -- Tận dụng bảng rate_limits (0003) nếu có trên DB; nếu chưa có thì fallback đếm trực tiếp trên api_tokens
+    IF to_regprocedure('public.consume_rate_limit(uuid,text,integer,interval)') IS NOT NULL THEN
+        SELECT rl.allowed, rl.reset_at
+        INTO v_rate_allowed, v_reset_at
+        FROM public.consume_rate_limit(v_user_id, 'create_api_token'::text, 10, INTERVAL '1 hour') AS rl;
 
-    IF NOT COALESCE(v_rate_allowed, true) THEN
-        RAISE EXCEPTION 'rate_limited: Bạn tạo token quá nhanh. Vui lòng thử lại sau %.', v_reset_at USING ERRCODE = 'P0001';
+        IF NOT COALESCE(v_rate_allowed, true) THEN
+            RAISE EXCEPTION 'rate_limited: Bạn tạo token quá nhanh. Vui lòng thử lại sau %.', v_reset_at USING ERRCODE = 'P0001';
+        END IF;
+    ELSE
+        SELECT COUNT(*)
+        INTO v_active_count
+        FROM public.api_tokens t
+        WHERE t.user_id = v_user_id
+          AND t.created_at > NOW() - INTERVAL '1 hour';
+
+        IF v_active_count >= 10 THEN
+            RAISE EXCEPTION 'rate_limited: Bạn tạo token quá nhanh. Vui lòng thử lại sau ít phút.' USING ERRCODE = 'P0001';
+        END IF;
     END IF;
 
     -- Giới hạn tối đa 5 token còn hiệu lực (chưa thu hồi và chưa hết hạn)
