@@ -193,6 +193,7 @@ export function AntigravityMcpSettings() {
   };
 
   const cmdDownloadHref = getAssetPath('/Ketnoianti.cmd');
+  const shDownloadHref = getAssetPath('/ketnoianti.sh');
 
   return (
     <section className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-5">
@@ -216,25 +217,38 @@ export function AntigravityMcpSettings() {
             Cho phép Antigravity đọc danh sách bàn học, ghi chú và tài liệu của bạn qua giao thức MCP (chỉ đọc, tối đa 5 token hoạt động, hết hạn sau 90 ngày).
           </p>
 
-          {/* Tải Ketnoianti.cmd & 3 bước hướng dẫn */}
+          {/* Tải script kết nối & 3 bước hướng dẫn */}
           <div className="p-4 rounded-2xl bg-green-50/70 border border-green-200 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <p className="text-xs font-bold text-[#166534]">Hướng dẫn kết nối nhanh (3 bước)</p>
                 <ol className="text-[11px] text-slate-700 mt-1.5 space-y-1 list-decimal list-inside">
                   <li>Nhập tên (tùy chọn) và bấm <strong>Tạo token</strong> bên dưới.</li>
-                  <li>Tải và chạy file <strong>Ketnoianti.cmd</strong> trên Windows.</li>
+                  <li>
+                    Tải và chạy <strong>Ketnoianti.cmd</strong> (Windows) hoặc{' '}
+                    <strong>ketnoianti.sh</strong> (Linux: <code className="px-1 py-0.5 rounded bg-white/80 font-mono text-[10px]">bash ketnoianti.sh</code>).
+                  </li>
                   <li>Dán token vừa sao chép vào cửa sổ dòng lệnh để hoàn tất.</li>
                 </ol>
               </div>
-              <a
-                href={cmdDownloadHref}
-                download="Ketnoianti.cmd"
-                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs transition-all active:scale-95 flex-shrink-0"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>Tải Ketnoianti.cmd</span>
-              </a>
+              <div className="flex flex-col gap-2 flex-shrink-0">
+                <a
+                  href={cmdDownloadHref}
+                  download="Ketnoianti.cmd"
+                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs transition-all active:scale-95"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Tải cho Windows (.cmd)</span>
+                </a>
+                <a
+                  href={shDownloadHref}
+                  download="ketnoianti.sh"
+                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold shadow-xs transition-all active:scale-95"
+                >
+                  <Download className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Tải cho Linux (.sh)</span>
+                </a>
+              </div>
             </div>
           </div>
 
